@@ -12,4 +12,4 @@ def read_from_data(file_name):
 
 if __name__ == '__main__':
     data_set = read_from_data('ppa.txt')
-    print(data_set.list_all_contraints())
+    print(data_set.find_BTB_constraints(4))

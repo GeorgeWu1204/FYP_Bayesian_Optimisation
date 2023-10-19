@@ -32,3 +32,11 @@ class Data_Set:
         for i in range(len(self)):
             constraints.append(self.__dict__.get(i).Constraints)
         return constraints
+    
+    def find_BTB_constraints(self, constraint):
+        Pre_Type = []
+        for i in range(len(self)):
+            tmp_constraint = self.__dict__.get(i).Constraints
+            if tmp_constraint['BTB'] == constraint:
+                Pre_Type.append(tmp_constraint['Pre_Type'])
+        return Pre_Type
