@@ -42,8 +42,6 @@ class Data_Set:
             if tmp_constraint['BTB'] == constraint:
                 Pre_Type.append(tmp_constraint['Pre_Type'])
         return Pre_Type
-<<<<<<< Updated upstream:utils.py
-=======
     
     def find_Pre_Type_constraints(self, constraint):
         BTB = []
@@ -67,4 +65,3 @@ class Data_Set:
 
 
     
->>>>>>> Stashed changes:src/utils.py
