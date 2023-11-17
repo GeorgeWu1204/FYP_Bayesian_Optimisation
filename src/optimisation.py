@@ -1,32 +1,42 @@
 import os
 import torch
 import data
+import time
+import warnings
+
 from format_constraints import Constraints
 from botorch.models import SingleTaskGP
 from gpytorch.mlls.sum_marginal_log_likelihood import SumMarginalLogLikelihood
 from botorch.optim import optimize_acqf
-#Environment variables
-NUM_RESTARTS = 1
+from botorch.acquisition import qExpectedImprovement
+from botorch.sampling.normal import NormalSampler
+from botorch.exceptions import BadInitialCandidatesWarning
+from botorch import fit_gpytorch_model
+#Data variables
+DATA_DIM = 2
+DATA_SCALES = [1, 4]
 RAW_DATA_FILE = '../ppa.txt'
 NOISE_SE = 0.5
 OBJECTIVE = 'avail_ff'
-BATCH_SIZE = 1
 RAW_SAMPLES = 32
-DATA_DIM = 2
-DATA_SCALES = [1, 4]
+
+#BO variables
+NUM_RESTARTS = 1
+N_TRIALS = 1            # number of trials of BO (outer loop)
+N_BATCH = 1             # number of BO batches (inner loop)
+BATCH_SIZE = 1
+MC_SAMPLES = 16         # number of MC samples for qNEI
+
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 dtype = torch.int64
-train_yvar = torch.tensor(NOISE_SE**2, device=device, dtype=dtype)
-data_set = data.read_from_data(RAW_DATA_FILE, [OBJECTIVE], DATA_SCALES)
-constraint_set = Constraints(DATA_DIM)
+
 
 #TODO
+constraint_set.update_scale(1, 4)
 constraint_set.update_self_constraints(0, [1, 6])
 constraint_set.update_self_constraints(1, [4, 252])
-constraint_set.update_new_constraints([{0: [1, 4], 1: [4, 4]}, {0: [4, 6], 1: [4, 252]}])
-constraint_set.update_scale(1, 4)
-
+constraint_set.update_new_constraints([{0: [1, 4], 1: [4, 4]}, {0: [5, 6], 1: [4, 252]}])
 
 
 # define output constraints
@@ -51,11 +61,8 @@ def generate_internal_bound():
         scalas[i] = torch.tensor(constraint_set.Node[i].scale)
     return bounds, scalas.squeeze()
 
-bounds, scalas = generate_internal_bound()
-print(bounds)
-print(scalas)
-generate_initial_data(bounds, dtype)
-def initialize_model(train_x, train_obj, train_con, state_dict=None):
+
+def initialize_model(train_x, train_obj, state_dict=None):
     # define models for objective and constraint
     train_Yvar = torch.full_like(train_obj, 1e-6)
     noise_free_model = SingleTaskGP(
@@ -94,3 +101,72 @@ def update_random_observations(best_random):
     next_random_best = weighted_obj(rand_x).max().item()
     best_random.append(max(best_random[-1], next_random_best))
     return best_random
+
+
+train_yvar = torch.tensor(NOISE_SE**2, device=device, dtype=dtype)
+data_set = data.read_from_data(RAW_DATA_FILE, [OBJECTIVE], DATA_SCALES)
+constraint_set = Constraints(DATA_DIM)
+verbose = True
+bounds, scalas = generate_internal_bound()
+# Global Best Values
+best_observed_all, best_random_all = [], []
+
+#Optimisation Loop
+for trial in range (N_TRIALS):
+    print(f"\nTrial {trial:>2} of {N_TRIALS} ", end="")
+    best_observed_ei, best_random = [], []
+
+    (
+        train_x_ei,
+        train_obj_ei,
+        best_observed_value_ei,
+    ) = generate_initial_data(bounds, dtype)
+
+    mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei)
+
+    best_observed_ei.append(best_observed_value_ei)
+    best_random.append(best_observed_value_ei)
+
+    for iteration in range(1, N_BATCH + 1):
+        t0 = time.monotonic()
+
+        # Clearing house for fitting models passed as GPyTorch MarginalLogLikelihoods.
+        fit_gpytorch_model(mll_ei)  
+        #QMC sampler
+        qmc_sampler = NormalSampler(num_samples=MC_SAMPLES)
+        qEI = qExpectedImprovement(
+            model=model_ei,
+            best_f=best_observed_value_ei,
+            sampler=qmc_sampler,
+            objective=weighted_obj,
+        )
+        # optimize and get new observation
+        new_x_ei, new_obj_ei = optimize_acqf_and_get_observation(qEI)
+
+        # update training points
+        train_x_ei = torch.cat([train_x_ei, new_x_ei])
+        train_obj_ei = torch.cat([train_obj_ei, new_obj_ei])
+
+        # update progress
+        best_random = update_random_observations(best_random)
+        best_value_ei = weighted_obj(train_x_ei).max().item()
+        best_observed_ei.append(best_value_ei)
+        
+        # reinitialize the models so they are ready for fitting on next iteration
+        mll_ei, model_ei = initialize_model(
+            train_x_ei,
+            train_obj_ei,
+        )
+        t1 = time.monotonic()
+
+        if verbose:
+            print(
+                f"\nBatch {iteration:>2}: best_value (random, qEI, qNEI) = "
+                f"({max(best_random):>4.2f}, {best_value_ei:>4.2f}, {best_value_nei:>4.2f}), "
+                f"time = {t1-t0:>4.2f}.",
+                end="",
+            )
+        else:
+            print(".", end="")
+    best_observed_all.append(best_observed_ei)
+    best_random_all.append(best_random)

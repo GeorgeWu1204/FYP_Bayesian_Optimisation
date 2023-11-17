@@ -39,16 +39,21 @@ class Constraints_Node:
         return len(self.conditions)
 
     def initialize_self_constraints(self, indvidual_constraint):
-        self.individual_constraints = indvidual_constraint
+        self.individual_constraints = [x/self.scale for x in indvidual_constraint]
 
     def check_condition_included(self, condition):
-        if condition[0] < self.individual_constraints[0] or condition[1] > self.individual_constraints[1]:
-            raise Exception('Condition out of range')
         
-        if condition in self.conditions:
+        lower_bound_cond = round(condition[0] / self.scale)
+        upper_bound_cond = round(condition[1] / self.scale)
+
+        if lower_bound_cond < self.individual_constraints[0] or upper_bound_cond > self.individual_constraints[1]:
+            raise Exception('Condition out of range')
+        tmp_condition = [lower_bound_cond, upper_bound_cond]
+        
+        if tmp_condition in self.conditions:
             return self.conditions.index(condition)
         else:
-            self.conditions.append(condition)
+            self.conditions.append(tmp_condition)
             return len(self.conditions) - 1
 
 
@@ -113,10 +118,11 @@ class Constraints:
             valid_initial_tensor = torch.zeros((1, 1, self.dim), dtype=dtype)
             data_matrix = build_matrix(valid_initial_tensor, self, 1, q_dim, self.dim)
             while(self.check_meet_constraint(data_matrix, 0) < 0):
-
                 for j in range(self.dim):
                     valid_initial_tensor[0][0][j] = random.randint(bounds[j][0], bounds[j][1])
                 data_matrix = build_matrix(valid_initial_tensor, self, 1, q_dim, self.dim)
+            print("final data_matrix", data_matrix)
+            print("check_meet_constraint", self.check_meet_constraint(data_matrix, 0))
             output_tensor[i] = valid_initial_tensor.squeeze()
         return output_tensor
             
