@@ -1,6 +1,7 @@
 import ast
 import torch
 # Read the file
+from utils import denormalise_generated_data
 
 class Data_Sample:
     def __init__(self, data, objs):
@@ -27,13 +28,14 @@ class Data_Sample:
         return self.PPA[obj]    
 
 class Data_Set:
-    def __init__(self, data, objs, scales):
+    def __init__(self, data, objs, scales, normalized_factors):
         for i in range(len(data)):
             d_input_dic = data[i][0]
             d_input = [val for val in d_input_dic.values()]
             for i in range(len(d_input)):
                 d_input[i] = round(d_input[i] / scales[i])
             self.__dict__[tuple(d_input)] = Data_Sample(data[i], objs)
+            self.normalized_factors = normalized_factors
     def __len__(self):
         return len(self.__dict__)
     
@@ -60,17 +62,16 @@ class Data_Set:
         return BTB
     
     def find_ppa_result(self, constraints, obj, dtype):
-        print("constraints", constraints.shape)
-        num_constraints = constraints.shape[0]
+        # constraints = num_constraints * d_dims
+        denormalized_constraints = denormalise_generated_data(constraints, self.normalized_factors)
+        num_constraints = denormalized_constraints.shape[0]
         result = torch.zeros(num_constraints, dtype=dtype)
         for i in range(0, num_constraints):
-            constraint = constraints[i].tolist()
-            print("constraint", constraint)
+            rounded_constraints = denormalized_constraints[i].round()
+            constraint = rounded_constraints.tolist()
             result[i] = self.__dict__.get(tuple(constraint)).get_ppa(obj)
         return result
  
-    
-
 
 def read_from_data(file_name, objs, scales):
     with open(file_name, 'r') as f:

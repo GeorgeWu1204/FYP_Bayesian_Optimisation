@@ -2,25 +2,8 @@ from settings import MAX_PARAMETER_VALUE, NEGATIVE_PARAMETER_VALUE
 import torch
 import numpy as np
 import random
+from utils import build_matrix, normalise_generated_data
 
-def calculate_condition(x, condition):
-    return (x - condition[0]) * (condition[1] - x)
-
-def build_matrix(data, constraints, num_restarts, q_dim, d_dim):
-    formatted_data = {}
-    flat_data = data.flatten()
-    for i in range(d_dim):
-        if(constraints.Node[i].have_constraints()):
-            condition_size = constraints.Node[i].condition_size()
-            indices = torch.arange(start = i, end = len(flat_data), step = d_dim)
-            selected_data = flat_data[indices]
-            cal_condition = torch.empty((condition_size, num_restarts * q_dim))
-            for j in range(constraints.Node[i].condition_size()):
-                cal_condition[j] = calculate_condition(selected_data, constraints.Node[i].conditions[j])
-            
-            formatted_data[i] = cal_condition
-
-    return formatted_data
 
 class Constraints_Node:
     def __init__(self, index):
@@ -28,9 +11,13 @@ class Constraints_Node:
         self.index = index
         self.scale = 1
         self.conditions = []
+        self.normalized_factor = 1
 
     def initialize_scale(self, scale):
         self.scale = scale
+    
+    def initialize_normalized_factor(self, normalized_factor):
+        self.normalized_factor = normalized_factor
 
     def have_constraints(self):
         return (len(self.conditions) > 0)
@@ -60,16 +47,24 @@ class Constraints_Node:
 class Constraints:
 
     def __init__(self, dim):  
+        #linked_constraints = [[or_constraints = {constraints 1, constraints 2}], [or_constraints], ...]]
         self.dim = dim
         self.Node = [Constraints_Node(i) for i in range(dim)]
         self.linked_constraints = []
-        #linked_constraints = [[or_constraints = {constraints 1, constraints 2}], [or_constraints], ...]]
+        self.normalized_factors = []
+    
+    def update_normalize_factor(self, normalized_factors):
+        # not sure whether it is the most efficient way to normalise the data
+        self.normalized_factors = normalized_factors
+        for index, factor in enumerate(normalized_factors):
+            self.Node[index].initialize_normalized_factor(factor)
     
     def update_self_constraints(self, index, indvidual_constraint):
         self.Node[index].initialize_self_constraints([indvidual_constraint[0], indvidual_constraint[1]])
 
-    def update_scale(self, index, scale):
-        self.Node[index].initialize_scale(scale)
+    def update_scale(self, scales):
+        for index, scale in enumerate(scales):
+            self.Node[index].initialize_scale(scale)
 
     def update_new_constraints(self, new_constraints):
         # new_constraints = {index: [condition]}
@@ -111,21 +106,31 @@ class Constraints:
                     print("At D ", constraint, "D col: ", linked_constraint[constraint])
                     print("Condition: ", self.Node[constraint].conditions[linked_constraint[constraint]])
     
-    def create_initial_data(self, num_of_start, bounds, dtype):
+    def create_initial_data(self, num_of_start, bounds, output_type):
         q_dim = 1
-        output_tensor = torch.empty((num_of_start, self.dim), dtype=dtype)
+        output_tensor = torch.empty((num_of_start, self.dim), dtype=output_type)
         for i in range(num_of_start):
-            valid_initial_tensor = torch.zeros((1, 1, self.dim), dtype=dtype)
+            valid_initial_tensor = torch.zeros((1, 1, self.dim), dtype=output_type)
             data_matrix = build_matrix(valid_initial_tensor, self, 1, q_dim, self.dim)
-            while(self.check_meet_constraint(data_matrix, 0) < 0):
-                for j in range(self.dim):
-                    valid_initial_tensor[0][0][j] = random.randint(bounds[j][0], bounds[j][1])
+            while(self.check_meet_constraint(data_matrix, num_of_start) < 0):
+                valid_initial_tensor = torch.rand((1, 1, self.dim), dtype=output_type) * (bounds[:, 1] - bounds[:, 0]) + bounds[:, 0]
                 data_matrix = build_matrix(valid_initial_tensor, self, 1, q_dim, self.dim)
-            print("final data_matrix", data_matrix)
-            print("check_meet_constraint", self.check_meet_constraint(data_matrix, 0))
             output_tensor[i] = valid_initial_tensor.squeeze()
+        normalise_generated_data(output_tensor, self.normalized_factors)
         return output_tensor
             
+    def get_inequality_constraints(self, X):
+        #input X: [num_restarts, q_dim, d_dim] ===> [num_restarts, q_dim]
+        num_restarts, q_dim, d_dim = X.shape
+        data_matrix = build_matrix(X, self, num_restarts, q_dim, d_dim)
+        inequality_constraints = torch.empty((num_restarts, q_dim), dtype=X.dtype)
+        for i in range(num_restarts):
+            for j in range(q_dim):
+                inequality_constraints[i][j] = self.check_meet_constraint(data_matrix, i * q_dim + j)
+
+        return inequality_constraints
+
+
 
         
 if __name__ == '__main__':
