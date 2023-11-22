@@ -12,12 +12,15 @@ class Constraints_Node:
         self.scale = 1
         self.conditions = []
         self.normalized_factor = 1
+        self.rounded_region = 0.5/(self.scale * self.normalized_factor)
 
     def initialize_scale(self, scale):
         self.scale = scale
+        self.rounded_region = 0.45/(self.scale * self.normalized_factor)
     
     def initialize_normalized_factor(self, normalized_factor):
         self.normalized_factor = normalized_factor
+        self.rounded_region = 0.45/(self.scale * self.normalized_factor)
 
     def have_constraints(self):
         return (len(self.conditions) > 0)
@@ -26,17 +29,19 @@ class Constraints_Node:
         return len(self.conditions)
 
     def initialize_self_constraints(self, indvidual_constraint):
-        self.individual_constraints = [x/self.scale for x in indvidual_constraint]
+        self.individual_constraints [0] = indvidual_constraint[0] / (self.scale * self.normalized_factor) - self.rounded_region
+        self.individual_constraints [1] = indvidual_constraint[1] / (self.scale * self.normalized_factor) + self.rounded_region
+
 
     def check_condition_included(self, condition):
+        """Check whether the condition is included in the condition list. If not, add it to the list."""
         
-        lower_bound_cond = round(condition[0] / self.scale)
-        upper_bound_cond = round(condition[1] / self.scale)
-
+        lower_bound_cond = condition[0] / (self.scale * self.normalized_factor) - self.rounded_region
+        upper_bound_cond = condition[1] / (self.scale * self.normalized_factor) + self.rounded_region
+        
         if lower_bound_cond < self.individual_constraints[0] or upper_bound_cond > self.individual_constraints[1]:
             raise Exception('Condition out of range')
         tmp_condition = [lower_bound_cond, upper_bound_cond]
-        
         if tmp_condition in self.conditions:
             return self.conditions.index(condition)
         else:
@@ -54,7 +59,7 @@ class Constraints:
         self.normalized_factors = []
     
     def update_normalize_factor(self, normalized_factors):
-        # not sure whether it is the most efficient way to normalise the data
+        #not sure whether it is the most efficient way to normalise the data
         self.normalized_factors = normalized_factors
         for index, factor in enumerate(normalized_factors):
             self.Node[index].initialize_normalized_factor(factor)
@@ -83,18 +88,23 @@ class Constraints:
         #X_index : the index of the candidtate of the point.
         overall_constraint_sum = 0
         for or_constraints in self.linked_constraints:
-            max_constraint_sum = NEGATIVE_PARAMETER_VALUE
+            # loop through all the or_constraints sets in the linked_constraints
+            max_constraint_sum = torch.tensor(NEGATIVE_PARAMETER_VALUE)
             for linked_constraint in or_constraints:
+                # loop through all the constraints in the or_constraints
                 constraint_sum = 0
                 for constraint in linked_constraint.keys():
-                    if(data[constraint][linked_constraint[constraint]][X_index] <0):
-                        constraint_sum = NEGATIVE_PARAMETER_VALUE
+                    # loop through all the constraints in the and_constraint
+                    if(data[constraint][linked_constraint[constraint]][X_index] <= 0):
+                        # constraint_sum = torch.tensor(NEGATIVE_PARAMETER_VALUE)
+                        constraint_sum = data[constraint][linked_constraint[constraint]][X_index]
                         break
                     else:
                         constraint_sum += data[constraint][linked_constraint[constraint]][X_index]
                 if(constraint_sum > max_constraint_sum):
                     max_constraint_sum = constraint_sum.clone()
-            if(max_constraint_sum < 0):
+            if(max_constraint_sum <= 0):
+                #within a or_constraint, if all the and_constraint are not satisfied, the or_constraint is not satisfied.
                 return max_constraint_sum
             overall_constraint_sum += max_constraint_sum
         return overall_constraint_sum
@@ -106,27 +116,40 @@ class Constraints:
                     print("At D ", constraint, "D col: ", linked_constraint[constraint])
                     print("Condition: ", self.Node[constraint].conditions[linked_constraint[constraint]])
     
-    def create_initial_data(self, num_of_start, bounds, output_type):
+    def create_initial_data(self, num_of_start, output_type):
         q_dim = 1
         output_tensor = torch.empty((num_of_start, self.dim), dtype=output_type)
         for i in range(num_of_start):
-            valid_initial_tensor = torch.zeros((1, 1, self.dim), dtype=output_type)
-            data_matrix = build_matrix(valid_initial_tensor, self, 1, q_dim, self.dim)
-            while(self.check_meet_constraint(data_matrix, num_of_start) < 0):
-                valid_initial_tensor = torch.rand((1, 1, self.dim), dtype=output_type) * (bounds[:, 1] - bounds[:, 0]) + bounds[:, 0]
-                data_matrix = build_matrix(valid_initial_tensor, self, 1, q_dim, self.dim)
-            output_tensor[i] = valid_initial_tensor.squeeze()
-        normalise_generated_data(output_tensor, self.normalized_factors)
+            possible_initial_tensor = torch.zeros((1, 1, self.dim), dtype=output_type)
+            data_matrix = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
+            while(self.check_meet_constraint(data_matrix, i) <= 0):
+                possible_initial_tensor = torch.rand((1, 1, self.dim), dtype=output_type)
+                data_matrix = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
+            output_tensor[i] = possible_initial_tensor.squeeze()
         return output_tensor
             
-    def get_inequality_constraints(self, X):
-        #input X: [num_restarts, q_dim, d_dim] ===> [num_restarts, q_dim]
-        num_restarts, q_dim, d_dim = X.shape
-        data_matrix = build_matrix(X, self, num_restarts, q_dim, d_dim)
+    def get_nonlinear_inequality_constraints(self, X):
+        print("X: ", X.shape, "\n", X)
+
+        if(X.shape[0] == self.dim):
+            # TO be confirmed At the initial part of the optimisation, the batch size is the same as the dimension of the data.
+            d_dim = self.dim
+            q_dim = 1       #nonlinear_inequality has restricted the batch size to be 1.
+            num_restarts = round(X.shape[0]/(d_dim * q_dim)) 
+            re_organized_x = X.reshape((num_restarts, q_dim, d_dim))
+        else:
+            num_restarts, q_dim, d_dim = X.shape
+            re_organized_x = X
+        
+        print("re_organized_x: ", re_organized_x.shape, "\n", re_organized_x)
+
+        data_matrix = build_matrix(re_organized_x, self, num_restarts, q_dim, d_dim)
         inequality_constraints = torch.empty((num_restarts, q_dim), dtype=X.dtype)
         for i in range(num_restarts):
             for j in range(q_dim):
                 inequality_constraints[i][j] = self.check_meet_constraint(data_matrix, i * q_dim + j)
+                print("check inequality error: ", self.check_meet_constraint(data_matrix, i * q_dim + j))
+                print("inequality_constraints: ", inequality_constraints[i][j])
 
         return inequality_constraints
 

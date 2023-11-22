@@ -1,7 +1,7 @@
 import ast
 import torch
 # Read the file
-from utils import denormalise_generated_data
+from utils import recover_generated_data
 
 class Data_Sample:
     def __init__(self, data, objs):
@@ -32,9 +32,10 @@ class Data_Set:
         for i in range(len(data)):
             d_input_dic = data[i][0]
             d_input = [val for val in d_input_dic.values()]
-            for i in range(len(d_input)):
-                d_input[i] = round(d_input[i] / scales[i])
+            # for i in range(len(d_input)):
+            #     d_input[i] = round(d_input[i] / scales[i])
             self.__dict__[tuple(d_input)] = Data_Sample(data[i], objs)
+            self.scaled_factors = scales
             self.normalized_factors = normalized_factors
     def __len__(self):
         return len(self.__dict__)
@@ -63,7 +64,7 @@ class Data_Set:
     
     def find_ppa_result(self, constraints, obj, dtype):
         # constraints = num_constraints * d_dims
-        denormalized_constraints = denormalise_generated_data(constraints, self.normalized_factors)
+        denormalized_constraints = recover_generated_data(constraints, self.normalized_factors, self.scaled_factors)
         num_constraints = denormalized_constraints.shape[0]
         result = torch.zeros(num_constraints, dtype=dtype)
         for i in range(0, num_constraints):
@@ -73,11 +74,11 @@ class Data_Set:
         return result
  
 
-def read_from_data(file_name, objs, scales):
+def read_from_data(file_name, objs, scales, normalized_factors):
     with open(file_name, 'r') as f:
         content = f.read()
         raw_data = ast.literal_eval(content)
         print("objs", objs) 
-        data_set = Data_Set(raw_data, objs, scales)
+        data_set = Data_Set(raw_data, objs, scales, normalized_factors)
     return data_set
 
