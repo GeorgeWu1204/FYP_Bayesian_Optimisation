@@ -2,33 +2,30 @@ import os
 import torch
 import data
 import time
-import warnings
 
 from format_constraints import Constraints
-from botorch.models import SingleTaskGP, FixedNoiseGP
+from botorch.models import SingleTaskGP
 from botorch.models.transforms.outcome import Standardize
 from gpytorch.mlls import ExactMarginalLogLikelihood
 
 from botorch.optim import optimize_acqf
 from botorch.acquisition import qExpectedImprovement
 from botorch.sampling.normal import SobolQMCNormalSampler
-from botorch.exceptions import BadInitialCandidatesWarning
 from botorch import fit_gpytorch_model
 
-from settings import MAX_PARAMETER_VALUE, NEGATIVE_PARAMETER_VALUE
 #Data variables
 DATA_DIM = 2
 DATA_SCALES = [1, 4]
 DATA_NORMALIZED_FACTOR = [6, 63]    # normalized_Factor = max_value / scale
 RAW_DATA_FILE = '../data/ppa.txt'
 NOISE_SE = 0.5
-OBJECTIVE = 'avail_ff'
+OBJECTIVE = 'ff'
 RAW_SAMPLES = 1
 
 #BO variables
 NUM_RESTARTS = 1
 N_TRIALS = 1            # number of trials of BO (outer loop)
-N_BATCH = 1             # number of BO batches (inner loop)
+N_BATCH = 10             # number of BO batches (inner loop)
 BATCH_SIZE = 1          # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 16         # number of MC samples for qNEI
 
@@ -39,7 +36,8 @@ t_type = torch.float64
 
 data_set = data.read_from_data(RAW_DATA_FILE, [OBJECTIVE], DATA_SCALES, DATA_NORMALIZED_FACTOR)
 constraint_set = Constraints(DATA_DIM)
-#TODO
+
+#TODO : write a interface to read the constraints from file
 constraint_set.update_scale(DATA_SCALES)
 constraint_set.update_normalize_factor(DATA_NORMALIZED_FACTOR)
 
@@ -49,18 +47,17 @@ constraint_set.update_new_constraints([{0: [1, 4], 1: [4, 4]}, {0: [5, 6], 1: [4
 
 
 # define output constraints
-def weighted_objective(X, samples = None):
+def weighted_objective(X):
     """Feasibility weighted objective; zero if not feasible."""
-    if samples != None:
-        print("samples: ", samples.shape, "\n", samples)
+    # if samples != None:
+    #     print("samples: ", samples.shape, "\n", samples)
     return data_set.find_ppa_result(X, OBJECTIVE, t_type)
 
 # define models and data
 
 def generate_initial_data(data_type):
-    # generate training data
+    """generate training data"""
     train_x = constraint_set.create_initial_data(NUM_RESTARTS, data_type)
-    print("\n train_x: ", train_x)
     exact_obj = data_set.find_ppa_result(train_x, OBJECTIVE, data_type).unsqueeze(-1)  # add additional dimension at the last position
     best_observed_value = weighted_objective(train_x).max().item()
     return train_x, exact_obj, best_observed_value
@@ -75,14 +72,7 @@ def generate_internal_bound(data_type):
 
 
 def initialize_model(train_x, train_obj, state_dict=None):
-    # define models for objective and constraint
-
-    ### FixedNoiseGP ###
-    # train_Yvar = torch.full_like(train_obj, 1e-6)
-    # noise_free_model = FixedNoiseGP(
-    #     train_x, train_obj, train_Yvar, outcome_transform=Standardize(m=1)
-    # )
-
+    """define models for objective and constraint"""
     ### SingleTaskGP ###
     noise_free_model = SingleTaskGP(train_x, train_obj, outcome_transform=Standardize(m=1))
     mll = ExactMarginalLogLikelihood(noise_free_model.likelihood, noise_free_model)
@@ -93,7 +83,6 @@ def initialize_model(train_x, train_obj, state_dict=None):
 def ic_generator(*args, **kwargs):
     # generate training data
     train_x = constraint_set.create_initial_data(NUM_RESTARTS, t_type)
-    print("after normalise: ", train_x.shape, "\n", train_x)
     return train_x
 
 def optimize_acqf_and_get_observation(acq_func, generated_bounds):
@@ -101,7 +90,6 @@ def optimize_acqf_and_get_observation(acq_func, generated_bounds):
 
     sampled_initial_conditions = ic_generator().unsqueeze(1)
     sampled_initial_conditions.requires_grad = True
-    print("sampled_initial_conditions: ", sampled_initial_conditions.shape, sampled_initial_conditions)
     # optimize
     candidates, _ = optimize_acqf(
         acq_function=acq_func,
@@ -112,10 +100,8 @@ def optimize_acqf_and_get_observation(acq_func, generated_bounds):
         nonlinear_inequality_constraints = [constraint_set.get_nonlinear_inequality_constraints],
         batch_initial_conditions = sampled_initial_conditions
     )
-    print("candidates: ", candidates)
     # observe new values
     new_x = candidates.detach()
-    print("new_x: ", new_x)
     new_obj = data_set.find_ppa_result(new_x, OBJECTIVE, t_type).unsqueeze(-1)
     return new_x, new_obj
 
@@ -135,7 +121,7 @@ for trial in range (N_TRIALS):
         best_observed_value_ei,
     ) = generate_initial_data( t_type)
 
-    print("tran_x_ei: ", train_x_ei, "tran_obj_ei: ", train_obj_ei, "best_observed_value_ei: ", best_observed_value_ei)
+    print("tran_x_ei: ", train_x_ei, "\ntran_obj_ei: ", train_obj_ei, "\nbest_observed_value_ei: ", best_observed_value_ei)
 
     mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei)
     best_observed_ei.append(best_observed_value_ei)
@@ -143,6 +129,7 @@ for trial in range (N_TRIALS):
     for iteration in range(1, N_BATCH + 1):
         t0 = time.monotonic()
         fit_gpytorch_model(mll_ei)  
+
         #QMC sampler
         qmc_sampler = SobolQMCNormalSampler(sample_shape=torch.Size([MC_SAMPLES]))
         qEI = qExpectedImprovement(
@@ -150,31 +137,46 @@ for trial in range (N_TRIALS):
             best_f = best_observed_value_ei,
             sampler=qmc_sampler,
         )
+
         # optimize and get new observation
         new_x_ei, new_obj_ei = optimize_acqf_and_get_observation(qEI, bounds)
-        print("new_x_ei: ", new_x_ei, "new_obj_ei: ", new_obj_ei)
-
-    #     # update training points
-    #     train_x_ei = torch.cat([train_x_ei, new_x_ei])
-    #     train_obj_ei = torch.cat([train_obj_ei, new_obj_ei])
-
-    #     # update progress
-    #     best_value_ei = weighted_obj(train_x_ei).max().item()
-    #     best_observed_ei.append(best_value_ei)
         
-    #     # reinitialize the models so they are ready for fitting on next iteration
-    #     mll_ei, model_ei = initialize_model(
-    #         train_x_ei,
-    #         train_obj_ei,
-    #     )
-    #     t1 = time.monotonic()
+        # update training points
+        train_x_ei = torch.cat([train_x_ei, new_x_ei])
+        train_obj_ei = torch.cat([train_obj_ei, new_obj_ei])
+        
 
-    #     if verbose:
-    #         print(
-    #             f"\nBatch {iteration:>2}: best_value (random, qEI, qNEI) = "
-    #             f"time = {t1-t0:>4.2f}.",
-    #             end="",
-    #         )
-    #     else:
-    #         print(".", end="")
-    # best_observed_all.append(best_observed_ei)
+        # update progress
+        best_value_ei = weighted_objective(train_x_ei).max().item()
+        best_observed_ei.append(best_value_ei)
+        
+
+        # TODO: There is a warning in initialize model standardize data
+        # scaler = StandardScaler()
+        # standardized_data = scaler.fit_transform(train_obj_ei)
+        # print("standardized_data: ", standardized_data)
+
+        # reinitialize the models so they are ready for fitting on next iteration
+        mll_ei, model_ei = initialize_model(
+            train_x_ei,
+            train_obj_ei,
+        )
+        t1 = time.monotonic()
+
+        if verbose:
+            print("<---------------------------------------------------------------->")
+            print("at iteration: ", iteration)
+            print("new_x_ei: ", new_x_ei, "new_obj_ei: ", new_obj_ei)
+            print("train_x_ei: ", train_x_ei)
+            print("train_obj_ei: ", train_obj_ei)
+            print("best_value_ei: ", best_value_ei)
+            print("best_observed_ei: ", best_observed_ei)
+            print(
+                f"\nBatch {iteration:>2}: "
+                f"time = {t1-t0:>4.2f}.",
+                end="",
+            )
+            print("\n")
+        else:
+            print(".", end="")
+    best_observed_all.append(best_observed_ei)

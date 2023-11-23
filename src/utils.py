@@ -29,10 +29,8 @@ def normalise_generated_data(input_tensor, normalized_factors):
 
 def recover_generated_data(input_tensor, normalized_factors, scaled_factors):
     num_restarts, d_dim = input_tensor.shape
-    print("input_tensor: ", input_tensor.shape, "\n", input_tensor)
     output_tensor = torch.empty((num_restarts, d_dim), dtype=input_tensor.dtype)
     for i in range(num_restarts):
         for j in range(d_dim):
             output_tensor[i][j] = torch.round(input_tensor[i][j] * normalized_factors[j]) * scaled_factors[j] 
-    print("recovered output_tensor: ", output_tensor.shape, "\n", output_tensor)
     return output_tensor

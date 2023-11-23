@@ -30,7 +30,7 @@ class Constraints_Node:
 
     def initialize_self_constraints(self, indvidual_constraint):
         self.individual_constraints [0] = indvidual_constraint[0] / (self.scale * self.normalized_factor) - self.rounded_region
-        self.individual_constraints [1] = indvidual_constraint[1] / (self.scale * self.normalized_factor) + self.rounded_region
+        self.individual_constraints [1] = indvidual_constraint[1] / (self.scale * self.normalized_factor) # considering the final input to initiallize model require the input data to be in the range of [0, 1]
 
 
     def check_condition_included(self, condition):
@@ -40,7 +40,8 @@ class Constraints_Node:
         upper_bound_cond = condition[1] / (self.scale * self.normalized_factor) + self.rounded_region
         
         if lower_bound_cond < self.individual_constraints[0] or upper_bound_cond > self.individual_constraints[1]:
-            raise Exception('Condition out of range')
+            lower_bound_cond = max(lower_bound_cond, self.individual_constraints[0])
+            upper_bound_cond = min(upper_bound_cond, self.individual_constraints[1])
         tmp_condition = [lower_bound_cond, upper_bound_cond]
         if tmp_condition in self.conditions:
             return self.conditions.index(condition)
@@ -129,8 +130,6 @@ class Constraints:
         return output_tensor
             
     def get_nonlinear_inequality_constraints(self, X):
-        print("X: ", X.shape, "\n", X)
-
         if(X.shape[0] == self.dim):
             # TO be confirmed At the initial part of the optimisation, the batch size is the same as the dimension of the data.
             d_dim = self.dim
@@ -141,16 +140,13 @@ class Constraints:
             num_restarts, q_dim, d_dim = X.shape
             re_organized_x = X
         
-        print("re_organized_x: ", re_organized_x.shape, "\n", re_organized_x)
+        # print("re_organized_x: ", re_organized_x.shape, "\n", re_organized_x)
 
         data_matrix = build_matrix(re_organized_x, self, num_restarts, q_dim, d_dim)
         inequality_constraints = torch.empty((num_restarts, q_dim), dtype=X.dtype)
         for i in range(num_restarts):
             for j in range(q_dim):
                 inequality_constraints[i][j] = self.check_meet_constraint(data_matrix, i * q_dim + j)
-                print("check inequality error: ", self.check_meet_constraint(data_matrix, i * q_dim + j))
-                print("inequality_constraints: ", inequality_constraints[i][j])
-
         return inequality_constraints
 
 
