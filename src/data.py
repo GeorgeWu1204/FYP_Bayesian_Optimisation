@@ -32,8 +32,6 @@ class Data_Set:
         for i in range(len(data)):
             d_input_dic = data[i][0]
             d_input = [val for val in d_input_dic.values()]
-            # for i in range(len(d_input)):
-            #     d_input[i] = round(d_input[i] / scales[i])
             self.__dict__[tuple(d_input)] = Data_Sample(data[i], objs)
             self.scaled_factors = scales
             self.normalized_factors = normalized_factors
@@ -72,7 +70,11 @@ class Data_Set:
             constraint = rounded_constraints.tolist()
             result[i] = self.__dict__.get(tuple(constraint)).get_ppa(obj)
         return result
- 
+
+
+
+
+
 
 def read_from_data(file_name, objs, scales, normalized_factors):
     with open(file_name, 'r') as f:
@@ -81,4 +83,18 @@ def read_from_data(file_name, objs, scales, normalized_factors):
         print("objs", objs) 
         data_set = Data_Set(raw_data, objs, scales, normalized_factors)
     return data_set
+
+
+def list_all_objectives(file_name):
+    objectives = []
+    with open(file_name, 'r') as f:
+        content = f.read()
+        raw_data = ast.literal_eval(content)
+    for i in range(len(raw_data)):
+        for obj in raw_data[i][2].keys():
+            if obj not in objectives:
+                objectives.append(obj)
+    return objectives
+
+if __name__ == '__main__':
 
