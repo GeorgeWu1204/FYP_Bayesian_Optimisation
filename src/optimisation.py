@@ -19,7 +19,7 @@ DATA_SCALES = [1, 4]
 DATA_NORMALIZED_FACTOR = [6, 63]    # normalized_Factor = max_value / scale
 RAW_DATA_FILE = '../data/ppa.txt'
 NOISE_SE = 0.5
-OBJECTIVE = 'ff'
+OBJECTIVE = 'target_clock_period'
 RAW_SAMPLES = 1
 
 #BO variables

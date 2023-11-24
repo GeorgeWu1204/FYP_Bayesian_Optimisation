@@ -1,0 +1,4 @@
+|  Objective  | Max Value | Avg Cycles to Find Max |  
+|     FF      |    1629   |           5            | 
+|     LUT     |    2909   |           4            |
+|   hw_fmax   |    90.47  |           2            |

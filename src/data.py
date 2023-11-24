@@ -85,16 +85,16 @@ def read_from_data(file_name, objs, scales, normalized_factors):
     return data_set
 
 
-def list_all_objectives(file_name):
-    objectives = []
-    with open(file_name, 'r') as f:
-        content = f.read()
-        raw_data = ast.literal_eval(content)
-    for i in range(len(raw_data)):
-        for obj in raw_data[i][2].keys():
-            if obj not in objectives:
-                objectives.append(obj)
-    return objectives
+# def list_all_objectives(file_name):
+#     objectives = []
+#     with open(file_name, 'r') as f:
+#         content = f.read()
+#         raw_data = ast.literal_eval(content)
+#     for i in range(len(raw_data)):
+#         for obj in raw_data[i][2].keys():
+#             if obj not in objectives:
+#                 objectives.append(obj)
+#     return objectives
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
