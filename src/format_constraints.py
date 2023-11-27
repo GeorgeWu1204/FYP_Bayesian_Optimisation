@@ -12,7 +12,7 @@ class Constraints_Node:
         self.scale = 1
         self.conditions = []
         self.normalized_factor = 1
-        self.rounded_region = 0.5/(self.scale * self.normalized_factor)
+        self.rounded_region = 0.45/(self.scale * self.normalized_factor)
 
     def initialize_scale(self, scale):
         self.scale = scale
@@ -35,7 +35,6 @@ class Constraints_Node:
 
     def check_condition_included(self, condition):
         """Check whether the condition is included in the condition list. If not, add it to the list."""
-        
         lower_bound_cond = condition[0] / (self.scale * self.normalized_factor) - self.rounded_region
         upper_bound_cond = condition[1] / (self.scale * self.normalized_factor) + self.rounded_region
         
@@ -85,9 +84,16 @@ class Constraints:
             and_constraint.append(linked_constraint)
         self.linked_constraints.append(and_constraint)
 
-    def check_meet_constraint(self, data, X_index):
+    def check_meet_constraint(self, individual_constraint, formatted_correlated_constraints, X_index):
         #X_index : the index of the candidtate of the point.
         overall_constraint_sum = 0
+        for individual_constraint_index in range(self.dim):
+            if(individual_constraint[individual_constraint_index][X_index] <= 0):
+                #if the initial condition is not met, return the value of the constraint.
+                return individual_constraint[individual_constraint_index][X_index]
+            else:
+                overall_constraint_sum += individual_constraint[individual_constraint_index][X_index]
+        
         for or_constraints in self.linked_constraints:
             # loop through all the or_constraints sets in the linked_constraints
             max_constraint_sum = torch.tensor(NEGATIVE_PARAMETER_VALUE)
@@ -96,12 +102,12 @@ class Constraints:
                 constraint_sum = 0
                 for constraint in linked_constraint.keys():
                     # loop through all the constraints in the and_constraint
-                    if(data[constraint][linked_constraint[constraint]][X_index] <= 0):
+                    if(formatted_correlated_constraints[constraint][linked_constraint[constraint]][X_index] <= 0):
                         # constraint_sum = torch.tensor(NEGATIVE_PARAMETER_VALUE)
-                        constraint_sum = data[constraint][linked_constraint[constraint]][X_index]
+                        constraint_sum = formatted_correlated_constraints[constraint][linked_constraint[constraint]][X_index]
                         break
                     else:
-                        constraint_sum += data[constraint][linked_constraint[constraint]][X_index]
+                        constraint_sum += formatted_correlated_constraints[constraint][linked_constraint[constraint]][X_index]
                 if(constraint_sum > max_constraint_sum):
                     max_constraint_sum = constraint_sum.clone()
             if(max_constraint_sum <= 0):
@@ -122,10 +128,10 @@ class Constraints:
         output_tensor = torch.empty((num_of_start, self.dim), dtype=output_type)
         for i in range(num_of_start):
             possible_initial_tensor = torch.zeros((1, 1, self.dim), dtype=output_type)
-            data_matrix = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
-            while(self.check_meet_constraint(data_matrix, i) <= 0):
+            individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
+            while(self.check_meet_constraint(individual_constraint, correlated_constraints, i) <= 0):
                 possible_initial_tensor = torch.rand((1, 1, self.dim), dtype=output_type)
-                data_matrix = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
+                individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
             output_tensor[i] = possible_initial_tensor.squeeze()
         return output_tensor
             
@@ -142,11 +148,11 @@ class Constraints:
         
         # print("re_organized_x: ", re_organized_x.shape, "\n", re_organized_x)
 
-        data_matrix = build_matrix(re_organized_x, self, num_restarts, q_dim, d_dim)
+        individual_constraint, correlated_constraints = build_matrix(re_organized_x, self, num_restarts, q_dim, d_dim)
         inequality_constraints = torch.empty((num_restarts, q_dim), dtype=X.dtype)
         for i in range(num_restarts):
             for j in range(q_dim):
-                inequality_constraints[i][j] = self.check_meet_constraint(data_matrix, i * q_dim + j)
+                inequality_constraints[i][j] = self.check_meet_constraint(individual_constraint, correlated_constraints, i * q_dim + j)
         return inequality_constraints
 
 

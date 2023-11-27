@@ -19,7 +19,7 @@ if not osp.exists(db_name):
         loc = "**"
 
     for dbf in glob.glob(f'{loc}/ppa*.db', recursive=True):
-        #print(f"[i] loading db: '{dbf}'")
+        print(f"[i] loading db: '{dbf}'")
 
         with open(dbf, 'r') as f:
             local_db = eval(f.read())
@@ -47,8 +47,9 @@ print('number of designs: ', len(db))
 ppa_stats = { }
 for point in db:
     ppa_db_point = db[point]
-
+    print(f"{Fore.YELLOW}key: {point}{Style.RESET_ALL}")
     for k in ppa_db_point:
+
         if k not in ppa_stats: # initialize
             ppa_stats[k] = []
 

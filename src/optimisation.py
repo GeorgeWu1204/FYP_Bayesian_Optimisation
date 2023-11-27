@@ -1,7 +1,7 @@
-import os
 import torch
 import data
 import time
+import utils
 
 from format_constraints import Constraints
 from botorch.models import SingleTaskGP
@@ -14,18 +14,18 @@ from botorch.sampling.normal import SobolQMCNormalSampler
 from botorch import fit_gpytorch_model
 
 #Data variables
-DATA_DIM = 2
-DATA_SCALES = [1, 4]
-DATA_NORMALIZED_FACTOR = [6, 63]    # normalized_Factor = max_value / scale
-RAW_DATA_FILE = '../data/ppa.txt'
+DATA_DIM = 3
+DATA_SCALES = [1, 1, 1]
+DATA_NORMALIZED_FACTOR = [12, 6, 255]    # normalized_Factor = max_value / scale
+RAW_DATA_FILE = '../data/ppa_v2.db'
 NOISE_SE = 0.5
-OBJECTIVE = 'target_clock_period'
+OBJECTIVE = 'lut'
 RAW_SAMPLES = 1
 
 #BO variables
 NUM_RESTARTS = 1
 N_TRIALS = 1            # number of trials of BO (outer loop)
-N_BATCH = 10             # number of BO batches (inner loop)
+N_BATCH = 50             # number of BO batches (inner loop)
 BATCH_SIZE = 1          # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 16         # number of MC samples for qNEI
 
@@ -34,16 +34,16 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 d_type = torch.int
 t_type = torch.float64
 
-data_set = data.read_from_data(RAW_DATA_FILE, [OBJECTIVE], DATA_SCALES, DATA_NORMALIZED_FACTOR)
+data_set = data.read_data_from_db(RAW_DATA_FILE, [OBJECTIVE], DATA_SCALES, DATA_NORMALIZED_FACTOR)
 constraint_set = Constraints(DATA_DIM)
 
 #TODO : write a interface to read the constraints from file
 constraint_set.update_scale(DATA_SCALES)
 constraint_set.update_normalize_factor(DATA_NORMALIZED_FACTOR)
-
-constraint_set.update_self_constraints(0, [1, 6])
-constraint_set.update_self_constraints(1, [4, 252])
-constraint_set.update_new_constraints([{0: [1, 4], 1: [4, 4]}, {0: [5, 6], 1: [4, 252]}])
+constraint_set.update_self_constraints(0, [1, 12])
+constraint_set.update_self_constraints(1, [5, 6])
+constraint_set.update_self_constraints(2, [4, 255])
+# constraint_set.update_new_constraints([{0: [1, 4], 1: [4, 4]}, {0: [5, 6], 1: [4, 252]}])
 
 
 # define output constraints
@@ -105,9 +105,14 @@ def optimize_acqf_and_get_observation(acq_func, generated_bounds):
     new_obj = data_set.find_ppa_result(new_x, OBJECTIVE, t_type).unsqueeze(-1)
     return new_x, new_obj
 
-verbose = True
+verbose = False
+record = True
 bounds, scalas = generate_internal_bound(t_type)
 print("bounds: ", bounds, "scalas: ", scalas)
+if record:
+    print("record result, given the max value of objective: ", data_set.get_max_value(OBJECTIVE))
+    results_record = utils.recorded_training_result(OBJECTIVE, data_set.max_value[OBJECTIVE], '../test/record_result.txt')
+
 # Global Best Values
 best_observed_all = []
 #Optimisation Loop
@@ -118,13 +123,13 @@ for trial in range (N_TRIALS):
     (
         train_x_ei,
         train_obj_ei,
-        best_observed_value_ei,
+        best_value_ei,
     ) = generate_initial_data( t_type)
 
-    print("tran_x_ei: ", train_x_ei, "\ntran_obj_ei: ", train_obj_ei, "\nbest_observed_value_ei: ", best_observed_value_ei)
+    print("tran_x_ei: ", train_x_ei, "\ntran_obj_ei: ", train_obj_ei, "\nbest_observed_value_ei: ", best_value_ei)
 
     mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei)
-    best_observed_ei.append(best_observed_value_ei)
+    best_observed_ei.append(best_value_ei)
 
     for iteration in range(1, N_BATCH + 1):
         t0 = time.monotonic()
@@ -134,7 +139,7 @@ for trial in range (N_TRIALS):
         qmc_sampler = SobolQMCNormalSampler(sample_shape=torch.Size([MC_SAMPLES]))
         qEI = qExpectedImprovement(
             model = model_ei,
-            best_f = best_observed_value_ei,
+            best_f = best_value_ei,
             sampler=qmc_sampler,
         )
 
@@ -179,4 +184,9 @@ for trial in range (N_TRIALS):
             print("\n")
         else:
             print(".", end="")
+        
+        if record:
+            results_record.record(iteration, new_obj_ei.item(), best_value_ei, t1-t0)
     best_observed_all.append(best_observed_ei)
+if record:
+    results_record.store()
