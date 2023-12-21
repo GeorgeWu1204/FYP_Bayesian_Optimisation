@@ -30,8 +30,8 @@ RAW_DATA_FILE = '../data/ppa_v2.db'
 # RAW_DATA_FILE = '../data/ppa.txt'
 
 NOISE_SE = 0.5
-OBJECTIVES = ['lut']
-OPTIMISE_DIRECTION = {'lut': 'minimise'}
+
+OBJECTIVES = {'lut': 'minimise'}
 RAW_SAMPLES = 1
 
 #BO variables
@@ -46,7 +46,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 d_type = torch.int
 t_type = torch.float64
 
-data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES, OPTIMISE_DIRECTION, DATA_SCALES, DATA_NORMALIZED_FACTOR)
+data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES, DATA_SCALES, DATA_NORMALIZED_FACTOR)
 # data_set = data.read_data_from_txt(RAW_DATA_FILE, OBJECTIVES, DATA_SCALES, DATA_NORMALIZED_FACTOR)
 constraint_set = Constraints(DATA_DIM)
 
@@ -177,8 +177,8 @@ for trial in range (1, N_TRIALS + 1):
         if verbose:
             print(f"{Fore.YELLOW}Iteration: {iteration}{Style.RESET_ALL}")
             print(f"{Fore.GREEN}new x: {new_x_ei[0]}  == > new y: {new_obj_ei}{Style.RESET_ALL}")
-            for obj in OPTIMISE_DIRECTION.keys():
-                if(OPTIMISE_DIRECTION[obj] == 'minimise'):
+            for obj in OBJECTIVES.keys():
+                if(OBJECTIVES[obj] == 'minimise'):
                     print(f"{Fore.RED}best_value_{obj}: {-1 * best_value_ei}{Style.RESET_ALL}")
                 else:
                     print(f"{Fore.RED}best_value_{obj}: {best_value_ei}{Style.RESET_ALL}")
@@ -187,16 +187,16 @@ for trial in range (1, N_TRIALS + 1):
         
         if record:
             #TODO: prepare for multi objectives
-            for obj in OPTIMISE_DIRECTION.keys():
-                if(OPTIMISE_DIRECTION[obj] == 'minimise'):
+            for obj in OBJECTIVES.keys():
+                if(OBJECTIVES[obj] == 'minimise'):
                     tmp_best_value_ei = {obj: -1 * best_value_ei}
                     tmp_new_obj_ei = {obj: -1 * new_obj_ei.item()}
                 else:
                     tmp_best_value_ei = {obj: best_value_ei}
                     tmp_new_obj_ei = {obj: new_obj_ei.item()}
             results_record.record(iteration, tmp_best_value_ei, tmp_new_obj_ei, t1-t0)
-    for obj in OPTIMISE_DIRECTION.keys():
-        if(OPTIMISE_DIRECTION[obj] == 'minimise'):
+    for obj in OBJECTIVES.keys():
+        if(OBJECTIVES[obj] == 'minimise'):
             best_observed_all.append(-1 * best_value_ei)
         else:
             best_observed_all.append(best_value_ei)

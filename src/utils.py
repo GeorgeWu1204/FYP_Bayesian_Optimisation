@@ -49,7 +49,7 @@ class recorded_training_result:
         self.history = {}
         self.iterations = 0
         self.record_file_name = record_file_name
-        for i in objectives:
+        for i in objectives.keys():
             self.history[i] = {}
     def record(self, iteration, current_best_vals, current_vals, time):
         #Note prepare for multi objectives
@@ -64,7 +64,7 @@ class recorded_training_result:
                 f.write(f"obj: {obj}\n")
                 f.write(f"best: {self.best_vals[obj]}\n")
                 for i in self.best_pairs[obj]:
-                    f.write(f"pair : {i} \n")
+                    f.write(f"best pair : {i} \n")
                 f.write("iteration, current_best_val, current_val, time\n")
                 for i in range(1, self.iterations + 1):
                     total_time += self.history[obj][i][2]

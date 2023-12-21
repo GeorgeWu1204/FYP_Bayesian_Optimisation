@@ -19,13 +19,13 @@ class Data_Sample:
             self.Constraints = data[0]
             self.Cycle_count = data[1]
             self.PPA = {}
-            for obj in objs:
+            for obj in objs.keys():
                 self.PPA[obj] = data[2][obj]
         elif (data_set_type == 'db'):
             self.Constraints = data[0]
             self.Cycle_count = None
             self.PPA = {}
-            for obj in objs:
+            for obj in objs.keys():
                 self.PPA[obj] = data[1][obj]
     def print_constraints(self):
         print("Constraints:")
@@ -45,11 +45,11 @@ class Data_Sample:
         return self.PPA[obj]    
 
 class Data_Set:
-    def __init__(self, data, objs, objs_direct, scales, normalized_factors, data_set_type = 'txt'):
+    def __init__(self, data, objs, scales, normalized_factors, data_set_type = 'txt'):
         val_list = {}
         self.best_value = {}
         self.best_pair = {}
-        self.objs_direct = objs_direct
+        self.objs_direct = objs
 
         if data_set_type == 'txt':
             for i in range(len(data)):
@@ -59,17 +59,17 @@ class Data_Set:
                 self.scaled_factors = scales
                 self.normalized_factors = normalized_factors
         elif data_set_type == 'db':
-            for obj in objs:
+            for obj in objs.keys():
                 val_list[obj] = []
             for i in data.keys():
                 self.__dict__[i] = Data_Sample([i, data[i]], objs, data_set_type)
                 self.scaled_factors = scales
                 self.normalized_factors = normalized_factors
-                for obj in objs_direct.keys():
+                for obj in objs.keys():
                     val_list[obj].append(data[i][obj])
-            for obj in objs_direct.keys():
+            for obj in objs.keys():
                 
-                if objs_direct[obj] == 'minimise':
+                if objs[obj] == 'minimise':
                     self.best_value[obj] = min(val_list[obj])
                 else:
                     self.best_value[obj] = max(val_list[obj])
@@ -88,19 +88,19 @@ class Data_Set:
     def find_ppa_result(self, constraints, objs, dtype):
         """find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
         # TODO : prepare for multi objectives
-        obj = objs[0]
-        denormalized_constraints = recover_generated_data(constraints, self.normalized_factors, self.scaled_factors)
-        num_restart = denormalized_constraints.shape[0]
-        result = torch.zeros(num_restart, dtype=dtype)
-        for i in range(0, num_restart):
-            rounded_constraints = denormalized_constraints[i].round()
-            constraint = rounded_constraints.tolist()
-            try:
-                result[i] = self.__dict__.get(tuple(constraint)).get_ppa(obj)
-            except:
-                result[i] = 0
-        if self.objs_direct[obj] == 'minimise':
-            result = -result
+        for obj in objs.keys():
+            denormalized_constraints = recover_generated_data(constraints, self.normalized_factors, self.scaled_factors)
+            num_restart = denormalized_constraints.shape[0]
+            result = torch.zeros(num_restart, dtype=dtype)
+            for i in range(0, num_restart):
+                rounded_constraints = denormalized_constraints[i].round()
+                constraint = rounded_constraints.tolist()
+                try:
+                    result[i] = self.__dict__.get(tuple(constraint)).get_ppa(obj)
+                except:
+                    result[i] = 0
+            if self.objs_direct[obj] == 'minimise':
+                result = -result
         return result
 
 
@@ -112,7 +112,7 @@ def read_data_from_txt(file_name, objs, scales, normalized_factors):
         data_set = Data_Set(raw_data, objs, scales, normalized_factors, 'txt')
     return data_set
 
-def read_data_from_db(db_name, objs, objs_direct, scales, normalized_factors):
+def read_data_from_db(db_name, objs, scales, normalized_factors):
     db = {}
     if not osp.exists(db_name):
         print(f"[i] generating: '{db_name}'")
@@ -135,7 +135,7 @@ def read_data_from_db(db_name, objs, objs_direct, scales, normalized_factors):
         print(f"[i] loading: '{db_name}'")
         with open(db_name, 'rb') as f:
             db.update(pickle.load(f))
-    data_set = Data_Set(db, objs, objs_direct, scales, normalized_factors, 'db')
+    data_set = Data_Set(db, objs, scales, normalized_factors, 'db')
     return data_set
     
 
