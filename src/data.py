@@ -45,10 +45,13 @@ class Data_Sample:
         return self.PPA[obj]    
 
 class Data_Set:
-    def __init__(self, data, objs, scales, normalized_factors, data_set_type = 'txt'):
+    def __init__(self, data, objs, objs_direct, scales, normalized_factors, data_set_type = 'txt'):
+        val_list = {}
+        self.best_value = {}
+        self.best_pair = {}
+        self.objs_direct = objs_direct
+
         if data_set_type == 'txt':
-            val_list = {}
-            self.max_value = {}
             for i in range(len(data)):
                 d_input_dic = data[i][0]
                 d_input = [val for val in d_input_dic.values()]
@@ -56,19 +59,23 @@ class Data_Set:
                 self.scaled_factors = scales
                 self.normalized_factors = normalized_factors
         elif data_set_type == 'db':
-            val_list = {}
-            self.max_value = {}
             for obj in objs:
                 val_list[obj] = []
             for i in data.keys():
                 self.__dict__[i] = Data_Sample([i, data[i]], objs, data_set_type)
                 self.scaled_factors = scales
                 self.normalized_factors = normalized_factors
-                #find max values for each objective
-                for obj in objs:
+                for obj in objs_direct.keys():
                     val_list[obj].append(data[i][obj])
-            for obj in objs:
-                self.max_value[obj] = max(val_list[obj])
+            for obj in objs_direct.keys():
+                
+                if objs_direct[obj] == 'minimise':
+                    self.best_value[obj] = min(val_list[obj])
+                else:
+                    self.best_value[obj] = max(val_list[obj])
+                
+                self.best_pair[obj] = [[i] for i in data.keys() if data[i][obj] == self.best_value[obj]][0]
+    
     def __len__(self):
         return len(self.__dict__)
     
@@ -78,18 +85,23 @@ class Data_Set:
             constraints.append(self.__dict__.get(i).Constraints)
         return constraints
     
-    def find_ppa_result(self, constraints, obj, dtype):
-        # constraints = num_constraints * d_dims
+    def find_ppa_result(self, constraints, objs, dtype):
+        """find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
+        # TODO : prepare for multi objectives
+        obj = objs[0]
         denormalized_constraints = recover_generated_data(constraints, self.normalized_factors, self.scaled_factors)
-        num_constraints = denormalized_constraints.shape[0]
-        result = torch.zeros(num_constraints, dtype=dtype)
-        for i in range(0, num_constraints):
+        num_restart = denormalized_constraints.shape[0]
+        result = torch.zeros(num_restart, dtype=dtype)
+        for i in range(0, num_restart):
             rounded_constraints = denormalized_constraints[i].round()
             constraint = rounded_constraints.tolist()
-            result[i] = self.__dict__.get(tuple(constraint)).get_ppa(obj)
+            try:
+                result[i] = self.__dict__.get(tuple(constraint)).get_ppa(obj)
+            except:
+                result[i] = 0
+        if self.objs_direct[obj] == 'minimise':
+            result = -result
         return result
-    def get_max_value(self, obj):
-        return self.max_value[obj]
 
 
 def read_data_from_txt(file_name, objs, scales, normalized_factors):
@@ -100,7 +112,7 @@ def read_data_from_txt(file_name, objs, scales, normalized_factors):
         data_set = Data_Set(raw_data, objs, scales, normalized_factors, 'txt')
     return data_set
 
-def read_data_from_db(db_name, objs, scales, normalized_factors):
+def read_data_from_db(db_name, objs, objs_direct, scales, normalized_factors):
     db = {}
     if not osp.exists(db_name):
         print(f"[i] generating: '{db_name}'")
@@ -123,26 +135,11 @@ def read_data_from_db(db_name, objs, scales, normalized_factors):
         print(f"[i] loading: '{db_name}'")
         with open(db_name, 'rb') as f:
             db.update(pickle.load(f))
-    
-    test = (5, 6, 192)
-    print(f"{Fore.YELLOW}key: {test}{Style.RESET_ALL}")
-    print(f"{Fore.GREEN}values: {db[test]}{Style.RESET_ALL}")
-    data_set = Data_Set(db, objs, scales, normalized_factors, 'db')
+    data_set = Data_Set(db, objs, objs_direct, scales, normalized_factors, 'db')
     return data_set
     
 
 
-
-# def list_all_objectives(file_name):
-#     objectives = []
-#     with open(file_name, 'r') as f:
-#         content = f.read()
-#         raw_data = ast.literal_eval(content)
-#     for i in range(len(raw_data)):
-#         for obj in raw_data[i][2].keys():
-#             if obj not in objectives:
-#                 objectives.append(obj)
-#     return objectives
 
 if __name__ == '__main__':
     read_data_from_db("../data/ppa_v2.db", ['lut'], [1, 1, 1], [1, 1, 1])

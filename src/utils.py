@@ -9,6 +9,7 @@ def build_matrix(data, constraints, num_restarts, q_dim, d_dim):
 
     formatted_correlated_constraints = {}
     individual_constraint = torch.empty((d_dim, num_restarts * q_dim))
+    
     flat_data = data.flatten()
 
     for i in range(d_dim):
@@ -41,20 +42,30 @@ def recover_generated_data(input_tensor, normalized_factors, scaled_factors):
     return output_tensor
 
 class recorded_training_result:
-    def __init__(self, objective, max_value, record_file_name):
-        self.obj  = objective
-        self.max  = max_value
+    def __init__(self, objectives, best_values, best_pairs, record_file_name):
+        self.objs  = objectives
+        self.best_vals  = best_values
+        self.best_pairs = best_pairs
         self.history = {}
+        self.iterations = 0
         self.record_file_name = record_file_name
-    def record(self, iteration, current_best_val, current_val, time):
-        self.history[iteration] = [current_best_val, current_val, time]
+        for i in objectives:
+            self.history[i] = {}
+    def record(self, iteration, current_best_vals, current_vals, time):
+        #Note prepare for multi objectives
+        self.iterations = iteration
+        for obj in self.objs:
+            self.history[obj][iteration] = [current_best_vals[obj], current_vals[obj], time]
     
     def store(self):
         total_time = 0
         with open(self.record_file_name, 'w') as f:
-            f.write(f"obj: {self.obj}\n")
-            f.write(f"max: {self.max}\n")
-            f.write("iteration, current_best_val, current_val, time\n")
-            for i in self.history:
-                total_time += self.history[i][2]
-                f.write(f"{i}, {self.history[i][0]:>2}, {self.history[i][1]}, {total_time:>4.2f}\n")
+            for obj in self.objs:
+                f.write(f"obj: {obj}\n")
+                f.write(f"best: {self.best_vals[obj]}\n")
+                for i in self.best_pairs[obj]:
+                    f.write(f"pair : {i} \n")
+                f.write("iteration, current_best_val, current_val, time\n")
+                for i in range(1, self.iterations + 1):
+                    total_time += self.history[obj][i][2]
+                    f.write(f"{i}, {self.history[obj][i][0]:>2}, {self.history[obj][i][1]}, {total_time:>4.2f}\n")

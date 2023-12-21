@@ -2,6 +2,8 @@ import torch
 import data
 import time
 import utils
+from pprint import PrettyPrinter
+from colorama import Fore, Back, Style
 
 from format_constraints import Constraints
 from botorch.models import SingleTaskGP
@@ -11,20 +13,30 @@ from gpytorch.mlls import ExactMarginalLogLikelihood
 from botorch.optim import optimize_acqf
 from botorch.acquisition import qExpectedImprovement
 from botorch.sampling.normal import SobolQMCNormalSampler
-from botorch import fit_gpytorch_model
+from botorch.fit import fit_gpytorch_model
 
 #Data variables
+
+#Data_set 1
 DATA_DIM = 3
 DATA_SCALES = [1, 1, 1]
 DATA_NORMALIZED_FACTOR = [12, 6, 255]    # normalized_Factor = max_value / scale
 RAW_DATA_FILE = '../data/ppa_v2.db'
+
+#Data_set 2
+# DATA_DIM = 2
+# DATA_SCALES = [1, 4]
+# DATA_NORMALIZED_FACTOR = [6, 63]    # normalized_Factor = max_value / scale
+# RAW_DATA_FILE = '../data/ppa.txt'
+
 NOISE_SE = 0.5
-OBJECTIVE = 'lut'
+OBJECTIVES = ['lut']
+OPTIMISE_DIRECTION = {'lut': 'minimise'}
 RAW_SAMPLES = 1
 
 #BO variables
-NUM_RESTARTS = 1
-N_TRIALS = 1            # number of trials of BO (outer loop)
+NUM_RESTARTS = 2
+N_TRIALS = 4            # number of trials of BO (outer loop)
 N_BATCH = 50             # number of BO batches (inner loop)
 BATCH_SIZE = 1          # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 16         # number of MC samples for qNEI
@@ -34,32 +46,32 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 d_type = torch.int
 t_type = torch.float64
 
-data_set = data.read_data_from_db(RAW_DATA_FILE, [OBJECTIVE], DATA_SCALES, DATA_NORMALIZED_FACTOR)
+data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES, OPTIMISE_DIRECTION, DATA_SCALES, DATA_NORMALIZED_FACTOR)
+# data_set = data.read_data_from_txt(RAW_DATA_FILE, OBJECTIVES, DATA_SCALES, DATA_NORMALIZED_FACTOR)
 constraint_set = Constraints(DATA_DIM)
 
 #TODO : write a interface to read the constraints from file
 constraint_set.update_scale(DATA_SCALES)
 constraint_set.update_normalize_factor(DATA_NORMALIZED_FACTOR)
+
+#Data_set 1
 constraint_set.update_self_constraints(0, [1, 12])
 constraint_set.update_self_constraints(1, [5, 6])
 constraint_set.update_self_constraints(2, [4, 255])
+
+#Data_set 2
+# constraint_set.update_self_constraints(0, [1, 6])
+# constraint_set.update_self_constraints(1, [4, 252])
 # constraint_set.update_new_constraints([{0: [1, 4], 1: [4, 4]}, {0: [5, 6], 1: [4, 252]}])
 
-
-# define output constraints
-def weighted_objective(X):
-    """Feasibility weighted objective; zero if not feasible."""
-    # if samples != None:
-    #     print("samples: ", samples.shape, "\n", samples)
-    return data_set.find_ppa_result(X, OBJECTIVE, t_type)
 
 # define models and data
 
 def generate_initial_data(data_type):
     """generate training data"""
     train_x = constraint_set.create_initial_data(NUM_RESTARTS, data_type)
-    exact_obj = data_set.find_ppa_result(train_x, OBJECTIVE, data_type).unsqueeze(-1)  # add additional dimension at the last position
-    best_observed_value = weighted_objective(train_x).max().item()
+    exact_obj = data_set.find_ppa_result(train_x, OBJECTIVES, data_type).unsqueeze(-1)  # add additional dimension at the last position
+    best_observed_value = exact_obj.max().item()
     return train_x, exact_obj, best_observed_value
 
 def generate_internal_bound(data_type):
@@ -80,16 +92,11 @@ def initialize_model(train_x, train_obj, state_dict=None):
         noise_free_model.load_state_dict(state_dict)
     return mll, noise_free_model
 
-def ic_generator(*args, **kwargs):
-    # generate training data
-    train_x = constraint_set.create_initial_data(NUM_RESTARTS, t_type)
-    return train_x
 
 def optimize_acqf_and_get_observation(acq_func, generated_bounds):
     """Optimizes the acquisition function, and returns a new candidate and a noisy observation."""
 
-    sampled_initial_conditions = ic_generator().unsqueeze(1)
-    sampled_initial_conditions.requires_grad = True
+    sampled_initial_conditions = constraint_set.create_initial_data(NUM_RESTARTS, t_type).unsqueeze(1)
     # optimize
     candidates, _ = optimize_acqf(
         acq_function=acq_func,
@@ -102,38 +109,37 @@ def optimize_acqf_and_get_observation(acq_func, generated_bounds):
     )
     # observe new values
     new_x = candidates.detach()
-    new_obj = data_set.find_ppa_result(new_x, OBJECTIVE, t_type).unsqueeze(-1)
+    new_obj = data_set.find_ppa_result(new_x, OBJECTIVES, t_type).unsqueeze(-1)
     return new_x, new_obj
 
-verbose = False
+verbose = True
 record = True
 bounds, scalas = generate_internal_bound(t_type)
 print("bounds: ", bounds, "scalas: ", scalas)
 if record:
-    print("record result, given the max value of objective: ", data_set.get_max_value(OBJECTIVE))
-    results_record = utils.recorded_training_result(OBJECTIVE, data_set.max_value[OBJECTIVE], '../test/record_result.txt')
+    results_record = utils.recorded_training_result(OBJECTIVES, data_set.best_value, data_set.best_pair, '../test/record_result.txt')
 
 # Global Best Values
 best_observed_all = []
+
 #Optimisation Loop
-for trial in range (N_TRIALS):
-    print(f"\nTrial {trial:>2} of {N_TRIALS} ", end="")
+for trial in range (1, N_TRIALS + 1):
+    print(f"\nTrial {trial:>2} of {N_TRIALS} ")
     best_observed_ei = []
 
-    (
-        train_x_ei,
+    (   train_x_ei,
         train_obj_ei,
         best_value_ei,
-    ) = generate_initial_data( t_type)
-
-    print("tran_x_ei: ", train_x_ei, "\ntran_obj_ei: ", train_obj_ei, "\nbest_observed_value_ei: ", best_value_ei)
+    ) = generate_initial_data(t_type)
 
     mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei)
+
     best_observed_ei.append(best_value_ei)
 
     for iteration in range(1, N_BATCH + 1):
         t0 = time.monotonic()
-        fit_gpytorch_model(mll_ei)  
+        # fit the models
+        fit_gpytorch_model(mll_ei)
 
         #QMC sampler
         qmc_sampler = SobolQMCNormalSampler(sample_shape=torch.Size([MC_SAMPLES]))
@@ -152,7 +158,7 @@ for trial in range (N_TRIALS):
         
 
         # update progress
-        best_value_ei = weighted_objective(train_x_ei).max().item()
+        best_value_ei = train_obj_ei.max().item()
         best_observed_ei.append(best_value_ei)
         
 
@@ -169,24 +175,32 @@ for trial in range (N_TRIALS):
         t1 = time.monotonic()
 
         if verbose:
-            print("<---------------------------------------------------------------->")
-            print("at iteration: ", iteration)
-            print("new_x_ei: ", new_x_ei, "new_obj_ei: ", new_obj_ei)
-            print("train_x_ei: ", train_x_ei)
-            print("train_obj_ei: ", train_obj_ei)
-            print("best_value_ei: ", best_value_ei)
-            print("best_observed_ei: ", best_observed_ei)
-            print(
-                f"\nBatch {iteration:>2}: "
-                f"time = {t1-t0:>4.2f}.",
-                end="",
-            )
-            print("\n")
+            print(f"{Fore.YELLOW}Iteration: {iteration}{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}new x: {new_x_ei[0]}  == > new y: {new_obj_ei}{Style.RESET_ALL}")
+            for obj in OPTIMISE_DIRECTION.keys():
+                if(OPTIMISE_DIRECTION[obj] == 'minimise'):
+                    print(f"{Fore.RED}best_value_{obj}: {-1 * best_value_ei}{Style.RESET_ALL}")
+                else:
+                    print(f"{Fore.RED}best_value_{obj}: {best_value_ei}{Style.RESET_ALL}")
         else:
             print(".", end="")
         
         if record:
-            results_record.record(iteration, new_obj_ei.item(), best_value_ei, t1-t0)
-    best_observed_all.append(best_observed_ei)
+            #TODO: prepare for multi objectives
+            for obj in OPTIMISE_DIRECTION.keys():
+                if(OPTIMISE_DIRECTION[obj] == 'minimise'):
+                    tmp_best_value_ei = {obj: -1 * best_value_ei}
+                    tmp_new_obj_ei = {obj: -1 * new_obj_ei.item()}
+                else:
+                    tmp_best_value_ei = {obj: best_value_ei}
+                    tmp_new_obj_ei = {obj: new_obj_ei.item()}
+            results_record.record(iteration, tmp_best_value_ei, tmp_new_obj_ei, t1-t0)
+    for obj in OPTIMISE_DIRECTION.keys():
+        if(OPTIMISE_DIRECTION[obj] == 'minimise'):
+            best_observed_all.append(-1 * best_value_ei)
+        else:
+            best_observed_all.append(best_value_ei)
+    
+    print(f"{Fore.BLUE}Best value found: {best_observed_all}{Style.RESET_ALL}")
 if record:
     results_record.store()

@@ -1,9 +1,11 @@
-from settings import MAX_PARAMETER_VALUE, NEGATIVE_PARAMETER_VALUE
+
 import torch
 import numpy as np
 import random
 from utils import build_matrix, normalise_generated_data
 
+MAX_PARAMETER_VALUE = 1000
+NEGATIVE_PARAMETER_VALUE = -1000
 
 class Constraints_Node:
     def __init__(self, index):
@@ -127,9 +129,10 @@ class Constraints:
         q_dim = 1
         output_tensor = torch.empty((num_of_start, self.dim), dtype=output_type)
         for i in range(num_of_start):
+            # create initial data iteratively for num_of_start times
             possible_initial_tensor = torch.zeros((1, 1, self.dim), dtype=output_type)
             individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
-            while(self.check_meet_constraint(individual_constraint, correlated_constraints, i) <= 0):
+            while(self.check_meet_constraint(individual_constraint, correlated_constraints, 0) <= 0):
                 possible_initial_tensor = torch.rand((1, 1, self.dim), dtype=output_type)
                 individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
             output_tensor[i] = possible_initial_tensor.squeeze()
