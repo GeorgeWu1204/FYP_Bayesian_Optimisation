@@ -2,13 +2,14 @@ import torch
 import data
 import time
 import utils
-from pprint import PrettyPrinter
 from colorama import Fore, Back, Style
 
 from format_constraints import Constraints
 from botorch.models import SingleTaskGP
+from botorch.models.model_list_gp_regression import ModelListGP
 from botorch.models.transforms.outcome import Standardize
 from gpytorch.mlls import ExactMarginalLogLikelihood
+from gpytorch.mlls.sum_marginal_log_likelihood import SumMarginalLogLikelihood
 
 from botorch.optim import optimize_acqf
 from botorch.acquisition import qExpectedImprovement
@@ -36,8 +37,8 @@ RAW_SAMPLES = 1
 
 #BO variables
 NUM_RESTARTS = 2
-N_TRIALS = 4            # number of trials of BO (outer loop)
-N_BATCH = 50             # number of BO batches (inner loop)
+N_TRIALS = 2            # number of trials of BO (outer loop)
+N_BATCH = 10             # number of BO batches (inner loop)
 BATCH_SIZE = 1          # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 16         # number of MC samples for qNEI
 
@@ -70,7 +71,7 @@ constraint_set.update_self_constraints(2, [4, 255])
 def generate_initial_data(data_type):
     """generate training data"""
     train_x = constraint_set.create_initial_data(NUM_RESTARTS, data_type)
-    exact_obj = data_set.find_ppa_result(train_x, OBJECTIVES, data_type).unsqueeze(-1)  # add additional dimension at the last position
+    exact_obj = data_set.find_ppa_result(train_x, OBJECTIVES, data_type)
     best_observed_value = exact_obj.max().item()
     return train_x, exact_obj, best_observed_value
 
@@ -83,14 +84,17 @@ def generate_internal_bound(data_type):
     return bounds, scalas.squeeze()
 
 
-def initialize_model(train_x, train_obj, state_dict=None):
+def initialize_model(train_x, train_obj):
     """define models for objective and constraint"""
-    ### SingleTaskGP ###
-    noise_free_model = SingleTaskGP(train_x, train_obj, outcome_transform=Standardize(m=1))
-    mll = ExactMarginalLogLikelihood(noise_free_model.likelihood, noise_free_model)
-    if state_dict is not None:
-        noise_free_model.load_state_dict(state_dict)
-    return mll, noise_free_model
+    ### Model selection: When multiple independent output training on the same data, otherwise MultiTaskGP ###
+    models = []
+    for obj_index in range(len(OBJECTIVES)): 
+        train_y = train_obj[..., obj_index : obj_index + 1]
+        models.append(SingleTaskGP(train_x, train_y, outcome_transform=Standardize(m=1)))
+    model = ModelListGP(*models)
+    mll = SumMarginalLogLikelihood(model.likelihood, model)
+    # mll = ExactMarginalLogLikelihood(noise_free_model.likelihood, noise_free_model)
+    return mll, model
 
 
 def optimize_acqf_and_get_observation(acq_func, generated_bounds):
@@ -109,7 +113,7 @@ def optimize_acqf_and_get_observation(acq_func, generated_bounds):
     )
     # observe new values
     new_x = candidates.detach()
-    new_obj = data_set.find_ppa_result(new_x, OBJECTIVES, t_type).unsqueeze(-1)
+    new_obj = data_set.find_ppa_result(new_x, OBJECTIVES, t_type)
     return new_x, new_obj
 
 verbose = True
@@ -143,6 +147,7 @@ for trial in range (1, N_TRIALS + 1):
 
         #QMC sampler
         qmc_sampler = SobolQMCNormalSampler(sample_shape=torch.Size([MC_SAMPLES]))
+        
         qEI = qExpectedImprovement(
             model = model_ei,
             best_f = best_value_ei,

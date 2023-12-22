@@ -87,7 +87,8 @@ class Data_Set:
     
     def find_ppa_result(self, constraints, objs, dtype):
         """find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
-        # TODO : prepare for multi objectives
+        results = torch.empty((len(objs), 1), dtype=dtype)
+        obj_index = 0
         for obj in objs.keys():
             denormalized_constraints = recover_generated_data(constraints, self.normalized_factors, self.scaled_factors)
             num_restart = denormalized_constraints.shape[0]
@@ -101,7 +102,9 @@ class Data_Set:
                     result[i] = 0
             if self.objs_direct[obj] == 'minimise':
                 result = -result
-        return result
+            results[obj_index] = result
+            obj_index += 1
+        return results
 
 
 def read_data_from_txt(file_name, objs, scales, normalized_factors):
