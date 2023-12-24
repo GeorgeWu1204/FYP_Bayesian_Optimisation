@@ -2,7 +2,7 @@
 import torch
 import numpy as np
 import random
-from utils import build_matrix, normalise_generated_data
+from utils import build_matrix
 
 MAX_PARAMETER_VALUE = 1000
 NEGATIVE_PARAMETER_VALUE = -1000
@@ -140,7 +140,7 @@ class Constraints:
             
     def get_nonlinear_inequality_constraints(self, X):
         if(X.shape[0] == self.dim):
-            # TO be confirmed At the initial part of the optimisation, the batch size is the same as the dimension of the data.
+            # To be confirmed At the initial part of the optimisation, the batch size is the same as the dimension of the data.
             d_dim = self.dim
             q_dim = 1       #nonlinear_inequality has restricted the batch size to be 1.
             num_restarts = round(X.shape[0]/(d_dim * q_dim)) 
@@ -148,8 +148,6 @@ class Constraints:
         else:
             num_restarts, q_dim, d_dim = X.shape
             re_organized_x = X
-        
-        # print("re_organized_x: ", re_organized_x.shape, "\n", re_organized_x)
 
         individual_constraint, correlated_constraints = build_matrix(re_organized_x, self, num_restarts, q_dim, d_dim)
         inequality_constraints = torch.empty((num_restarts, q_dim), dtype=X.dtype)
@@ -167,8 +165,6 @@ if __name__ == '__main__':
     c.update_self_constraints(1, [4, 252])
     c.update_new_constraints([{0: [1, 4], 1: [4, 4]}, {0: [4, 6], 1: [4, 252]}])
     c.update_scale(1, 4)
-
-    # tensor
 
     tensor = torch.tensor([[[3, 4]]])
     print(tensor.shape)

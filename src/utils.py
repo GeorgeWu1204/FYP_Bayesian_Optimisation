@@ -25,7 +25,7 @@ def build_matrix(data, constraints, num_restarts, q_dim, d_dim):
             formatted_correlated_constraints[i] = cal_condition
     return individual_constraint, formatted_correlated_constraints
 
-def normalise_generated_data(input_tensor, normalized_factors):
+def normalise_input_data(input_tensor, normalized_factors):
     num_restarts, d_dim = input_tensor.shape
     output_tensor = torch.empty((num_restarts, d_dim), dtype=input_tensor.dtype)
     for i in range(num_restarts):
@@ -33,13 +33,33 @@ def normalise_generated_data(input_tensor, normalized_factors):
             output_tensor[i][j] = input_tensor[i][j] / normalized_factors[j]
     return output_tensor
 
-def recover_generated_data(input_tensor, normalized_factors, scaled_factors):
+def recover_input_data(input_tensor, normalized_factors, scaled_factors):
     num_restarts, d_dim = input_tensor.shape
     output_tensor = torch.empty((num_restarts, d_dim), dtype=input_tensor.dtype)
     for i in range(num_restarts):
         for j in range(d_dim):
             output_tensor[i][j] = torch.round(input_tensor[i][j] * normalized_factors[j]) * scaled_factors[j] 
     return output_tensor
+
+def normalise_output_data(input_tensor, normalized_factors):
+    batch_dim, num_restarts, obj_m = input_tensor.shape
+    output_tensor = torch.empty((batch_dim, num_restarts, obj_m), dtype=input_tensor.dtype)
+    for b in range(batch_dim):
+        for i in range(obj_m):
+            for j in range(num_restarts):
+                output_tensor[b][j][i] = input_tensor[b][j][i] / normalized_factors[b, i]
+    return output_tensor
+
+def recover_output_data(input_tensor, normalized_factors):
+    # Note: not sure if this is correct, as there might be a rounding problem
+    obj_m, num_restarts = input_tensor.shape
+    output_tensor = torch.empty((obj_m, num_restarts), dtype=input_tensor.dtype)
+    for i in range(obj_m):
+        for j in range(num_restarts):
+            output_tensor[i][j] = input_tensor[i][j] * normalized_factors[i]
+    return output_tensor
+
+
 
 class recorded_training_result:
     def __init__(self, objectives, best_values, best_pairs, record_file_name):

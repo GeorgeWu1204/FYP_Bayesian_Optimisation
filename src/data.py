@@ -1,6 +1,5 @@
 import ast
 import torch
-import statistics
 from pprint import PrettyPrinter
 from colorama import Fore, Back, Style
 import glob
@@ -8,10 +7,7 @@ import sys
 import pickle
 import os.path as osp
 # Read the file
-from utils import recover_generated_data
-
-pp = PrettyPrinter(indent=4)
-
+from utils import recover_input_data
 
 class Data_Sample:
     def __init__(self, data, objs, data_set_type):
@@ -49,7 +45,9 @@ class Data_Set:
         val_list = {}
         self.best_value = {}
         self.best_pair = {}
+        self.worst_value = {}
         self.objs_direct = objs
+        self.output_normalised_factors = {}
 
         if data_set_type == 'txt':
             for i in range(len(data)):
@@ -68,13 +66,21 @@ class Data_Set:
                 for obj in objs.keys():
                     val_list[obj].append(data[i][obj])
             for obj in objs.keys():
-                
+
                 if objs[obj] == 'minimise':
                     self.best_value[obj] = min(val_list[obj])
+                    self.worst_value[obj] = max(val_list[obj])
                 else:
                     self.best_value[obj] = max(val_list[obj])
-                
+                    self.worst_value[obj] = min(val_list[obj])
+
                 self.best_pair[obj] = [[i] for i in data.keys() if data[i][obj] == self.best_value[obj]][0]
+                
+                if self.best_value[obj] == self.worst_value[obj]:
+                    # if the best value is the same as the worst value, then the normalised factor is 1
+                    self.output_normalised_factors[obj] = 1.0
+                else:
+                    self.output_normalised_factors[obj] = abs(self.best_value[obj] - self.worst_value[obj])
     
     def __len__(self):
         return len(self.__dict__)
@@ -85,25 +91,26 @@ class Data_Set:
             constraints.append(self.__dict__.get(i).Constraints)
         return constraints
     
-    def find_ppa_result(self, constraints, objs, dtype):
+    def find_ppa_result(self, sample_inputs, batch_size, objs, dtype):
         """find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
-        results = torch.empty((len(objs), 1), dtype=dtype)
+        num_restart= sample_inputs.shape[0]
+        results = torch.empty((batch_size, num_restart, len(objs)), dtype=dtype)
         obj_index = 0
-        for obj in objs.keys():
-            denormalized_constraints = recover_generated_data(constraints, self.normalized_factors, self.scaled_factors)
-            num_restart = denormalized_constraints.shape[0]
-            result = torch.zeros(num_restart, dtype=dtype)
-            for i in range(0, num_restart):
-                rounded_constraints = denormalized_constraints[i].round()
-                constraint = rounded_constraints.tolist()
-                try:
-                    result[i] = self.__dict__.get(tuple(constraint)).get_ppa(obj)
-                except:
-                    result[i] = 0
-            if self.objs_direct[obj] == 'minimise':
-                result = -result
-            results[obj_index] = result
-            obj_index += 1
+        for batch in range(batch_size):
+            for obj in objs.keys():
+                denormalized_sample_inputs = recover_input_data(sample_inputs, self.normalized_factors, self.scaled_factors)
+                result = torch.zeros(num_restart, dtype=dtype)
+                for i in range(0, num_restart):
+                    rounded_denormalized_sample_inputs = denormalized_sample_inputs[i].round()
+                    input = rounded_denormalized_sample_inputs.tolist()
+                    try:
+                        result[i] = self.__dict__.get(tuple(input)).get_ppa(obj)
+                    except:
+                        result[i] = 0
+                if self.objs_direct[obj] == 'minimise':
+                    result = -1 * result
+                results[batch,:,obj_index] = result
+                obj_index += 1
         return results
 
 
