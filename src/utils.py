@@ -59,6 +59,14 @@ def recover_output_data(input_tensor, normalized_factors):
             output_tensor[i][j] = input_tensor[i][j] * normalized_factors[i]
     return output_tensor
 
+def encapsulate_obj_tensor_into_dict(objs, obj_tensor):
+    obj_dict = {}
+    obj_index = 0
+    for obj in objs.keys():
+        obj_dict[obj] = obj_tensor[... , obj_index].item()
+        obj_index += 1
+    return obj_dict 
+
 
 
 class recorded_training_result:

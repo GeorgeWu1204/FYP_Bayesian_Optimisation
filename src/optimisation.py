@@ -167,22 +167,22 @@ if record:
     results_record = utils.recorded_training_result(OBJECTIVES, data_set.best_value, data_set.best_pair, '../test/record_result.txt')
 
 # Global Best Values
-best_observed_all = {obj : [] for obj in OBJECTIVES.keys()}
+best_hyper_vol_per_trial = []
+best_observation_per_trial = {trial : {obj : [] for obj in OBJECTIVES.keys()} for trial in range(1, N_TRIALS + 1)}
 
 #Optimisation Loop
 for trial in range (1, N_TRIALS + 1):
     print(f"\nTrial {trial:>2} of {N_TRIALS} ")
-    best_hyper_vol = []
-
     (   train_x_ei,
         exact_obj_ei,
         train_obj_ei,
-        best_value_ei,
+        _,
     ) = generate_initial_data(t_type)
-
+    
     mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei)
-
-    best_hyper_vol.append(best_value_ei)
+    #reset the best observation
+    best_observation_per_interation = {obj : None for obj in OBJECTIVES.keys()}
+    best_hyper_vol_per_interation = 0.0
 
     for iteration in range(1, N_BATCH + 1):
         t0 = time.monotonic()
@@ -199,10 +199,11 @@ for trial in range (1, N_TRIALS + 1):
         # update training points
         train_x_ei = torch.cat([train_x_ei, new_x_ei])
         train_obj_ei = torch.cat((train_obj_ei, new_train_obj_ei), dim=1)
-        
 
         # update progress
-        best_hyper_vol.append(best_value_ei)
+        if best_value_ei > best_hyper_vol_per_interation:
+            best_hyper_vol_per_interation = best_value_ei
+            best_observation_per_interation = utils.encapsulate_obj_tensor_into_dict(OBJECTIVES, new_exact_obj_ei)
 
         # reinitialize the models so they are ready for fitting on next iteration
         mll_ei, model_ei = initialize_model(
@@ -214,38 +215,34 @@ for trial in range (1, N_TRIALS + 1):
         if verbose:
             print(f"{Fore.YELLOW}Iteration: {iteration}{Style.RESET_ALL}")
             print(f"{Fore.GREEN}new x: {new_x_ei[0]}  == > new y: {new_exact_obj_ei}{Style.RESET_ALL}")
-            obj_index = 0
             for obj in OBJECTIVES.keys():
                 if(OBJECTIVES[obj] == 'minimise'):
-                    print(f"{Fore.RED}best_value_{obj}: {-1 * new_exact_obj_ei[0][0][obj_index]}{Style.RESET_ALL}")
+                    print(f"{Fore.RED}best_value_{obj}: {-1 * best_observation_per_interation[obj]}{Style.RESET_ALL}")
                 else:
-                    print(f"{Fore.RED}best_value_{obj}: {new_exact_obj_ei[0][0][obj_index]}{Style.RESET_ALL}")
-                obj_index += 1
+                    print(f"{Fore.RED}best_value_{obj}: {best_observation_per_interation[obj]}{Style.RESET_ALL}")
         else:
             print(".", end="")
         
         if record:
             #TODO: prepare for multi objectives
-            obj_index = 0
             tmp_best_value_ei = {}
             tmp_new_obj_ei = {}
             for obj in OBJECTIVES.keys():
                 if(OBJECTIVES[obj] == 'minimise'):
                     tmp_best_value_ei[obj] = -1 * best_value_ei
-                    tmp_new_obj_ei[obj] = -1 * new_exact_obj_ei[0][0][obj_index].item()
+                    tmp_new_obj_ei[obj] = -1 * best_observation_per_interation[obj]
                 else:
                     tmp_best_value_ei[obj] =  best_value_ei
-                    tmp_new_obj_ei[obj] = new_exact_obj_ei[0][0][obj_index].item()
-                obj_index += 1
+                    tmp_new_obj_ei[obj] = best_observation_per_interation[obj]
             results_record.record(iteration, tmp_best_value_ei, tmp_new_obj_ei, t1-t0)
-    obj_index = 0
+    
     for obj in OBJECTIVES.keys():
         if(OBJECTIVES[obj] == 'minimise'):
-            best_observed_all[obj].append(-1 * new_exact_obj_ei[0][0][obj_index].item())
+            best_observation_per_trial[trial][obj] = -1 * best_observation_per_interation[obj]
         else:
-            best_observed_all[obj].append(new_exact_obj_ei[0][0][obj_index].item())
-        obj_index += 1
+            best_observation_per_trial[trial][obj] = best_observation_per_interation[obj]
+    best_hyper_vol_per_trial.append(best_hyper_vol_per_interation)
     
-    print(f"{Fore.BLUE}Best value found: {best_observed_all}{Style.RESET_ALL}")
+    print(f"{Fore.BLUE}Best value found: {best_hyper_vol_per_trial}{Style.RESET_ALL}")
 if record:
     results_record.store()
