@@ -47,7 +47,7 @@ def normalise_output_data(input_tensor, normalized_factors):
     for b in range(batch_dim):
         for i in range(obj_m):
             for j in range(num_restarts):
-                output_tensor[b][j][i] = input_tensor[b][j][i] / normalized_factors[b, i]
+                output_tensor[b][j][i] = input_tensor[b][j][i] / normalized_factors[i]
     return output_tensor
 
 def recover_output_data(input_tensor, normalized_factors):
@@ -66,6 +66,19 @@ def encapsulate_obj_tensor_into_dict(objs, obj_tensor):
         obj_dict[obj] = obj_tensor[... , obj_index].item()
         obj_index += 1
     return obj_dict 
+
+def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, worst_value, output_normalised_factors, t_type):
+    ref_points = torch.empty((OBJECTIVES_DIM), dtype=t_type)
+    ref_point_index = 0
+    for obj in OBJECTIVES.keys():
+        if(OBJECTIVES[obj] == 'minimise'):
+            ref_points[ref_point_index] = -1 * (worst_value[obj] / output_normalised_factors[obj])
+        else:
+            ref_points[ref_point_index] = (worst_value[obj] / output_normalised_factors[obj])
+        ref_point_index += 1
+    normalized_factors = list(output_normalised_factors.values())
+    print("ref_point: ", ref_points)
+    return ref_points, normalized_factors
 
 
 

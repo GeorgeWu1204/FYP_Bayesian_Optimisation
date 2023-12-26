@@ -51,7 +51,7 @@ class Constraints_Node:
             return len(self.conditions) - 1
 
 
-class Constraints:
+class Input_Constraints:
 
     def __init__(self, dim):  
         #linked_constraints = [[or_constraints = {constraints 1, constraints 2}], [or_constraints], ...]]
@@ -160,7 +160,7 @@ class Constraints:
 
         
 if __name__ == '__main__':
-    c = Constraints(2)
+    c = Input_Constraints(2)
     c.update_self_constraints(0, [1, 6])
     c.update_self_constraints(1, [4, 252])
     c.update_new_constraints([{0: [1, 4], 1: [4, 4]}, {0: [4, 6], 1: [4, 252]}])

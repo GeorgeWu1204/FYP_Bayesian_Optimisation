@@ -7,7 +7,7 @@ import sys
 import pickle
 import os.path as osp
 # Read the file
-from utils import recover_input_data
+from utils import recover_input_data, calculate_condition
 
 class Data_Sample:
     def __init__(self, data, objs, data_set_type):
@@ -41,13 +41,17 @@ class Data_Sample:
         return self.PPA[obj]    
 
 class Data_Set:
-    def __init__(self, data, objs, scales, normalized_factors, data_set_type = 'txt'):
+    def __init__(self, data, objs, scales, normalized_factors, output_obj_constraint, data_set_type = 'txt'):
         val_list = {}
         self.best_value = {}
         self.best_pair = {}
         self.worst_value = {}
         self.objs_direct = objs
+        self.output_constraints_to_optimise_len = len(objs)
+        self.objs_to_evaluate = list(objs.keys()) + list(output_obj_constraint.keys())
         self.output_normalised_factors = {}
+        self.output_constraints_to_check = list(output_obj_constraint.values())
+        
 
         if data_set_type == 'txt':
             for i in range(len(data)):
@@ -57,17 +61,17 @@ class Data_Set:
                 self.scaled_factors = scales
                 self.normalized_factors = normalized_factors
         elif data_set_type == 'db':
-            for obj in objs.keys():
+            for obj in self.objs_to_evaluate:
                 val_list[obj] = []
             for i in data.keys():
-                self.__dict__[i] = Data_Sample([i, data[i]], objs, data_set_type)
+                self.__dict__[i] = Data_Sample([i, data[i]], {**objs, **output_obj_constraint}, data_set_type)
                 self.scaled_factors = scales
                 self.normalized_factors = normalized_factors
-                for obj in objs.keys():
+                for obj in self.objs_to_evaluate:
                     val_list[obj].append(data[i][obj])
-            for obj in objs.keys():
+            for obj in self.objs_to_evaluate:
 
-                if objs[obj] == 'minimise':
+                if objs.get(obj, None) == 'minimise':
                     self.best_value[obj] = min(val_list[obj])
                     self.worst_value[obj] = max(val_list[obj])
                 else:
@@ -91,13 +95,13 @@ class Data_Set:
             constraints.append(self.__dict__.get(i).Constraints)
         return constraints
     
-    def find_ppa_result(self, sample_inputs, batch_size, objs, dtype):
+    def find_ppa_result(self, sample_inputs, batch_size, dtype):
         """find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
         num_restart= sample_inputs.shape[0]
-        results = torch.empty((batch_size, num_restart, len(objs)), dtype=dtype)
+        results = torch.empty((batch_size, num_restart, len(self.objs_to_evaluate)), dtype=dtype)
         obj_index = 0
         for batch in range(batch_size):
-            for obj in objs.keys():
+            for obj in self.objs_to_evaluate:
                 denormalized_sample_inputs = recover_input_data(sample_inputs, self.normalized_factors, self.scaled_factors)
                 result = torch.zeros(num_restart, dtype=dtype)
                 for i in range(0, num_restart):
@@ -107,12 +111,26 @@ class Data_Set:
                         result[i] = self.__dict__.get(tuple(input)).get_ppa(obj)
                     except:
                         result[i] = 0
-                if self.objs_direct[obj] == 'minimise':
+                if self.objs_direct.get(obj, None) == 'minimise':
                     result = -1 * result
                 results[batch,:,obj_index] = result
                 obj_index += 1
         return results
 
+    def check_output_constraints(self, X):
+        """This is the callable function for the output constraints of the acq function"""
+        # X shape sample_shape x batch-shape x q x m , Output shape sample_shape x batch-shape x q
+        results = torch.zeros((X.shape[0], X.shape[1], X.shape[2]), dtype=X.dtype)
+        for i in range(X.shape[0]):
+            for j in range(X.shape[1]):
+                for k in range(X.shape[2]):
+                    for obj_index in range(self.output_constraints_to_optimise_len, X.shape[3]):
+                        condition_val = calculate_condition(X[i][j][k][obj_index], self.output_constraints_to_check[obj_index - self.output_constraints_to_optimise_len])
+                        if  condition_val < 0:
+                            results[i][j][k] = -1
+                            break
+                        else:
+                            results[i][j][k] += self.calculate_condition(X[i][j][k], self.output_constraints_to_check)
 
 def read_data_from_txt(file_name, objs, scales, normalized_factors):
     with open(file_name, 'r') as f:
@@ -122,7 +140,7 @@ def read_data_from_txt(file_name, objs, scales, normalized_factors):
         data_set = Data_Set(raw_data, objs, scales, normalized_factors, 'txt')
     return data_set
 
-def read_data_from_db(db_name, objs, scales, normalized_factors):
+def read_data_from_db(db_name, objs, output_obj_constraint, scales, normalized_factors):
     db = {}
     if not osp.exists(db_name):
         print(f"[i] generating: '{db_name}'")
@@ -145,7 +163,7 @@ def read_data_from_db(db_name, objs, scales, normalized_factors):
         print(f"[i] loading: '{db_name}'")
         with open(db_name, 'rb') as f:
             db.update(pickle.load(f))
-    data_set = Data_Set(db, objs, scales, normalized_factors, 'db')
+    data_set = Data_Set(db, objs, scales, normalized_factors, output_obj_constraint, 'db')
     return data_set
     
 

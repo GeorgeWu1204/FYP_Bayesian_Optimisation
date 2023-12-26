@@ -15,3 +15,6 @@ TODO
 - Implement a constraint interface.
 - Further optimise the efficiency of the model.
 - Experiments in larger dataset.
+
+Things to Improve
+- The multiple-objectives optimisation now takes every objective as the same weight. This is not ideal as some objectives are more important than others.

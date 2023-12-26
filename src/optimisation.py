@@ -4,7 +4,7 @@ import time
 import utils
 from colorama import Fore, Back, Style
 
-from format_constraints import Constraints
+from format_constraints import Input_Constraints
 from botorch.models import SingleTaskGP
 from botorch.models.model_list_gp_regression import ModelListGP
 from botorch.models.transforms.outcome import Standardize
@@ -13,6 +13,7 @@ from botorch.utils.multi_objective.box_decompositions.non_dominated import (
     FastNondominatedPartitioning,
     NondominatedPartitioning
 )
+from botorch.acquisition.multi_objective.objective import IdentityMCMultiOutputObjective
 from botorch.acquisition.multi_objective.monte_carlo import qExpectedHypervolumeImprovement
 
 from botorch.optim import optimize_acqf
@@ -20,8 +21,8 @@ from botorch.acquisition import qExpectedImprovement
 from botorch.sampling.normal import SobolQMCNormalSampler
 from botorch.fit import fit_gpytorch_model
 
-#Data variables
 
+#Data Inputs
 #Data_set 1
 DATA_DIM = 3
 DATA_SCALES = [1, 1, 1]
@@ -34,16 +35,18 @@ RAW_DATA_FILE = '../data/ppa_v2.db'
 # DATA_NORMALIZED_FACTOR = [6, 63]    # normalized_Factor = max_value / scale
 # RAW_DATA_FILE = '../data/ppa.txt'
 
-NOISE_SE = 0.5
-
-OBJECTIVES = {'lut': 'minimise', 'estimated_clock_period': 'maximize'}
+OBJECTIVES = {'estimated_clock_period': 'minimise', 'ncycles_matmul': 'minimise'}
 OBJECTIVES_DIM = len(OBJECTIVES)
-RAW_SAMPLES = 1
+OBJECTIVE_TO_OPTIMISE = list(range(OBJECTIVES_DIM))
+OUTPUT_OBJECTIVE_CONSTRAINT = {'lut': [0,20000], 'ff' : [0, 12000]}
 
-#BO variables
+
+#Model Settings
+RAW_SAMPLES = 1
+NOISE_SE = 0.5
 NUM_RESTARTS = 2
 N_TRIALS = 2            # number of trials of BO (outer loop)
-N_BATCH = 10             # number of BO batches (inner loop)
+N_BATCH = 50            # number of BO batches (inner loop)
 BATCH_SIZE = 1          # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 16         # number of MC samples for qNEI
 
@@ -52,23 +55,13 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 d_type = torch.int
 t_type = torch.float64
 
-data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES, DATA_SCALES, DATA_NORMALIZED_FACTOR)
+data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES, OUTPUT_OBJECTIVE_CONSTRAINT, DATA_SCALES, DATA_NORMALIZED_FACTOR)
 # data_set = data.read_data_from_txt(RAW_DATA_FILE, OBJECTIVES, DATA_SCALES, DATA_NORMALIZED_FACTOR)
 
 #Reference point for Optimisation
-output_normalised_factors = torch.empty((BATCH_SIZE, OBJECTIVES_DIM), dtype=t_type)
-ref_points = torch.empty((OBJECTIVES_DIM), dtype=t_type)
-ref_point_index = 0
-for obj in OBJECTIVES.keys():
-    if(OBJECTIVES[obj] == 'minimise'):
-        ref_points[ref_point_index] = -1 * (data_set.worst_value[obj] / data_set.output_normalised_factors[obj])
-    else:
-        ref_points[ref_point_index] = (data_set.worst_value[obj] / data_set.output_normalised_factors[obj])
-    output_normalised_factors[:, ref_point_index] = data_set.output_normalised_factors[obj]
-    ref_point_index += 1
-print("ref_point: ", ref_points)
 
-constraint_set = Constraints(DATA_DIM)
+
+constraint_set = Input_Constraints(DATA_DIM)
 
 #TODO : write a interface to read the constraints from file
 constraint_set.update_scale(DATA_SCALES)
@@ -84,18 +77,20 @@ constraint_set.update_self_constraints(2, [4, 255])
 # constraint_set.update_self_constraints(1, [4, 252])
 # constraint_set.update_new_constraints([{0: [1, 4], 1: [4, 4]}, {0: [5, 6], 1: [4, 252]}])
 
+
+
 def calculate_hypervolume(ref_points, train_obj):
     """Calculate the hypervolume"""
     # Y dimension (batch_shape) x n x m-dim
-    partitioning = NondominatedPartitioning(ref_point=ref_points, Y = train_obj)
+    partitioning = NondominatedPartitioning(ref_point=ref_points, Y = train_obj[..., : ref_points.shape[0]])
     hv = partitioning.compute_hypervolume().item()
     return hv
 
 def generate_initial_data(data_type):
     """generate training data"""
     train_x = constraint_set.create_initial_data(NUM_RESTARTS, data_type)
-    exact_obj = data_set.find_ppa_result(train_x, BATCH_SIZE, OBJECTIVES, data_type)
-    normalised_obj = utils.normalise_output_data(exact_obj, output_normalised_factors)
+    exact_obj = data_set.find_ppa_result(train_x, BATCH_SIZE, data_type)
+    normalised_obj = utils.normalise_output_data(exact_obj, normalized_factors)
     best_observed_value = calculate_hypervolume(ref_points, normalised_obj)
     return train_x, exact_obj, normalised_obj, best_observed_value
 
@@ -112,14 +107,14 @@ def initialize_model(train_x, train_obj):
     """define models for objective and constraint"""
     ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
     models = []
-    for obj_index in range(len(OBJECTIVES)): 
+    for obj_index in range(OBJECTIVES_DIM): 
         train_y = train_obj[..., obj_index : obj_index + 1].squeeze(0)
         models.append(SingleTaskGP(train_x, train_y, outcome_transform=Standardize(m=1)))
     model = ModelListGP(*models)
     mll = SumMarginalLogLikelihood(model.likelihood, model)
     return mll, model
 
-def build_multi_objective_acqf(model, train_x, train_obj, sampler):
+def build_multi_objective_acqf(model, train_obj, sampler):
     """Build the qEHVI acquisition function"""
     # partition non-dominated space into disjoint rectangles
     train_y = train_obj.squeeze(0)
@@ -131,7 +126,9 @@ def build_multi_objective_acqf(model, train_x, train_obj, sampler):
         model=model,
         ref_point=ref_points,
         partitioning=partitioning,
+        objective=IdentityMCMultiOutputObjective(outcomes = OBJECTIVE_TO_OPTIMISE),
         sampler=sampler,
+        constraints=data.check_output_constraints,
     )
     return acq_func
 
@@ -152,8 +149,8 @@ def optimize_acqf_and_get_observation(acq_func, generated_bounds):
 
     # observe new values
     new_x = candidates.detach()
-    new_exact_obj = data_set.find_ppa_result(new_x, BATCH_SIZE, OBJECTIVES, t_type)
-    new_normalised_obj = utils.normalise_output_data(new_exact_obj, output_normalised_factors)
+    new_exact_obj = data_set.find_ppa_result(new_x, BATCH_SIZE, t_type)
+    new_normalised_obj = utils.normalise_output_data(new_exact_obj, normalized_factors)
     hyper_vol = calculate_hypervolume(ref_points, new_normalised_obj)
     return new_x, new_exact_obj, new_normalised_obj, hyper_vol
 
@@ -191,7 +188,7 @@ for trial in range (1, N_TRIALS + 1):
 
         #QMC sampler
         qmc_sampler = SobolQMCNormalSampler(sample_shape=torch.Size([MC_SAMPLES]))
-        acqf = build_multi_objective_acqf(model_ei, train_x_ei, train_obj_ei,qmc_sampler)
+        acqf = build_multi_objective_acqf(model_ei, train_obj_ei, qmc_sampler)
 
         # optimize and get new observation
         new_x_ei, new_exact_obj_ei, new_train_obj_ei, best_value_ei = optimize_acqf_and_get_observation(acqf, bounds)
