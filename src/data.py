@@ -120,6 +120,13 @@ class Data_Set:
                 obj_index += 1
         return results
 
+    def find_single_ppa_result(self, sample_input):
+        result = []
+        for  obj in self.objs_to_evaluate:
+            result.append(self.__dict__.get(tuple(sample_input)).get_ppa(obj))
+        return result
+
+
     def check_output_constraints(self, X):
         """This is the callable function for the output constraints of the acq function"""
         # X shape sample_shape x batch-shape x q x m , Output shape sample_shape x batch-shape x q

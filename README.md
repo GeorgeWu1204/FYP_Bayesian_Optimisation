@@ -7,9 +7,10 @@ To run this code, run the following command in the terminal:
 ```python3 src/optimisation.py```
 
 Current Progress
-- Formatted Constraints
+- Formatted Input Constraints
 - Built a simple model
-- Modify the model to be able to optimise for multiple-objectives
+- Modified the model to be able to optimise for multiple-objectives
+- Modified the model to be aware of the output constraints, making it able to find design with the output within a range.
 
 TODO
 - Implement a constraint interface.
@@ -18,3 +19,4 @@ TODO
 
 Things to Improve
 - The multiple-objectives optimisation now takes every objective as the same weight. This is not ideal as some objectives are more important than others.
+- Regarding the normalisation of the objective, not sure if it is correct to normalised as x/(a-b) for [a, b], considering the ref_points.

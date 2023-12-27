@@ -1,4 +1,5 @@
 import torch
+import itertools
 
 def calculate_condition(x, condition):
     return (x - condition[0]) * (condition[1] - x)
@@ -6,7 +7,6 @@ def calculate_condition(x, condition):
 def build_matrix(data, constraints, num_restarts, q_dim, d_dim):
     """Build a matrix to store all the results of whether the input data meet the constraints."""
     # formatted_correlated_constraints = {d_dim : [condition_size, num_restarts * q_dim]}
-
     formatted_correlated_constraints = {}
     individual_constraint = torch.empty((d_dim, num_restarts * q_dim))
     
@@ -80,9 +80,23 @@ def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, worst_value, output_normalised_f
     print("ref_point: ", ref_points)
     return ref_points
 
+def find_samples_brute_force(ranges):
+    """This function is used for brute force optimisation to prepare all the samples"""
+    for i in range(len(ranges)):
+        ranges[i] = list(range(ranges[i][0], ranges[i][1] + 1))
+    combinations = list(itertools.product(*ranges))
+    vectors = [list(combination) for combination in combinations]
+    return vectors
 
+def calculate_volumes_for_brute_force(objs, normalised_factors, objs_to_optimise_dim):
+    """This function is used for brute force optimisation to calculate the volume of the design space"""
+    volumes = 1
+    for obj_index in range(objs_to_optimise_dim):
+        volumes *= objs[obj_index]/ normalised_factors[obj_index]
+    return volumes
 
 class recorded_training_result:
+    """This class is used to record the results of optimisation."""
     def __init__(self, objectives, best_values, best_pairs, record_file_name, num_trials, num_iterations):
         self.objs  = objectives
         self.best_vals  = best_values
@@ -107,8 +121,32 @@ class recorded_training_result:
                 total_time += self.history[i][1]
                 f.write(f"{i}, {total_time:>4.2f}")
                 for obj in self.objs:
-                    if self.history[i][0].get(obj, None) != None:
-                        f.write(f", {self.history[i][0][obj]}")
-                    else:
-                        f.write(f", 0")
+                    result = self.history[i][0].get(obj, 0)
+                    f.write(f", {result}")
+                f.write("\n")
+
+class brute_force_training_result:
+    """This class is used to record the results of brute force optimisation."""
+    def __init__(self, objectives, overall_iteration_size, record_file_name):
+        self.history = {}
+        self.objs  = objectives
+        self.record_file_name = record_file_name
+        for i in range(overall_iteration_size):
+            self.history[i] = {}
+    def record(self, iteration, best_objs, time):
+        self.history[iteration] = [best_objs, time]
+    
+    def store(self):
+        total_time = 0
+        with open(self.record_file_name, 'w') as f:
+            f.write("iteration, time")
+            for obj in self.objs:
+                f.write(f", {obj}")
+            f.write("\n")
+            for i in range(len(self.history)):
+                total_time += self.history[i][1]
+                f.write(f"{i}, {total_time:>4.2f}")
+                for obj in range(len(self.objs)):
+                    result = self.history[i][0][obj]
+                    f.write(f", {result}")
                 f.write("\n")

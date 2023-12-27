@@ -155,6 +155,34 @@ class Input_Constraints:
             for j in range(q_dim):
                 inequality_constraints[i][j] = self.check_meet_constraint(individual_constraint, correlated_constraints, i * q_dim + j)
         return inequality_constraints
+    
+        
+            
+class Constraints_Brute_Force:
+    def __init__(self, sample_scales, obj_to_optimise_dim, obj_to_check_constraints_dim):
+        self.sample_scales = sample_scales
+        self.self_constraints = []
+        self.output_obj_constraint = []
+        self.output_obj_constraint_index = [i for i in range(obj_to_optimise_dim, obj_to_optimise_dim + obj_to_check_constraints_dim)]
+    
+    def update_self_constraints(self, index, self_constraints):
+        self.self_constraints.append([self_constraints[0] / self.sample_scales[index], self_constraints[1] / self.sample_scales[index]])
+    
+    def update_output_obj_constraint(self, output_obj_constraint):
+        self.output_obj_constraint.append(output_obj_constraint)
+    
+    def check_meet_self_constraint_for_brute_force(self, X):
+        for index, element in enumerate(X):
+            normalised_element = element / self.sample_scales[index]
+            if normalised_element < self.self_constraints[index][0] or normalised_element > self.self_constraints[index][1]:
+                return False
+        return True
+
+    def check_meet_output_obj_constraint_for_brute_force(self, X, obj_for_optimise_dim):
+        for i in self.output_obj_constraint_index:
+            if X[i] < self.output_obj_constraint[i - obj_for_optimise_dim][0] or X[i] > self.output_obj_constraint[i - obj_for_optimise_dim][1]:
+                return False
+        return True
 
 
 
