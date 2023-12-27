@@ -76,37 +76,39 @@ def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, worst_value, output_normalised_f
         else:
             ref_points[ref_point_index] = (worst_value[obj] / output_normalised_factors[obj])
         ref_point_index += 1
-    normalized_factors = list(output_normalised_factors.values())
+
     print("ref_point: ", ref_points)
-    return ref_points, normalized_factors
+    return ref_points
 
 
 
 class recorded_training_result:
-    def __init__(self, objectives, best_values, best_pairs, record_file_name):
+    def __init__(self, objectives, best_values, best_pairs, record_file_name, num_trials, num_iterations):
         self.objs  = objectives
         self.best_vals  = best_values
         self.best_pairs = best_pairs
         self.history = {}
-        self.iterations = 0
+        self.iterations = num_iterations
+        self.trials = num_trials
         self.record_file_name = record_file_name
-        for i in objectives.keys():
+        for i in range(num_trials * num_iterations):
             self.history[i] = {}
-    def record(self, iteration, current_best_vals, current_vals, time):
-        #Note prepare for multi objectives
-        self.iterations = iteration
-        for obj in self.objs:
-            self.history[obj][iteration] = [current_best_vals[obj], current_vals[obj], time]
+    def record(self, iteration, trial, best_objs, time):
+        self.history[(trial -1) * self.iterations + (iteration-1)] = [best_objs, time]
     
     def store(self):
         total_time = 0
         with open(self.record_file_name, 'w') as f:
+            f.write("iteration, time")
             for obj in self.objs:
-                f.write(f"obj: {obj}\n")
-                f.write(f"best: {self.best_vals[obj]}\n")
-                for i in self.best_pairs[obj]:
-                    f.write(f"best pair : {i} \n")
-                f.write("iteration, current_best_val, current_val, time\n")
-                for i in range(1, self.iterations + 1):
-                    total_time += self.history[obj][i][2]
-                    f.write(f"{i}, {self.history[obj][i][0]:>2}, {self.history[obj][i][1]}, {total_time:>4.2f}\n")
+                f.write(f", {obj}")
+            f.write("\n")
+            for i in range(self.trials * self.iterations):
+                total_time += self.history[i][1]
+                f.write(f"{i}, {total_time:>4.2f}")
+                for obj in self.objs:
+                    if self.history[i][0].get(obj, None) != None:
+                        f.write(f", {self.history[i][0][obj]}")
+                    else:
+                        f.write(f", 0")
+                f.write("\n")

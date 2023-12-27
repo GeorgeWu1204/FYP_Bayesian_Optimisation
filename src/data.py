@@ -15,13 +15,13 @@ class Data_Sample:
             self.Constraints = data[0]
             self.Cycle_count = data[1]
             self.PPA = {}
-            for obj in objs.keys():
+            for obj in objs:
                 self.PPA[obj] = data[2][obj]
         elif (data_set_type == 'db'):
             self.Constraints = data[0]
             self.Cycle_count = None
             self.PPA = {}
-            for obj in objs.keys():
+            for obj in objs:
                 self.PPA[obj] = data[1][obj]
     def print_constraints(self):
         print("Constraints:")
@@ -41,32 +41,30 @@ class Data_Sample:
         return self.PPA[obj]    
 
 class Data_Set:
-    def __init__(self, data, objs, scales, normalized_factors, output_obj_constraint, data_set_type = 'txt'):
+    def __init__(self, data, objs, scales, input_data_normalized_factors, output_obj_constraint, data_set_type = 'txt'):
         val_list = {}
         self.best_value = {}
         self.best_pair = {}
         self.worst_value = {}
         self.objs_direct = objs
-        self.output_constraints_to_optimise_len = len(objs)
+        self.objs_to_optimise_dim = len(objs)
         self.objs_to_evaluate = list(objs.keys()) + list(output_obj_constraint.keys())
         self.output_normalised_factors = {}
-        self.output_constraints_to_check = list(output_obj_constraint.values())
-        
+        self.input_normalized_factors = input_data_normalized_factors
 
         if data_set_type == 'txt':
             for i in range(len(data)):
                 d_input_dic = data[i][0]
                 d_input = [val for val in d_input_dic.values()]
-                self.__dict__[tuple(d_input)] = Data_Sample(data[i], objs, data_set_type)
+                self.__dict__[tuple(d_input)] = Data_Sample(data[i], self.objs_to_evaluate, data_set_type)
                 self.scaled_factors = scales
-                self.normalized_factors = normalized_factors
+            
         elif data_set_type == 'db':
             for obj in self.objs_to_evaluate:
                 val_list[obj] = []
             for i in data.keys():
-                self.__dict__[i] = Data_Sample([i, data[i]], {**objs, **output_obj_constraint}, data_set_type)
+                self.__dict__[i] = Data_Sample([i, data[i]], self.objs_to_evaluate, data_set_type)
                 self.scaled_factors = scales
-                self.normalized_factors = normalized_factors
                 for obj in self.objs_to_evaluate:
                     val_list[obj].append(data[i][obj])
             for obj in self.objs_to_evaluate:
@@ -85,6 +83,11 @@ class Data_Set:
                     self.output_normalised_factors[obj] = 1.0
                 else:
                     self.output_normalised_factors[obj] = abs(self.best_value[obj] - self.worst_value[obj])
+        
+        self.output_constraints_to_check = []
+        for obj in output_obj_constraint:
+            self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj] for bound in output_obj_constraint[obj]])
+            
     
     def __len__(self):
         return len(self.__dict__)
@@ -102,7 +105,7 @@ class Data_Set:
         obj_index = 0
         for batch in range(batch_size):
             for obj in self.objs_to_evaluate:
-                denormalized_sample_inputs = recover_input_data(sample_inputs, self.normalized_factors, self.scaled_factors)
+                denormalized_sample_inputs = recover_input_data(sample_inputs, self.input_normalized_factors, self.scaled_factors)
                 result = torch.zeros(num_restart, dtype=dtype)
                 for i in range(0, num_restart):
                     rounded_denormalized_sample_inputs = denormalized_sample_inputs[i].round()
@@ -124,23 +127,36 @@ class Data_Set:
         for i in range(X.shape[0]):
             for j in range(X.shape[1]):
                 for k in range(X.shape[2]):
-                    for obj_index in range(self.output_constraints_to_optimise_len, X.shape[3]):
-                        condition_val = calculate_condition(X[i][j][k][obj_index], self.output_constraints_to_check[obj_index - self.output_constraints_to_optimise_len])
+                    for obj_index in range(self.objs_to_optimise_dim, X.shape[3]):
+                        condition_val = calculate_condition(X[i][j][k][obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
                         if  condition_val < 0:
-                            results[i][j][k] = -1
+                            results[i][j][k] = 1
                             break
                         else:
-                            results[i][j][k] += self.calculate_condition(X[i][j][k], self.output_constraints_to_check)
+                            results[i][j][k] -= condition_val
+        return results
+    
+    def check_candidate_output_constraints(self, X):
+        valid_obj = True
+        for obj_index in range(self.objs_to_optimise_dim, X.shape[2]):
+            condition_val = calculate_condition(X[..., obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
+            if  condition_val < 0:
+                valid_obj = False
+            else:
+                valid_obj = True
+        return valid_obj
 
-def read_data_from_txt(file_name, objs, scales, normalized_factors):
+
+
+def read_data_from_txt(file_name, objs, scales, input_data_normalized_factors):
     with open(file_name, 'r') as f:
         content = f.read()
         raw_data = ast.literal_eval(content)
         print("objs", objs) 
-        data_set = Data_Set(raw_data, objs, scales, normalized_factors, 'txt')
+        data_set = Data_Set(raw_data, objs, scales, input_data_normalized_factors, 'txt')
     return data_set
 
-def read_data_from_db(db_name, objs, output_obj_constraint, scales, normalized_factors):
+def read_data_from_db(db_name, objs, output_obj_constraint, scales, input_data_normalized_factors):
     db = {}
     if not osp.exists(db_name):
         print(f"[i] generating: '{db_name}'")
@@ -163,7 +179,7 @@ def read_data_from_db(db_name, objs, output_obj_constraint, scales, normalized_f
         print(f"[i] loading: '{db_name}'")
         with open(db_name, 'rb') as f:
             db.update(pickle.load(f))
-    data_set = Data_Set(db, objs, scales, normalized_factors, output_obj_constraint, 'db')
+    data_set = Data_Set(db, objs, scales, input_data_normalized_factors, output_obj_constraint, 'db')
     return data_set
     
 
