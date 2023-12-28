@@ -26,6 +26,7 @@ from botorch.fit import fit_gpytorch_model
 INPUT_DATA_DIM = 3
 INPUT_DATA_SCALES = [1, 1, 1]
 INPUT_NORMALIZED_FACTOR = [12, 6, 255]    # normalized_Factor = max_value / scale
+INPUT_NAMES = ['arch', 'pre-type', 'btb']
 RAW_DATA_FILE = '../data/ppa_v2.db'
 
 #Data_set 2
@@ -50,8 +51,8 @@ OBJECTIVES_TO_EVALUATE = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONST
 RAW_SAMPLES = 1
 NOISE_SE = 0.5
 NUM_RESTARTS = 2
-N_TRIALS = 2            # number of trials of BO (outer loop)
-N_BATCH = 10            # number of BO batches (inner loop)
+N_TRIALS = 15            # number of trials of BO (outer loop)
+N_BATCH = 30            # number of BO batches (inner loop)
 BATCH_SIZE = 1          # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 16         # number of MC samples for qNEI
 
@@ -175,8 +176,7 @@ if record:
 
 # Global Best Values
 best_hyper_vol_per_trial = []
-best_observation_per_trial = {trial : {obj : [] for obj in OBJECTIVES_TO_OPTIMISE.keys()} for trial in range(1, N_TRIALS + 1)}
-
+best_sample_points_per_trial = {trial : {input : 0.0 for input in INPUT_NAMES} for trial in range(1, N_TRIALS + 1)}
 
 #Optimisation Loop
 for trial in range (1, N_TRIALS + 1):
@@ -191,6 +191,7 @@ for trial in range (1, N_TRIALS + 1):
     #reset the best observation
     best_observation_per_interation = {obj : None for obj in OBJECTIVES_TO_OPTIMISE.keys()}
     best_constraint_per_interation = {obj : None for obj in OUTPUT_OBJECTIVE_CONSTRAINT.keys()}
+    best_sample_point_per_interation = {input : None for input in INPUT_NAMES}
     best_hyper_vol_per_interation = 0.0
 
     for iteration in range(1, N_BATCH + 1):
@@ -214,7 +215,7 @@ for trial in range (1, N_TRIALS + 1):
             best_hyper_vol_per_interation = hyper_vol
             best_observation_per_interation = utils.encapsulate_obj_tensor_into_dict(OBJECTIVES_TO_OPTIMISE, new_exact_obj_ei)
             best_constraint_per_interation = utils.encapsulate_obj_tensor_into_dict(OUTPUT_OBJECTIVE_CONSTRAINT, new_exact_obj_ei[... , OBJECTIVES_TO_OPTIMISE_DIM :])
-        
+            best_sample_point_per_interation = utils.encapsulate_input_tensor_into_dict(new_x_ei, INPUT_NAMES)
         # reinitialize the models so they are ready for fitting on next iteration
         mll_ei, model_ei = initialize_model(
             train_x_ei,
@@ -249,13 +250,15 @@ for trial in range (1, N_TRIALS + 1):
                     tmp_new_obj_ei[obj] = best_observation_per_interation[obj]
             results_record.record(iteration, trial, tmp_new_obj_ei, t1-t0)
     
-    for obj in OBJECTIVES_TO_OPTIMISE.keys():
-        if(OBJECTIVES_TO_OPTIMISE[obj] == 'minimise'):
-            best_observation_per_trial[trial][obj] = -1 * best_observation_per_interation[obj]
-        else:
-            best_observation_per_trial[trial][obj] = best_observation_per_interation[obj]
+
     best_hyper_vol_per_trial.append(best_hyper_vol_per_interation)
-    
-    print(f"{Fore.BLUE}Best value found: {best_hyper_vol_per_trial}{Style.RESET_ALL}")
+    best_sample_points_per_trial[trial] = best_sample_point_per_interation
 if record:
     results_record.store()
+# Final stage, find the best sample point and the corresponding best observation
+print("<------------------Final Result------------------>")
+best_trial = utils.find_max_index_in_list(best_hyper_vol_per_trial)
+best_sample_point = data_set.recover_single_input_data(best_sample_points_per_trial[best_trial + 1])
+best_objective = data_set.find_single_ppa_result(list(best_sample_point.values()))
+print(f"{Fore.BLUE}Best sample point: {best_sample_point}{Style.RESET_ALL}")
+print(f"{Fore.BLUE}Best objective: {best_objective}{Style.RESET_ALL}")

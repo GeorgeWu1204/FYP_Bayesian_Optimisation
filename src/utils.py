@@ -41,6 +41,8 @@ def recover_input_data(input_tensor, normalized_factors, scaled_factors):
             output_tensor[i][j] = torch.round(input_tensor[i][j] * normalized_factors[j]) * scaled_factors[j] 
     return output_tensor
 
+
+
 def normalise_output_data(input_tensor, normalized_factors):
     batch_dim, num_restarts, obj_m = input_tensor.shape
     output_tensor = torch.empty((batch_dim, num_restarts, obj_m), dtype=input_tensor.dtype)
@@ -66,6 +68,14 @@ def encapsulate_obj_tensor_into_dict(objs, obj_tensor):
         obj_dict[obj] = obj_tensor[... , obj_index].item()
         obj_index += 1
     return obj_dict 
+
+def encapsulate_input_tensor_into_dict(input_tensor, input_var_names):
+    input_dict = {}
+    input_index = 0
+    for var in input_var_names:
+        input_dict[var] = input_tensor[... , input_index].item()
+        input_index += 1
+    return input_dict
 
 def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, worst_value, output_normalised_factors, t_type):
     ref_points = torch.empty((OBJECTIVES_DIM), dtype=t_type)
@@ -94,6 +104,14 @@ def calculate_volumes_for_brute_force(objs, normalised_factors, objs_to_optimise
     for obj_index in range(objs_to_optimise_dim):
         volumes *= objs[obj_index]/ normalised_factors[obj_index]
     return volumes
+
+
+def find_max_index_in_list(list):
+    max_index = 0
+    for i in range(len(list)):
+        if(list[i] > list[max_index]):
+            max_index = i
+    return max_index
 
 class recorded_training_result:
     """This class is used to record the results of optimisation."""

@@ -103,12 +103,12 @@ class Data_Set:
         num_restart= sample_inputs.shape[0]
         results = torch.empty((batch_size, num_restart, len(self.objs_to_evaluate)), dtype=dtype)
         obj_index = 0
+        denormalized_sample_inputs = recover_input_data(sample_inputs, self.input_normalized_factors, self.scaled_factors)
         for batch in range(batch_size):
             for obj in self.objs_to_evaluate:
-                denormalized_sample_inputs = recover_input_data(sample_inputs, self.input_normalized_factors, self.scaled_factors)
                 result = torch.zeros(num_restart, dtype=dtype)
                 for i in range(0, num_restart):
-                    rounded_denormalized_sample_inputs = denormalized_sample_inputs[i].round()
+                    rounded_denormalized_sample_inputs = denormalized_sample_inputs[i]
                     input = rounded_denormalized_sample_inputs.tolist()
                     try:
                         result[i] = self.__dict__.get(tuple(input)).get_ppa(obj)
@@ -126,6 +126,12 @@ class Data_Set:
             result.append(self.__dict__.get(tuple(sample_input)).get_ppa(obj))
         return result
 
+    
+    def recover_single_input_data(self, input):
+        output = {}
+        for j, obj in enumerate(input.keys()):
+            output[obj] = round(input[obj] * self.input_normalized_factors[j]) * self.scaled_factors[j]
+        return output
 
     def check_output_constraints(self, X):
         """This is the callable function for the output constraints of the acq function"""

@@ -1,8 +1,9 @@
-import torch
+
 import data
 import time
 import utils
 from colorama import Fore, Style
+import random
 
 from format_constraints import Constraints_Brute_Force
 #Data_set 1
@@ -30,6 +31,7 @@ constraint_set.update_output_obj_constraint([0, 20000])
 constraint_set.update_output_obj_constraint([0, 12000])
 
 obj_normalized_factors = list(data_set.output_normalised_factors.values())
+print("obj_normalized_factors: ", obj_normalized_factors)
 verbose = True
 record = True
 
@@ -37,8 +39,9 @@ record = True
 # Global Best Values
 best_volume = 100
 best_sample = None  
-best_results = None
+best_results = [data_set.worst_value[obj] for obj in data_set.objs_direct]
 sample_inputs = utils.find_samples_brute_force(INPUT_VARIABLES)
+random.shuffle(sample_inputs)
 overall_iteration_required = len(sample_inputs)
 print("overall_iteration_required: ", overall_iteration_required)
 
@@ -51,6 +54,8 @@ for iteration in range(overall_iteration_required):
     sample_input = sample_inputs[iteration]
     if constraint_set.check_meet_self_constraint_for_brute_force(sample_input) == True:
         result = data_set.find_single_ppa_result(sample_input)
+        if result == None:
+            continue
         if constraint_set.check_meet_output_obj_constraint_for_brute_force(result, OBJECTIVES_TO_OPTIMISE_DIM) == True:
             volume = utils.calculate_volumes_for_brute_force(result, obj_normalized_factors, OBJECTIVES_TO_OPTIMISE_DIM)
             if volume < best_volume:
