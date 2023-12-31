@@ -73,7 +73,7 @@ class Input_Constraints:
         for index, scale in enumerate(scales):
             self.Node[index].initialize_scale(scale)
 
-    def update_new_constraints(self, new_constraints):
+    def update_coupled_constraints(self, new_constraints):
         # new_constraints = {index: [condition]}
         and_constraint = []
         for or_constraint in new_constraints:
@@ -191,7 +191,7 @@ if __name__ == '__main__':
     c = Input_Constraints(2)
     c.update_self_constraints(0, [1, 6])
     c.update_self_constraints(1, [4, 252])
-    c.update_new_constraints([{0: [1, 4], 1: [4, 4]}, {0: [4, 6], 1: [4, 252]}])
+    c.update_coupled_constraints([{0: [1, 4], 1: [4, 4]}, {0: [4, 6], 1: [4, 252]}])
     c.update_scale(1, 4)
 
     tensor = torch.tensor([[[3, 4]]])

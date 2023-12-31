@@ -5,6 +5,7 @@ import utils
 from colorama import Fore, Style
 
 from format_constraints import Input_Constraints
+from interface import fill_constraints, parse_constraints
 from botorch.models import SingleTaskGP
 from botorch.models.model_list_gp_regression import ModelListGP
 from botorch.models.transforms.outcome import Standardize
@@ -20,39 +21,23 @@ from botorch.optim import optimize_acqf
 from botorch.sampling.normal import SobolQMCNormalSampler
 from botorch.fit import fit_gpytorch_model
 
-
-#Data Inputs
-#Data_set 1
-INPUT_DATA_DIM = 3
-INPUT_DATA_SCALES = [1, 1, 1]
-INPUT_NORMALIZED_FACTOR = [12, 6, 255]    # normalized_Factor = max_value / scale
-INPUT_NAMES = ['arch', 'pre-type', 'btb']
-RAW_DATA_FILE = '../data/ppa_v2.db'
-
-#Data_set 2
-# INPUT_DATA_DIM = 2
-# INPUT_DATA_SCALES = [1, 4]
-# INPUT_NORMALIZED_FACTOR = [6, 63]    # normalized_Factor = max_value / scale
-# RAW_DATA_FILE = '../data/ppa.txt'
-
-
-#objective to evaluate = [objective_to_optimise, objective_for_constraint]
-#objective to optimise
-OBJECTIVES_TO_OPTIMISE = {'estimated_clock_period': 'minimise', 'ncycles_matmul': 'minimise'}
+# Input Settings
+CONSTRAINT_FILE = '../data/input_constraint.txt'
+self_constraints, coupled_constraints, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT = parse_constraints(CONSTRAINT_FILE)
+(INPUT_DATA_DIM, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_NAMES), constraint_set = fill_constraints(self_constraints, coupled_constraints)
 OBJECTIVES_TO_OPTIMISE_DIM = len(OBJECTIVES_TO_OPTIMISE)
 OBJECTIVES_TO_OPTIMISE_INDEX = list(range(OBJECTIVES_TO_OPTIMISE_DIM))
-#objective to evaluate
-OUTPUT_OBJECTIVE_CONSTRAINT = {'lut': [0,20000], 'ff' : [0, 12000]}
 OBJECTIVES_TO_EVALUATE = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONSTRAINT)
 
-
-
+#Dataset Settings
+RAW_DATA_FILE = '../data/ppa_v2.db'
+data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
 #Model Settings
 RAW_SAMPLES = 1
 NOISE_SE = 0.5
 NUM_RESTARTS = 2
-N_TRIALS = 15            # number of trials of BO (outer loop)
-N_BATCH = 30            # number of BO batches (inner loop)
+N_TRIALS = 10            # number of trials of BO (outer loop)
+N_BATCH = 2            # number of BO batches (inner loop)
 BATCH_SIZE = 1          # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 16         # number of MC samples for qNEI
 
@@ -61,29 +46,10 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 d_type = torch.int
 t_type = torch.float64
 
-data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
-# data_set = data.read_data_from_txt(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
 
 #Reference point for Optimisation
 ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, OBJECTIVES_TO_OPTIMISE, data_set.worst_value, data_set.output_normalised_factors, t_type)
 obj_normalized_factors = list(data_set.output_normalised_factors.values())
-
-#Constraints
-constraint_set = Input_Constraints(INPUT_DATA_DIM)
-constraint_set.update_scale(INPUT_DATA_SCALES)
-constraint_set.update_normalize_factor(INPUT_NORMALIZED_FACTOR)
-
-#Data_set 1
-constraint_set.update_self_constraints(0, [1, 12])
-constraint_set.update_self_constraints(1, [5, 6])
-constraint_set.update_self_constraints(2, [4, 255])
-
-#Data_set 2
-# constraint_set.update_self_constraints(0, [1, 6])
-# constraint_set.update_self_constraints(1, [4, 252])
-# constraint_set.update_new_constraints([{0: [1, 4], 1: [4, 4]}, {0: [5, 6], 1: [4, 252]}])
-
-
 
 def calculate_hypervolume(ref_points, train_obj):
     """Calculate the hypervolume"""
