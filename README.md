@@ -11,9 +11,9 @@ Current Progress
 - Built a simple model
 - Modified the model to be able to optimise for multiple-objectives
 - Modified the model to be aware of the output constraints, making it able to find design with the output within a range.
+- Implemented constraint interface.
 
 TODO
-- Implement a constraint interface.
 - Further optimise the efficiency of the model.
 - Experiments in larger dataset.
 

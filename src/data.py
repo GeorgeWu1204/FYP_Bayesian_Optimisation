@@ -82,7 +82,8 @@ class Data_Set:
                     # if the best value is the same as the worst value, then the normalised factor is 1
                     self.output_normalised_factors[obj] = 1.0
                 else:
-                    self.output_normalised_factors[obj] = abs(self.best_value[obj] - self.worst_value[obj])
+                    # self.output_normalised_factors[obj] = abs(self.best_value[obj] - self.worst_value[obj])
+                    self.output_normalised_factors[obj] = abs(self.best_value[obj])
         
         self.output_constraints_to_check = []
         for obj in output_obj_constraint:
@@ -98,7 +99,7 @@ class Data_Set:
             constraints.append(self.__dict__.get(i).Constraints)
         return constraints
     
-    def find_ppa_result(self, sample_inputs, batch_size, dtype):
+    def find_ppa_result(self, sample_inputs, batch_size, dtype, device):
         """find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
         num_restart= sample_inputs.shape[0]
         results = torch.empty((batch_size, num_restart, len(self.objs_to_evaluate)), dtype=dtype)
@@ -119,6 +120,9 @@ class Data_Set:
                 results[batch,:,obj_index] = result
                 obj_index += 1
         return results
+    
+    def find_unnormalised_input(self, sample_inputs):
+        return recover_input_data(sample_inputs, self.input_normalized_factors, self.scaled_factors)
 
     def find_single_ppa_result(self, sample_input):
         result = []
@@ -133,10 +137,10 @@ class Data_Set:
             output[obj] = round(input[obj] * self.input_normalized_factors[j]) * self.scaled_factors[j]
         return output
 
-    def check_output_constraints(self, X):
-        """This is the callable function for the output constraints of the acq function"""
+    def check_qEHVI_constraints(self, X):
+        """This is the callable function for the output constraints of the qEHVI acq function"""
         # X shape sample_shape x batch-shape x q x m , Output shape sample_shape x batch-shape x q
-        results = torch.zeros((X.shape[0], X.shape[1], X.shape[2]), dtype=X.dtype)
+        results = torch.zeros((X.shape[0], X.shape[1], X.shape[2]), device=X.device, dtype=X.dtype)
         for i in range(X.shape[0]):
             for j in range(X.shape[1]):
                 for k in range(X.shape[2]):
@@ -147,6 +151,22 @@ class Data_Set:
                             break
                         else:
                             results[i][j][k] -= condition_val
+        return results
+
+    def check_qNEHVI_constraints(self, X):
+        """This is the callable function for the output constraints of the qNEHVI acq function"""
+        # X shape sample_shape x batch-shape x q x m , Output shape sample_shape x batch-shape x q
+        print("X.shape", X.shape)
+        results = torch.zeros((X.shape[0], X.shape[1]), device=X.device, dtype=X.dtype)
+        for i in range(X.shape[0]):
+            for j in range(X.shape[1]):
+                    for obj_index in range(self.objs_to_optimise_dim, X.shape[2]):
+                        condition_val = calculate_condition(X[i][j][obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
+                        if  condition_val < 0:
+                            results[i][j] = 1
+                            break
+                        else:
+                            results[i][j] -= condition_val
         return results
     
     def check_candidate_output_constraints(self, X):

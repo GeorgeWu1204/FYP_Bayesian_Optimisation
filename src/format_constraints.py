@@ -125,9 +125,9 @@ class Input_Constraints:
                     print("At D ", constraint, "D col: ", linked_constraint[constraint])
                     print("Condition: ", self.Node[constraint].conditions[linked_constraint[constraint]])
     
-    def create_initial_data(self, num_of_start, output_type):
+    def create_initial_data(self, num_of_start, output_type, device):
         q_dim = 1
-        output_tensor = torch.empty((num_of_start, self.dim), dtype=output_type)
+        output_tensor = torch.empty((num_of_start, self.dim), device=device, dtype=output_type)
         for i in range(num_of_start):
             # create initial data iteratively for num_of_start times
             possible_initial_tensor = torch.zeros((1, 1, self.dim), dtype=output_type)

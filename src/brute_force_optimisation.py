@@ -4,21 +4,20 @@ import time
 import utils
 from colorama import Fore, Style
 import random
-
+from interface import fill_constraints, parse_constraints
 from format_constraints import Constraints_Brute_Force
-#Data_set 1
-INPUT_DATA_DIM = 3
-INPUT_DATA_SCALES = [1, 1, 1]
-INPUT_NORMALIZED_FACTOR = [12, 6, 255]    # normalized_Factor = max_value / scale
-RAW_DATA_FILE = '../data/ppa_v2.db'
-INPUT_VARIABLES = [[1, 12], [5, 6], [4, 255]]
 
-OBJECTIVES_TO_OPTIMISE = {'estimated_clock_period': 'minimise', 'ncycles_matmul': 'minimise'}
+CONSTRAINT_FILE = '../data/input_constraint.txt'
+self_constraints, coupled_constraints, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT = parse_constraints(CONSTRAINT_FILE)
+(INPUT_DATA_DIM, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_NAMES), _ = fill_constraints(self_constraints, coupled_constraints)
 OBJECTIVES_TO_OPTIMISE_DIM = len(OBJECTIVES_TO_OPTIMISE)
 OBJECTIVES_TO_OPTIMISE_INDEX = list(range(OBJECTIVES_TO_OPTIMISE_DIM))
-#objective to evaluate
-OUTPUT_OBJECTIVE_CONSTRAINT = {'lut': [0,20000], 'ff' : [0, 12000]}
 OBJECTIVES_TO_EVALUATE = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONSTRAINT)
+
+RAW_DATA_FILE = '../data/ppa_v2.db'
+INPUT_VARIABLES = []
+for input_name in INPUT_NAMES:
+    INPUT_VARIABLES.append(self_constraints[input_name][:2])
 
 data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
 
@@ -46,7 +45,11 @@ overall_iteration_required = len(sample_inputs)
 print("overall_iteration_required: ", overall_iteration_required)
 
 if record:
-    results_record = utils.brute_force_training_result(OBJECTIVES_TO_OPTIMISE, overall_iteration_required, '../test/record_brute_force_result.txt')
+    record_file_name = '../test/test_results/'
+    for obj_name in OBJECTIVES_TO_OPTIMISE.keys():
+        record_file_name = record_file_name + obj_name + '_'
+    record_file_name = record_file_name + 'brute_force_record_result.txt'
+    results_record = utils.brute_force_training_result(OBJECTIVES_TO_OPTIMISE, overall_iteration_required, record_file_name)
 
 #Optimisation Loop
 for iteration in range(overall_iteration_required):
@@ -62,11 +65,10 @@ for iteration in range(overall_iteration_required):
                 best_volume = volume
                 best_sample = sample_input
                 best_results = result
-                print(f"{Fore.GREEN}best_volume: {best_volume}, best_sample: {best_sample}, best_results: {best_results}{Style.RESET_ALL}")
     t1 = time.monotonic()
     if record:
         results_record.record(iteration, best_results, t1-t0)
-print("best_results: ", best_results)
+print(f"{Fore.GREEN}best_volume: {best_volume}, best_sample: {best_sample}, best_results: {best_results}{Style.RESET_ALL}")
 if record:
     results_record.store()
 

@@ -1,0 +1,5 @@
+iteration, time, estimated_clock_period, ncycles_matmul
+0, 2.12, 13.797, 78756.0
+1, 2.92, 13.797, 78756.0
+2, 5.12, 0, 0
+3, 6.05, 14.268, 52911.0

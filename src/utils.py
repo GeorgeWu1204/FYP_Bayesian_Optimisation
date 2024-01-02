@@ -43,9 +43,9 @@ def recover_input_data(input_tensor, normalized_factors, scaled_factors):
 
 
 
-def normalise_output_data(input_tensor, normalized_factors):
+def normalise_output_data(input_tensor, normalized_factors, device):
     batch_dim, num_restarts, obj_m = input_tensor.shape
-    output_tensor = torch.empty((batch_dim, num_restarts, obj_m), dtype=input_tensor.dtype)
+    output_tensor = torch.empty((batch_dim, num_restarts, obj_m), device=device,dtype=input_tensor.dtype)
     for b in range(batch_dim):
         for i in range(obj_m):
             for j in range(num_restarts):
@@ -77,8 +77,8 @@ def encapsulate_input_tensor_into_dict(input_tensor, input_var_names):
         input_index += 1
     return input_dict
 
-def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, worst_value, output_normalised_factors, t_type):
-    ref_points = torch.empty((OBJECTIVES_DIM), dtype=t_type)
+def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, worst_value, output_normalised_factors, t_type, device):
+    ref_points = torch.empty((OBJECTIVES_DIM), device=device, dtype=t_type)
     ref_point_index = 0
     for obj in OBJECTIVES.keys():
         if(OBJECTIVES[obj] == 'minimise'):
