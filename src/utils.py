@@ -1,8 +1,15 @@
 import torch
 import itertools
+from botorch.utils.transforms import unnormalize
+
 
 def calculate_condition(x, condition):
     return (x - condition[0]) * (condition[1] - x)
+
+def calculate_smooth_condition(x, condition):
+    """Smooth, differentiable step function."""
+    return 1 / (1 + torch.exp(-10 * (x - condition[1]))) - 1 / (1 + torch.exp(-10 * (x - condition[0]))) + 0.5
+
 
 def build_matrix(data, constraints, num_restarts, q_dim, d_dim):
     """Build a matrix to store all the results of whether the input data meet the constraints."""
@@ -33,23 +40,19 @@ def normalise_input_data(input_tensor, normalized_factors):
             output_tensor[i][j] = input_tensor[i][j] / normalized_factors[j]
     return output_tensor
 
-def recover_input_data(input_tensor, normalized_factors, scaled_factors):
-    num_restarts, d_dim = input_tensor.shape
-    output_tensor = torch.empty((num_restarts, d_dim), dtype=input_tensor.dtype)
-    for i in range(num_restarts):
-        for j in range(d_dim):
-            output_tensor[i][j] = torch.round(input_tensor[i][j] * normalized_factors[j]) * scaled_factors[j] 
-    return output_tensor
+def recover_input_data(input_tensor, bounds):
+    unnormalized_tensor = unnormalize(input_tensor, bounds)
+    rounded_tensor = torch.round(unnormalized_tensor)
+    return rounded_tensor
 
 
 
 def normalise_output_data(input_tensor, normalized_factors, device):
-    batch_dim, num_restarts, obj_m = input_tensor.shape
-    output_tensor = torch.empty((batch_dim, num_restarts, obj_m), device=device,dtype=input_tensor.dtype)
-    for b in range(batch_dim):
-        for i in range(obj_m):
-            for j in range(num_restarts):
-                output_tensor[b][j][i] = input_tensor[b][j][i] / normalized_factors[i]
+    num_restarts, obj_m = input_tensor.shape
+    output_tensor = torch.empty((num_restarts, obj_m), device=device,dtype=input_tensor.dtype)
+    for i in range(obj_m):
+        for j in range(num_restarts):
+            output_tensor[j][i] = input_tensor[j][i] / normalized_factors[i]
     return output_tensor
 
 def recover_output_data(input_tensor, normalized_factors):
@@ -86,8 +89,6 @@ def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, worst_value, output_normalised_f
         else:
             ref_points[ref_point_index] = (worst_value[obj] / output_normalised_factors[obj])
         ref_point_index += 1
-
-    print("ref_point: ", ref_points)
     return ref_points
 
 def find_samples_brute_force(ranges):

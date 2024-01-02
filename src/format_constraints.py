@@ -9,12 +9,13 @@ NEGATIVE_PARAMETER_VALUE = -1000
 
 class Constraints_Node:
     def __init__(self, index):
-        self.individual_constraints = [0, MAX_PARAMETER_VALUE]
+        self.individual_constraints = [0, 1]
         self.index = index
         self.scale = 1
         self.conditions = []
         self.normalized_factor = 1
         self.rounded_region = 0.45/(self.scale * self.normalized_factor)
+        self.normalised_bound = []
 
     def initialize_scale(self, scale):
         self.scale = scale
@@ -30,15 +31,14 @@ class Constraints_Node:
     def condition_size(self):
         return len(self.conditions)
 
-    def initialize_self_constraints(self, indvidual_constraint):
-        self.individual_constraints [0] = indvidual_constraint[0] / (self.scale * self.normalized_factor) - self.rounded_region
-        self.individual_constraints [1] = indvidual_constraint[1] / (self.scale * self.normalized_factor) # considering the final input to initiallize model require the input data to be in the range of [0, 1]
 
+    def initialize_self_constraints(self, indvidual_constraint):
+        self.normalised_bound = indvidual_constraint
 
     def check_condition_included(self, condition):
         """Check whether the condition is included in the condition list. If not, add it to the list."""
-        lower_bound_cond = condition[0] / (self.scale * self.normalized_factor) - self.rounded_region
-        upper_bound_cond = condition[1] / (self.scale * self.normalized_factor) + self.rounded_region
+        lower_bound_cond = condition[0] - self.normalised_bound[0]/ (self.scale * self.normalized_factor) - self.rounded_region
+        upper_bound_cond = condition[1] - self.normalised_bound[0]/ (self.scale * self.normalized_factor) + self.rounded_region
         
         if lower_bound_cond < self.individual_constraints[0] or upper_bound_cond > self.individual_constraints[1]:
             lower_bound_cond = max(lower_bound_cond, self.individual_constraints[0])
@@ -53,12 +53,14 @@ class Constraints_Node:
 
 class Input_Constraints:
 
-    def __init__(self, dim):  
+    def __init__(self, dim, device):  
         #linked_constraints = [[or_constraints = {constraints 1, constraints 2}], [or_constraints], ...]]
         self.dim = dim
         self.Node = [Constraints_Node(i) for i in range(dim)]
         self.linked_constraints = []
         self.normalized_factors = []
+        self.normalized_bound = torch.empty((2, dim), device=device)
+        self.constraint_bound = torch.empty((2, dim), device=device)
     
     def update_normalize_factor(self, normalized_factors):
         #not sure whether it is the most efficient way to normalise the data
@@ -68,6 +70,8 @@ class Input_Constraints:
     
     def update_self_constraints(self, index, indvidual_constraint):
         self.Node[index].initialize_self_constraints([indvidual_constraint[0], indvidual_constraint[1]])
+        self.normalized_bound[:,index] = torch.tensor([indvidual_constraint[0], indvidual_constraint[1]])
+        self.constraint_bound[:,index] = torch.tensor(self.Node[index].individual_constraints)
 
     def update_scale(self, scales):
         for index, scale in enumerate(scales):

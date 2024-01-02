@@ -2,6 +2,7 @@
 import data
 import time
 import utils
+import torch
 from colorama import Fore, Style
 import random
 from interface import fill_constraints, parse_constraints
@@ -9,7 +10,7 @@ from format_constraints import Constraints_Brute_Force
 
 CONSTRAINT_FILE = '../data/input_constraint.txt'
 self_constraints, coupled_constraints, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT = parse_constraints(CONSTRAINT_FILE)
-(INPUT_DATA_DIM, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_NAMES), _ = fill_constraints(self_constraints, coupled_constraints)
+(INPUT_DATA_DIM, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_NAMES), _ = fill_constraints(self_constraints, coupled_constraints, torch.device('cpu'))
 OBJECTIVES_TO_OPTIMISE_DIM = len(OBJECTIVES_TO_OPTIMISE)
 OBJECTIVES_TO_OPTIMISE_INDEX = list(range(OBJECTIVES_TO_OPTIMISE_DIM))
 OBJECTIVES_TO_EVALUATE = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONSTRAINT)

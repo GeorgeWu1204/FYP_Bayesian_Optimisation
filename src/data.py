@@ -7,7 +7,7 @@ import sys
 import pickle
 import os.path as osp
 # Read the file
-from utils import recover_input_data, calculate_condition
+from utils import recover_input_data, calculate_condition, calculate_smooth_condition
 
 class Data_Sample:
     def __init__(self, data, objs, data_set_type):
@@ -38,7 +38,7 @@ class Data_Sample:
         for k, v in self.PPA.items():
             print(f"{k} = {v}")
     def get_ppa(self, obj):
-        return self.PPA[obj]    
+        return self.PPA.get(obj, None)   
 
 class Data_Set:
     def __init__(self, data, objs, scales, input_data_normalized_factors, output_obj_constraint, data_set_type = 'txt'):
@@ -51,24 +51,23 @@ class Data_Set:
         self.objs_to_evaluate = list(objs.keys()) + list(output_obj_constraint.keys())
         self.output_normalised_factors = {}
         self.input_normalized_factors = input_data_normalized_factors
+        self.scaled_factors = scales
 
+            
         if data_set_type == 'txt':
             for i in range(len(data)):
                 d_input_dic = data[i][0]
                 d_input = [val for val in d_input_dic.values()]
                 self.__dict__[tuple(d_input)] = Data_Sample(data[i], self.objs_to_evaluate, data_set_type)
-                self.scaled_factors = scales
-            
+                
         elif data_set_type == 'db':
             for obj in self.objs_to_evaluate:
                 val_list[obj] = []
             for i in data.keys():
                 self.__dict__[i] = Data_Sample([i, data[i]], self.objs_to_evaluate, data_set_type)
-                self.scaled_factors = scales
                 for obj in self.objs_to_evaluate:
                     val_list[obj].append(data[i][obj])
             for obj in self.objs_to_evaluate:
-
                 if objs.get(obj, None) == 'minimise':
                     self.best_value[obj] = min(val_list[obj])
                     self.worst_value[obj] = max(val_list[obj])
@@ -99,29 +98,24 @@ class Data_Set:
             constraints.append(self.__dict__.get(i).Constraints)
         return constraints
     
-    def find_ppa_result(self, sample_inputs, batch_size, dtype, device):
-        """find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
+    def find_ppa_result(self, sample_inputs, dtype):
+        """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
         num_restart= sample_inputs.shape[0]
-        results = torch.empty((batch_size, num_restart, len(self.objs_to_evaluate)), dtype=dtype)
+        results = torch.empty((num_restart, len(self.objs_to_evaluate)), device=sample_inputs.device, dtype=dtype)
         obj_index = 0
-        denormalized_sample_inputs = recover_input_data(sample_inputs, self.input_normalized_factors, self.scaled_factors)
-        for batch in range(batch_size):
-            for obj in self.objs_to_evaluate:
-                result = torch.zeros(num_restart, dtype=dtype)
-                for i in range(0, num_restart):
-                    rounded_denormalized_sample_inputs = denormalized_sample_inputs[i]
-                    input = rounded_denormalized_sample_inputs.tolist()
-                    try:
-                        result[i] = self.__dict__.get(tuple(input)).get_ppa(obj)
-                    except:
-                        result[i] = 0
-                if self.objs_direct.get(obj, None) == 'minimise':
-                    result = -1 * result
-                results[batch,:,obj_index] = result
-                obj_index += 1
+        for obj in self.objs_to_evaluate:
+            result = torch.zeros(num_restart, dtype=dtype)
+            for i in range(0, num_restart):
+                input = sample_inputs[i].tolist()
+                result[i] = self.__dict__.get(tuple(input)).get_ppa(obj)
+            if self.objs_direct.get(obj, None) == 'minimise':
+                result = -1 * result
+            results[:,obj_index] = result
+            obj_index += 1
         return results
     
     def find_unnormalised_input(self, sample_inputs):
+        """This function is for recording the unnormalised input data for the given sample inputs"""
         return recover_input_data(sample_inputs, self.input_normalized_factors, self.scaled_factors)
 
     def find_single_ppa_result(self, sample_input):
@@ -130,7 +124,6 @@ class Data_Set:
             result.append(self.__dict__.get(tuple(sample_input)).get_ppa(obj))
         return result
 
-    
     def recover_single_input_data(self, input):
         output = {}
         for j, obj in enumerate(input.keys()):
@@ -147,7 +140,7 @@ class Data_Set:
                     for obj_index in range(self.objs_to_optimise_dim, X.shape[3]):
                         condition_val = calculate_condition(X[i][j][k][obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
                         if  condition_val < 0:
-                            results[i][j][k] = 1
+                            results[i][j][k] = 1e-3
                             break
                         else:
                             results[i][j][k] -= condition_val
@@ -155,23 +148,21 @@ class Data_Set:
 
     def check_qNEHVI_constraints(self, X):
         """This is the callable function for the output constraints of the qNEHVI acq function"""
-        # X shape sample_shape x batch-shape x q x m , Output shape sample_shape x batch-shape x q
-        print("X.shape", X.shape)
-        results = torch.zeros((X.shape[0], X.shape[1]), device=X.device, dtype=X.dtype)
+        # X shape n x m , Output shape sample_shape x batch-shape x q
+        # Negative implies feasible
+        
+        results = torch.zeros((X.shape[0], 1), device=X.device, dtype=X.dtype)
         for i in range(X.shape[0]):
-            for j in range(X.shape[1]):
-                    for obj_index in range(self.objs_to_optimise_dim, X.shape[2]):
-                        condition_val = calculate_condition(X[i][j][obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
-                        if  condition_val < 0:
-                            results[i][j] = 1
-                            break
-                        else:
-                            results[i][j] -= condition_val
+            condition_vals = []
+            for obj_index in range(self.objs_to_optimise_dim, X.shape[1]):
+                condition_val = calculate_smooth_condition(X[i][obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
+                condition_vals.append(condition_val)
+            results[i] = max(condition_vals)
         return results
     
     def check_candidate_output_constraints(self, X):
         valid_obj = True
-        for obj_index in range(self.objs_to_optimise_dim, X.shape[2]):
+        for obj_index in range(self.objs_to_optimise_dim, X.shape[1]):
             condition_val = calculate_condition(X[..., obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
             if  condition_val < 0:
                 valid_obj = False

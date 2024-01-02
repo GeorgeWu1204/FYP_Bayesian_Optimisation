@@ -1,5 +1,5 @@
 from format_constraints import Input_Constraints
-def fill_constraints(self_constraints, coupled_constraints):
+def fill_constraints(self_constraints, coupled_constraints, device):
     """this function is used to fill the constraints in the interface"""
     # self_constraints: {var_name: [lower_bound, upper_bound, scale]}
     # coupled_constraints: [{var_name: [lower_bound, upper_bound], var_name: [lower_bound, upper_bound]},... ]
@@ -10,7 +10,7 @@ def fill_constraints(self_constraints, coupled_constraints):
         input_scales[i] = int(self_constraints[var_obj][2])
         input_normalized_factor[i] = int(self_constraints[var_obj][1] / input_scales[i])
     input_names = list(self_constraints.keys())
-    constraint = Input_Constraints(input_dim)
+    constraint = Input_Constraints(input_dim, device)
     constraint.update_scale(input_scales)
     constraint.update_normalize_factor(input_normalized_factor)
     for i in range(input_dim):

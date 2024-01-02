@@ -2,6 +2,7 @@ import torch
 import data
 import time
 import utils
+import warnings
 from colorama import Fore, Style
 
 from interface import fill_constraints, parse_constraints
@@ -21,30 +22,40 @@ from botorch.acquisition.multi_objective.monte_carlo import (
 from botorch.optim import optimize_acqf
 from botorch.sampling.normal import SobolQMCNormalSampler
 from botorch.fit import fit_gpytorch_model
+from botorch.utils.transforms import normalize
+from botorch.exceptions import BadInitialCandidatesWarning
+
+
+
+# Device Settings
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cpu")
 
 # Input Settings
 CONSTRAINT_FILE = '../data/input_constraint.txt'
 self_constraints, coupled_constraints, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT = parse_constraints(CONSTRAINT_FILE)
-(INPUT_DATA_DIM, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_NAMES), constraint_set = fill_constraints(self_constraints, coupled_constraints)
+(INPUT_DATA_DIM, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_NAMES), constraint_set = fill_constraints(self_constraints, coupled_constraints, device)
 OBJECTIVES_TO_OPTIMISE_DIM = len(OBJECTIVES_TO_OPTIMISE)
 OBJECTIVES_TO_OPTIMISE_INDEX = list(range(OBJECTIVES_TO_OPTIMISE_DIM))
-OBJECTIVES_TO_EVALUATE = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONSTRAINT)
 
 #Dataset Settings
 RAW_DATA_FILE = '../data/ppa_v2.db'
 data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
 
 #Model Settings
-NUM_RESTARTS = 10               # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 30      # number of initial points for BO
-N_TRIALS = 2                    # number of trials of BO (outer loop)
-N_BATCH = 10                     # number of BO batches (inner loop)
+NUM_RESTARTS = 16                # number of starting points for BO for optimize_acqf
+NUM_OF_INITIAL_POINT = 30       # number of initial points for BO
+N_TRIALS = 1                    # number of trials of BO (outer loop)
+N_BATCH = 50                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
-MC_SAMPLES = 16                 # number of MC samples for qNEI
+MC_SAMPLES = 128                # number of MC samples for qNEI
+
+#Runtime Settings
+verbose = True
+record = False
+debug = True
 
 
-# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-device = torch.device("cpu")
 t_type = torch.float64
 
 
@@ -59,37 +70,33 @@ def calculate_hypervolume(ref_points, train_obj):
     hv = partitioning.compute_hypervolume().item()
     return hv
 
-def generate_initial_data(data_type):
+def generate_initial_data(data_type, bounds):
     """generate training data"""
-    train_x = constraint_set.create_initial_data(NUM_OF_INITIAL_POINT, data_type, device)
-    exact_obj = data_set.find_ppa_result(train_x, BATCH_SIZE, data_type, device)
+    normlised_train_x = constraint_set.create_initial_data(NUM_OF_INITIAL_POINT, data_type, device)
+    train_x = utils.recover_input_data(normlised_train_x, bounds)
+    exact_obj = data_set.find_ppa_result(train_x, data_type)
     normalised_obj = utils.normalise_output_data(exact_obj, obj_normalized_factors, device)
+    con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
+    train_obj = torch.cat([normalised_obj[...,:OBJECTIVES_TO_OPTIMISE_DIM], con_obj], dim=-1)
     best_observed_value = calculate_hypervolume(ref_points, normalised_obj)
-    return train_x, exact_obj, normalised_obj, best_observed_value
+    return train_x, exact_obj, train_obj, best_observed_value
 
-def generate_internal_bound(data_type):
-    bounds = torch.empty((INPUT_DATA_DIM, 2), dtype=data_type)
-    scalas = torch.empty((INPUT_DATA_DIM, 1), dtype=data_type)
-    for i in range(INPUT_DATA_DIM):
-        bounds[i] = torch.tensor(constraint_set.Node[i].individual_constraints)
-        scalas[i] = torch.tensor(constraint_set.Node[i].scale)
-    return bounds, scalas.squeeze()
-
-
-def initialize_model(train_x, train_obj):
+def initialize_model(train_x, train_obj, bounds):
     """define models for objective and constraint"""
     ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
+    train_x = normalize(train_x, bounds)
     models = []
     for obj_index in range(train_obj.shape[-1]): 
-        train_y = train_obj[..., obj_index : obj_index + 1].squeeze(0)
+        train_y = train_obj[..., obj_index : obj_index + 1]
         models.append(SingleTaskGP(train_x, train_y, outcome_transform=Standardize(m=1)))
     model = ModelListGP(*models)
     mll = SumMarginalLogLikelihood(model.likelihood, model)
     return mll, model
 
-def build_qEHVI_acqf(model, train_x, sampler):
+def build_qEHVI_acqf(model, train_x, sampler, bounds):
     """Build the qEHVI acquisition function"""
     # partition non-dominated space into disjoint rectangles
+    train_x = normalize(train_x, bounds)
     with torch.no_grad():
         pred = model.posterior(train_x).mean[..., :OBJECTIVES_TO_OPTIMISE_DIM]
     partitioning = FastNondominatedPartitioning(
@@ -102,56 +109,55 @@ def build_qEHVI_acqf(model, train_x, sampler):
         partitioning=partitioning,
         objective=IdentityMCMultiOutputObjective(outcomes = OBJECTIVES_TO_OPTIMISE_INDEX),
         sampler=sampler,
-        constraints=[data_set.check_qEHVI_constraints],
+        constraints=[lambda Z: Z[..., -1]],
     )
     return acq_func
 
-def build_qNEHVI_acqf(model, train_x, sampler):
+def build_qNEHVI_acqf(model, train_x, sampler, bounds):
     """Build the qNEHVI acquisition function"""
+    train_x = normalize(train_x, bounds)
     acq_func = qNoisyExpectedHypervolumeImprovement(
         model=model,
         ref_point=ref_points.tolist(),  # use known reference point
         X_baseline=train_x,
         sampler=sampler,
-        # prune_baseline=True,
+        prune_baseline=True,
         objective=IdentityMCMultiOutputObjective(outcomes = OBJECTIVES_TO_OPTIMISE_INDEX),
-        constraints=[data_set.check_qEHVI_constraints],
+        constraints=[lambda Z: Z[..., -1]],
     )
     return acq_func
     
 
-def optimize_acqf_and_get_observation(acq_func, generated_bounds):
+def optimize_acqf_and_get_observation(acq_func, constraint_bounds, normalize_bounds):
     """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
     sampled_initial_conditions = constraint_set.create_initial_data(NUM_RESTARTS, t_type, device).unsqueeze(1)
-    
-    # optimize
+    # optimize'
     candidates, _ = optimize_acqf(
         acq_function=acq_func,
-        bounds=torch.transpose(generated_bounds, 0, 1),
+        bounds=constraint_bounds,
         q=BATCH_SIZE,
         num_restarts=NUM_RESTARTS,
         options={"batch_limit": 1, "maxiter": 200},
         nonlinear_inequality_constraints = [constraint_set.get_nonlinear_inequality_constraints],
         batch_initial_conditions = sampled_initial_conditions,
     )
-
     # observe new values
-    new_x = candidates.detach()
-    new_exact_obj = data_set.find_ppa_result(new_x, BATCH_SIZE, t_type, device)
+    new_x = utils.recover_input_data(candidates.detach(), normalize_bounds)
+    new_exact_obj = data_set.find_ppa_result(new_x, t_type)
     new_normalised_obj = utils.normalise_output_data(new_exact_obj, obj_normalized_factors, device)
-    if data_set.check_candidate_output_constraints(new_normalised_obj):
+    new_con_obj = data_set.check_qNEHVI_constraints(new_normalised_obj)
+    if new_con_obj.item() <= 0.0:
         hyper_vol = calculate_hypervolume(ref_points, new_normalised_obj)
     else:
         hyper_vol = 0.0
+    new_train_obj = torch.cat([new_normalised_obj[...,:OBJECTIVES_TO_OPTIMISE_DIM], new_con_obj], dim=-1)
+    return new_x, new_exact_obj, new_train_obj, hyper_vol
 
-    return new_x, new_exact_obj, new_normalised_obj, hyper_vol
+if not debug:
+    warnings.filterwarnings("ignore", category=BadInitialCandidatesWarning)
+    warnings.filterwarnings("ignore", category=RuntimeWarning)
+    torch.set_printoptions(sci_mode=False)
 
-
-
-verbose = True
-record = False
-bounds, scalas = generate_internal_bound(t_type)
-print("bounds: ", bounds, "scalas: ", scalas)
 if record:
     record_file_name = '../test/test_results/'
     for obj_name in OBJECTIVES_TO_OPTIMISE.keys():
@@ -170,11 +176,9 @@ for trial in range (1, N_TRIALS + 1):
         exact_obj_ei,
         train_obj_ei,
         _,
-    ) = generate_initial_data(t_type)
-
-    print("train_x_ei shape: ", train_x_ei.shape)
+    ) = generate_initial_data(t_type, constraint_set.normalized_bound)
     
-    mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei)
+    mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, constraint_set.normalized_bound)
     #reset the best observation
     best_observation_per_interation = {obj : None for obj in OBJECTIVES_TO_OPTIMISE.keys()}
     best_constraint_per_interation = {obj : None for obj in OUTPUT_OBJECTIVE_CONSTRAINT.keys()}
@@ -183,29 +187,32 @@ for trial in range (1, N_TRIALS + 1):
 
     for iteration in range(1, N_BATCH + 1):
         t0 = time.monotonic()
+        
         # fit the models
+        print("line 192")
         fit_gpytorch_model(mll_ei)
 
         #QMC sampler
         qmc_sampler = SobolQMCNormalSampler(sample_shape=torch.Size([MC_SAMPLES]))
+        print("line 197")
         # acqf = build_qEHVI_acqf(model_ei, train_x_ei, qmc_sampler)
-        acqf = build_qNEHVI_acqf(model_ei, train_x_ei, qmc_sampler)
+        acqf = build_qNEHVI_acqf(model_ei, train_x_ei, qmc_sampler, constraint_set.normalized_bound)
+        print("line 200")
         # optimize and get new observation
-        new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimize_acqf_and_get_observation(acqf, bounds)
-        
-        #--------------for debug------------------
+        new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimize_acqf_and_get_observation(acqf, constraint_set.constraint_bound, constraint_set.normalized_bound)
+        print("line 203")
 
-        print("new_x_ei: ", data_set.find_unnormalised_input(new_x_ei))
-        print("new_exact_obj_ei: ", new_exact_obj_ei)
-        print("hyper_vol: ", hyper_vol)
+        #--------------for debug------------------
+        if debug:
+            print("new_x_ei: ", new_x_ei)
+            print("new_exact_obj_ei: ", new_exact_obj_ei)
+            print("hyper_vol: ", hyper_vol)
 
         #-----------------------------------------
 
         # update training points
         train_x_ei = torch.cat([train_x_ei, new_x_ei])
-        print("train_x_ei shape: ", train_x_ei.shape)
-        train_obj_ei = torch.cat((train_obj_ei, new_train_obj_ei), dim=1)
-        print("train_obj_ei shape: ", train_obj_ei.shape)
+        train_obj_ei = torch.cat([train_obj_ei, new_train_obj_ei])
         # update progress
         if hyper_vol > best_hyper_vol_per_interation:
             best_hyper_vol_per_interation = hyper_vol
@@ -213,10 +220,7 @@ for trial in range (1, N_TRIALS + 1):
             best_constraint_per_interation = utils.encapsulate_obj_tensor_into_dict(OUTPUT_OBJECTIVE_CONSTRAINT, new_exact_obj_ei[... , OBJECTIVES_TO_OPTIMISE_DIM :])
             best_sample_point_per_interation = utils.encapsulate_input_tensor_into_dict(new_x_ei, INPUT_NAMES)
         # reinitialize the models so they are ready for fitting on next iteration
-        mll_ei, model_ei = initialize_model(
-            train_x_ei,
-            train_obj_ei,
-        )
+        mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, constraint_set.normalized_bound)
         t1 = time.monotonic()
 
         if verbose:
@@ -254,7 +258,6 @@ if record:
 # Final stage, find the best sample point and the corresponding best observation
 print("<------------------Final Result------------------>")
 best_trial = utils.find_max_index_in_list(best_hyper_vol_per_trial)
-best_sample_point = data_set.recover_single_input_data(best_sample_points_per_trial[best_trial + 1])
-best_objective = data_set.find_single_ppa_result(list(best_sample_point.values()))
-print(f"{Fore.BLUE}Best sample point: {best_sample_point}{Style.RESET_ALL}")
+best_objective = data_set.find_single_ppa_result(list(best_sample_points_per_trial[best_trial + 1].values()))
+print(f"{Fore.BLUE}Best sample point: {best_sample_points_per_trial[best_trial + 1]}{Style.RESET_ALL}")
 print(f"{Fore.BLUE}Best objective: {best_objective}{Style.RESET_ALL}")
