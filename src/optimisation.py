@@ -23,9 +23,16 @@ from botorch.optim import optimize_acqf
 from botorch.sampling.normal import SobolQMCNormalSampler
 from botorch.fit import fit_gpytorch_model
 from botorch.utils.transforms import normalize
+
+from gpytorch.likelihoods import GaussianLikelihood
+from gpytorch.constraints import GreaterThan, LessThan
+
+from gpytorch.priors import GammaPrior
+from gpytorch.kernels import MaternKernel, ScaleKernel
+
+# Warning Suppression
 from botorch.exceptions import BadInitialCandidatesWarning
-
-
+from linear_operator.utils.cholesky import NumericalWarning
 
 # Device Settings
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -38,26 +45,29 @@ self_constraints, coupled_constraints, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_
 OBJECTIVES_TO_OPTIMISE_DIM = len(OBJECTIVES_TO_OPTIMISE)
 OBJECTIVES_TO_OPTIMISE_INDEX = list(range(OBJECTIVES_TO_OPTIMISE_DIM))
 
-#Dataset Settings
+# Dataset Settings
 RAW_DATA_FILE = '../data/ppa_v2.db'
 data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
 
-#Model Settings
-NUM_RESTARTS = 16                # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 30       # number of initial points for BO
+# Model Settings
+NUM_RESTARTS = 16               # number of starting points for BO for optimize_acqf
+NUM_OF_INITIAL_POINT = 100      # number of initial points for BO
 N_TRIALS = 1                    # number of trials of BO (outer loop)
-N_BATCH = 50                    # number of BO batches (inner loop)
+N_BATCH = 25                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 128                # number of MC samples for qNEI
+             
+MODEL_LIKELIHOOD = GaussianLikelihood(
+    noise_constraint=GreaterThan(1e-5 ) # noise level for qNEI
+)
 
-#Runtime Settings
+# Runtime Settings
 verbose = True
 record = False
 debug = True
 
 
 t_type = torch.float64
-
 
 #Reference point for Optimisation
 ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, OBJECTIVES_TO_OPTIMISE, data_set.worst_value, data_set.output_normalised_factors, t_type, device)
@@ -88,7 +98,19 @@ def initialize_model(train_x, train_obj, bounds):
     models = []
     for obj_index in range(train_obj.shape[-1]): 
         train_y = train_obj[..., obj_index : obj_index + 1]
-        models.append(SingleTaskGP(train_x, train_y, outcome_transform=Standardize(m=1)))
+        models.append(SingleTaskGP(train_x, 
+                                   train_y, 
+                                   likelihood=MODEL_LIKELIHOOD, 
+                                #    covar_module=ScaleKernel(
+                                #         MaternKernel(
+                                #             nu=2.5,
+                                #             ard_num_dims=train_x.shape[-1],
+                                #             lengthscale_prior=GammaPrior(2.0, 2.0),
+                                #         ),
+                                #         outputscale_prior=GammaPrior(2.0, 0.15),
+                                #     ),
+                                    outcome_transform=Standardize(m=1)))
+       
     model = ModelListGP(*models)
     mll = SumMarginalLogLikelihood(model.likelihood, model)
     return mll, model
@@ -105,7 +127,7 @@ def build_qEHVI_acqf(model, train_x, sampler, bounds):
     )
     acq_func = qExpectedHypervolumeImprovement(
         model=model,
-        ref_point=ref_points,
+        ref_point=ref_points.tolist(),  # use known reference point
         partitioning=partitioning,
         objective=IdentityMCMultiOutputObjective(outcomes = OBJECTIVES_TO_OPTIMISE_INDEX),
         sampler=sampler,
@@ -131,7 +153,6 @@ def build_qNEHVI_acqf(model, train_x, sampler, bounds):
 def optimize_acqf_and_get_observation(acq_func, constraint_bounds, normalize_bounds):
     """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
     sampled_initial_conditions = constraint_set.create_initial_data(NUM_RESTARTS, t_type, device).unsqueeze(1)
-    # optimize'
     candidates, _ = optimize_acqf(
         acq_function=acq_func,
         bounds=constraint_bounds,
@@ -156,6 +177,7 @@ def optimize_acqf_and_get_observation(acq_func, constraint_bounds, normalize_bou
 if not debug:
     warnings.filterwarnings("ignore", category=BadInitialCandidatesWarning)
     warnings.filterwarnings("ignore", category=RuntimeWarning)
+    warnings.filterwarnings("ignore", category=NumericalWarning)
     torch.set_printoptions(sci_mode=False)
 
 if record:
@@ -189,25 +211,20 @@ for trial in range (1, N_TRIALS + 1):
         t0 = time.monotonic()
         
         # fit the models
-        print("line 192")
         fit_gpytorch_model(mll_ei)
 
         #QMC sampler
         qmc_sampler = SobolQMCNormalSampler(sample_shape=torch.Size([MC_SAMPLES]))
-        print("line 197")
         # acqf = build_qEHVI_acqf(model_ei, train_x_ei, qmc_sampler)
         acqf = build_qNEHVI_acqf(model_ei, train_x_ei, qmc_sampler, constraint_set.normalized_bound)
-        print("line 200")
         # optimize and get new observation
         new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimize_acqf_and_get_observation(acqf, constraint_set.constraint_bound, constraint_set.normalized_bound)
-        print("line 203")
 
         #--------------for debug------------------
         if debug:
             print("new_x_ei: ", new_x_ei)
             print("new_exact_obj_ei: ", new_exact_obj_ei)
             print("hyper_vol: ", hyper_vol)
-
         #-----------------------------------------
 
         # update training points

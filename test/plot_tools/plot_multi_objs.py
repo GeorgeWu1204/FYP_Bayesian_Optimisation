@@ -3,8 +3,14 @@ import matplotlib.pyplot as plt
 data = []
 optimised_obj_dim = 2
 
-obj_normalized_factors = 4.668999999999999 * 55036.0
-max_value = 14.268 * 46602/obj_normalized_factors
+obj_normalized_factors = 4.668999999999999 * 1289581.0
+max_value = 14.268 * 311063/obj_normalized_factors
+
+objnames = ['Estimated clock period', 'ncycles Dijkstra']
+
+# Join the names in the list with underscores and convert them to lowercase
+output_string = "_".join(objnames).lower().replace(" ", "_")
+
 
 def process_data(file_name):
     data = []
@@ -35,11 +41,11 @@ def find_hyper_vol(objs, iterations):
 
 
 # Extract the values for plotting
-overall_iterations, times, objs = process_data('../record_result.txt')
+overall_iterations, times, objs = process_data('../test_results/'+output_string+'_record_result.txt')
 hyper_volume_bo = find_hyper_vol(objs, overall_iterations)
 max_values = [max_value for i in range(len(overall_iterations))]
 
-iterations, times, objs = process_data('../record_brute_force_result.txt')
+iterations, times, objs = process_data('../test_results/'+output_string+'_brute_force_record_result.txt')
 hyper_volume_brute_force = find_hyper_vol(objs, overall_iterations)
 
 
@@ -49,11 +55,12 @@ plt.plot(overall_iterations, max_values, color='red', label='Optimal Value')
 plt.plot(overall_iterations, hyper_volume_bo, color='blue', label='Bayesian Optimisation')
 plt.plot(overall_iterations, hyper_volume_brute_force,color='green', label='Brute Force')
 plt.xlim(0, 150)
+plt.ylim(max_value - 0.01, 0.8)
 plt.xlabel('Iteration')
-plt.ylabel('Normalised Estimated clock period * Matmul Cycle count')
+plt.ylabel('Normalised Estimated clock period * Dijkstra Cycle Count')
 plt.legend()
-plt.title('Optimisation Process for Estimated clock period * Matmul Cycle count')
+plt.title('Optimisation Process for Estimated clock period * Dijkstra Cycle count')
 
 # Show the plots
-plt.savefig('../plot_results/Estimated_clock_period_Cycle_count.png')
+plt.savefig('../plot_results/' + output_string + '.png')
 plt.show()

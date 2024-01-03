@@ -153,11 +153,16 @@ class Data_Set:
         
         results = torch.zeros((X.shape[0], 1), device=X.device, dtype=X.dtype)
         for i in range(X.shape[0]):
-            condition_vals = []
+            # condition_vals = []
+            # for obj_index in range(self.objs_to_optimise_dim, X.shape[1]):
+            #     condition_val = calculate_smooth_condition(X[i][obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
+            #     condition_vals.append(condition_val)
+            # results[i] = max(condition_vals)
+            condition_vals = 0
             for obj_index in range(self.objs_to_optimise_dim, X.shape[1]):
                 condition_val = calculate_smooth_condition(X[i][obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
-                condition_vals.append(condition_val)
-            results[i] = max(condition_vals)
+                condition_vals += condition_val
+            results[i] = condition_vals
         return results
     
     def check_candidate_output_constraints(self, X):
@@ -169,6 +174,8 @@ class Data_Set:
             else:
                 valid_obj = True
         return valid_obj
+
+
 
 
 

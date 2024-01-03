@@ -8,7 +8,7 @@ def calculate_condition(x, condition):
 
 def calculate_smooth_condition(x, condition):
     """Smooth, differentiable step function."""
-    return 1 / (1 + torch.exp(-10 * (x - condition[1]))) - 1 / (1 + torch.exp(-10 * (x - condition[0]))) + 0.5
+    return (1 / (1 + torch.exp(-10 * (x - condition[1]))) - 1 / (1 + torch.exp(-10 * (x - condition[0]))) + 0.5) * 1e-2
 
 
 def build_matrix(data, constraints, num_restarts, q_dim, d_dim):

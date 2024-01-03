@@ -4,7 +4,18 @@ This project is currently under development. The aim is to use Bayesian Optimisa
 
 To run this code, run the following command in the terminal: 
 
-```python3 src/optimisation.py```
+```cd src```
+```python3 optimisation.py```
+
+To run the brute force method, run the following command in the terminal: 
+
+```cd src```
+```python3 brute_force.py```
+
+To change the objective and constraints, modify the file ```data/input_constraint.txt```
+The test data is stored in ```test/test_results/```
+The corresponding plots are stored in ```test/plot_results/```
+
 
 Current Progress
 - Formatted Input Constraints
@@ -18,5 +29,4 @@ TODO
 - Experiments in larger dataset.
 
 Things to Improve
-- The multiple-objectives optimisation now takes every objective as the same weight. This is not ideal as some objectives are more important than others.
-- Regarding the normalisation of the objective, not sure if it is correct to normalised as x/(a-b) for [a, b], considering the ref_points.
+- Currently, the output constraints are considered as the last dimension of the objective functions.
