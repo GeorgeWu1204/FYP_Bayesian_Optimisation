@@ -23,6 +23,8 @@ Current Progress
 - Modified the model to be able to optimise for multiple-objectives
 - Modified the model to be aware of the output constraints, making it able to find design with the output within a range.
 - Implemented constraint interface.
+- Implemented the brute force method to compare the efficiency of the model.
+- Introduce Noise to the model to mitigate the discreteness problem.
 
 TODO
 - Further optimise the efficiency of the model.
@@ -30,3 +32,4 @@ TODO
 
 Things to Improve
 - Currently, the output constraints are considered as the last dimension of the objective functions.
+- Discreteness problem, many samples map to the same outcomes, driving the model easily to the local optimum.

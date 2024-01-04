@@ -45,6 +45,13 @@ def recover_input_data(input_tensor, bounds):
     rounded_tensor = torch.round(unnormalized_tensor)
     return rounded_tensor
 
+def recover_single_input_data(input, bound):
+    print
+    output = {}
+    for j, obj in enumerate(input.keys()):
+        output[obj] = round(input[obj] * (bound[1][j].item() - bound[0][j].item()) + bound[0][j].item())
+    return output
+
 
 
 def normalise_output_data(input_tensor, normalized_factors, device):

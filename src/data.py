@@ -114,21 +114,12 @@ class Data_Set:
             obj_index += 1
         return results
     
-    def find_unnormalised_input(self, sample_inputs):
-        """This function is for recording the unnormalised input data for the given sample inputs"""
-        return recover_input_data(sample_inputs, self.input_normalized_factors, self.scaled_factors)
-
     def find_single_ppa_result(self, sample_input):
         result = []
         for  obj in self.objs_to_evaluate:
             result.append(self.__dict__.get(tuple(sample_input)).get_ppa(obj))
         return result
 
-    def recover_single_input_data(self, input):
-        output = {}
-        for j, obj in enumerate(input.keys()):
-            output[obj] = round(input[obj] * self.input_normalized_factors[j]) * self.scaled_factors[j]
-        return output
 
     def check_qEHVI_constraints(self, X):
         """This is the callable function for the output constraints of the qEHVI acq function"""
@@ -153,16 +144,16 @@ class Data_Set:
         
         results = torch.zeros((X.shape[0], 1), device=X.device, dtype=X.dtype)
         for i in range(X.shape[0]):
-            # condition_vals = []
-            # for obj_index in range(self.objs_to_optimise_dim, X.shape[1]):
-            #     condition_val = calculate_smooth_condition(X[i][obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
-            #     condition_vals.append(condition_val)
-            # results[i] = max(condition_vals)
-            condition_vals = 0
+            condition_vals = []
             for obj_index in range(self.objs_to_optimise_dim, X.shape[1]):
                 condition_val = calculate_smooth_condition(X[i][obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
-                condition_vals += condition_val
-            results[i] = condition_vals
+                condition_vals.append(condition_val)
+            results[i] = max(condition_vals)
+            # condition_vals = 0
+            # for obj_index in range(self.objs_to_optimise_dim, X.shape[1]):
+            #     condition_val = calculate_smooth_condition(X[i][obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
+            #     condition_vals += condition_val
+            # results[i] = condition_vals
         return results
     
     def check_candidate_output_constraints(self, X):
@@ -218,4 +209,3 @@ def read_data_from_db(db_name, objs, output_obj_constraint, scales, input_data_n
 
 if __name__ == '__main__':
     read_data_from_db("../data/ppa_v2.db", ['lut'], [1, 1, 1], [1, 1, 1])
-
