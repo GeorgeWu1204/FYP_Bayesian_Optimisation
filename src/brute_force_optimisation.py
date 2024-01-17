@@ -8,20 +8,20 @@ import random
 from interface import fill_constraints, parse_constraints
 from format_constraints import Constraints_Brute_Force
 
-CONSTRAINT_FILE = '../data/input_constraint.txt'
-self_constraints, coupled_constraints, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT = parse_constraints(CONSTRAINT_FILE)
-(INPUT_DATA_DIM, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_NAMES), _ = fill_constraints(self_constraints, coupled_constraints, torch.device('cpu'))
-OBJECTIVES_TO_OPTIMISE_DIM = len(OBJECTIVES_TO_OPTIMISE)
-OBJECTIVES_TO_OPTIMISE_INDEX = list(range(OBJECTIVES_TO_OPTIMISE_DIM))
-OBJECTIVES_TO_EVALUATE = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONSTRAINT)
 
+CONSTRAINT_FILE = '../data/input_constraint.txt'
+device = torch.device("cpu")
+self_constraints, coupled_constraints, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT = parse_constraints(CONSTRAINT_FILE)
+(INPUT_DATA_DIM, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_NAMES), constraint_set = fill_constraints(self_constraints, coupled_constraints, device)
+OBJECTIVES_TO_OPTIMISE_DIM = len(OBJECTIVES_TO_OPTIMISE)
+OBJECTIVE_DIM = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONSTRAINT)
+OBJECTIVES_TO_OPTIMISE_INDEX = list(range(OBJECTIVES_TO_OPTIMISE_DIM))
 RAW_DATA_FILE = '../data/ppa_v2.db'
 INPUT_VARIABLES = []
 for input_name in INPUT_NAMES:
     INPUT_VARIABLES.append(self_constraints[input_name][:2])
 
-data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
-
+data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS)
 #Constraints
 constraint_set = Constraints_Brute_Force(INPUT_DATA_SCALES, OBJECTIVES_TO_OPTIMISE_DIM, len(OUTPUT_OBJECTIVE_CONSTRAINT))
 constraint_set.update_self_constraints(0, [1, 12])
@@ -57,7 +57,7 @@ for iteration in range(overall_iteration_required):
     t0 = time.monotonic()
     sample_input = sample_inputs[iteration]
     if constraint_set.check_meet_self_constraint_for_brute_force(sample_input) == True:
-        result = data_set.find_single_ppa_result(sample_input)
+        result = data_set.find_single_ppa_result_for_brute_force(sample_input)
         if result == None:
             continue
         if constraint_set.check_meet_output_obj_constraint_for_brute_force(result, OBJECTIVES_TO_OPTIMISE_DIM) == True:

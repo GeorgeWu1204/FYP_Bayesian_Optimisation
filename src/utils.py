@@ -4,10 +4,11 @@ from botorch.utils.transforms import unnormalize
 
 
 def calculate_condition(x, condition):
+    """This function is used to calculate the input constraints"""
     return (x - condition[0]) * (condition[1] - x)
 
 def calculate_smooth_condition(x, condition):
-    """Smooth, differentiable step function."""
+    """Smooth, differentiable step function. Used for calculating the output constraints"""
     return (1 / (1 + torch.exp(-10 * (x - condition[1]))) - 1 / (1 + torch.exp(-10 * (x - condition[0]))) + 0.5) * 1e-2
 
 
@@ -33,6 +34,7 @@ def build_matrix(data, constraints, num_restarts, q_dim, d_dim):
     return individual_constraint, formatted_correlated_constraints
 
 def normalise_input_data(input_tensor, normalized_factors):
+    """This function is used to normalise the input data, it is not used currently"""
     num_restarts, d_dim = input_tensor.shape
     output_tensor = torch.empty((num_restarts, d_dim), dtype=input_tensor.dtype)
     for i in range(num_restarts):
@@ -41,6 +43,7 @@ def normalise_input_data(input_tensor, normalized_factors):
     return output_tensor
 
 def recover_input_data(input_tensor, offsets, scales):
+    """This function is to find the real input from the x tensor in optimisation process"""
     num_restarts, d_dim = input_tensor.shape
     output_tensor = torch.empty((num_restarts, d_dim), dtype=input_tensor.dtype)
     rounded_input = torch.round(input_tensor)
@@ -50,9 +53,10 @@ def recover_input_data(input_tensor, offsets, scales):
     return output_tensor
 
 def recover_single_input_data(input, offsets, scales):
+    """This function is to find the real input from the x in array format"""
     output = {}
     for j, obj in enumerate(input.keys()):
-        output[obj] = (input[obj] + offsets[j]) * scales[j]
+        output[obj] = (round(input[obj] + offsets[j])) * scales[j]
     return output
 
 
@@ -65,7 +69,7 @@ def normalise_output_data(input_tensor, normalized_factors, device):
     return output_tensor
 
 def recover_output_data(input_tensor, normalized_factors):
-    # Note: not sure if this is correct, as there might be a rounding problem
+    """This function is used to recover the output data"""
     obj_m, num_restarts = input_tensor.shape
     output_tensor = torch.empty((obj_m, num_restarts), dtype=input_tensor.dtype)
     for i in range(obj_m):
@@ -74,6 +78,7 @@ def recover_output_data(input_tensor, normalized_factors):
     return output_tensor
 
 def encapsulate_obj_tensor_into_dict(objs, obj_tensor):
+    """This function is used to facilitate the recording of the output results"""
     obj_dict = {}
     obj_index = 0
     for obj in objs.keys():
@@ -82,6 +87,7 @@ def encapsulate_obj_tensor_into_dict(objs, obj_tensor):
     return obj_dict 
 
 def encapsulate_input_tensor_into_dict(input_tensor, input_var_names):
+    """This function is used to facilitate the recording of the input results"""
     input_dict = {}
     input_index = 0
     for var in input_var_names:
@@ -90,6 +96,7 @@ def encapsulate_input_tensor_into_dict(input_tensor, input_var_names):
     return input_dict
 
 def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, worst_value, output_normalised_factors, t_type, device):
+    """This function is used to find the reference points for qNEHVI optimisation"""
     ref_points = torch.empty((OBJECTIVES_DIM), device=device, dtype=t_type)
     ref_point_index = 0
     for obj in OBJECTIVES.keys():

@@ -16,12 +16,6 @@ from botorch.acquisition.multi_objective.monte_carlo import qNoisyExpectedHyperv
 from botorch.optim import optimize_acqf
 from botorch.sampling.normal import SobolQMCNormalSampler
 from botorch.fit import fit_gpytorch_model
-from botorch.utils.transforms import normalize
-from botorch.models import SingleTaskGP
-
-from gpytorch.likelihoods import GaussianLikelihood
-from gpytorch.constraints import GreaterThan
-
 
 # Warning Suppression
 from botorch.exceptions import BadInitialCandidatesWarning
@@ -29,7 +23,6 @@ from linear_operator.utils.cholesky import NumericalWarning
 
 # Device Settings
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-# device = torch.device("cpu")
 
 # Input Settings
 CONSTRAINT_FILE = '../data/input_constraint.txt'
@@ -44,26 +37,25 @@ data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_
 
 # Model Settings
 NUM_RESTARTS = 16               # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 96       # number of initial points for BO
-N_TRIALS = 1                    # number of trials of BO (outer loop)
-N_BATCH = 15                     # number of BO batches (inner loop)
+NUM_OF_INITIAL_POINT = 128      # number of initial points for BO
+N_TRIALS = 2                    # number of trials of BO (outer loop)
+N_BATCH = 15                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 128                # number of MC samples for qNEI
-NOISE_SE = 1e-3                 # noise level for qNEI
-MODEL_LIKELIHOOD = GaussianLikelihood(
-    noise_constraint=GreaterThan(NOISE_SE) # noise level for qNEI
-)
-
+# NOISE_SE = 1e-3               # noise level for qNEI
+# MODEL_LIKELIHOOD = GaussianLikelihood(
+#     noise_constraint=GreaterThan(NOISE_SE) # noise level for qNEI
+# )
 # Runtime Settings
 verbose = True
 record = False
 debug = True
 
-
 t_type = torch.float64
 
-#Reference point for Optimisation
+#reference point for optimisation used for hypervolume calculation
 ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, OBJECTIVES_TO_OPTIMISE, data_set.worst_value, data_set.output_normalised_factors, t_type, device)
+#normalise objective to ensure the same scale
 obj_normalized_factors = list(data_set.output_normalised_factors.values())
 
 def calculate_hypervolume(ref_points, train_obj):
@@ -90,7 +82,7 @@ def initialize_model(train_x, train_obj, GP_kernel_mapping_covar_identification)
         models.append(SingleTaskGP_transformed(train_x, 
                                    train_y, 
                                    GP_kernel_mapping_covar_identification,
-                                   likelihood=MODEL_LIKELIHOOD, 
+                                #    likelihood=MODEL_LIKELIHOOD, 
                                    outcome_transform=Standardize(m=1)
                                    ))
        
@@ -102,10 +94,9 @@ def initialize_model(train_x, train_obj, GP_kernel_mapping_covar_identification)
 def build_qNEHVI_acqf(model, train_x, sampler):
     """Build the qNEHVI acquisition function"""
     # normalized_train_x = normalize(train_x, bounds)
-    print("ggtest")
     acq_func = qNoisyExpectedHypervolumeImprovement(
         model=model,
-        ref_point=ref_points.tolist(),  # use known reference point
+        ref_point=ref_points.tolist(), 
         X_baseline=train_x,
         sampler=sampler,
         prune_baseline=True,
@@ -115,7 +106,7 @@ def build_qNEHVI_acqf(model, train_x, sampler):
     return acq_func
     
 
-def optimize_acqf_and_get_observation(acq_func, constraint_bounds, normalize_bounds):
+def optimize_acqf_and_get_observation(acq_func, constraint_bounds, data_type):
     """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
     unnormalised_train_x, *_ = utils.generate_valid_initial_data(NUM_RESTARTS, INPUT_DATA_DIM, OBJECTIVE_DIM, data_set, constraint_set, obj_normalized_factors, t_type, device)
     sampled_initial_conditions = unnormalised_train_x.unsqueeze(1) # to match the dimension n * 1 * m
@@ -130,7 +121,7 @@ def optimize_acqf_and_get_observation(acq_func, constraint_bounds, normalize_bou
     )
     # observe new values
     new_x = candidates.detach()
-    new_exact_obj = data_set.find_ppa_result(new_x, t_type)
+    new_exact_obj = data_set.find_ppa_result(new_x, data_type)
     new_normalised_obj = utils.normalise_output_data(new_exact_obj, obj_normalized_factors, device)
     new_con_obj = data_set.check_qNEHVI_constraints(new_normalised_obj)
     if new_con_obj.item() <= 0.0:
@@ -138,8 +129,8 @@ def optimize_acqf_and_get_observation(acq_func, constraint_bounds, normalize_bou
     else:
         hyper_vol = 0.0
     new_train_obj = torch.cat([new_normalised_obj[...,:OBJECTIVES_TO_OPTIMISE_DIM], new_con_obj], dim=-1)
-    with_noise_new_train_obj = new_train_obj + torch.randn_like(new_train_obj) * NOISE_SE
-    return new_x, new_exact_obj, with_noise_new_train_obj, hyper_vol
+    # with_noise_new_train_obj = new_train_obj + torch.randn_like(new_train_obj) * NOISE_SE
+    return new_x, new_exact_obj, new_train_obj, hyper_vol
 
 if not debug:
     warnings.filterwarnings("ignore", category=BadInitialCandidatesWarning)
@@ -158,8 +149,7 @@ if record:
 best_hyper_vol_per_trial = []
 best_sample_points_per_trial = {trial : {input : 0.0 for input in INPUT_NAMES} for trial in range(1, N_TRIALS + 1)}
 
-
-# for GP_kernel_mapping_covar_identification
+# This variable is temporarily used to match the data format of the SingleTaskGP_transformed, which is a copy of greattunes project on Github
 GP_kernel_mapping_covar_identification = [
     {
         "name": "arch",
@@ -205,10 +195,9 @@ for trial in range (1, N_TRIALS + 1):
 
         #QMC sampler
         qmc_sampler = SobolQMCNormalSampler(sample_shape=torch.Size([MC_SAMPLES]))
-        print("train_x_ei: ", train_x_ei.shape)
         acqf = build_qNEHVI_acqf(model_ei, train_x_ei, qmc_sampler)
         # optimize and get new observation
-        new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimize_acqf_and_get_observation(acqf, constraint_set.constraint_bound, constraint_set.normalized_bound)
+        new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimize_acqf_and_get_observation(acqf, constraint_set.constraint_bound, t_type)
 
         #--------------for debug------------------
         if debug:

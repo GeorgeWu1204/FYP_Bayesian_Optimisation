@@ -3,6 +3,9 @@ from gpytorch.distributions.multivariate_normal import MultivariateNormal
 from botorch.models.transforms.outcome import Standardize
 import torch
 
+########################################################################################################################
+#Note: This is the copy of the code from https://github.com/svedel/greattunes
+
 # kernel transformation mapping
 def GP_kernel_transform(x, GP_kernel_mapping_covar_identification):
     """

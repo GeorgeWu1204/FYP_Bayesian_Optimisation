@@ -87,10 +87,6 @@ class Data_Set:
         self.output_constraints_to_check = []
         for obj in output_obj_constraint:
             self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj] for bound in output_obj_constraint[obj]])
-            
-    
-    def __len__(self):
-        return len(self.__dict__)
     
     def list_all_contraints(self):
         constraints = []
@@ -117,19 +113,18 @@ class Data_Set:
         return results
     
     def find_single_ppa_result(self, sample_input):
-        """This function is used to find the ppa result for a single input"""
+        """This function is used to find the ppa result for a single input, only used in result recording"""
         result = []
         for  obj in self.objs_to_evaluate:
             recovered_sample_input = [round(x + y) for x, y in zip(sample_input, self.input_offset)]
             result.append(self.__dict__.get(tuple(recovered_sample_input)).get_ppa(obj))
         return result
 
-    def find_single_ppa_result_tensor(self, sample_input):
-        """This function is used to find the ppa result for a single input"""
-        result = torch.empty((len(self.objs_to_evaluate)), device=sample_input.device, dtype=sample_input.dtype)
+    def find_single_ppa_result_for_brute_force(self, sample_input):
+        """This function is used to find the ppa result for a single input, only used in result recording"""
+        result = []
         for  obj in self.objs_to_evaluate:
-            recovered_sample_input = [x + y for x, y in zip(sample_input, self.input_offset)]
-            result[obj] = self.__dict__.get(tuple(recovered_sample_input)).get_ppa(obj)
+            result.append(self.__dict__.get(tuple(sample_input)).get_ppa(obj))
         return result
     
 
@@ -161,16 +156,6 @@ class Data_Set:
                 condition_vals.append(condition_val)
             results[i] = max(condition_vals)
         return results
-    
-    def check_candidate_output_constraints(self, X):
-        valid_obj = True
-        for obj_index in range(self.objs_to_optimise_dim, X.shape[1]):
-            condition_val = calculate_condition(X[..., obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
-            if  condition_val < 0:
-                valid_obj = False
-            else:
-                valid_obj = True
-        return valid_obj
 
 
 def read_data_from_txt(file_name, objs, scales, input_data_normalized_factors):

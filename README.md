@@ -7,14 +7,18 @@ To run this code, run the following command in the terminal:
 ```cd src``` \
 ```python3 optimisation.py```
 
+The model settings are all in ```src/optimisation.py```
+
+
 To run the brute force method, run the following command in the terminal: 
 
 ```cd src``` \
 ```python3 brute_force.py```
 
-To change the objective and constraints, modify the file ```data/input_constraint.txt```
-The test data is stored in ```test/test_results/```
-The corresponding plots are stored in ```test/plot_results/```
+To change the objective and constraints, modify the file ```data/input_constraint.txt``` \
+The test data is stored in ```test/test_results/``` \
+To plot the results, the tools are provided in ```test/plot_tools/``` \ 
+The corresponding plots are stored in ```test/plot_results/``` \
 
 
 Current Progress
