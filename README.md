@@ -1,5 +1,5 @@
 # FYP_Bayesian_Optimisation
-
+## Run the model
 This project is currently under development. The aim is to use Bayesian Optimisation to find the multi-objectives optimal solutions within the customised processor's design space.
 
 To run this code, run the following command in the terminal: 
@@ -17,13 +17,23 @@ To run the brute force method, run the following command in the terminal:
 
 To change the objective and constraints, modify the file ```data/input_constraint.txt``` 
 
-The test data is stored in ```test/test_results/``` 
+## Record Results
+To record the results, change the record flag in ```optimisation.py``` to be true. The record data will be stored in ```test/test_results/``` 
 To plot the results, the tools are provided in ```test/plot_tools/``` 
 
 The corresponding plots are stored in ```test/plot_results/```
 
+## Data Format
 
-Current Progress
+### Input Variables
+To improve the performance of the model, the input variables are downscaled by their step size and then extracted by there offset. For example, if a variable is to select from [4, 8, 12, 16], the step size is 4, the offset is 4. The input variable is then scaled to [0, 1, 2, 3] and then extracted by the offset 4.
+
+### Output Variables
+To add the constraints to the objectives of the model, the train_obj is extended by one dimension to represent the validity of the design. The value of the last dimension is negative if the design is valid, positive otherwise.
+
+Apart from that, the train_obj only considers the objectives that need to optimise and ignore te objectives for constraints purposes.
+
+## Current Progress
 - Formatted Input Constraints
 - Built a simple model
 - Modified the model to be able to optimise for multiple-objectives
@@ -32,11 +42,11 @@ Current Progress
 - Implemented the brute force method to compare the efficiency of the model.
 - Introduce Noise to the model to mitigate the discreteness problem.
 
-TODO
+## TODO
 - Examine the feasibility of converting the input discrete input to vector of continuous input though one-hot encoding. This will allow the model to be able to find the optimal solution within the discrete design space.
 - Try to modify the Covariance Kernel to be able to handle the discrete input.
 - Experiments in larger dataset.
 
-Things to Improve
+## Things to Improve
 - Currently, the output constraints are considered as the last dimension of the objective functions.
 - Discreteness problem, many samples map to the same outcomes, driving the model easily to the local optimum.
