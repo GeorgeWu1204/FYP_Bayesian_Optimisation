@@ -48,7 +48,6 @@ for iteration in range(overall_iteration_required):
                 records_to_plot[(sample_input[0], sample_input[2])] = volume
 
 
-print(records_to_plot)
 x_coords = [key[0] for key in records_to_plot.keys()]
 y_coords = [key[1] for key in records_to_plot.keys()]
 values = [value for value in records_to_plot.values()]
@@ -56,8 +55,9 @@ values = [value for value in records_to_plot.values()]
 # Create the scatter plot
 plt.scatter(x_coords, y_coords, c=values, cmap='viridis')
 plt.colorbar(label='Values')
-plt.xlabel('X Coordinate')
-plt.ylabel('Y Coordinate')
-plt.title('2D Dot Plot with Color Indication')
+plt.xlabel('arch')
+plt.ylabel('btb')
+# plt.title('2D Dot Plot with Color Indication')
 plt.grid(True)
+
 plt.show()

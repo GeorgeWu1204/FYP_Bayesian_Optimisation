@@ -34,8 +34,10 @@ class Constraints_Node:
 
     def initialize_self_constraints(self, indvidual_constraint):
         self.normalised_bound = indvidual_constraint
+        self.individual_constraints = indvidual_constraint
 
     def check_condition_included(self, condition):
+        # TODOTODO, need to modify due to the change of normalisation
         """Check whether the condition is included in the condition list. If not, add it to the list."""
         lower_bound_cond = condition[0] - self.normalised_bound[0]/ (self.scale * self.normalized_factor) - self.rounded_region
         upper_bound_cond = condition[1] - self.normalised_bound[0]/ (self.scale * self.normalized_factor) + self.rounded_region
@@ -63,7 +65,6 @@ class Input_Constraints:
         self.constraint_bound = torch.empty((2, dim), device=device)
     
     def update_normalize_factor(self, normalized_factors):
-        #not sure whether it is the most efficient way to normalise the data
         self.normalized_factors = normalized_factors
         for index, factor in enumerate(normalized_factors):
             self.Node[index].initialize_normalized_factor(factor)
@@ -93,13 +94,14 @@ class Input_Constraints:
     def check_meet_constraint(self, individual_constraint, formatted_correlated_constraints, X_index):
         #X_index : the index of the candidtate of the point.
         overall_constraint_sum = 0
+        # check meet the individual constraint
         for individual_constraint_index in range(self.dim):
             if(individual_constraint[individual_constraint_index][X_index] <= 0):
                 #if the initial condition is not met, return the value of the constraint.
                 return individual_constraint[individual_constraint_index][X_index]
             else:
                 overall_constraint_sum += individual_constraint[individual_constraint_index][X_index]
-        
+        # check meet the coupled constraint
         for or_constraints in self.linked_constraints:
             # loop through all the or_constraints sets in the linked_constraints
             max_constraint_sum = torch.tensor(NEGATIVE_PARAMETER_VALUE)
@@ -129,18 +131,31 @@ class Input_Constraints:
                     print("At D ", constraint, "D col: ", linked_constraint[constraint])
                     print("Condition: ", self.Node[constraint].conditions[linked_constraint[constraint]])
     
-    def create_initial_data(self, num_of_start, output_type, device):
+    # def create_initial_data(self, num_of_start, output_type, device):
+    #     q_dim = 1
+    #     output_tensor = torch.empty((num_of_start, self.dim), device=device, dtype=output_type)
+    #     for i in range(num_of_start):
+    #         # create initial data iteratively for num_of_start times
+    #         possible_initial_tensor = torch.zeros((1, 1, self.dim), dtype=output_type)
+    #         individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
+    #         while(self.check_meet_constraint(individual_constraint, correlated_constraints, 0) <= 0):
+    #             possible_initial_tensor = torch.rand((1, 1, self.dim), dtype=output_type)
+    #             individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
+    #         output_tensor[i] = possible_initial_tensor.squeeze()
+    #     return output_tensor
+    
+    def create_initial_data(self, output_type, device):
         q_dim = 1
-        output_tensor = torch.empty((num_of_start, self.dim), device=device, dtype=output_type)
-        for i in range(num_of_start):
-            # create initial data iteratively for num_of_start times
-            possible_initial_tensor = torch.zeros((1, 1, self.dim), dtype=output_type)
+        possible_initial_tensor = torch.zeros((1, self.dim), dtype=output_type, device=device)
+        individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
+        while True:
+            for i in range(self.dim):
+                possible_initial_tensor[0][i] = random.uniform(self.Node[i].individual_constraints[0], self.Node[i].individual_constraints[1])
             individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
-            while(self.check_meet_constraint(individual_constraint, correlated_constraints, 0) <= 0):
-                possible_initial_tensor = torch.rand((1, 1, self.dim), dtype=output_type)
-                individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
-            output_tensor[i] = possible_initial_tensor.squeeze()
-        return output_tensor
+            if self.check_meet_constraint(individual_constraint, correlated_constraints, 0) > 0:
+                break
+        return possible_initial_tensor
+    
             
     def get_nonlinear_inequality_constraints(self, X):
         if(X.shape[0] == self.dim):

@@ -40,18 +40,20 @@ def normalise_input_data(input_tensor, normalized_factors):
             output_tensor[i][j] = input_tensor[i][j] / normalized_factors[j]
     return output_tensor
 
-def recover_input_data(input_tensor, bounds):
-    unnormalized_tensor = unnormalize(input_tensor, bounds)
-    rounded_tensor = torch.round(unnormalized_tensor)
-    return rounded_tensor
+def recover_input_data(input_tensor, offsets, scales):
+    num_restarts, d_dim = input_tensor.shape
+    output_tensor = torch.empty((num_restarts, d_dim), dtype=input_tensor.dtype)
+    rounded_input = torch.round(input_tensor)
+    for i in range(num_restarts):
+        for j in range(d_dim):
+            output_tensor[i][j] = (rounded_input[i][j] + offsets[j]) * scales[j]
+    return output_tensor
 
-def recover_single_input_data(input, bound):
-    print
+def recover_single_input_data(input, offsets, scales):
     output = {}
     for j, obj in enumerate(input.keys()):
-        output[obj] = round(input[obj] * (bound[1][j].item() - bound[0][j].item()) + bound[0][j].item())
+        output[obj] = (input[obj] + offsets[j]) * scales[j]
     return output
-
 
 
 def normalise_output_data(input_tensor, normalized_factors, device):
@@ -120,6 +122,33 @@ def find_max_index_in_list(list):
         if(list[i] > list[max_index]):
             max_index = i
     return max_index
+
+
+def generate_valid_initial_data(generate_points_num, input_dim, output_dim, data_set, constraint_set, obj_normalized_factors, type, device):
+    """This function is used to generate valid initial data that meet the input constraints and also the output constraints"""
+    unnormalised_train_x = torch.empty((generate_points_num, input_dim), device=device, dtype=type)
+    exact_objs = torch.empty((generate_points_num, output_dim), device=device, dtype=type)
+    con_objs = torch.empty((generate_points_num, 1), device=device, dtype=type)
+    normalised_objs = torch.empty((generate_points_num, output_dim), device=device, dtype=type)
+    for i in range(generate_points_num):
+        while True:
+            # create initial data iteratively for num_of_start times
+            possible_initial_tensor = constraint_set.create_initial_data(type, device)
+            # check internal constraints
+            possible_obj = data_set.find_ppa_result(possible_initial_tensor, type)
+            normalised_obj = normalise_output_data(possible_obj, obj_normalized_factors, device)
+            con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
+            if con_obj.item() <= 0.0:
+                unnormalised_train_x[i] = possible_initial_tensor.squeeze()
+                exact_objs[i] = possible_obj
+                con_objs[i] = con_obj
+                normalised_objs[i] = normalised_obj
+                break
+    return unnormalised_train_x, exact_objs, con_objs, normalised_objs
+
+
+
+
 
 class recorded_training_result:
     """This class is used to record the results of optimisation."""

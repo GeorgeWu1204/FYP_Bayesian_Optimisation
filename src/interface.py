@@ -6,15 +6,21 @@ def fill_constraints(self_constraints, coupled_constraints, device):
     input_dim = len(self_constraints)
     input_scales = [1] * input_dim
     input_normalized_factor = [1] * input_dim
+    input_offset = [0] * input_dim
     for i, var_obj in enumerate(self_constraints.keys()):
         input_scales[i] = int(self_constraints[var_obj][2])
         input_normalized_factor[i] = int(self_constraints[var_obj][1] / input_scales[i])
+        input_offset[i] = int(self_constraints[var_obj][0] / input_scales[i])
     input_names = list(self_constraints.keys())
     constraint = Input_Constraints(input_dim, device)
     constraint.update_scale(input_scales)
     constraint.update_normalize_factor(input_normalized_factor)
     for i in range(input_dim):
-        constraint.update_self_constraints(i, self_constraints[input_names[i]][:2])
+        # Get rid of the offset to ensure the input is in the range of from 0
+        input_self_constraints = []
+        input_self_constraints.append(self_constraints[input_names[i]][0] - input_offset[i])
+        input_self_constraints.append(self_constraints[input_names[i]][1] - input_offset[i])
+        constraint.update_self_constraints(i, input_self_constraints)
     if len(coupled_constraints) != 0:
         format_coupled_constraint = []
         for or_constraint in range(len(coupled_constraints)):
@@ -23,7 +29,7 @@ def fill_constraints(self_constraints, coupled_constraints, device):
                 and_constraints[input_names.index(and_constraint)] = coupled_constraints[or_constraint][and_constraint]
             format_coupled_constraint.append(and_constraints)
         constraint.update_coupled_constraints(format_coupled_constraint)
-    return (input_dim, input_scales, input_normalized_factor, input_names), constraint
+    return (input_dim, input_scales, input_normalized_factor, input_offset, input_names), constraint
 
 def parse_constraints(filename):
     """this function is used to parse the constraints from the file"""
@@ -88,7 +94,7 @@ if __name__ == '__main__':
     print(coupled_constraints)
     print(output_objective)
     print(output_constraints)
-    (input_dim, input_scales, input_normalized_factor, input_names), constraint = fill_constraints(self_constraints, coupled_constraints)
+    (input_dim, input_scales, input_normalized_factor, input_offset, input_names), constraint = fill_constraints(self_constraints, coupled_constraints)
     print(input_dim)
     print(input_scales)
     print(input_normalized_factor)

@@ -4,12 +4,12 @@ This project is currently under development. The aim is to use Bayesian Optimisa
 
 To run this code, run the following command in the terminal: 
 
-```cd src```
+```cd src``` \
 ```python3 optimisation.py```
 
 To run the brute force method, run the following command in the terminal: 
 
-```cd src```
+```cd src``` \
 ```python3 brute_force.py```
 
 To change the objective and constraints, modify the file ```data/input_constraint.txt```
@@ -27,7 +27,8 @@ Current Progress
 - Introduce Noise to the model to mitigate the discreteness problem.
 
 TODO
-- Further optimise the efficiency of the model.
+- Examine the feasibility of converting the input discrete input to vector of continuous input though one-hot encoding. This will allow the model to be able to find the optimal solution within the discrete design space.
+- Try to modify the Covariance Kernel to be able to handle the discrete input.
 - Experiments in larger dataset.
 
 Things to Improve
