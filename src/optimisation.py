@@ -20,6 +20,8 @@ from botorch.fit import fit_gpytorch_model
 # Warning Suppression
 from botorch.exceptions import BadInitialCandidatesWarning
 from linear_operator.utils.cholesky import NumericalWarning
+from botorch.exceptions.warnings import InputDataWarning
+
 
 # Device Settings
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -37,9 +39,9 @@ data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_
 
 # Model Settings
 NUM_RESTARTS = 16               # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 128      # number of initial points for BO
-N_TRIALS = 2                    # number of trials of BO (outer loop)
-N_BATCH = 15                    # number of BO batches (inner loop)
+NUM_OF_INITIAL_POINT = 200      # number of initial points for BO
+N_TRIALS = 1                    # number of trials of BO (outer loop)
+N_BATCH = 2                     # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 128                # number of MC samples for qNEI
 # NOISE_SE = 1e-3               # noise level for qNEI
@@ -70,13 +72,17 @@ def generate_initial_data(data_type):
     unnormalised_train_x, exact_objs, con_objs, normalised_objs = utils.generate_valid_initial_data(NUM_OF_INITIAL_POINT, INPUT_DATA_DIM, OBJECTIVE_DIM, data_set, constraint_set, obj_normalized_factors, data_type, device)
     train_obj = torch.cat([normalised_objs[...,:OBJECTIVES_TO_OPTIMISE_DIM], con_objs], dim=-1)
     # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
-    best_observed_value = calculate_hypervolume(ref_points, normalised_objs)
-    return unnormalised_train_x, exact_objs, train_obj, best_observed_value
+    print("tran obj is ", train_obj.shape)
+    hypervolumes = torch.zeros(NUM_OF_INITIAL_POINT, device=device)
+    for i in range(NUM_OF_INITIAL_POINT):
+        hypervolumes[i] = calculate_hypervolume(ref_points, train_obj[i].unsqueeze(0))
+    return unnormalised_train_x, exact_objs, train_obj, hypervolumes
 
 def initialize_model(train_x, train_obj, GP_kernel_mapping_covar_identification):
     """define models for objective and constraint"""
     ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
     models = []
+    
     for obj_index in range(train_obj.shape[-1]): 
         train_y = train_obj[..., obj_index : obj_index + 1]
         models.append(SingleTaskGP_transformed(train_x, 
@@ -94,6 +100,7 @@ def initialize_model(train_x, train_obj, GP_kernel_mapping_covar_identification)
 def build_qNEHVI_acqf(model, train_x, sampler):
     """Build the qNEHVI acquisition function"""
     # normalized_train_x = normalize(train_x, bounds)
+    
     acq_func = qNoisyExpectedHypervolumeImprovement(
         model=model,
         ref_point=ref_points.tolist(), 
@@ -136,14 +143,14 @@ if not debug:
     warnings.filterwarnings("ignore", category=BadInitialCandidatesWarning)
     warnings.filterwarnings("ignore", category=RuntimeWarning)
     warnings.filterwarnings("ignore", category=NumericalWarning)
+    warnings.filterwarnings("ignore", category=InputDataWarning)
     torch.set_printoptions(sci_mode=False)
 
 if record:
     record_file_name = '../test/test_results/'
     for obj_name in OBJECTIVES_TO_OPTIMISE.keys():
         record_file_name = record_file_name + obj_name + '_'
-    record_file_name = record_file_name + 'record_result.txt'
-    results_record = utils.recorded_training_result(OBJECTIVES_TO_OPTIMISE, data_set.best_value, data_set.best_pair, record_file_name, N_TRIALS, N_BATCH)
+    results_record = utils.recorded_training_result(INPUT_NAMES, OBJECTIVES_TO_OPTIMISE, data_set.best_value, data_set.best_pair, record_file_name, N_TRIALS, N_BATCH)
 
 # Global Best Values
 best_hyper_vol_per_trial = []
@@ -178,8 +185,9 @@ for trial in range (1, N_TRIALS + 1):
     (   train_x_ei,
         exact_obj_ei,
         train_obj_ei,
-        _,
+        hyper_vol_ei,
     ) = generate_initial_data(t_type)
+
     mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, GP_kernel_mapping_covar_identification)
     #reset the best observation
     best_observation_per_interation = {obj : None for obj in OBJECTIVES_TO_OPTIMISE.keys()}
@@ -201,7 +209,8 @@ for trial in range (1, N_TRIALS + 1):
 
         #--------------for debug------------------
         if debug:
-            print("new_x_ei: ", utils.recover_input_data(new_x_ei, INPUT_OFFSETS, INPUT_DATA_SCALES))
+            print("new_x_ei: ", new_x_ei)
+            print("recovered new_x_ei: ", utils.recover_input_data(new_x_ei, INPUT_OFFSETS, INPUT_DATA_SCALES))
             print("new_train_obj_ei: ", new_train_obj_ei)
             print("hyper_vol: ", hyper_vol)
         #-----------------------------------------
@@ -209,8 +218,12 @@ for trial in range (1, N_TRIALS + 1):
         # update training points
         is_duplicate = any(torch.all(torch.isclose(new_x_ei, old_x), dim=-1) for old_x in train_x_ei)
         if not is_duplicate:
-            train_x_ei = torch.cat([train_x_ei, new_x_ei])
+            train_x_ei   = torch.cat([train_x_ei, new_x_ei])
             train_obj_ei = torch.cat([train_obj_ei, new_train_obj_ei])
+            hyper_vol_ei = torch.cat([hyper_vol_ei, torch.tensor(hyper_vol, device=device).unsqueeze(0)])
+        # print("train x is ", train_x_ei)
+        # print("train obj is ", train_obj_ei)
+        # print("hyper vol is ", hyper_vol_ei)
         
         if hyper_vol > best_hyper_vol_per_interation:
             best_hyper_vol_per_interation = hyper_vol
@@ -252,6 +265,10 @@ for trial in range (1, N_TRIALS + 1):
 
     best_hyper_vol_per_trial.append(best_hyper_vol_per_interation)
     best_sample_points_per_trial[trial] = best_sample_point_per_interation
+
+    if record:
+        results_record.record_input(trial, train_x_ei, hyper_vol_ei)
+
 if record:
     results_record.store()
 # Final stage, find the best sample point and the corresponding best observation

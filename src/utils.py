@@ -154,12 +154,9 @@ def generate_valid_initial_data(generate_points_num, input_dim, output_dim, data
     return unnormalised_train_x, exact_objs, con_objs, normalised_objs
 
 
-
-
-
 class recorded_training_result:
     """This class is used to record the results of optimisation."""
-    def __init__(self, objectives, best_values, best_pairs, record_file_name, num_trials, num_iterations):
+    def __init__(self, input_names, objectives, best_values, best_pairs, record_file_name, num_trials, num_iterations):
         self.objs  = objectives
         self.best_vals  = best_values
         self.best_pairs = best_pairs
@@ -169,12 +166,18 @@ class recorded_training_result:
         self.record_file_name = record_file_name
         for i in range(num_trials * num_iterations):
             self.history[i] = {}
+        self.input_history = {}
+        self.input_names = input_names
+
     def record(self, iteration, trial, best_objs, time):
         self.history[(trial -1) * self.iterations + (iteration-1)] = [best_objs, time]
     
+    def record_input(self, trial, train_x, hyper_vols):
+        self.input_history[trial] = [trial, train_x, hyper_vols]
+    
     def store(self):
         total_time = 0
-        with open(self.record_file_name, 'w') as f:
+        with open(self.record_file_name + 'record_result.txt', 'w') as f:
             f.write("iteration, time")
             for obj in self.objs:
                 f.write(f", {obj}")
@@ -186,6 +189,19 @@ class recorded_training_result:
                     result = self.history[i][0].get(obj, 0)
                     f.write(f", {result}")
                 f.write("\n")
+        
+        with open(self.record_file_name + 'record_input.txt', 'w') as f:
+            f.write("trial, hyper_vol")
+            for name in self.input_names:
+                f.write(f", {name}")
+            f.write("\n")
+            for trial in self.input_history.keys():
+                for data_idx in range(len(self.input_history[trial][1])):
+                    f.write(f"{trial}, {self.input_history[trial][2][data_idx]}")
+                    for input_index in range(len(self.input_names)):
+                       f.write(f", {self.input_history[trial][1][data_idx][input_index]}")
+                    f.write("\n")
+    
 
 class brute_force_training_result:
     """This class is used to record the results of brute force optimisation."""

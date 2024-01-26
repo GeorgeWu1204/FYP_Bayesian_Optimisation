@@ -83,7 +83,6 @@ def GP_kernel_transform(x, GP_kernel_mapping_covar_identification):
             x_output[..., mapped_covar["column"]] = tmp.index_put(
                 indices=indices, values=torch.tensor([1.0], dtype=torch.double)
             )
-
     return x_output
 
 
@@ -108,5 +107,7 @@ class SingleTaskGP_transformed(SingleTaskGP):
         covar_x = self.covar_module(
             GP_kernel_transform(x, self.GP_kernel_mapping_covar_identification)
         )
+        # print("the covariance matrix is ")
+        # print(covar_x.evaluate().shape)
         return MultivariateNormal(mean_x, covar_x)
 
