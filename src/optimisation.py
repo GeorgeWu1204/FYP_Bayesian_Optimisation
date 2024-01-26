@@ -6,6 +6,7 @@ import warnings
 from colorama import Fore, Style
 
 from interface import fill_constraints, parse_constraints
+from sampler import initial_sampler
 from discretization import SingleTaskGP_transformed
 from botorch.models.model_list_gp_regression import ModelListGP
 from botorch.models.transforms.outcome import Standardize
@@ -39,9 +40,9 @@ data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_
 
 # Model Settings
 NUM_RESTARTS = 16               # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 200      # number of initial points for BO
+NUM_OF_INITIAL_POINT = 100      # number of initial points for BO
 N_TRIALS = 1                    # number of trials of BO (outer loop)
-N_BATCH = 2                     # number of BO batches (inner loop)
+N_BATCH = 100                   # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 128                # number of MC samples for qNEI
 # NOISE_SE = 1e-3               # noise level for qNEI
@@ -54,11 +55,12 @@ record = False
 debug = True
 
 t_type = torch.float64
-
 #reference point for optimisation used for hypervolume calculation
 ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, OBJECTIVES_TO_OPTIMISE, data_set.worst_value, data_set.output_normalised_factors, t_type, device)
 #normalise objective to ensure the same scale
 obj_normalized_factors = list(data_set.output_normalised_factors.values())
+
+sampler_generator = initial_sampler(INPUT_DATA_DIM, constraint_set, data_set, t_type, device)
 
 def calculate_hypervolume(ref_points, train_obj):
     """Calculate the hypervolume"""
@@ -67,14 +69,15 @@ def calculate_hypervolume(ref_points, train_obj):
     hv = partitioning.compute_hypervolume().item()
     return hv
 
-def generate_initial_data(data_type):
+def generate_initial_data():
     """generate training data"""
-    unnormalised_train_x, exact_objs, con_objs, normalised_objs = utils.generate_valid_initial_data(NUM_OF_INITIAL_POINT, INPUT_DATA_DIM, OBJECTIVE_DIM, data_set, constraint_set, obj_normalized_factors, data_type, device)
+    unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, OBJECTIVE_DIM, data_set, obj_normalized_factors)
+    print("unnormalised_train_x: ", unnormalised_train_x.shape)
     train_obj = torch.cat([normalised_objs[...,:OBJECTIVES_TO_OPTIMISE_DIM], con_objs], dim=-1)
     # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
-    print("tran obj is ", train_obj.shape)
-    hypervolumes = torch.zeros(NUM_OF_INITIAL_POINT, device=device)
-    for i in range(NUM_OF_INITIAL_POINT):
+    generate_size = train_obj.shape[0]
+    hypervolumes = torch.zeros(generate_size, device=device)
+    for i in range(generate_size):
         hypervolumes[i] = calculate_hypervolume(ref_points, train_obj[i].unsqueeze(0))
     return unnormalised_train_x, exact_objs, train_obj, hypervolumes
 
@@ -115,7 +118,7 @@ def build_qNEHVI_acqf(model, train_x, sampler):
 
 def optimize_acqf_and_get_observation(acq_func, constraint_bounds, data_type):
     """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
-    unnormalised_train_x, *_ = utils.generate_valid_initial_data(NUM_RESTARTS, INPUT_DATA_DIM, OBJECTIVE_DIM, data_set, constraint_set, obj_normalized_factors, t_type, device)
+    unnormalised_train_x, *_ = sampler_generator.generate_valid_initial_data(NUM_RESTARTS, OBJECTIVE_DIM, data_set, obj_normalized_factors)
     sampled_initial_conditions = unnormalised_train_x.unsqueeze(1) # to match the dimension n * 1 * m
     candidates, _ = optimize_acqf(
         acq_function=acq_func,
@@ -186,7 +189,7 @@ for trial in range (1, N_TRIALS + 1):
         exact_obj_ei,
         train_obj_ei,
         hyper_vol_ei,
-    ) = generate_initial_data(t_type)
+    ) = generate_initial_data()
 
     mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, GP_kernel_mapping_covar_identification)
     #reset the best observation

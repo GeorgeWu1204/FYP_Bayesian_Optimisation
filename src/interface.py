@@ -18,8 +18,8 @@ def fill_constraints(self_constraints, coupled_constraints, device):
     for i in range(input_dim):
         # Get rid of the offset to ensure the input is in the range of from 0
         input_self_constraints = []
-        input_self_constraints.append(self_constraints[input_names[i]][0] - input_offset[i])
-        input_self_constraints.append(self_constraints[input_names[i]][1] - input_offset[i])
+        input_self_constraints.append(round(self_constraints[input_names[i]][0]/input_scales[i]) - input_offset[i])
+        input_self_constraints.append(round(self_constraints[input_names[i]][1]/input_scales[i]) - input_offset[i])
         constraint.update_self_constraints(i, input_self_constraints)
     if len(coupled_constraints) != 0:
         format_coupled_constraint = []

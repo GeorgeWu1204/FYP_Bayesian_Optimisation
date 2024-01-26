@@ -106,6 +106,7 @@ class SingleTaskGP_transformed(SingleTaskGP):
         mean_x = self.mean_module(x)
         covar_x = self.covar_module(
             GP_kernel_transform(x, self.GP_kernel_mapping_covar_identification)
+            # x
         )
         # print("the covariance matrix is ")
         # print(covar_x.evaluate().shape)

@@ -99,6 +99,7 @@ class Data_Set:
         num_restart= sample_inputs.shape[0]
         results = torch.empty((num_restart, len(self.objs_to_evaluate)), device=sample_inputs.device, dtype=dtype)
         rounded_sample_inputs = torch.round(sample_inputs)
+        print("rounded_sample_inputs: ", rounded_sample_inputs)
         obj_index = 0
         for obj in self.objs_to_evaluate:
             result = torch.zeros(num_restart, dtype=dtype)

@@ -131,27 +131,6 @@ def find_max_index_in_list(list):
     return max_index
 
 
-def generate_valid_initial_data(generate_points_num, input_dim, output_dim, data_set, constraint_set, obj_normalized_factors, type, device):
-    """This function is used to generate valid initial data that meet the input constraints and also the output constraints"""
-    unnormalised_train_x = torch.empty((generate_points_num, input_dim), device=device, dtype=type)
-    exact_objs = torch.empty((generate_points_num, output_dim), device=device, dtype=type)
-    con_objs = torch.empty((generate_points_num, 1), device=device, dtype=type)
-    normalised_objs = torch.empty((generate_points_num, output_dim), device=device, dtype=type)
-    for i in range(generate_points_num):
-        while True:
-            # create initial data iteratively for num_of_start times
-            possible_initial_tensor = constraint_set.create_initial_data(type, device)
-            # check internal constraints
-            possible_obj = data_set.find_ppa_result(possible_initial_tensor, type)
-            normalised_obj = normalise_output_data(possible_obj, obj_normalized_factors, device)
-            con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
-            if con_obj.item() <= 0.0:
-                unnormalised_train_x[i] = possible_initial_tensor.squeeze()
-                exact_objs[i] = possible_obj
-                con_objs[i] = con_obj
-                normalised_objs[i] = normalised_obj
-                break
-    return unnormalised_train_x, exact_objs, con_objs, normalised_objs
 
 
 class recorded_training_result:

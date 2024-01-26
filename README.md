@@ -40,10 +40,12 @@ Apart from that, the train_obj only considers the objectives that need to optimi
 - Modified the model to be aware of the output constraints, making it able to find design with the output within a range.
 - Implemented constraint interface.
 - Implemented the brute force method to compare the efficiency of the model.
-- Introduce Noise to the model to mitigate the discreteness problem.
+- Apply transformation to the tensor for forward pass to the covariance kernel.
+- Improve the initial Sampling method.
+- Select the sample point to decide whether it shoud be integrated to the training set.
+
 
 ## TODO
-- Examine the feasibility of converting the input discrete input to vector of continuous input though one-hot encoding. This will allow the model to be able to find the optimal solution within the discrete design space.
 - Try to modify the Covariance Kernel to be able to handle the discrete input.
 - Experiments in larger dataset.
 

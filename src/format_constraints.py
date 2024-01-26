@@ -1,4 +1,3 @@
-
 import torch
 import numpy as np
 import random
@@ -96,7 +95,7 @@ class Input_Constraints:
         overall_constraint_sum = 0
         # check meet the individual constraint
         for individual_constraint_index in range(self.dim):
-            if(individual_constraint[individual_constraint_index][X_index] <= 0):
+            if(individual_constraint[individual_constraint_index][X_index] < 0):
                 #if the initial condition is not met, return the value of the constraint.
                 return individual_constraint[individual_constraint_index][X_index]
             else:
@@ -131,30 +130,31 @@ class Input_Constraints:
                     print("At D ", constraint, "D col: ", linked_constraint[constraint])
                     print("Condition: ", self.Node[constraint].conditions[linked_constraint[constraint]])
     
-    # def create_initial_data(self, num_of_start, output_type, device):
-    #     q_dim = 1
-    #     output_tensor = torch.empty((num_of_start, self.dim), device=device, dtype=output_type)
-    #     for i in range(num_of_start):
-    #         # create initial data iteratively for num_of_start times
-    #         possible_initial_tensor = torch.zeros((1, 1, self.dim), dtype=output_type)
-    #         individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
-    #         while(self.check_meet_constraint(individual_constraint, correlated_constraints, 0) <= 0):
-    #             possible_initial_tensor = torch.rand((1, 1, self.dim), dtype=output_type)
-    #             individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
-    #         output_tensor[i] = possible_initial_tensor.squeeze()
-    #     return output_tensor
     
-    def create_initial_data(self, output_type, device):
+    # def create_initial_data(self, output_type, sampler, device):
+    #     q_dim = 1
+    #     possible_initial_tensor = torch.zeros((1, self.dim), dtype=output_type, device=device)
+    #     individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
+    #     while True:
+    #         possible_initial_tensor = sampler.random()
+    #         for i in range(self.dim):
+    #             possible_initial_tensor[0][i] = random.uniform(self.Node[i].individual_constraints[0], self.Node[i].individual_constraints[1])
+    #         individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
+    #         if self.check_meet_constraint(individual_constraint, correlated_constraints, 0) > 0:
+    #             break
+    #     return possible_initial_tensor
+    
+    def check_single_point_meet_constraint(self, X):
+
         q_dim = 1
-        possible_initial_tensor = torch.zeros((1, self.dim), dtype=output_type, device=device)
-        individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
-        while True:
-            for i in range(self.dim):
-                possible_initial_tensor[0][i] = random.uniform(self.Node[i].individual_constraints[0], self.Node[i].individual_constraints[1])
-            individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
-            if self.check_meet_constraint(individual_constraint, correlated_constraints, 0) > 0:
-                break
-        return possible_initial_tensor
+        x_input = X.unsqueeze(0)
+        individual_constraint, correlated_constraints = build_matrix(x_input, self, 1, q_dim, self.dim)
+        if self.check_meet_constraint(individual_constraint, correlated_constraints, 0) > 0:
+            print("meet constraint")
+            return True
+        else:
+            print("not meet constraint")
+            return False
     
             
     def get_nonlinear_inequality_constraints(self, X):
@@ -175,6 +175,11 @@ class Input_Constraints:
                 inequality_constraints[i][j] = self.check_meet_constraint(individual_constraint, correlated_constraints, i * q_dim + j)
         return inequality_constraints
     
+    def get_self_bounds(self):
+        results = []
+        for i in range(self.dim):
+            results.append((self.Node[i].individual_constraints[0], self.Node[i].individual_constraints[1]))
+        return results
         
             
 class Constraints_Brute_Force:
@@ -220,4 +225,4 @@ if __name__ == '__main__':
     d_dim = 2
     # result = c.check_meet_constraint(d_data, 0)
     # print(result)
-    test = c.create_initial_data(1)
+    # test = c.create_initial_data(1)

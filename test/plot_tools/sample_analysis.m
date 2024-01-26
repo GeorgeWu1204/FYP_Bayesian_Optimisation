@@ -19,6 +19,9 @@ Y = A(start_position:end, 4); % Second last column
 Z = A(start_position:end, 5); % Last column
 C = A(start_position:end, 2); % Second column (objective value)
 
+Index_array = start_position:1:length(X)+start_position-1;
+
+
 % texts
 X_text = loaded_data.textdata(1, 3);
 Y_text = loaded_data.textdata(1, 4);
@@ -26,7 +29,7 @@ Z_text = loaded_data.textdata(1, 5);
 
 
 % Create the 3D scatter plot
-scatter3(X, Y, Z, 36, C, 'filled');
+scatter3(X, Y, Z, 36, Index_array', 'filled');
 
 % Add color bar to indicate the scale of the objective values
 colorbar;
