@@ -14,32 +14,24 @@ class Constraints_Node:
         self.conditions = []
         self.normalized_factor = 1
         self.rounded_region = 0.45/(self.scale * self.normalized_factor)
-        self.normalised_bound = []
+        self.offset = 0
 
-    def initialize_scale(self, scale):
+    def initialize_scale_and_normalise_factor(self, scale, normalized_factor):
         self.scale = scale
-        self.rounded_region = 0.45/(self.scale * self.normalized_factor)
-    
-    def initialize_normalized_factor(self, normalized_factor):
         self.normalized_factor = normalized_factor
         self.rounded_region = 0.45/(self.scale * self.normalized_factor)
 
     def have_constraints(self):
         return (len(self.conditions) > 0)
 
-    def condition_size(self):
-        return len(self.conditions)
-
-
-    def initialize_self_constraints(self, indvidual_constraint):
-        self.normalised_bound = indvidual_constraint
-        self.individual_constraints = indvidual_constraint
+    def update_offset(self, offset):
+        self.offset = offset
 
     def check_condition_included(self, condition):
         # TODOTODO, need to modify due to the change of normalisation
         """Check whether the condition is included in the condition list. If not, add it to the list."""
-        lower_bound_cond = condition[0] - self.normalised_bound[0]/ (self.scale * self.normalized_factor) - self.rounded_region
-        upper_bound_cond = condition[1] - self.normalised_bound[0]/ (self.scale * self.normalized_factor) + self.rounded_region
+        lower_bound_cond = condition[0] - self.offset / (self.scale * self.normalized_factor) - self.rounded_region
+        upper_bound_cond = condition[1] - self.offset / (self.scale * self.normalized_factor) + self.rounded_region
         
         if lower_bound_cond < self.individual_constraints[0] or upper_bound_cond > self.individual_constraints[1]:
             lower_bound_cond = max(lower_bound_cond, self.individual_constraints[0])
@@ -63,19 +55,16 @@ class Input_Constraints:
         self.normalized_bound = torch.empty((2, dim), device=device)
         self.constraint_bound = torch.empty((2, dim), device=device)
     
-    def update_normalize_factor(self, normalized_factors):
-        self.normalized_factors = normalized_factors
-        for index, factor in enumerate(normalized_factors):
-            self.Node[index].initialize_normalized_factor(factor)
-    
     def update_self_constraints(self, index, indvidual_constraint):
-        self.Node[index].initialize_self_constraints([indvidual_constraint[0], indvidual_constraint[1]])
+        self.Node[index].update_offset(indvidual_constraint[0])
+        #-----------------------------------------------------------
         self.normalized_bound[:,index] = torch.tensor([indvidual_constraint[0], indvidual_constraint[1]])
         self.constraint_bound[:,index] = torch.tensor(self.Node[index].individual_constraints)
 
-    def update_scale(self, scales):
-        for index, scale in enumerate(scales):
-            self.Node[index].initialize_scale(scale)
+    def update_scale_and_normalize_factor(self, scales, normalized_factors):
+        self.normalized_factors = normalized_factors
+        for index in range(self.dim):
+            self.Node[index].initialize_scale_and_normalise_factor(scales[index], normalized_factors[index])
 
     def update_coupled_constraints(self, new_constraints):
         # new_constraints = {index: [condition]}
@@ -123,37 +112,14 @@ class Input_Constraints:
             overall_constraint_sum += max_constraint_sum
         return overall_constraint_sum
     
-    def print_linked_constraints(self):
-        for or_constraints in self.linked_constraints:
-            for linked_constraint in or_constraints:
-                for constraint in linked_constraint.keys():
-                    print("At D ", constraint, "D col: ", linked_constraint[constraint])
-                    print("Condition: ", self.Node[constraint].conditions[linked_constraint[constraint]])
-    
-    
-    # def create_initial_data(self, output_type, sampler, device):
-    #     q_dim = 1
-    #     possible_initial_tensor = torch.zeros((1, self.dim), dtype=output_type, device=device)
-    #     individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
-    #     while True:
-    #         possible_initial_tensor = sampler.random()
-    #         for i in range(self.dim):
-    #             possible_initial_tensor[0][i] = random.uniform(self.Node[i].individual_constraints[0], self.Node[i].individual_constraints[1])
-    #         individual_constraint, correlated_constraints = build_matrix(possible_initial_tensor, self, 1, q_dim, self.dim)
-    #         if self.check_meet_constraint(individual_constraint, correlated_constraints, 0) > 0:
-    #             break
-    #     return possible_initial_tensor
     
     def check_single_point_meet_constraint(self, X):
-
         q_dim = 1
         x_input = X.unsqueeze(0)
         individual_constraint, correlated_constraints = build_matrix(x_input, self, 1, q_dim, self.dim)
         if self.check_meet_constraint(individual_constraint, correlated_constraints, 0) > 0:
-            print("meet constraint")
             return True
         else:
-            print("not meet constraint")
             return False
     
             
@@ -175,11 +141,11 @@ class Input_Constraints:
                 inequality_constraints[i][j] = self.check_meet_constraint(individual_constraint, correlated_constraints, i * q_dim + j)
         return inequality_constraints
     
-    def get_self_bounds(self):
-        results = []
-        for i in range(self.dim):
-            results.append((self.Node[i].individual_constraints[0], self.Node[i].individual_constraints[1]))
-        return results
+    # def get_self_bounds(self):
+    #     results = []
+    #     for i in range(self.dim):
+    #         results.append((self.Node[i].individual_constraints[0], self.Node[i].individual_constraints[1]))
+    #     return results
         
             
 class Constraints_Brute_Force:

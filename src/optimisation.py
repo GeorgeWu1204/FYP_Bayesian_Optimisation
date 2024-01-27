@@ -7,7 +7,7 @@ from colorama import Fore, Style
 
 from interface import fill_constraints, parse_constraints
 from sampler import initial_sampler
-from discretization import SingleTaskGP_transformed
+from customised_model import SingleTaskGP_transformed
 from botorch.models.model_list_gp_regression import ModelListGP
 from botorch.models.transforms.outcome import Standardize
 from gpytorch.mlls.sum_marginal_log_likelihood import SumMarginalLogLikelihood
@@ -24,8 +24,9 @@ from linear_operator.utils.cholesky import NumericalWarning
 from botorch.exceptions.warnings import InputDataWarning
 
 
-# Device Settings
+# Tensor Settings
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+t_type = torch.float64
 
 # Input Settings
 CONSTRAINT_FILE = '../data/input_constraint.txt'
@@ -36,30 +37,25 @@ OBJECTIVE_DIM = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONSTRAINT)
 OBJECTIVES_TO_OPTIMISE_INDEX = list(range(OBJECTIVES_TO_OPTIMISE_DIM))
 # Dataset Settings
 RAW_DATA_FILE = '../data/ppa_v2.db'
-data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS)
+data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, t_type, device)
 
 # Model Settings
 NUM_RESTARTS = 16               # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 100      # number of initial points for BO
+NUM_OF_INITIAL_POINT = 128      # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
-N_BATCH = 100                   # number of BO batches (inner loop)
+N_BATCH = 5                     # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 128                # number of MC samples for qNEI
-# NOISE_SE = 1e-3               # noise level for qNEI
-# MODEL_LIKELIHOOD = GaussianLikelihood(
-#     noise_constraint=GreaterThan(NOISE_SE) # noise level for qNEI
-# )
+
 # Runtime Settings
 verbose = True
-record = False
+record = True
 debug = True
 
-t_type = torch.float64
 #reference point for optimisation used for hypervolume calculation
 ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, OBJECTIVES_TO_OPTIMISE, data_set.worst_value, data_set.output_normalised_factors, t_type, device)
 #normalise objective to ensure the same scale
 obj_normalized_factors = list(data_set.output_normalised_factors.values())
-
 sampler_generator = initial_sampler(INPUT_DATA_DIM, constraint_set, data_set, t_type, device)
 
 def calculate_hypervolume(ref_points, train_obj):
@@ -72,7 +68,6 @@ def calculate_hypervolume(ref_points, train_obj):
 def generate_initial_data():
     """generate training data"""
     unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, OBJECTIVE_DIM, data_set, obj_normalized_factors)
-    print("unnormalised_train_x: ", unnormalised_train_x.shape)
     train_obj = torch.cat([normalised_objs[...,:OBJECTIVES_TO_OPTIMISE_DIM], con_objs], dim=-1)
     # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
     generate_size = train_obj.shape[0]
@@ -81,18 +76,22 @@ def generate_initial_data():
         hypervolumes[i] = calculate_hypervolume(ref_points, train_obj[i].unsqueeze(0))
     return unnormalised_train_x, exact_objs, train_obj, hypervolumes
 
-def initialize_model(train_x, train_obj, GP_kernel_mapping_covar_identification):
+def initialize_model(train_x, train_obj, scales, normalized_factors):
     """define models for objective and constraint"""
     ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
     models = []
     
     for obj_index in range(train_obj.shape[-1]): 
         train_y = train_obj[..., obj_index : obj_index + 1]
-        models.append(SingleTaskGP_transformed(train_x, 
-                                   train_y, 
-                                   GP_kernel_mapping_covar_identification,
+        models.append(SingleTaskGP_transformed(
+                                    scales,
+                                    normalized_factors,
+                                    train_x, 
+                                    train_y, 
                                 #    likelihood=MODEL_LIKELIHOOD, 
-                                   outcome_transform=Standardize(m=1)
+                                    outcome_transform=Standardize(m=1),
+                                    tensor_type=t_type,
+                                    tensor_device=device
                                    ))
        
     model = ModelListGP(*models)
@@ -102,8 +101,6 @@ def initialize_model(train_x, train_obj, GP_kernel_mapping_covar_identification)
 
 def build_qNEHVI_acqf(model, train_x, sampler):
     """Build the qNEHVI acquisition function"""
-    # normalized_train_x = normalize(train_x, bounds)
-    
     acq_func = qNoisyExpectedHypervolumeImprovement(
         model=model,
         ref_point=ref_points.tolist(), 
@@ -139,7 +136,6 @@ def optimize_acqf_and_get_observation(acq_func, constraint_bounds, data_type):
     else:
         hyper_vol = 0.0
     new_train_obj = torch.cat([new_normalised_obj[...,:OBJECTIVES_TO_OPTIMISE_DIM], new_con_obj], dim=-1)
-    # with_noise_new_train_obj = new_train_obj + torch.randn_like(new_train_obj) * NOISE_SE
     return new_x, new_exact_obj, new_train_obj, hyper_vol
 
 if not debug:
@@ -159,29 +155,6 @@ if record:
 best_hyper_vol_per_trial = []
 best_sample_points_per_trial = {trial : {input : 0.0 for input in INPUT_NAMES} for trial in range(1, N_TRIALS + 1)}
 
-# This variable is temporarily used to match the data format of the SingleTaskGP_transformed, which is a copy of greattunes project on Github
-GP_kernel_mapping_covar_identification = [
-    {
-        "name": "arch",
-        "type": int,
-        "column": 0,        
-    },
-
-    {
-        "name": "arch",
-        "type": int,
-        "column": 1,        
-    },
-
-    {
-        "name": "arch",
-        "type": int,
-        "column": 2,        
-    },
-
-]
-
-
 #Optimisation Loop
 for trial in range (1, N_TRIALS + 1):
     print(f"\nTrial {trial:>2} of {N_TRIALS} ")
@@ -190,14 +163,13 @@ for trial in range (1, N_TRIALS + 1):
         train_obj_ei,
         hyper_vol_ei,
     ) = generate_initial_data()
-
-    mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, GP_kernel_mapping_covar_identification)
+    
+    mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
     #reset the best observation
     best_observation_per_interation = {obj : None for obj in OBJECTIVES_TO_OPTIMISE.keys()}
     best_constraint_per_interation = {obj : None for obj in OUTPUT_OBJECTIVE_CONSTRAINT.keys()}
     best_sample_point_per_interation = {input : None for input in INPUT_NAMES}
     best_hyper_vol_per_interation = 0.0
-
     for iteration in range(1, N_BATCH + 1):
         t0 = time.monotonic()
         
@@ -213,7 +185,7 @@ for trial in range (1, N_TRIALS + 1):
         #--------------for debug------------------
         if debug:
             print("new_x_ei: ", new_x_ei)
-            print("recovered new_x_ei: ", utils.recover_input_data(new_x_ei, INPUT_OFFSETS, INPUT_DATA_SCALES))
+            print("recovered new_x_ei: ", utils.recover_all_input_data(new_x_ei.squeeze(0), INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES,INPUT_OFFSETS, t_type, device))
             print("new_train_obj_ei: ", new_train_obj_ei)
             print("hyper_vol: ", hyper_vol)
         #-----------------------------------------
@@ -227,15 +199,14 @@ for trial in range (1, N_TRIALS + 1):
         # print("train x is ", train_x_ei)
         # print("train obj is ", train_obj_ei)
         # print("hyper vol is ", hyper_vol_ei)
-        
         if hyper_vol > best_hyper_vol_per_interation:
             best_hyper_vol_per_interation = hyper_vol
             best_observation_per_interation = utils.encapsulate_obj_tensor_into_dict(OBJECTIVES_TO_OPTIMISE, new_exact_obj_ei)
             best_constraint_per_interation = utils.encapsulate_obj_tensor_into_dict(OUTPUT_OBJECTIVE_CONSTRAINT, new_exact_obj_ei[... , OBJECTIVES_TO_OPTIMISE_DIM :])
-            best_sample_point_per_interation = utils.encapsulate_input_tensor_into_dict(new_x_ei, INPUT_NAMES)
+            best_sample_point_per_interation = new_x_ei
 
         # reinitialize the models so they are ready for fitting on next iteration
-        mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, GP_kernel_mapping_covar_identification)
+        mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
         t1 = time.monotonic()
 
         if verbose:
@@ -270,14 +241,15 @@ for trial in range (1, N_TRIALS + 1):
     best_sample_points_per_trial[trial] = best_sample_point_per_interation
 
     if record:
-        results_record.record_input(trial, train_x_ei, hyper_vol_ei)
+        unnormalized_train_x = utils.recover_all_input_data(train_x_ei, INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES, INPUT_OFFSETS, t_type, device)
+        results_record.record_input(trial, unnormalized_train_x, hyper_vol_ei)
 
 if record:
     results_record.store()
 # Final stage, find the best sample point and the corresponding best observation
 print("<------------------Final Result------------------>")
 best_trial = utils.find_max_index_in_list(best_hyper_vol_per_trial)
-best_objective = data_set.find_single_ppa_result(list(best_sample_points_per_trial[best_trial + 1].values()))
-real_sample_point = utils.recover_single_input_data(best_sample_points_per_trial[best_trial + 1], INPUT_OFFSETS, INPUT_DATA_SCALES)
+best_objective = data_set.find_ppa_result(best_sample_points_per_trial[best_trial + 1], t_type)
+real_sample_point = utils.recover_all_input_data(best_sample_points_per_trial[best_trial + 1], INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES, INPUT_OFFSETS, t_type, device)
 print(f"{Fore.BLUE}Best sample point: {real_sample_point}{Style.RESET_ALL}")
 print(f"{Fore.BLUE}Best objective: {best_objective}{Style.RESET_ALL}")

@@ -1,6 +1,5 @@
 import torch
 import itertools
-from botorch.utils.transforms import unnormalize
 
 
 def calculate_condition(x, condition):
@@ -42,24 +41,6 @@ def normalise_input_data(input_tensor, normalized_factors):
             output_tensor[i][j] = input_tensor[i][j] / normalized_factors[j]
     return output_tensor
 
-def recover_input_data(input_tensor, offsets, scales):
-    """This function is to find the real input from the x tensor in optimisation process"""
-    num_restarts, d_dim = input_tensor.shape
-    output_tensor = torch.empty((num_restarts, d_dim), dtype=input_tensor.dtype)
-    rounded_input = torch.round(input_tensor)
-    for i in range(num_restarts):
-        for j in range(d_dim):
-            output_tensor[i][j] = (rounded_input[i][j] + offsets[j]) * scales[j]
-    return output_tensor
-
-def recover_single_input_data(input, offsets, scales):
-    """This function is to find the real input from the x in array format"""
-    output = {}
-    for j, obj in enumerate(input.keys()):
-        output[obj] = (round(input[obj] + offsets[j])) * scales[j]
-    return output
-
-
 def normalise_output_data(input_tensor, normalized_factors, device):
     num_restarts, obj_m = input_tensor.shape
     output_tensor = torch.empty((num_restarts, obj_m), device=device,dtype=input_tensor.dtype)
@@ -67,6 +48,18 @@ def normalise_output_data(input_tensor, normalized_factors, device):
         for j in range(num_restarts):
             output_tensor[j][i] = input_tensor[j][i] / normalized_factors[i]
     return output_tensor
+
+def recover_single_input_data(input_tensor, normalised_factor, scales, offsets):
+    """This function is to find the real input from the x tensor in optimisation process"""
+    #assuming the input_tensor is in the shape of num_restarts x d_dim
+    input_var = torch.round(input_tensor * normalised_factor) * scales + offsets
+    results = input_var.tolist()
+    return results
+
+def recover_all_input_data(input_tensor, normalised_factor, scales, offsets, type, device):
+    """This function is to find the real input from the x tensor in recording process"""
+    results = torch.round(input_tensor * torch.tensor(normalised_factor, dtype=type, device=device)) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)
+    return results
 
 def recover_output_data(input_tensor, normalized_factors):
     """This function is used to recover the output data"""

@@ -5,7 +5,7 @@ from utils import normalise_output_data
 
 class initial_sampler:
     def __init__(self, input_dim, constraint_set=None, data_set=None, gen_type=torch.float, gen_device=torch.device('cpu')):    
-        self.dim_ranges = constraint_set.get_self_bounds()
+        # self.dim_ranges = constraint_set.get_self_bounds()
         self.input_dim = input_dim
         # The reason to use this sampler is that it could guarantee to only generate unique points.
         self.sampler = qmc.Sobol(d=self.input_dim, scramble=True)
@@ -17,18 +17,11 @@ class initial_sampler:
     def generate_samples(self, num_samples):
         # Generate samples
         samples = torch.tensor(self.sampler.random(n=num_samples), device=self.device, dtype=self.type)
-        # Scale samples to the specified ranges and convert to integers
-        scaled_samples = torch.empty((num_samples, self.input_dim), device=self.device, dtype=self.type)
-        for i in range(self.input_dim):
-            range_min = self.dim_ranges[i][0]
-            range_max = self.dim_ranges[i][1]
-            scaled_samples[:, i] = torch.round(samples[:, i] * (range_max - range_min) + range_min)
-
-        return scaled_samples
+        return samples
     
     def generate_valid_initial_data(self, num_samples,output_dim, data_set, obj_normalized_factors):
         """This function is used to generate valid initial data that meet the input constraints and also the output constraints"""
-        unnormalised_train_x = torch.empty((num_samples, self.input_dim), device=self.device, dtype=self.type)
+        train_x = torch.empty((num_samples, self.input_dim), device=self.device, dtype=self.type)
         exact_objs = torch.empty((num_samples, output_dim), device=self.device, dtype=self.type)
         con_objs = torch.empty((num_samples, 1), device=self.device, dtype=self.type)
         normalised_objs = torch.empty((num_samples, output_dim), device=self.device, dtype=self.type)
@@ -43,10 +36,10 @@ class initial_sampler:
             normalised_obj = normalise_output_data(possible_obj, obj_normalized_factors, self.device)
             con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
             if con_obj.item() <= 0.0:
-                unnormalised_train_x[valid_sample_index] = possible_initial_tensor[i,:]
+                train_x[valid_sample_index] = possible_initial_tensor[i,:]
                 exact_objs[valid_sample_index] = possible_obj
                 con_objs[valid_sample_index] = con_obj
                 normalised_objs[valid_sample_index] = normalised_obj
                 valid_sample_index += 1
-        return unnormalised_train_x[:valid_sample_index + 1, : ], exact_objs[:valid_sample_index + 1, :], con_objs[:valid_sample_index + 1, :], normalised_objs[:valid_sample_index + 1, :]
+        return train_x[:valid_sample_index + 1, : ], exact_objs[:valid_sample_index + 1, :], con_objs[:valid_sample_index + 1, :], normalised_objs[:valid_sample_index + 1, :]
 

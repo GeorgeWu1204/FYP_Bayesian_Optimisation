@@ -9,18 +9,15 @@ def fill_constraints(self_constraints, coupled_constraints, device):
     input_offset = [0] * input_dim
     for i, var_obj in enumerate(self_constraints.keys()):
         input_scales[i] = int(self_constraints[var_obj][2])
-        input_normalized_factor[i] = int(self_constraints[var_obj][1] / input_scales[i])
+        input_normalized_factor[i] = int((self_constraints[var_obj][1] - self_constraints[var_obj][0])/ input_scales[i])
         input_offset[i] = int(self_constraints[var_obj][0] / input_scales[i])
     input_names = list(self_constraints.keys())
     constraint = Input_Constraints(input_dim, device)
-    constraint.update_scale(input_scales)
-    constraint.update_normalize_factor(input_normalized_factor)
-    for i in range(input_dim):
-        # Get rid of the offset to ensure the input is in the range of from 0
-        input_self_constraints = []
-        input_self_constraints.append(round(self_constraints[input_names[i]][0]/input_scales[i]) - input_offset[i])
-        input_self_constraints.append(round(self_constraints[input_names[i]][1]/input_scales[i]) - input_offset[i])
-        constraint.update_self_constraints(i, input_self_constraints)
+    constraint.update_scale_and_normalize_factor(input_scales, input_normalized_factor)
+
+    for index, constraints in enumerate(self_constraints.values()):
+        constraint.update_self_constraints(index, list(constraints))
+    
     if len(coupled_constraints) != 0:
         format_coupled_constraint = []
         for or_constraint in range(len(coupled_constraints)):
