@@ -8,6 +8,8 @@ from colorama import Fore, Style
 from interface import fill_constraints, parse_constraints
 from sampler import initial_sampler
 from customised_model import SingleTaskGP_transformed
+from train_set import train_set_records
+
 from botorch.models.model_list_gp_regression import ModelListGP
 from botorch.models.transforms.outcome import Standardize
 from gpytorch.mlls.sum_marginal_log_likelihood import SumMarginalLogLikelihood
@@ -57,6 +59,7 @@ ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, OBJECTIVES_TO_OPT
 #normalise objective to ensure the same scale
 obj_normalized_factors = list(data_set.output_normalised_factors.values())
 sampler_generator = initial_sampler(INPUT_DATA_DIM, constraint_set, data_set, t_type, device)
+train_set_storage = train_set_records(INPUT_NORMALIZED_FACTOR, t_type, device)
 
 def calculate_hypervolume(ref_points, train_obj):
     """Calculate the hypervolume"""
@@ -163,7 +166,7 @@ for trial in range (1, N_TRIALS + 1):
         train_obj_ei,
         hyper_vol_ei,
     ) = generate_initial_data()
-    
+    train_set_storage.store_initial_data(train_x_ei)
     mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
     #reset the best observation
     best_observation_per_interation = {obj : None for obj in OBJECTIVES_TO_OPTIMISE.keys()}
@@ -190,15 +193,15 @@ for trial in range (1, N_TRIALS + 1):
             print("hyper_vol: ", hyper_vol)
         #-----------------------------------------
 
+
         # update training points
-        is_duplicate = any(torch.all(torch.isclose(new_x_ei, old_x), dim=-1) for old_x in train_x_ei)
-        if not is_duplicate:
-            train_x_ei   = torch.cat([train_x_ei, new_x_ei])
-            train_obj_ei = torch.cat([train_obj_ei, new_train_obj_ei])
-            hyper_vol_ei = torch.cat([hyper_vol_ei, torch.tensor(hyper_vol, device=device).unsqueeze(0)])
-        # print("train x is ", train_x_ei)
-        # print("train obj is ", train_obj_ei)
-        # print("hyper vol is ", hyper_vol_ei)
+        modified_new_train_x, modified_new_train_obj_ei, modified_hyper_vol  = train_set_storage.store_new_data(new_x_ei, new_train_obj_ei, hyper_vol)
+        print("modified_new_train_x: ", modified_new_train_x)
+        print("modified_new_train_obj_ei: ", modified_new_train_obj_ei)
+        print("modified_hyper_vol: ", modified_hyper_vol)
+        train_x_ei   = torch.cat([train_x_ei, modified_new_train_x])
+        train_obj_ei = torch.cat([train_obj_ei, modified_new_train_obj_ei])
+        hyper_vol_ei = torch.cat([hyper_vol_ei, modified_hyper_vol])
         if hyper_vol > best_hyper_vol_per_interation:
             best_hyper_vol_per_interation = hyper_vol
             best_observation_per_interation = utils.encapsulate_obj_tensor_into_dict(OBJECTIVES_TO_OPTIMISE, new_exact_obj_ei)
@@ -241,7 +244,7 @@ for trial in range (1, N_TRIALS + 1):
     best_sample_points_per_trial[trial] = best_sample_point_per_interation
 
     if record:
-        unnormalized_train_x = utils.recover_all_input_data(train_x_ei, INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES, INPUT_OFFSETS, t_type, device)
+        unnormalized_train_x = utils.recover_unrounded_input_data(train_x_ei, INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES, INPUT_OFFSETS, t_type, device)
         results_record.record_input(trial, unnormalized_train_x, hyper_vol_ei)
 
 if record:

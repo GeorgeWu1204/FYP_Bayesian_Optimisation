@@ -61,6 +61,12 @@ def recover_all_input_data(input_tensor, normalised_factor, scales, offsets, typ
     results = torch.round(input_tensor * torch.tensor(normalised_factor, dtype=type, device=device)) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)
     return results
 
+def recover_unrounded_input_data(input_tensor, normalised_factor, scales, offsets, type, device):
+    """This function is to find the unrounded version of the real input from the x tensor in recording process"""
+    results = input_tensor * torch.tensor(normalised_factor, dtype=type, device=device) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)
+    return results
+
+
 def recover_output_data(input_tensor, normalized_factors):
     """This function is used to recover the output data"""
     obj_m, num_restarts = input_tensor.shape

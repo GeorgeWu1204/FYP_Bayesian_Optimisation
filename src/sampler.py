@@ -1,4 +1,3 @@
-import numpy as np
 from scipy.stats import qmc
 import torch
 from utils import normalise_output_data

@@ -42,10 +42,8 @@ def parse_constraints(filename):
 
         # Define a flag to track the section type
         section = None
-
         for line in lines:
             line = line.strip()
-
             # Update the section based on the line content
             if line.startswith('#input self constraint'):
                 section = 'self_constraint'
