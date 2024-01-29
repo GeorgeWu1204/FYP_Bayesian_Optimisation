@@ -37,15 +37,20 @@ self_constraints, coupled_constraints, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_
 OBJECTIVES_TO_OPTIMISE_DIM = len(OBJECTIVES_TO_OPTIMISE)
 OBJECTIVE_DIM = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONSTRAINT)
 OBJECTIVES_TO_OPTIMISE_INDEX = list(range(OBJECTIVES_TO_OPTIMISE_DIM))
+
 # Dataset Settings
 RAW_DATA_FILE = '../data/ppa_v2.db'
 data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, t_type, device)
 
+# Train Set Settings
+TRAIN_SET_DISTURBANCE_RANGE = 0.01                 # noise standard deviation for objective
+TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2            # acceptable distance between the rounded vertex and the real vertex
+
 # Model Settings
-NUM_RESTARTS = 16               # number of starting points for BO for optimize_acqf
+NUM_RESTARTS = 32               # number of starting points for BO for optimize_acqf
 NUM_OF_INITIAL_POINT = 128      # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
-N_BATCH = 5                     # number of BO batches (inner loop)
+N_BATCH = 25                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 128                # number of MC samples for qNEI
 
@@ -54,12 +59,14 @@ verbose = True
 record = True
 debug = True
 
+
+
 #reference point for optimisation used for hypervolume calculation
 ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, OBJECTIVES_TO_OPTIMISE, data_set.worst_value, data_set.output_normalised_factors, t_type, device)
 #normalise objective to ensure the same scale
 obj_normalized_factors = list(data_set.output_normalised_factors.values())
 sampler_generator = initial_sampler(INPUT_DATA_DIM, constraint_set, data_set, t_type, device)
-train_set_storage = train_set_records(INPUT_NORMALIZED_FACTOR, t_type, device)
+train_set_storage = train_set_records(INPUT_NORMALIZED_FACTOR, TRAIN_SET_ACCEPTABLE_THRESHOLD, TRAIN_SET_DISTURBANCE_RANGE, t_type, device)
 
 def calculate_hypervolume(ref_points, train_obj):
     """Calculate the hypervolume"""
@@ -166,6 +173,7 @@ for trial in range (1, N_TRIALS + 1):
         train_obj_ei,
         hyper_vol_ei,
     ) = generate_initial_data()
+    print("size of train_x_ei: ", train_x_ei.shape[0])
     train_set_storage.store_initial_data(train_x_ei)
     mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
     #reset the best observation
@@ -195,18 +203,22 @@ for trial in range (1, N_TRIALS + 1):
 
 
         # update training points
-        modified_new_train_x, modified_new_train_obj_ei, modified_hyper_vol  = train_set_storage.store_new_data(new_x_ei, new_train_obj_ei, hyper_vol)
+        valid_point, modified_new_train_x, modified_new_train_obj_ei, modified_hyper_vol  = train_set_storage.store_new_data(new_x_ei, new_train_obj_ei, hyper_vol)
         print("modified_new_train_x: ", modified_new_train_x)
         print("modified_new_train_obj_ei: ", modified_new_train_obj_ei)
         print("modified_hyper_vol: ", modified_hyper_vol)
-        train_x_ei   = torch.cat([train_x_ei, modified_new_train_x])
-        train_obj_ei = torch.cat([train_obj_ei, modified_new_train_obj_ei])
-        hyper_vol_ei = torch.cat([hyper_vol_ei, modified_hyper_vol])
-        if hyper_vol > best_hyper_vol_per_interation:
-            best_hyper_vol_per_interation = hyper_vol
-            best_observation_per_interation = utils.encapsulate_obj_tensor_into_dict(OBJECTIVES_TO_OPTIMISE, new_exact_obj_ei)
-            best_constraint_per_interation = utils.encapsulate_obj_tensor_into_dict(OUTPUT_OBJECTIVE_CONSTRAINT, new_exact_obj_ei[... , OBJECTIVES_TO_OPTIMISE_DIM :])
-            best_sample_point_per_interation = new_x_ei
+
+        if valid_point:
+            print("valid point")
+            train_x_ei   = torch.cat([train_x_ei, modified_new_train_x])
+            train_obj_ei = torch.cat([train_obj_ei, modified_new_train_obj_ei])
+            hyper_vol_ei = torch.cat([hyper_vol_ei, modified_hyper_vol])
+            if hyper_vol > best_hyper_vol_per_interation:
+                best_hyper_vol_per_interation = hyper_vol
+                best_observation_per_interation = utils.encapsulate_obj_tensor_into_dict(OBJECTIVES_TO_OPTIMISE, new_exact_obj_ei)
+                best_constraint_per_interation = utils.encapsulate_obj_tensor_into_dict(OUTPUT_OBJECTIVE_CONSTRAINT, new_exact_obj_ei[... , OBJECTIVES_TO_OPTIMISE_DIM :])
+                best_sample_point_per_interation = new_x_ei
+        
 
         # reinitialize the models so they are ready for fitting on next iteration
         mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
