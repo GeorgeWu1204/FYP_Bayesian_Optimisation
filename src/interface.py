@@ -32,6 +32,7 @@ def parse_constraints(filename):
     """this function is used to parse the constraints from the file"""
     # Define dictionaries to store the parsed data
     self_constraints = {}
+    input_constant = {}
     coupled_constraints = []
     output_objective = {}
     output_constraints = {}
@@ -49,27 +50,34 @@ def parse_constraints(filename):
                 section = 'self_constraint'
             elif line.startswith('#input coupled constraint'):
                 section = 'coupled_constraint'
+            elif line.startswith('#input constant'):
+                section = 'input_constant'
             elif line.startswith('#output objective'):
                 section = 'output_objective'
             elif line.startswith('#output constraint'):
                 section = 'output_constraint'
             elif line.startswith('var:') and section:
                 # Process the variable line based on the section
-                parts = line.split()
-                var_name = parts[1]
-                range_values = parts[3].strip('[]').split(',')
-                if section == 'self_constraint':
-                    scale = int(parts[5])
-                    self_constraints[var_name] = [int(range_values[0]), int(range_values[1]), scale]
-                elif section == 'coupled_constraint':
-                    coupled_parts = line.split('and')
-                    coupled_data = {}
-                    for part in coupled_parts:
-                        var_parts = part.split()
-                        var_name = var_parts[1]
-                        range_values = var_parts[3].strip('[]').split(',')
-                        coupled_data[var_name] = [int(range_values[0]), int(range_values[1])]
-                    coupled_constraints.append(coupled_data)
+                if section == 'input_constant':
+                    parts = line.split()
+                    var_index = int(parts[5])
+                    input_constant[var_index] = int(parts[3])
+                else:
+                    parts = line.split()
+                    var_name = parts[1]
+                    range_values = parts[3].strip('[]').split(',')
+                    if section == 'self_constraint':
+                        scale = int(parts[5])
+                        self_constraints[var_name] = [int(range_values[0]), int(range_values[1]), scale]
+                    elif section == 'coupled_constraint':
+                        coupled_parts = line.split('and')
+                        coupled_data = {}
+                        for part in coupled_parts:
+                            var_parts = part.split()
+                            var_name = var_parts[1]
+                            range_values = var_parts[3].strip('[]').split(',')
+                            coupled_data[var_name] = [int(range_values[0]), int(range_values[1])]
+                        coupled_constraints.append(coupled_data)
             elif line.startswith('obj_name:') and section:
                 # Process the objective line
                 parts = line.split()
@@ -81,7 +89,7 @@ def parse_constraints(filename):
                     range_values = parts[3].strip('[]').split(',')
                     output_constraints[obj_name] = [int(range_values[0]), int(range_values[1])]
 
-    return self_constraints, coupled_constraints, output_objective, output_constraints
+    return self_constraints, coupled_constraints, input_constant, output_objective, output_constraints
 
 if __name__ == '__main__':
     self_constraints, coupled_constraints, output_objective, output_constraints = parse_constraints('../data/input_constraint.txt')

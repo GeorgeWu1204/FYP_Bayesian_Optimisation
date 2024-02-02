@@ -1,6 +1,8 @@
 import torch
 import itertools
-
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 def calculate_condition(x, condition):
     """This function is used to calculate the input constraints"""
@@ -206,3 +208,80 @@ class brute_force_training_result:
                     result = self.history[i][0][obj]
                     f.write(f", {result}")
                 f.write("\n")
+
+
+class test_posterior_result:
+    """This class is used to visualise the posterior funcitons"""
+    def __init__(self, input_dim, dtype, device, num_samples = 100):
+        self.dim = input_dim
+        self.X = np.linspace(0, 1, num_samples) 
+        self.num_samples = num_samples
+        # Create multi-dimensional grids
+        basis_grid = np.meshgrid(*[self.X for _ in range(self.dim)])
+        # Flatten and combine all grids to form the combination array
+        # Each row in the combination array represents a point in the multi-dimensional space
+        combination_array = np.vstack([grid.ravel() for grid in basis_grid]).T
+        # Convert the combination array to a PyTorch tensor
+        self.testcase = torch.from_numpy(combination_array).to(dtype=dtype, device=device)
+        print("testcase shape is ", self.testcase.shape)
+
+    def examine_posterior(self, model, iteration):
+        """This function is used to examine the function"""
+        # self.mean_prediction, self.std_deviation = model.forward(self.testcase)
+        posterior = model.posterior(self.testcase)
+        mean_prediction = posterior.mean.cpu().detach().numpy()  # Mean of the predictive distribution
+        std_deviation = posterior.variance.cpu().detach().numpy() 
+
+        Z_mean = mean_prediction.reshape([self.num_samples for _ in range(self.dim)])
+        Z_uncertainty = std_deviation.reshape([self.num_samples for _ in range(self.dim)])
+        print("Z_mean shape is ", Z_mean.shape)
+
+        X = self.testcase[:,0].cpu().detach().numpy().reshape([self.num_samples for _ in range(self.dim)])
+        Y = self.testcase[:,1].cpu().detach().numpy().reshape([self.num_samples for _ in range(self.dim)])
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        surf = ax.plot_surface(X, Y, Z_mean, cmap='viridis', edgecolor='none', alpha=0.7)
+        # Plot Uncertainty using Contourf  at the base
+        min_uncertainty, max_uncertainty = np.min(Z_uncertainty), np.max(Z_uncertainty)
+        levels  = np.linspace(min_uncertainty, max_uncertainty, num=10)
+        levels  = np.unique(levels)  # Ensure levels are unique
+        epsilon = np.diff(levels).min() * 0.1  # Small increment
+        levels[1:] += epsilon  # Avoid incrementing the first level to keep the minimum
+
+        contour = ax.contourf(X, Y, Z_uncertainty, zdir='z', offset=Z_mean.min()-1.5, levels=levels, cmap='inferno', alpha=0.5)
+
+        ax.set_xlabel('arch')
+        ax.set_ylabel('btb')
+        ax.set_zlabel('Mean Prediction')
+        ax.set_title('Posterior Mean and Uncertainty at Iteration ' + str(iteration))
+
+        # Add a color bar for the contour plot
+        fig.colorbar(contour, shrink=0.5, aspect=5, label='Uncertainty (Std Dev)')
+
+        plt.show()
+
+    def examine_acq_function(self, acq_function, iteration):
+        """This function is used to examine the acquisition function"""
+        print("testcase shape is ", self.testcase.shape)
+        acq_values = acq_function(self.testcase.unsqueeze(-2)).cpu().detach().numpy()
+        Z = acq_values.reshape([self.num_samples for _ in range(self.dim)])
+        X = self.testcase[:,0].cpu().detach().numpy().reshape([self.num_samples for _ in range(self.dim)])
+        Y = self.testcase[:,1].cpu().detach().numpy().reshape([self.num_samples for _ in range(self.dim)])
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        surf = ax.plot_surface(X, Y, Z, cmap='viridis', edgecolor='none', alpha=0.7)
+        ax.set_xlabel('arch')
+        ax.set_ylabel('btb')
+        ax.set_zlabel('Acquisition Function Value at Iteration ' + str(iteration))
+        ax.set_title('Acquisition Function Examination')
+        plt.show()
+        
+
+
+
+
+        
+
+        
+    

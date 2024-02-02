@@ -8,7 +8,7 @@ import pickle
 import os.path as osp
 # Read the file
 from utils import calculate_condition, calculate_smooth_condition, recover_single_input_data
-from botorch.utils.transforms import unnormalize
+
 
 
 class Data_Sample:
@@ -43,7 +43,7 @@ class Data_Sample:
         return self.PPA.get(obj, None)   
 
 class Data_Set:
-    def __init__(self, data, objs, scales, input_data_normalized_factors, offsets, output_obj_constraint, data_set_type = 'txt', tensor_type = torch.float64, tensor_device = torch.device('cpu')):
+    def __init__(self, data, objs, scales, input_data_normalized_factors, input_offsets, input_constants, output_obj_constraint, data_set_type = 'txt', tensor_type = torch.float64, tensor_device = torch.device('cpu')):
         val_list = {}
         self.best_value = {}
         self.best_pair = {}
@@ -57,7 +57,8 @@ class Data_Set:
         # to recover the input data
         self.input_normalized_factors = torch.tensor(input_data_normalized_factors, dtype=tensor_type, device=tensor_device)
         self.scaled_factors = torch.tensor(scales, dtype=tensor_type, device=tensor_device)
-        self.offsets = torch.tensor(offsets, dtype=tensor_type, device=tensor_device)
+        self.input_offsets = torch.tensor(input_offsets, dtype=tensor_type, device=tensor_device)
+        self.input_constants = input_constants
         # tensor type and device
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
@@ -82,7 +83,7 @@ class Data_Set:
                 else:
                     self.best_value[obj] = max(val_list[obj])
                     self.worst_value[obj] = min(val_list[obj])
-
+                # for recording the best pair
                 self.best_pair[obj] = [[i] for i in data.keys() if data[i][obj] == self.best_value[obj]][0]
                 
                 if self.best_value[obj] == self.worst_value[obj]:
@@ -90,7 +91,7 @@ class Data_Set:
                     self.output_normalised_factors[obj] = 1.0
                 else:
                     # self.output_normalised_factors[obj] = abs(self.best_value[obj] - self.worst_value[obj])
-                    self.output_normalised_factors[obj] = abs(self.best_value[obj])
+                    self.output_normalised_factors[obj] = max(self.best_value[obj], self.worst_value[obj])
         
         self.output_constraints_to_check = []
         for obj in output_obj_constraint:
@@ -102,16 +103,23 @@ class Data_Set:
             constraints.append(self.__dict__.get(i).Constraints)
         return constraints
     
+    def format_input_data(self, input_data):
+        """This function is used to add constant input to the input data to make it able to find the ppa result"""
+        for index in self.input_constants.keys():
+            input_data.insert(index, self.input_constants[index])
+        return tuple(input_data)
+    
     def find_ppa_result(self, sample_inputs, dtype):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
         num_restart= sample_inputs.shape[0]
         results = torch.empty((num_restart, len(self.objs_to_evaluate)), device=sample_inputs.device, dtype=dtype)
         obj_index = 0
         for i in range(num_restart):
-            input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.scaled_factors, self.offsets)
+            input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.scaled_factors, self.input_offsets)
+            sample_input = self.format_input_data(input)
             for obj_index in range(self.objs_to_evaluate_dim):
                 obj = self.objs_to_evaluate[obj_index]
-                results[i][obj_index] = self.__dict__.get(tuple(input)).get_ppa(obj)
+                results[i][obj_index] = self.__dict__.get(sample_input).get_ppa(obj)
                 if self.objs_direct.get(obj, None) == 'minimise':
                     results[i][obj_index] = -1 * results[i][obj_index]
                 obj_index += 1
@@ -124,7 +132,7 @@ class Data_Set:
         recovered_sample_input = []
         # [round(x + y) for x, y in zip(sample_input, self.input_offset)]
         for i in range(len(sample_input)):
-            recovered_sample_input.append(round(sample_input[i] * self.input_normalized_factors[i].item()) * self.scaled_factors[i].item()) + self.offsets[i].item()
+            recovered_sample_input.append(round(sample_input[i] * self.input_normalized_factors[i].item()) * self.scaled_factors[i].item()) + self.input_offsets[i].item()
         
         for obj in self.objs_to_evaluate:
             result.append(self.__dict__.get(tuple(recovered_sample_input)).get_ppa(obj))
@@ -176,7 +184,7 @@ def read_data_from_txt(file_name, objs, scales, input_data_normalized_factors):
         data_set = Data_Set(raw_data, objs, scales, input_data_normalized_factors, 'txt')
     return data_set
 
-def read_data_from_db(db_name, objs, output_obj_constraint, scales, input_data_normalized_factors, input_offsets, type, device):
+def read_data_from_db(db_name, objs, output_obj_constraint, scales, input_data_normalized_factors, input_offsets, input_constants, type, device):
     db = {}
     if not osp.exists(db_name):
         print(f"[i] generating: '{db_name}'")
@@ -198,7 +206,7 @@ def read_data_from_db(db_name, objs, output_obj_constraint, scales, input_data_n
         print(f"[i] loading: '{db_name}'")
         with open(db_name, 'rb') as f:
             db.update(pickle.load(f))
-    data_set = Data_Set(db, objs, scales, input_data_normalized_factors, input_offsets, output_obj_constraint, 'db', type, device)
+    data_set = Data_Set(db, objs, scales, input_data_normalized_factors, input_offsets, input_constants, output_obj_constraint, 'db', type, device)
     return data_set
     
 

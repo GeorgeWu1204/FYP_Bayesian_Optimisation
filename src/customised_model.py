@@ -1,6 +1,5 @@
 from botorch.models import SingleTaskGP
 from gpytorch.distributions.multivariate_normal import MultivariateNormal
-from botorch.models.transforms.outcome import Standardize
 import torch
 
 
@@ -27,7 +26,5 @@ class SingleTaskGP_transformed(SingleTaskGP):
         covar_x = self.covar_module(
             discretinize_input_data(x, self.rounding_factors)
         )
-        # print("the covariance matrix is ")
-        # print(covar_x.evaluate().shape)
         return MultivariateNormal(mean_x, covar_x)
-
+    
