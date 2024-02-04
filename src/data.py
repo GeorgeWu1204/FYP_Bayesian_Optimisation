@@ -125,24 +125,13 @@ class Data_Set:
                 obj_index += 1
 
         return results
-    
-    def find_single_ppa_result(self, sample_input):
-        """This function is used to find the ppa result for a single input, only used in result recording"""
-        result = []
-        recovered_sample_input = []
-        # [round(x + y) for x, y in zip(sample_input, self.input_offset)]
-        for i in range(len(sample_input)):
-            recovered_sample_input.append(round(sample_input[i] * self.input_normalized_factors[i].item()) * self.scaled_factors[i].item()) + self.input_offsets[i].item()
-        
-        for obj in self.objs_to_evaluate:
-            result.append(self.__dict__.get(tuple(recovered_sample_input)).get_ppa(obj))
-        return result
 
     def find_single_ppa_result_for_brute_force(self, sample_input):
         """This function is used to find the ppa result for a single input, only used in result recording"""
+        formatted_input = self.format_input_data(sample_input)
         result = []
         for  obj in self.objs_to_evaluate:
-            result.append(self.__dict__.get(tuple(sample_input)).get_ppa(obj))
+            result.append(self.__dict__.get(tuple(formatted_input)).get_ppa(obj))
         return result
     
 

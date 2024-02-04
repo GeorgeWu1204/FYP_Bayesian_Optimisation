@@ -11,24 +11,39 @@ from format_constraints import Constraints_Brute_Force
 
 CONSTRAINT_FILE = '../data/input_constraint.txt'
 device = torch.device("cpu")
-self_constraints, coupled_constraints, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT = parse_constraints(CONSTRAINT_FILE)
+t_type = torch.float64
+self_constraints, coupled_constraints, INPUT_CONSTANT, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT = parse_constraints(CONSTRAINT_FILE)
 (INPUT_DATA_DIM, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_NAMES), constraint_set = fill_constraints(self_constraints, coupled_constraints, device)
+
+
 OBJECTIVES_TO_OPTIMISE_DIM = len(OBJECTIVES_TO_OPTIMISE)
 OBJECTIVE_DIM = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONSTRAINT)
 OBJECTIVES_TO_OPTIMISE_INDEX = list(range(OBJECTIVES_TO_OPTIMISE_DIM))
+
 RAW_DATA_FILE = '../data/ppa_v2.db'
+data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT , t_type, device)
+
 INPUT_VARIABLES = []
 for input_name in INPUT_NAMES:
     INPUT_VARIABLES.append(self_constraints[input_name][:2])
 
-data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS)
+print("INPUT_VARIABLES: ", INPUT_VARIABLES)
+print("OUTPUT OBJECTIVE CONSTRAINT: ", OUTPUT_OBJECTIVE_CONSTRAINT)
+print("SCALE: ", INPUT_DATA_SCALES)
+print("NORMALISED FACTOR: ", INPUT_NORMALIZED_FACTOR)
+print("INPUT_NAMES: ", INPUT_NAMES)
+print("INPUT_CONSTANT: ", INPUT_CONSTANT)
+
+
+
 #Constraints
-constraint_set = Constraints_Brute_Force(INPUT_DATA_SCALES, OBJECTIVES_TO_OPTIMISE_DIM, len(OUTPUT_OBJECTIVE_CONSTRAINT))
-constraint_set.update_self_constraints(0, [1, 12])
-constraint_set.update_self_constraints(1, [5, 6])
-constraint_set.update_self_constraints(2, [4, 255])
-constraint_set.update_output_obj_constraint([0, 20000])
-constraint_set.update_output_obj_constraint([0, 12000])
+constraint_set = Constraints_Brute_Force( OBJECTIVES_TO_OPTIMISE_DIM, len(OUTPUT_OBJECTIVE_CONSTRAINT))
+for input_constraint in INPUT_VARIABLES:
+    constraint_set.update_self_constraints(input_constraint)
+
+for constraint_range in OUTPUT_OBJECTIVE_CONSTRAINT.keys():
+    constraint_set.update_output_obj_constraint(OUTPUT_OBJECTIVE_CONSTRAINT[constraint_range])
+
 
 obj_normalized_factors = list(data_set.output_normalised_factors.values())
 print("obj_normalized_factors: ", obj_normalized_factors)
@@ -50,7 +65,8 @@ if record:
     for obj_name in OBJECTIVES_TO_OPTIMISE.keys():
         record_file_name = record_file_name + obj_name + '_'
     record_file_name = record_file_name + 'brute_force_record_result.txt'
-    results_record = utils.brute_force_training_result(OBJECTIVES_TO_OPTIMISE, overall_iteration_required, record_file_name)
+    results_record = utils.brute_force_training_result(INPUT_NAMES, OBJECTIVES_TO_OPTIMISE, overall_iteration_required, record_file_name)
+
 
 #Optimisation Loop
 for iteration in range(overall_iteration_required):
@@ -66,9 +82,13 @@ for iteration in range(overall_iteration_required):
                 best_volume = volume
                 best_sample = sample_input
                 best_results = result
+        else:
+            continue
     t1 = time.monotonic()
     if record:
-        results_record.record(iteration, best_results, t1-t0)
+        for index in INPUT_CONSTANT.keys():
+            del sample_input[index]
+        results_record.record(iteration, sample_input, volume, best_results, t1-t0)
 print(f"{Fore.GREEN}best_volume: {best_volume}, best_sample: {best_sample}, best_results: {best_results}{Style.RESET_ALL}")
 if record:
     results_record.store()

@@ -149,22 +149,20 @@ class Input_Constraints:
         
             
 class Constraints_Brute_Force:
-    def __init__(self, sample_scales, obj_to_optimise_dim, obj_to_check_constraints_dim):
-        self.sample_scales = sample_scales
+    def __init__(self, obj_to_optimise_dim, obj_to_check_constraints_dim):
         self.self_constraints = []
         self.output_obj_constraint = []
         self.output_obj_constraint_index = [i for i in range(obj_to_optimise_dim, obj_to_optimise_dim + obj_to_check_constraints_dim)]
     
-    def update_self_constraints(self, index, self_constraints):
-        self.self_constraints.append([self_constraints[0] / self.sample_scales[index], self_constraints[1] / self.sample_scales[index]])
+    def update_self_constraints(self, self_constraints):
+        self.self_constraints.append(self_constraints)
     
     def update_output_obj_constraint(self, output_obj_constraint):
         self.output_obj_constraint.append(output_obj_constraint)
     
     def check_meet_self_constraint_for_brute_force(self, X):
         for index, element in enumerate(X):
-            normalised_element = element / self.sample_scales[index]
-            if normalised_element < self.self_constraints[index][0] or normalised_element > self.self_constraints[index][1]:
+            if element < self.self_constraints[index][0] or element > self.self_constraints[index][1]:
                 return False
         return True
 

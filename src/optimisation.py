@@ -69,7 +69,6 @@ obj_normalized_factors = list(data_set.output_normalised_factors.values())
 sampler_generator = initial_sampler(INPUT_DATA_DIM, constraint_set, data_set, t_type, device)
 train_set_storage = train_set_records(INPUT_NORMALIZED_FACTOR, TRAIN_SET_ACCEPTABLE_THRESHOLD, TRAIN_SET_DISTURBANCE_RANGE, t_type, device)
 
-print("input dimension: ", INPUT_DATA_DIM)
 if plot_posterior:
     posterior_examiner = utils.test_posterior_result(INPUT_DATA_DIM, t_type, device)
     posterior_objective_index = 1
@@ -200,8 +199,8 @@ for trial in range (1, N_TRIALS + 1):
         new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimize_acqf_and_get_observation(acqf, constraint_set.constraint_bound, t_type)
 
         # examine the posterior
-        if plot_posterior:
-            posterior_examiner.examine_posterior(model_ei.subset_output([posterior_objective_index]), iteration)
+        if plot_posterior and iteration == N_BATCH:
+            # posterior_examiner.examine_posterior(model_ei.subset_output([posterior_objective_index]), iteration)
             posterior_examiner.examine_acq_function(acqf, iteration)
         #--------------for debug------------------
         if debug:

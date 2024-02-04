@@ -185,29 +185,38 @@ class recorded_training_result:
 
 class brute_force_training_result:
     """This class is used to record the results of brute force optimisation."""
-    def __init__(self, objectives, overall_iteration_size, record_file_name):
+    def __init__(self, input_vars, objectives, overall_iteration_size, record_file_name):
         self.history = {}
+        self.input_vars = input_vars
         self.objs  = objectives
         self.record_file_name = record_file_name
         for i in range(overall_iteration_size):
             self.history[i] = {}
-    def record(self, iteration, best_objs, time):
-        self.history[iteration] = [best_objs, time]
+    def record(self, iteration, sample_input, sample_result, best_objs, time):
+        self.history[iteration] = [sample_input, sample_result, best_objs, time]
     
     def store(self):
         total_time = 0
         with open(self.record_file_name, 'w') as f:
             f.write("iteration, time")
+            for input in self.input_vars:
+                f.write(f", {input}")
+            f.write(", current_hyper_vol")
             for obj in self.objs:
                 f.write(f", {obj}")
             f.write("\n")
             for i in range(len(self.history)):
-                total_time += self.history[i][1]
-                f.write(f"{i}, {total_time:>4.2f}")
-                for obj in range(len(self.objs)):
-                    result = self.history[i][0][obj]
-                    f.write(f", {result}")
-                f.write("\n")
+                valid_history = self.history.get(i, None)
+                if(valid_history != {}):
+                    total_time += valid_history[3]
+                    f.write(f"{i}, {total_time:>4.2f}")
+                    for input in valid_history[0]:
+                        f.write(f", {input}")
+                    f.write(f", {valid_history[1]}")
+                    for obj in range(len(self.objs)):
+                        result = valid_history[2][obj]
+                        f.write(f", {result}")
+                    f.write("\n")
 
 
 class test_posterior_result:
@@ -249,7 +258,7 @@ class test_posterior_result:
         epsilon = np.diff(levels).min() * 0.1  # Small increment
         levels[1:] += epsilon  # Avoid incrementing the first level to keep the minimum
 
-        contour = ax.contourf(X, Y, Z_uncertainty, zdir='z', offset=Z_mean.min()-1.5, levels=levels, cmap='inferno', alpha=0.5)
+        contour = ax.contourf(X, Y, Z_uncertainty, zdir='z', offset=Z_mean.min()-0.25, levels=levels, cmap='inferno', alpha=0.5)
 
         ax.set_xlabel('arch')
         ax.set_ylabel('btb')
@@ -258,7 +267,6 @@ class test_posterior_result:
 
         # Add a color bar for the contour plot
         fig.colorbar(contour, shrink=0.5, aspect=5, label='Uncertainty (Std Dev)')
-
         plt.show()
 
     def examine_acq_function(self, acq_function, iteration):
@@ -273,8 +281,8 @@ class test_posterior_result:
         surf = ax.plot_surface(X, Y, Z, cmap='viridis', edgecolor='none', alpha=0.7)
         ax.set_xlabel('arch')
         ax.set_ylabel('btb')
-        ax.set_zlabel('Acquisition Function Value at Iteration ' + str(iteration))
-        ax.set_title('Acquisition Function Examination')
+        ax.set_zlabel('Acquisition Function Value')
+        ax.set_title('Acquisition Function Examination at Iteration ' + str(iteration))
         plt.show()
         
 
