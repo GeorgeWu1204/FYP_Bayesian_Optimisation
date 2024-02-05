@@ -123,7 +123,6 @@ class Data_Set:
                 if self.objs_direct.get(obj, None) == 'minimise':
                     results[i][obj_index] = -1 * results[i][obj_index]
                 obj_index += 1
-
         return results
 
     def find_single_ppa_result_for_brute_force(self, sample_input):

@@ -51,7 +51,7 @@ TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2            # acceptable distance between th
 NUM_RESTARTS = 32               # number of starting points for BO for optimize_acqf
 NUM_OF_INITIAL_POINT = 128      # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
-N_BATCH = 25                    # number of BO batches (inner loop)
+N_BATCH = 10                     # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 128                # number of MC samples for qNEI
 
@@ -64,6 +64,7 @@ plot_posterior = True
 
 #reference point for optimisation used for hypervolume calculation
 ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, OBJECTIVES_TO_OPTIMISE, data_set.worst_value, data_set.output_normalised_factors, t_type, device)
+
 #normalise objective to ensure the same scale
 obj_normalized_factors = list(data_set.output_normalised_factors.values())
 sampler_generator = initial_sampler(INPUT_DATA_DIM, constraint_set, data_set, t_type, device)
@@ -77,6 +78,7 @@ def calculate_hypervolume(ref_points, train_obj):
     """Calculate the hypervolume"""
     # Y dimension (batch_shape) x n x m-dim
     partitioning = NondominatedPartitioning(ref_point=ref_points, Y = train_obj[..., : OBJECTIVES_TO_OPTIMISE_DIM])
+
     hv = partitioning.compute_hypervolume().item()
     return hv
 
@@ -178,7 +180,6 @@ for trial in range (1, N_TRIALS + 1):
         train_obj_ei,
         hyper_vol_ei,
     ) = generate_initial_data()
-
     train_set_storage.store_initial_data(train_x_ei)
     mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
     #reset the best observation
@@ -199,7 +200,7 @@ for trial in range (1, N_TRIALS + 1):
         new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimize_acqf_and_get_observation(acqf, constraint_set.constraint_bound, t_type)
 
         # examine the posterior
-        if plot_posterior and iteration == N_BATCH:
+        if plot_posterior and iteration == 10:
             # posterior_examiner.examine_posterior(model_ei.subset_output([posterior_objective_index]), iteration)
             posterior_examiner.examine_acq_function(acqf, iteration)
         #--------------for debug------------------
@@ -213,12 +214,14 @@ for trial in range (1, N_TRIALS + 1):
 
         # update training points
         valid_point, modified_new_train_x, modified_new_train_obj_ei, modified_hyper_vol  = train_set_storage.store_new_data(new_x_ei, new_train_obj_ei, hyper_vol)
-        print("modified_new_train_x: ", modified_new_train_x)
-        print("modified_new_train_obj_ei: ", modified_new_train_obj_ei)
-        print("modified_hyper_vol: ", modified_hyper_vol)
+        
+        #--------------for debug------------------
+        if debug:
+            print("modified_new_train_x: ", modified_new_train_x)
+            print("modified_new_train_obj_ei: ", modified_new_train_obj_ei)
+            print("modified_hyper_vol: ", modified_hyper_vol)
 
         if valid_point:
-            print("valid point")
             train_x_ei   = torch.cat([train_x_ei, modified_new_train_x])
             train_obj_ei = torch.cat([train_obj_ei, modified_new_train_obj_ei])
             hyper_vol_ei = torch.cat([hyper_vol_ei, modified_hyper_vol])

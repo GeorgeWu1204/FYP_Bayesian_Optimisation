@@ -40,5 +40,5 @@ class initial_sampler:
                 con_objs[valid_sample_index] = con_obj
                 normalised_objs[valid_sample_index] = normalised_obj
                 valid_sample_index += 1
-        return train_x[:valid_sample_index + 1, : ], exact_objs[:valid_sample_index + 1, :], con_objs[:valid_sample_index + 1, :], normalised_objs[:valid_sample_index + 1, :]
+        return train_x[:valid_sample_index, : ], exact_objs[:valid_sample_index, :], con_objs[:valid_sample_index, :], normalised_objs[:valid_sample_index, :]
 

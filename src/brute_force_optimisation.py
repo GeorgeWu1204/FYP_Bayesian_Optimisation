@@ -88,7 +88,7 @@ for iteration in range(overall_iteration_required):
     if record:
         for index in INPUT_CONSTANT.keys():
             del sample_input[index]
-        results_record.record(iteration, sample_input, volume, best_results, t1-t0)
+        results_record.record(iteration, sample_input, 1-volume, best_results, t1-t0)
 print(f"{Fore.GREEN}best_volume: {best_volume}, best_sample: {best_sample}, best_results: {best_results}{Style.RESET_ALL}")
 if record:
     results_record.store()
