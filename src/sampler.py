@@ -31,7 +31,7 @@ class initial_sampler:
             if self.constraint_set.check_single_point_meet_constraint(possible_initial_tensor[i,:]) == False:
                 continue
             # check internal constraints
-            possible_obj = data_set.find_ppa_result(possible_initial_tensor[i:i+1,:], self.type)
+            possible_obj = data_set.find_ppa_result(possible_initial_tensor[i:i+1,:])
             normalised_obj = normalise_output_data(possible_obj, obj_normalized_factors, self.device)
             con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
             if con_obj.item() <= 0.0:

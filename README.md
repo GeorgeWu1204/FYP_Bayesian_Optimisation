@@ -43,11 +43,11 @@ Apart from that, the train_obj only considers the objectives that need to optimi
 - Apply transformation to the tensor for forward pass to the covariance kernel.
 - Improve the initial Sampling method.
 - Select the sample point to decide whether it shoud be integrated to the training set.
+- Connect the model with the real customisable processor.
 
 
 ## TODO
-- Try to modify the Covariance Kernel to be able to handle the discrete input.
-- Experiments in larger dataset.
+- Complete the overall flow
 
 ## Things to Improve
 - Currently, the output constraints are considered as the last dimension of the objective functions.

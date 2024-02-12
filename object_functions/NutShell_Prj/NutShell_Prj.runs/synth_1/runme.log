@@ -1,0 +1,1472 @@
+
+*** Running vivado
+    with args -log NutShell.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source NutShell.tcl
+
+
+
+****** Vivado v2023.2 (64-bit)
+  **** SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
+  **** IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+  **** SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source NutShell.tcl -notrace
+Command: read_checkpoint -auto_incremental -incremental d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.srcs/utils_1/imports/synth_1/NutShell.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.srcs/utils_1/imports/synth_1/NutShell.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top NutShell -part xczu19eg-ffvc1760-2-i
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xczu19eg'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xczu19eg'
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 37856
+---------------------------------------------------------------------------------
+Starting Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1032.918 ; gain = 439.355
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'NutShell' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:26483]
+INFO: [Synth 8-6157] synthesizing module 'NutCore' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:16940]
+INFO: [Synth 8-6157] synthesizing module 'Frontend_inorder' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:3445]
+INFO: [Synth 8-6157] synthesizing module 'IFU_inorder' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:428]
+INFO: [Synth 8-6157] synthesizing module 'BPU_inorder' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:192]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'BPU_inorder' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:192]
+INFO: [Synth 8-6155] done synthesizing module 'IFU_inorder' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:428]
+INFO: [Synth 8-6157] synthesizing module 'NaiveRVCAlignBuffer' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:666]
+INFO: [Synth 8-6155] done synthesizing module 'NaiveRVCAlignBuffer' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:666]
+INFO: [Synth 8-6157] synthesizing module 'IDU' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:3083]
+INFO: [Synth 8-6157] synthesizing module 'Decoder' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:1195]
+INFO: [Synth 8-6155] done synthesizing module 'Decoder' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:1195]
+INFO: [Synth 8-6157] synthesizing module 'Decoder_1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:3074]
+INFO: [Synth 8-6155] done synthesizing module 'Decoder_1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:3074]
+INFO: [Synth 8-6155] done synthesizing module 'IDU' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:3083]
+INFO: [Synth 8-6157] synthesizing module 'FlushableQueue' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:3214]
+INFO: [Synth 8-6155] done synthesizing module 'FlushableQueue' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:3214]
+INFO: [Synth 8-6155] done synthesizing module 'Frontend_inorder' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:3445]
+INFO: [Synth 8-6157] synthesizing module 'Backend_inorder' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:8012]
+INFO: [Synth 8-6157] synthesizing module 'ISU' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:3842]
+INFO: [Synth 8-6155] done synthesizing module 'ISU' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:3842]
+INFO: [Synth 8-6157] synthesizing module 'EXU' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:7617]
+INFO: [Synth 8-6157] synthesizing module 'ALU' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:4124]
+INFO: [Synth 8-6155] done synthesizing module 'ALU' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:4124]
+INFO: [Synth 8-6157] synthesizing module 'UnpipelinedLSU' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:4784]
+INFO: [Synth 8-6157] synthesizing module 'LSExecUnit' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:4335]
+INFO: [Synth 8-6155] done synthesizing module 'LSExecUnit' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:4335]
+INFO: [Synth 8-6157] synthesizing module 'AtomALU' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:4705]
+INFO: [Synth 8-6155] done synthesizing module 'AtomALU' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:4705]
+INFO: [Synth 8-6155] done synthesizing module 'UnpipelinedLSU' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:4784]
+INFO: [Synth 8-6157] synthesizing module 'MDU' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:5917]
+INFO: [Synth 8-6157] synthesizing module 'Multiplier' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:5181]
+INFO: [Synth 8-6155] done synthesizing module 'Multiplier' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:5181]
+INFO: [Synth 8-6157] synthesizing module 'Divider' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:5315]
+INFO: [Synth 8-6155] done synthesizing module 'Divider' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:5315]
+INFO: [Synth 8-6155] done synthesizing module 'MDU' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:5917]
+INFO: [Synth 8-6157] synthesizing module 'CSR' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:6156]
+INFO: [Synth 8-6155] done synthesizing module 'CSR' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:6156]
+INFO: [Synth 8-6157] synthesizing module 'MOU' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:7604]
+INFO: [Synth 8-6155] done synthesizing module 'MOU' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:7604]
+INFO: [Synth 8-6155] done synthesizing module 'EXU' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:7617]
+INFO: [Synth 8-6157] synthesizing module 'WBU' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:7979]
+INFO: [Synth 8-6155] done synthesizing module 'WBU' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:7979]
+INFO: [Synth 8-6155] done synthesizing module 'Backend_inorder' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:8012]
+INFO: [Synth 8-6157] synthesizing module 'SimpleBusCrossbarNto1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:8783]
+INFO: [Synth 8-6157] synthesizing module 'LockingArbiter' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:8672]
+INFO: [Synth 8-6155] done synthesizing module 'LockingArbiter' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:8672]
+INFO: [Synth 8-6155] done synthesizing module 'SimpleBusCrossbarNto1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:8783]
+INFO: [Synth 8-6157] synthesizing module 'SimpleBusCrossbarNto1_1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:9237]
+INFO: [Synth 8-6157] synthesizing module 'LockingArbiter_1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:9069]
+INFO: [Synth 8-6155] done synthesizing module 'LockingArbiter_1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:9069]
+INFO: [Synth 8-6155] done synthesizing module 'SimpleBusCrossbarNto1_1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:9237]
+INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLB' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:10096]
+INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLBExec' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:9582]
+INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLBExec' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:9582]
+INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLBMD' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:9998]
+INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLBMD' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:9998]
+INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLB' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:10096]
+INFO: [Synth 8-6157] synthesizing module 'Cache' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:12717]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:10254]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:10254]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage2' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:10307]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage2' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:10307]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage3' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:10800]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:10746]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:10746]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:10775]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:10775]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage3' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:10800]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplateWithArbiter' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:11836]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate_1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:11508]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate_1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:11508]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_2' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:11820]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_2' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:11820]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplateWithArbiter' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:11836]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplateWithArbiter_1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:12409]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate_2' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:12175]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate_2' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:12175]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_3' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:12387]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_3' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:12387]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplateWithArbiter_1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:12409]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_4' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:12698]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_4' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:12698]
+INFO: [Synth 8-6155] done synthesizing module 'Cache' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:12717]
+INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLB_1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:14171]
+INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLBExec_1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:13627]
+INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLBExec_1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:13627]
+INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLBMD_1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:14056]
+INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLBMD_1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:14056]
+INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLB_1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:14171]
+INFO: [Synth 8-6157] synthesizing module 'Cache_1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:15868]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage1_1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:14356]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage1_1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:14356]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage2_1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:14418]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage2_1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:14418]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage3_1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:14866]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage3_1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:14866]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_9' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:15830]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_9' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:15830]
+INFO: [Synth 8-6155] done synthesizing module 'Cache_1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:15868]
+INFO: [Synth 8-6155] done synthesizing module 'NutCore' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:16940]
+INFO: [Synth 8-6157] synthesizing module 'CoherenceManager' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:19782]
+INFO: [Synth 8-6155] done synthesizing module 'CoherenceManager' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:19782]
+INFO: [Synth 8-6157] synthesizing module 'AXI42SimpleBusConverter' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:20089]
+INFO: [Synth 8-6155] done synthesizing module 'AXI42SimpleBusConverter' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:20089]
+INFO: [Synth 8-6157] synthesizing module 'Prefetcher' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:20532]
+INFO: [Synth 8-6155] done synthesizing module 'Prefetcher' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:20532]
+INFO: [Synth 8-6157] synthesizing module 'Cache_2' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:23413]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage1_2' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:20722]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage1_2' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:20722]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage2_2' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:20781]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage2_2' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:20781]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage3_2' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:21279]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_10' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:21226]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_10' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:21226]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_11' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:21254]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_11' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:21254]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage3_2' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:21279]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplateWithArbiter_4' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:22551]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate_5' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:22223]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate_5' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:22223]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_12' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:22535]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_12' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:22535]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplateWithArbiter_4' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:22551]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplateWithArbiter_5' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:23124]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate_6' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:22890]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate_6' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:22890]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_13' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:23102]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_13' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:23102]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplateWithArbiter_5' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:23124]
+INFO: [Synth 8-6155] done synthesizing module 'Cache_2' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:23413]
+INFO: [Synth 8-6157] synthesizing module 'SimpleBusAddressMapper' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:24397]
+INFO: [Synth 8-6155] done synthesizing module 'SimpleBusAddressMapper' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:24397]
+INFO: [Synth 8-6157] synthesizing module 'SimpleBus2AXI4Converter' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:24428]
+INFO: [Synth 8-6155] done synthesizing module 'SimpleBus2AXI4Converter' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:24428]
+INFO: [Synth 8-6157] synthesizing module 'SimpleBusCrossbar1toN' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:24665]
+INFO: [Synth 8-6155] done synthesizing module 'SimpleBusCrossbar1toN' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:24665]
+INFO: [Synth 8-6157] synthesizing module 'SimpleBus2AXI4Converter_1' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:24958]
+INFO: [Synth 8-6155] done synthesizing module 'SimpleBus2AXI4Converter_1' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:24958]
+INFO: [Synth 8-6157] synthesizing module 'AXI4CLINT' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:25204]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4CLINT' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:25204]
+INFO: [Synth 8-6157] synthesizing module 'SimpleBus2AXI4Converter_2' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:25531]
+INFO: [Synth 8-6155] done synthesizing module 'SimpleBus2AXI4Converter_2' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:25531]
+INFO: [Synth 8-6157] synthesizing module 'AXI4PLIC' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:25751]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4PLIC' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:25751]
+INFO: [Synth 8-6155] done synthesizing module 'NutShell' (0#1) [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:26483]
+WARNING: [Synth 8-6014] Unused sequential element array_0__T_19_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:165]
+WARNING: [Synth 8-6014] Unused sequential element cnt_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:287]
+WARNING: [Synth 8-4767] Trying to implement RAM 'pht_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+Reason is one or more of the following :
+	1: No valid read/write found for RAM. 
+RAM "pht_reg" dissolved into registers
+WARNING: [Synth 8-4767] Trying to implement RAM 'ras_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+Reason is one or more of the following :
+	1: No valid read/write found for RAM. 
+RAM "ras_reg" dissolved into registers
+WARNING: [Synth 8-3936] Found unconnected internal register 'addrLatch_reg' and it is trimmed from '64' to '3' bits. [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:4527]
+WARNING: [Synth 8-6014] Unused sequential element array_0__T_21_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:11778]
+WARNING: [Synth 8-6014] Unused sequential element array_1__T_21_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:11785]
+WARNING: [Synth 8-6014] Unused sequential element array_2__T_21_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:11792]
+WARNING: [Synth 8-6014] Unused sequential element array_3__T_21_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:11799]
+WARNING: [Synth 8-6014] Unused sequential element array_0__T_13_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:12360]
+WARNING: [Synth 8-6014] Unused sequential element array_1__T_13_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:12367]
+WARNING: [Synth 8-6014] Unused sequential element array_2__T_13_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:12374]
+WARNING: [Synth 8-6014] Unused sequential element array_3__T_13_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:12381]
+WARNING: [Synth 8-6014] Unused sequential element array_0__T_21_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:22493]
+WARNING: [Synth 8-6014] Unused sequential element array_1__T_21_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:22500]
+WARNING: [Synth 8-6014] Unused sequential element array_2__T_21_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:22507]
+WARNING: [Synth 8-6014] Unused sequential element array_3__T_21_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:22514]
+WARNING: [Synth 8-6014] Unused sequential element array_0__T_13_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:23075]
+WARNING: [Synth 8-6014] Unused sequential element array_1__T_13_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:23082]
+WARNING: [Synth 8-6014] Unused sequential element array_2__T_13_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:23089]
+WARNING: [Synth 8-6014] Unused sequential element array_3__T_13_en_pipe_0_reg was removed.  [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:23096]
+WARNING: [Synth 8-3917] design NutShell has port io_mem_wstrb[7] driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mem_wstrb[6] driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mem_wstrb[5] driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mem_wstrb[4] driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mem_wstrb[3] driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mem_wstrb[2] driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mem_wstrb[1] driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mem_wstrb[0] driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mem_bready driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arprot[2] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arprot[1] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arprot[0] driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arid driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_aruser driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arsize[2] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arsize[1] driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arsize[0] driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arburst[1] driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arburst[0] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arlock driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arcache[3] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arcache[2] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arcache[1] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arcache[0] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arqos[3] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arqos[2] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arqos[1] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_arqos[0] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mem_rready driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arprot[2] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arprot[1] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arprot[0] driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arid driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_aruser driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arburst[1] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arburst[0] driven by constant 1
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arlock driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arcache[3] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arcache[2] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arcache[1] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arcache[0] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arqos[3] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arqos[2] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arqos[1] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_mmio_arqos[0] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_frontend_bresp[1] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_frontend_bresp[0] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_frontend_bid driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_frontend_buser driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_frontend_rresp[1] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_frontend_rresp[0] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_frontend_ruser driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[38] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[37] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[36] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[35] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[34] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[33] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[32] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[31] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[30] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[29] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[28] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[27] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[26] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[25] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[24] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[23] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[22] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[21] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[20] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[19] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[18] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[17] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[16] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[15] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[14] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[13] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[12] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[11] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[10] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[9] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[8] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[7] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[6] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[5] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[4] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[3] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[2] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[1] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUpc[0] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUvalid driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUrfWen driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUrfDest[4] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUrfDest[3] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUrfDest[2] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUrfDest[1] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUrfDest[0] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUrfData[63] driven by constant 0
+WARNING: [Synth 8-3917] design NutShell has port io_ila_WBUrfData[62] driven by constant 0
+INFO: [Common 17-14] Message 'Synth 8-3917' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+WARNING: [Synth 8-7129] Port io_in_req_bits_cmd[2] in module SimpleBus2AXI4Converter_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_req_bits_cmd[1] in module SimpleBus2AXI4Converter_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[31] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[30] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[29] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[28] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[27] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[26] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[63] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[62] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[61] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[60] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[59] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[58] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[57] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[56] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[55] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[54] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[53] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[52] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[51] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[50] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[49] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[48] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[47] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[46] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[45] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[44] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[43] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[42] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[41] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[40] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[39] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[38] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[37] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[36] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[35] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[34] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[33] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_w_bits_data[32] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[31] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[30] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[29] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[28] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[27] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[26] in module AXI4PLIC is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[31] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[30] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[29] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[28] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[27] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[26] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[25] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[24] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[23] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[22] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[21] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[20] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[19] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[18] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[17] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_aw_bits_addr[16] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[31] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[30] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[29] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[28] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[27] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[26] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[25] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[24] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[23] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[22] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[21] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[20] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[19] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[18] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[17] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_ar_bits_addr[16] in module AXI4CLINT is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_bits_req_addr[2] in module CacheStage3_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_bits_req_addr[1] in module CacheStage3_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_in_bits_req_addr[0] in module CacheStage3_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[16] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[15] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[14] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[13] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[12] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[11] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[10] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[9] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[8] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[7] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[6] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[5] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[4] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[3] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[2] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[1] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_tag[0] in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_valid in module CacheStage1_2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_dirty in module CacheStage1_2 is either unconnected or has no load
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished Synthesize : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1292.980 ; gain = 699.418
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 1292.980 ; gain = 699.418
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xczu19eg-ffvc1760-2-i
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 1292.980 ; gain = 699.418
+---------------------------------------------------------------------------------
+INFO: [Device 21-403] Loading part xczu19eg-ffvc1760-2-i
+INFO: [Synth 8-6904] The RAM "SRAMTemplate:/SRAMTemplate_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "IFU_inorder:/IFU_inorder_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "NaiveRVCAlignBuffer:/NaiveRVCAlignBuffer_cov_reg" of size (depth=32 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "FlushableQueue:/ram_instr_reg" of size (depth=4 x width=64) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "FlushableQueue:/ram_pc_reg" of size (depth=4 x width=39) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "FlushableQueue:/ram_pnpc_reg" of size (depth=4 x width=39) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "FlushableQueue:/ram_exceptionVec_12_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "FlushableQueue:/ram_brIdx_reg" of size (depth=4 x width=4) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "LSExecUnit:/LSExecUnit_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "UnpipelinedLSU:/UnpipelinedLSU_cov_reg" of size (depth=8 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Divider:/Divider_cov_reg" of size (depth=64 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "MDU:/MDU_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "CSR:/CSR_cov_reg" of size (depth=16 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SimpleBusCrossbarNto1:/SimpleBusCrossbarNto1_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SimpleBusCrossbarNto1_1:/SimpleBusCrossbarNto1_1_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "EmbeddedTLBExec:/EmbeddedTLBExec_cov_reg" of size (depth=128 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "EmbeddedTLBMD:/EmbeddedTLBMD_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "CacheStage2:/CacheStage2_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "CacheStage3:/CacheStage3_cov_reg" of size (depth=32 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SRAMTemplate_1:/array_0_reg" of size (depth=128 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SRAMTemplate_1:/array_1_reg" of size (depth=128 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SRAMTemplate_1:/array_2_reg" of size (depth=128 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SRAMTemplate_1:/array_3_reg" of size (depth=128 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SRAMTemplate_1:/SRAMTemplate_1_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SRAMTemplateWithArbiter:/SRAMTemplateWithArbiter_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+WARNING: [Synth 8-6430] The Block RAM "SRAMTemplate_2:/array_0_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 36 for RAM "SRAMTemplate_2:/array_0_reg"
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 28 for RAM "SRAMTemplate_2:/array_0_reg"
+WARNING: [Synth 8-6430] The Block RAM "SRAMTemplate_2:/array_1_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 36 for RAM "SRAMTemplate_2:/array_1_reg"
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 28 for RAM "SRAMTemplate_2:/array_1_reg"
+WARNING: [Synth 8-6430] The Block RAM "SRAMTemplate_2:/array_2_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 36 for RAM "SRAMTemplate_2:/array_2_reg"
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 28 for RAM "SRAMTemplate_2:/array_2_reg"
+WARNING: [Synth 8-6430] The Block RAM "SRAMTemplate_2:/array_3_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 36 for RAM "SRAMTemplate_2:/array_3_reg"
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 28 for RAM "SRAMTemplate_2:/array_3_reg"
+INFO: [Synth 8-6904] The RAM "SRAMTemplateWithArbiter_1:/SRAMTemplateWithArbiter_1_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "EmbeddedTLBExec_1:/EmbeddedTLBExec_1_cov_reg" of size (depth=64 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "EmbeddedTLBMD_1:/EmbeddedTLBMD_1_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "CacheStage2_1:/CacheStage2_1_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "CacheStage3_1:/CacheStage3_1_cov_reg" of size (depth=16 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "NutCore:/NutCore_cov_reg" of size (depth=16 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "CoherenceManager:/CoherenceManager_cov_reg" of size (depth=8 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "AXI42SimpleBusConverter:/AXI42SimpleBusConverter_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Prefetcher:/Prefetcher_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "CacheStage2_2:/CacheStage2_2_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "CacheStage3_2:/CacheStage3_2_cov_reg" of size (depth=16 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+WARNING: [Synth 8-6430] The Block RAM "SRAMTemplate_5:/array_0_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+WARNING: [Synth 8-6430] The Block RAM "SRAMTemplate_5:/array_1_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+WARNING: [Synth 8-6430] The Block RAM "SRAMTemplate_5:/array_2_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+WARNING: [Synth 8-6430] The Block RAM "SRAMTemplate_5:/array_3_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+INFO: [Synth 8-6904] The RAM "SRAMTemplate_5:/SRAMTemplate_5_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SRAMTemplateWithArbiter_4:/SRAMTemplateWithArbiter_4_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6794] RAM ("SRAMTemplate_6:/array_0_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-6794] RAM ("SRAMTemplate_6:/array_0_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-6794] RAM ("SRAMTemplate_6:/array_0_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-5780] Default cascade height of 1 will be used for URAM '"SRAMTemplate_6:/array_0_reg"'.
+INFO: [Synth 8-6794] RAM ("SRAMTemplate_6:/array_1_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-6794] RAM ("SRAMTemplate_6:/array_1_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-6794] RAM ("SRAMTemplate_6:/array_1_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-5780] Default cascade height of 1 will be used for URAM '"SRAMTemplate_6:/array_1_reg"'.
+INFO: [Synth 8-6794] RAM ("SRAMTemplate_6:/array_2_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-6794] RAM ("SRAMTemplate_6:/array_2_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-6794] RAM ("SRAMTemplate_6:/array_2_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-5780] Default cascade height of 1 will be used for URAM '"SRAMTemplate_6:/array_2_reg"'.
+INFO: [Synth 8-6794] RAM ("SRAMTemplate_6:/array_3_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-6794] RAM ("SRAMTemplate_6:/array_3_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-6794] RAM ("SRAMTemplate_6:/array_3_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-5780] Default cascade height of 1 will be used for URAM '"SRAMTemplate_6:/array_3_reg"'.
+INFO: [Synth 8-6904] The RAM "SRAMTemplateWithArbiter_5:/SRAMTemplateWithArbiter_5_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SimpleBus2AXI4Converter:/SimpleBus2AXI4Converter_cov_reg" of size (depth=8 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SimpleBusCrossbar1toN:/SimpleBusCrossbar1toN_cov_reg" of size (depth=16 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SimpleBus2AXI4Converter_1:/SimpleBus2AXI4Converter_1_cov_reg" of size (depth=8 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SimpleBus2AXI4Converter_2:/SimpleBus2AXI4Converter_2_cov_reg" of size (depth=8 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "AXI4PLIC:/AXI4PLIC_cov_reg" of size (depth=1024 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:12 ; elapsed = 00:00:11 . Memory (MB): peak = 2222.906 ; gain = 1629.344
+---------------------------------------------------------------------------------
+RAM Pipeline Warning: Read Address Register Found For RAM array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+No constraint files found.
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   3 Input   65 Bit       Adders := 2     
+	   2 Input   64 Bit       Adders := 6     
+	   3 Input   64 Bit       Adders := 1     
+	   2 Input   39 Bit       Adders := 10    
+	   2 Input   32 Bit       Adders := 1     
+	   3 Input   30 Bit       Adders := 12    
+	   5 Input   30 Bit       Adders := 1     
+	   2 Input   30 Bit       Adders := 7     
+	   4 Input   30 Bit       Adders := 1     
+	   9 Input   30 Bit       Adders := 1     
+	   6 Input   30 Bit       Adders := 3     
+	  14 Input   30 Bit       Adders := 1     
+	   2 Input   16 Bit       Adders := 2     
+	   2 Input    9 Bit       Adders := 2     
+	   3 Input    7 Bit       Adders := 1     
+	   2 Input    7 Bit       Adders := 2     
+	   2 Input    6 Bit       Adders := 1     
+	   2 Input    4 Bit       Adders := 1     
+	   2 Input    3 Bit       Adders := 18    
+	   2 Input    2 Bit       Adders := 8     
++---XORs : 
+	   2 Input     64 Bit         XORs := 4     
+	   2 Input     32 Bit         XORs := 8     
+	   2 Input      1 Bit         XORs := 4     
+	   4 Input      1 Bit         XORs := 3     
++---Registers : 
+	              130 Bit    Registers := 3     
+	              129 Bit    Registers := 1     
+	               87 Bit    Registers := 2     
+	               73 Bit    Registers := 1     
+	               65 Bit    Registers := 3     
+	               64 Bit    Registers := 123   
+	               39 Bit    Registers := 22    
+	               32 Bit    Registers := 19    
+	               19 Bit    Registers := 18    
+	               18 Bit    Registers := 1     
+	               17 Bit    Registers := 9     
+	               16 Bit    Registers := 4     
+	               12 Bit    Registers := 4     
+	               10 Bit    Registers := 9     
+	                9 Bit    Registers := 6     
+	                8 Bit    Registers := 6     
+	                7 Bit    Registers := 16    
+	                6 Bit    Registers := 3     
+	                5 Bit    Registers := 19    
+	                4 Bit    Registers := 33    
+	                3 Bit    Registers := 38    
+	                2 Bit    Registers := 543   
+	                1 Bit    Registers := 205   
++---Multipliers : 
+	              65x65  Multipliers := 1     
++---RAMs : 
+	             256K Bit	(4096 X 64 bit)          RAMs := 4     
+	              64K Bit	(1024 X 64 bit)          RAMs := 8     
+	              36K Bit	(512 X 73 bit)          RAMs := 1     
+	               9K Bit	(512 X 19 bit)          RAMs := 4     
+	               2K Bit	(128 X 21 bit)          RAMs := 8     
+	             1024 Bit	(1024 X 1 bit)          RAMs := 1     
+	              256 Bit	(4 X 64 bit)          RAMs := 1     
+	              156 Bit	(4 X 39 bit)          RAMs := 2     
+	              128 Bit	(128 X 1 bit)          RAMs := 1     
+	               64 Bit	(64 X 1 bit)          RAMs := 2     
+	               32 Bit	(32 X 1 bit)          RAMs := 2     
+	               16 Bit	(16 X 1 bit)          RAMs := 5     
+	               16 Bit	(4 X 4 bit)          RAMs := 1     
+	                8 Bit	(8 X 1 bit)          RAMs := 6     
+	                4 Bit	(4 X 1 bit)          RAMs := 14    
+	                2 Bit	(2 X 1 bit)          RAMs := 10    
++---Muxes : 
+	   4 Input  129 Bit        Muxes := 1     
+	   2 Input  129 Bit        Muxes := 1     
+	   2 Input   73 Bit        Muxes := 1     
+	   2 Input   65 Bit        Muxes := 3     
+	   2 Input   64 Bit        Muxes := 237   
+	   4 Input   64 Bit        Muxes := 7     
+	   5 Input   64 Bit        Muxes := 1     
+	   3 Input   64 Bit        Muxes := 5     
+	   2 Input   39 Bit        Muxes := 18    
+	   4 Input   39 Bit        Muxes := 3     
+	   2 Input   32 Bit        Muxes := 34    
+	   4 Input   32 Bit        Muxes := 2     
+	   2 Input   24 Bit        Muxes := 1     
+	   2 Input   21 Bit        Muxes := 8     
+	   2 Input   19 Bit        Muxes := 40    
+	   2 Input   18 Bit        Muxes := 5     
+	   2 Input   17 Bit        Muxes := 18    
+	   2 Input   16 Bit        Muxes := 4     
+	   5 Input   13 Bit        Muxes := 1     
+	   2 Input   12 Bit        Muxes := 3     
+	   2 Input   10 Bit        Muxes := 4     
+	   2 Input    9 Bit        Muxes := 4     
+	   2 Input    8 Bit        Muxes := 8     
+	   4 Input    8 Bit        Muxes := 1     
+	   6 Input    7 Bit        Muxes := 1     
+	   4 Input    7 Bit        Muxes := 1     
+	 124 Input    7 Bit        Muxes := 1     
+	   2 Input    7 Bit        Muxes := 9     
+	   2 Input    6 Bit        Muxes := 6     
+	   2 Input    5 Bit        Muxes := 24    
+	   4 Input    5 Bit        Muxes := 3     
+	  34 Input    5 Bit        Muxes := 2     
+	   2 Input    4 Bit        Muxes := 78    
+	  15 Input    4 Bit        Muxes := 1     
+	   4 Input    4 Bit        Muxes := 7     
+	 124 Input    4 Bit        Muxes := 1     
+	  32 Input    4 Bit        Muxes := 1     
+	  34 Input    4 Bit        Muxes := 1     
+	   5 Input    4 Bit        Muxes := 4     
+	   9 Input    4 Bit        Muxes := 1     
+	   3 Input    4 Bit        Muxes := 10    
+	   8 Input    4 Bit        Muxes := 1     
+	   7 Input    4 Bit        Muxes := 1     
+	   2 Input    3 Bit        Muxes := 82    
+	   5 Input    3 Bit        Muxes := 6     
+	   4 Input    3 Bit        Muxes := 5     
+	   3 Input    3 Bit        Muxes := 7     
+	   8 Input    3 Bit        Muxes := 1     
+	   9 Input    3 Bit        Muxes := 1     
+	 126 Input    3 Bit        Muxes := 1     
+	  34 Input    3 Bit        Muxes := 1     
+	   6 Input    3 Bit        Muxes := 1     
+	   2 Input    2 Bit        Muxes := 116   
+	   3 Input    2 Bit        Muxes := 7     
+	   4 Input    2 Bit        Muxes := 6     
+	   5 Input    2 Bit        Muxes := 8     
+	   2 Input    1 Bit        Muxes := 236   
+	   7 Input    1 Bit        Muxes := 1     
+	   5 Input    1 Bit        Muxes := 1     
+	   4 Input    1 Bit        Muxes := 11    
+	   3 Input    1 Bit        Muxes := 5     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 1968 (col length:264)
+BRAMs: 1968 (col length: RAMB18 264 RAMB36 132)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+INFO: [Synth 8-6904] The RAM "Backend_inorder/exu/lsu/lsExecUnit/LSExecUnit_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Backend_inorder/exu/lsu/UnpipelinedLSU_cov_reg" of size (depth=8 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Backend_inorder/exu/mdu/div/Divider_cov_reg" of size (depth=64 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+WARNING: [Synth 8-3936] Found unconnected internal register 'mul/_T_6_reg' and it is trimmed from '130' to '128' bits. [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:5219]
+WARNING: [Synth 8-3936] Found unconnected internal register 'mul/_T_5_reg' and it is trimmed from '130' to '128' bits. [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:5300]
+WARNING: [Synth 8-3936] Found unconnected internal register 'mul/_T_4_reg' and it is trimmed from '130' to '128' bits. [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:5299]
+DSP Report: Generating DSP mul/_T_5_reg, operation Mode is: (A2*B2)'.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_5_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_5_reg.
+DSP Report: Generating DSP mul/_T_4_reg, operation Mode is: (A2*B2)'.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_4_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_4_reg.
+DSP Report: Generating DSP mul/_T_40, operation Mode is: (PCIN>>17)+(A2*B2)'.
+DSP Report: register mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: register mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_40.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: Generating DSP mul/_T_5_reg, operation Mode is: (PCIN+(A2*B2)')'.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_5_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_5_reg.
+DSP Report: Generating DSP mul/_T_4_reg, operation Mode is: (A2*B2)'.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_4_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_4_reg.
+DSP Report: Generating DSP mul/_T_40, operation Mode is: (PCIN>>17)+(A2*B2)'.
+DSP Report: register mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: register mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_40.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: Generating DSP mul/_T_5_reg, operation Mode is: (PCIN+(A2*B2)')'.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_5_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_5_reg.
+DSP Report: Generating DSP mul/_T_4_reg, operation Mode is: (A2*B2)'.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_4_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_4_reg.
+DSP Report: Generating DSP mul/_T_40, operation Mode is: PCIN+(A2*B2)'.
+DSP Report: register mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: register mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_40.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: Generating DSP mul/_T_5_reg, operation Mode is: (PCIN+(A2*B2)')'.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_5_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_5_reg.
+DSP Report: Generating DSP mul/_T_4_reg, operation Mode is: (A2*B2)'.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_4_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_4_reg.
+DSP Report: Generating DSP mul/_T_40, operation Mode is: PCIN+(A2*B2)'.
+DSP Report: register mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: register mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_40.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: Generating DSP mul/_T_5_reg, operation Mode is: (PCIN+(A2*B2)')'.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_5_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_5_reg.
+DSP Report: Generating DSP mul/_T_4_reg, operation Mode is: (A2*B2)'.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_4_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_4_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_4_reg.
+DSP Report: Generating DSP mul/_T_40, operation Mode is: (PCIN>>17)+(A2*B2)'.
+DSP Report: register mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: register mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_40.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_40.
+DSP Report: Generating DSP mul/_T_5_reg, operation Mode is: (PCIN+(A2*B2)')'.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_5_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: register mul/_T_4_reg is absorbed into DSP mul/_T_5_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_5_reg.
+DSP Report: operator mul/_T_40 is absorbed into DSP mul/_T_5_reg.
+INFO: [Synth 8-6904] The RAM "Backend_inorder/exu/mdu/MDU_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Backend_inorder/exu/csr/CSR_cov_reg" of size (depth=16 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "NutShell/NutCore_cov_reg" of size (depth=16 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "frontend/ifu/bp1/btb/SRAMTemplate_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "frontend/ifu/IFU_inorder_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "frontend/ibf/NaiveRVCAlignBuffer_cov_reg" of size (depth=32 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "frontend/FlushableQueue/ram_instr_reg" of size (depth=4 x width=64) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "frontend/FlushableQueue/ram_pc_reg" of size (depth=4 x width=39) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "frontend/FlushableQueue/ram_pnpc_reg" of size (depth=4 x width=39) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "frontend/FlushableQueue/ram_exceptionVec_12_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "frontend/FlushableQueue/ram_brIdx_reg" of size (depth=4 x width=4) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+WARNING: [Synth 8-3936] Found unconnected internal register 'EmbeddedTLB/_T_20_addr_reg' and it is trimmed from '39' to '30' bits. [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:10197]
+INFO: [Synth 8-6904] The RAM "NutShell/EmbeddedTLB_1/mdTLB/EmbeddedTLBMD_1_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "NutShell/EmbeddedTLB_1/tlbExec/EmbeddedTLBExec_1_cov_reg" of size (depth=64 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "NutShell/EmbeddedTLB/mdTLB/EmbeddedTLBMD_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "NutShell/EmbeddedTLB/tlbExec/EmbeddedTLBExec_cov_reg" of size (depth=128 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache_1/s2/CacheStage2_1_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache_1/s3/CacheStage3_1_cov_reg" of size (depth=16 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache_1/metaArray/ram/array_0_reg" of size (depth=128 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache_1/metaArray/ram/array_1_reg" of size (depth=128 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache_1/metaArray/ram/array_2_reg" of size (depth=128 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache_1/metaArray/ram/array_3_reg" of size (depth=128 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache_1/metaArray/ram/SRAMTemplate_1_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache_1/metaArray/SRAMTemplateWithArbiter_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache_1/dataArray/SRAMTemplateWithArbiter_1_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache/s2/CacheStage2_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache/s3/CacheStage3_cov_reg" of size (depth=32 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache/metaArray/ram/array_0_reg" of size (depth=128 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache/metaArray/ram/array_1_reg" of size (depth=128 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache/metaArray/ram/array_2_reg" of size (depth=128 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache/metaArray/ram/array_3_reg" of size (depth=128 x width=21) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache/metaArray/ram/SRAMTemplate_1_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache/metaArray/SRAMTemplateWithArbiter_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache/dataArray/SRAMTemplateWithArbiter_1_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "NutShell/SimpleBusCrossbarNto1_1/SimpleBusCrossbarNto1_1_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "NutShell/SimpleBusCrossbarNto1/SimpleBusCrossbarNto1_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "cohMg/CoherenceManager_cov_reg" of size (depth=8 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "xbar/SimpleBusCrossbarNto1_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "axi2sb/AXI42SimpleBusConverter_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Prefetcher/Prefetcher_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache/s2/CacheStage2_2_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache/s3/CacheStage3_2_cov_reg" of size (depth=16 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache/metaArray/ram/SRAMTemplate_5_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache/metaArray/SRAMTemplateWithArbiter_4_cov_reg" of size (depth=2 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "Cache/dataArray/SRAMTemplateWithArbiter_5_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SimpleBus2AXI4Converter/SimpleBus2AXI4Converter_cov_reg" of size (depth=8 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "mmioXbar/SimpleBusCrossbar1toN_cov_reg" of size (depth=16 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "SimpleBus2AXI4Converter_1/SimpleBus2AXI4Converter_1_cov_reg" of size (depth=8 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "plic/AXI4PLIC_cov_reg" of size (depth=1024 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "NutShell/SimpleBus2AXI4Converter_3/SimpleBus2AXI4Converter_2_cov_reg" of size (depth=8 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "NutShell/SimpleBus2AXI4Converter_2/SimpleBus2AXI4Converter_2_cov_reg" of size (depth=8 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "\Backend_inorder/exu /lsu/lsExecUnit/LSExecUnit_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "\Backend_inorder/exu /lsu/UnpipelinedLSU_cov_reg" of size (depth=8 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Synth 8-6904] The RAM "\Backend_inorder/exu /mdu/div/Divider_cov_reg" of size (depth=64 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+INFO: [Common 17-14] Message 'Synth 8-6904' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-6430] The Block RAM "Cache_1/dataArray/ram/array_0_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+RAM ("Cache_1/dataArray/ram/array_0_reg") is too shallow (depth = 1024) to use URAM. Choosing BRAM instead of URAM 
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 36 for RAM "Cache_1/dataArray/ram/array_0_reg"
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 28 for RAM "Cache_1/dataArray/ram/array_0_reg"
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-6430] The Block RAM "Cache_1/dataArray/ram/array_1_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+RAM ("Cache_1/dataArray/ram/array_1_reg") is too shallow (depth = 1024) to use URAM. Choosing BRAM instead of URAM 
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 36 for RAM "Cache_1/dataArray/ram/array_1_reg"
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 28 for RAM "Cache_1/dataArray/ram/array_1_reg"
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-6430] The Block RAM "Cache_1/dataArray/ram/array_2_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+RAM ("Cache_1/dataArray/ram/array_2_reg") is too shallow (depth = 1024) to use URAM. Choosing BRAM instead of URAM 
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 36 for RAM "Cache_1/dataArray/ram/array_2_reg"
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 28 for RAM "Cache_1/dataArray/ram/array_2_reg"
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-6430] The Block RAM "Cache_1/dataArray/ram/array_3_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+RAM ("Cache_1/dataArray/ram/array_3_reg") is too shallow (depth = 1024) to use URAM. Choosing BRAM instead of URAM 
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 36 for RAM "Cache_1/dataArray/ram/array_3_reg"
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 28 for RAM "Cache_1/dataArray/ram/array_3_reg"
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-6430] The Block RAM "Cache/dataArray/ram/array_0_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+RAM ("Cache/dataArray/ram/array_0_reg") is too shallow (depth = 1024) to use URAM. Choosing BRAM instead of URAM 
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 36 for RAM "Cache/dataArray/ram/array_0_reg"
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 28 for RAM "Cache/dataArray/ram/array_0_reg"
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-6430] The Block RAM "Cache/dataArray/ram/array_1_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+RAM ("Cache/dataArray/ram/array_1_reg") is too shallow (depth = 1024) to use URAM. Choosing BRAM instead of URAM 
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 36 for RAM "Cache/dataArray/ram/array_1_reg"
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 28 for RAM "Cache/dataArray/ram/array_1_reg"
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-6430] The Block RAM "Cache/dataArray/ram/array_2_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+RAM ("Cache/dataArray/ram/array_2_reg") is too shallow (depth = 1024) to use URAM. Choosing BRAM instead of URAM 
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 36 for RAM "Cache/dataArray/ram/array_2_reg"
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 28 for RAM "Cache/dataArray/ram/array_2_reg"
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-6430] The Block RAM "Cache/dataArray/ram/array_3_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+RAM ("Cache/dataArray/ram/array_3_reg") is too shallow (depth = 1024) to use URAM. Choosing BRAM instead of URAM 
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 36 for RAM "Cache/dataArray/ram/array_3_reg"
+INFO: [Synth 8-7030] Implemented Non-Cascaded Block Ram (cascade_height = 1) of width 28 for RAM "Cache/dataArray/ram/array_3_reg"
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-6430] The Block RAM "Cache/metaArray/ram/array_0_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+RAM ("Cache/metaArray/ram/array_0_reg") is too shallow (depth = 512) to use URAM. Choosing BRAM instead of URAM 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-6430] The Block RAM "Cache/metaArray/ram/array_1_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+RAM ("Cache/metaArray/ram/array_1_reg") is too shallow (depth = 512) to use URAM. Choosing BRAM instead of URAM 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-6430] The Block RAM "Cache/metaArray/ram/array_2_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+RAM ("Cache/metaArray/ram/array_2_reg") is too shallow (depth = 512) to use URAM. Choosing BRAM instead of URAM 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-6430] The Block RAM "Cache/metaArray/ram/array_3_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
+RAM ("Cache/metaArray/ram/array_3_reg") is too shallow (depth = 512) to use URAM. Choosing BRAM instead of URAM 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6794] RAM ("Cache/dataArray/ram/array_0_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-5780] Default cascade height of 1 will be used for URAM '"Cache/dataArray/ram/array_0_reg"'.
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6794] RAM ("Cache/dataArray/ram/array_1_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-5780] Default cascade height of 1 will be used for URAM '"Cache/dataArray/ram/array_1_reg"'.
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6794] RAM ("Cache/dataArray/ram/array_2_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-5780] Default cascade height of 1 will be used for URAM '"Cache/dataArray/ram/array_2_reg"'.
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6794] RAM ("Cache/dataArray/ram/array_3_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-5780] Default cascade height of 1 will be used for URAM '"Cache/dataArray/ram/array_3_reg"'.
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6794] RAM ("Cache/dataArray/ram/array_0_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-5780] Default cascade height of 1 will be used for URAM '"Cache/dataArray/ram/array_0_reg"'.
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6794] RAM ("Cache/dataArray/ram/array_1_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-5780] Default cascade height of 1 will be used for URAM '"Cache/dataArray/ram/array_1_reg"'.
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6794] RAM ("Cache/dataArray/ram/array_2_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-5780] Default cascade height of 1 will be used for URAM '"Cache/dataArray/ram/array_2_reg"'.
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+INFO: [Synth 8-6794] RAM ("Cache/dataArray/ram/array_3_reg") will be automatically implemented using URAM. 
+INFO: [Synth 8-5780] Default cascade height of 1 will be used for URAM '"Cache/dataArray/ram/array_3_reg"'.
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_0_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_1_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_2_reg. We will not be able to pipeline it. This may degrade performance. 
+RAM Pipeline Warning: Read Address Register Found For RAM ram/array_3_reg. We will not be able to pipeline it. This may degrade performance. 
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[47]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[46]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[45]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[44]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[43]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[42]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[41]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[40]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[39]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[38]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[37]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[36]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[35]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[34]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[33]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[32]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[31]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[30]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[29]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[28]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[27]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[26]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[25]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[24]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[23]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[22]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[21]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[20]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[19]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[18]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[17]) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[47]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[46]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[45]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[44]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[43]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[42]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[41]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[40]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[39]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[38]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[37]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[36]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[35]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[34]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[33]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[32]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[31]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[30]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[29]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[28]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[27]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[26]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[25]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[24]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[23]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[22]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[21]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[20]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[19]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[18]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[17]__0) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[47]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[46]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[45]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[44]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[43]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[42]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[41]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[40]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[39]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[38]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[37]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[36]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[35]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[34]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[33]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[32]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[31]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[30]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[29]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[28]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[27]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[26]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[25]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[24]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[23]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[22]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[21]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[20]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[19]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[18]__1) is unused and will be removed from module MDU.
+WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[17]__1) is unused and will be removed from module MDU.
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:42 ; elapsed = 00:01:47 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+---------------------------------------------------------------------------------
+ Sort Area is NutCore__GB0 mul/_T_4_reg_0 : 0 0 : 3185 9622 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_4_reg_0 : 0 1 : 3204 9622 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_4_reg_0 : 0 2 : 3233 9622 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_4_reg_4 : 0 0 : 3185 9603 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_4_reg_4 : 0 1 : 3185 9603 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_4_reg_4 : 0 2 : 3233 9603 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_4_reg_6 : 0 0 : 2540 8958 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_4_reg_6 : 0 1 : 3185 8958 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_4_reg_6 : 0 2 : 3233 8958 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_4_reg_8 : 0 0 : 2540 8332 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_4_reg_8 : 0 1 : 2559 8332 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_4_reg_8 : 0 2 : 3233 8332 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_4_reg_a : 0 0 : 2540 7687 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_4_reg_a : 0 1 : 2559 7687 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_4_reg_a : 0 2 : 2588 7687 : Used 1 time 0
+ Sort Area is NutCore__GB0 mul/_T_5_reg_c : 0 0 : 2381 2381 : Used 1 time 0
+WARNING: [Synth 8-6057] Memory: "ram/array_0_reg" defined in module: "Cache/dataArray" implemented as Ultra-Ram has no pipeline registers. It is recommended to use pipeline registers to achieve high performance.
+WARNING: [Synth 8-6057] Memory: "ram/array_1_reg" defined in module: "Cache/dataArray" implemented as Ultra-Ram has no pipeline registers. It is recommended to use pipeline registers to achieve high performance.
+WARNING: [Synth 8-6057] Memory: "ram/array_2_reg" defined in module: "Cache/dataArray" implemented as Ultra-Ram has no pipeline registers. It is recommended to use pipeline registers to achieve high performance.
+WARNING: [Synth 8-6057] Memory: "ram/array_3_reg" defined in module: "Cache/dataArray" implemented as Ultra-Ram has no pipeline registers. It is recommended to use pipeline registers to achieve high performance.
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Ultra RAM: Preliminary Mapping Report (see note below)
++----------------+-----------------+------------------------+---+---+------------------------+---+---+------------------+---------+--------------+--------------------------+-------------+
+|Module Name     | RTL Object      | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | URAM288 | Matrix Shape | FF provided for Pipeline | FF absorbed | 
++----------------+-----------------+------------------------+---+---+------------------------+---+---+------------------+---------+--------------+--------------------------+-------------+
+|Cache/dataArray | ram/array_0_reg | 4 K x 64               | W |   | 4 K x 64               |   | R | Port A and B     | 1       | 1x1          | 0                        | 0           | 
+|Cache/dataArray | ram/array_1_reg | 4 K x 64               | W |   | 4 K x 64               |   | R | Port A and B     | 1       | 1x1          | 0                        | 0           | 
+|Cache/dataArray | ram/array_2_reg | 4 K x 64               | W |   | 4 K x 64               |   | R | Port A and B     | 1       | 1x1          | 0                        | 0           | 
+|Cache/dataArray | ram/array_3_reg | 4 K x 64               | W |   | 4 K x 64               |   | R | Port A and B     | 1       | 1x1          | 0                        | 0           | 
++----------------+-----------------+------------------------+---+---+------------------------+---+---+------------------+---------+--------------+--------------------------+-------------+
+
+Note: The table above is a preliminary report that shows the Ultra RAMs at the current stage of the synthesis flow. Some Ultra RAMs may be reimplemented as non Ultra RAM primitives later in the synthesis flow. Multiple instantiated Ultra RAMs are reported only once. Fields "FF provided for Pipeline" and "FF absorbed" respectively indicate number of registers available for pipelining and number of registers absorbed in the URAM matrix for pipelining. 
+
+Block RAM: Preliminary Mapping Report (see note below)
++------------------+-----------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+-----------------+
+|Module Name       | RTL Object      | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | Cascade Heights | 
++------------------+-----------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+-----------------+
+|Cache_1/dataArray | ram/array_0_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache_1/dataArray | ram/array_1_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache_1/dataArray | ram/array_2_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache_1/dataArray | ram/array_3_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache/dataArray   | ram/array_0_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache/dataArray   | ram/array_1_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache/dataArray   | ram/array_2_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache/dataArray   | ram/array_3_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache/metaArray   | ram/array_0_reg | 512 x 19(READ_FIRST)   | W |   | 512 x 19(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      |                 | 
+|Cache/metaArray   | ram/array_1_reg | 512 x 19(READ_FIRST)   | W |   | 512 x 19(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      |                 | 
+|Cache/metaArray   | ram/array_2_reg | 512 x 19(READ_FIRST)   | W |   | 512 x 19(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      |                 | 
+|Cache/metaArray   | ram/array_3_reg | 512 x 19(READ_FIRST)   | W |   | 512 x 19(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      |                 | 
++------------------+-----------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+-----------------+
+
+Note: The table above is a preliminary report that shows the Block RAMs at the current stage of the synthesis flow. Some Block RAMs may be reimplemented as non Block RAM primitives later in the synthesis flow. Multiple instantiated Block RAMs are reported only once. 
+
+Distributed RAM: Preliminary Mapping Report (see note below)
++------------------+---------------------------------------+-----------+----------------------+----------------+
+|Module Name       | RTL Object                            | Inference | Size (Depth x Width) | Primitives     | 
++------------------+---------------------------------------+-----------+----------------------+----------------+
+|NutShell          | Backend_inorder/isu/_T_31_reg         | Implied   | 32 x 64              | RAM32M16 x 10  | 
+|NutShell          | frontend/FlushableQueue/ram_instr_reg | Implied   | 4 x 64               | RAM32M16 x 5   | 
+|NutShell          | frontend/FlushableQueue/ram_pc_reg    | Implied   | 4 x 39               | RAM32M16 x 3   | 
+|NutShell          | frontend/FlushableQueue/ram_pnpc_reg  | Implied   | 4 x 39               | RAM32M16 x 3   | 
+|NutShell          | frontend/FlushableQueue/ram_brIdx_reg | Implied   | 4 x 4                | RAM32M16 x 1   | 
+|Cache_1/metaArray | ram/array_0_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
+|Cache_1/metaArray | ram/array_1_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
+|Cache_1/metaArray | ram/array_2_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
+|Cache_1/metaArray | ram/array_3_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
+|Cache/metaArray   | ram/array_0_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
+|Cache/metaArray   | ram/array_1_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
+|Cache/metaArray   | ram/array_2_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
+|Cache/metaArray   | ram/array_3_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
++------------------+---------------------------------------+-----------+----------------------+----------------+
+
+Note: The table above is a preliminary report that shows the Distributed RAMs at the current stage of the synthesis flow. Some Distributed RAMs may be reimplemented as non Distributed RAM primitives later in the synthesis flow. Multiple instantiated RAMs are reported only once.
+
+DSP: Preliminary Mapping Report (see note below. The ' indicates corresponding REG is set)
++------------+---------------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name | DSP Mapping         | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++------------+---------------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|MDU         | (A2*B2)'            | 14     | 14     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 1    | 
+|MDU         | (A2*B2)'            | 18     | 14     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 0    | 
+|MDU         | (PCIN>>17)+(A2*B2)' | 18     | 14     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 0    | 
+|MDU         | (PCIN+(A2*B2)')'    | 18     | 14     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 1    | 
+|MDU         | (A2*B2)'            | 18     | 14     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 0    | 
+|MDU         | (PCIN>>17)+(A2*B2)' | 18     | 14     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 0    | 
+|MDU         | (PCIN+(A2*B2)')'    | 18     | 18     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 1    | 
+|MDU         | (A2*B2)'            | 18     | 14     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 0    | 
+|MDU         | PCIN+(A2*B2)'       | 18     | 18     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 0    | 
+|MDU         | (PCIN+(A2*B2)')'    | 18     | 18     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 1    | 
+|MDU         | (A2*B2)'            | 18     | 18     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 0    | 
+|MDU         | PCIN+(A2*B2)'       | 18     | 18     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 0    | 
+|MDU         | (PCIN+(A2*B2)')'    | 18     | 18     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 1    | 
+|MDU         | (A2*B2)'            | 18     | 18     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 0    | 
+|MDU         | (PCIN>>17)+(A2*B2)' | 18     | 18     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 0    | 
+|MDU         | (PCIN+(A2*B2)')'    | 18     | 18     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 1    | 
++------------+---------------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+Note: The table above is a preliminary report that shows the DSPs inferred at the current stage of the synthesis flow. Some DSP may be reimplemented as non DSP primitives later in the synthesis flow. Multiple instantiated DSPs are reported only once.
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:01:42 ; elapsed = 00:01:48 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-6057] Memory: "ram/array_0_reg" defined in module: "Cache/dataArray" implemented as Ultra-Ram has no pipeline registers. It is recommended to use pipeline registers to achieve high performance.
+WARNING: [Synth 8-6057] Memory: "ram/array_1_reg" defined in module: "Cache/dataArray" implemented as Ultra-Ram has no pipeline registers. It is recommended to use pipeline registers to achieve high performance.
+WARNING: [Synth 8-6057] Memory: "ram/array_2_reg" defined in module: "Cache/dataArray" implemented as Ultra-Ram has no pipeline registers. It is recommended to use pipeline registers to achieve high performance.
+WARNING: [Synth 8-6057] Memory: "ram/array_3_reg" defined in module: "Cache/dataArray" implemented as Ultra-Ram has no pipeline registers. It is recommended to use pipeline registers to achieve high performance.
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Ultra RAM: Final Mapping Report (see note below)
++----------------+-----------------+------------------------+---+---+------------------------+---+---+------------------+---------+--------------+--------------------------+-------------+
+|Module Name     | RTL Object      | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | URAM288 | Matrix Shape | FF provided for Pipeline | FF absorbed | 
++----------------+-----------------+------------------------+---+---+------------------------+---+---+------------------+---------+--------------+--------------------------+-------------+
+|Cache/dataArray | ram/array_0_reg | 4 K x 64               | W |   | 4 K x 64               |   | R | Port A and B     | 1       | 1x1          | 0                        | 0           | 
+|Cache/dataArray | ram/array_1_reg | 4 K x 64               | W |   | 4 K x 64               |   | R | Port A and B     | 1       | 1x1          | 0                        | 0           | 
+|Cache/dataArray | ram/array_2_reg | 4 K x 64               | W |   | 4 K x 64               |   | R | Port A and B     | 1       | 1x1          | 0                        | 0           | 
+|Cache/dataArray | ram/array_3_reg | 4 K x 64               | W |   | 4 K x 64               |   | R | Port A and B     | 1       | 1x1          | 0                        | 0           | 
++----------------+-----------------+------------------------+---+---+------------------------+---+---+------------------+---------+--------------+--------------------------+-------------+
+
+
+Block RAM: Final Mapping Report
++------------------+-----------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+-----------------+
+|Module Name       | RTL Object      | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | Cascade Heights | 
++------------------+-----------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+-----------------+
+|Cache_1/dataArray | ram/array_0_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache_1/dataArray | ram/array_1_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache_1/dataArray | ram/array_2_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache_1/dataArray | ram/array_3_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache/dataArray   | ram/array_0_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache/dataArray   | ram/array_1_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache/dataArray   | ram/array_2_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache/dataArray   | ram/array_3_reg | 1 K x 64(READ_FIRST)   | W |   | 1 K x 64(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 1,1             | 
+|Cache/metaArray   | ram/array_0_reg | 512 x 19(READ_FIRST)   | W |   | 512 x 19(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      |                 | 
+|Cache/metaArray   | ram/array_1_reg | 512 x 19(READ_FIRST)   | W |   | 512 x 19(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      |                 | 
+|Cache/metaArray   | ram/array_2_reg | 512 x 19(READ_FIRST)   | W |   | 512 x 19(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      |                 | 
+|Cache/metaArray   | ram/array_3_reg | 512 x 19(READ_FIRST)   | W |   | 512 x 19(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      |                 | 
++------------------+-----------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+-----------------+
+
+
+Distributed RAM: Final Mapping Report
++------------------+---------------------------------------+-----------+----------------------+----------------+
+|Module Name       | RTL Object                            | Inference | Size (Depth x Width) | Primitives     | 
++------------------+---------------------------------------+-----------+----------------------+----------------+
+|NutShell          | Backend_inorder/isu/_T_31_reg         | Implied   | 32 x 64              | RAM32M16 x 10  | 
+|NutShell          | frontend/FlushableQueue/ram_instr_reg | Implied   | 4 x 64               | RAM32M16 x 5   | 
+|NutShell          | frontend/FlushableQueue/ram_pc_reg    | Implied   | 4 x 39               | RAM32M16 x 3   | 
+|NutShell          | frontend/FlushableQueue/ram_pnpc_reg  | Implied   | 4 x 39               | RAM32M16 x 3   | 
+|NutShell          | frontend/FlushableQueue/ram_brIdx_reg | Implied   | 4 x 4                | RAM32M16 x 1   | 
+|Cache_1/metaArray | ram/array_0_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
+|Cache_1/metaArray | ram/array_1_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
+|Cache_1/metaArray | ram/array_2_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
+|Cache_1/metaArray | ram/array_3_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
+|Cache/metaArray   | ram/array_0_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
+|Cache/metaArray   | ram/array_1_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
+|Cache/metaArray   | ram/array_2_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
+|Cache/metaArray   | ram/array_3_reg                       | Implied   | 128 x 21             | RAM64M8 x 6    | 
++------------------+---------------------------------------+-----------+----------------------+----------------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache_1/dataArray/ram/array_0_reg_bram_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache_1/dataArray/ram/array_0_reg_bram_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache_1/dataArray/ram/array_1_reg_bram_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache_1/dataArray/ram/array_1_reg_bram_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache_1/dataArray/ram/array_2_reg_bram_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache_1/dataArray/ram/array_2_reg_bram_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache_1/dataArray/ram/array_3_reg_bram_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache_1/dataArray/ram/array_3_reg_bram_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache/dataArray/ram/array_0_reg_bram_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache/dataArray/ram/array_0_reg_bram_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache/dataArray/ram/array_1_reg_bram_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache/dataArray/ram/array_1_reg_bram_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache/dataArray/ram/array_2_reg_bram_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache/dataArray/ram/array_2_reg_bram_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache/dataArray/ram/array_3_reg_bram_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance nutcore/Cache/dataArray/ram/array_3_reg_bram_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance Cache/metaArray/ram/array_0_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance Cache/metaArray/ram/array_1_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance Cache/metaArray/ram/array_2_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance Cache/metaArray/ram/array_3_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance Cache/dataArray/ram/array_0_reg_uram_0 (implemented as a Ultra RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance Cache/dataArray/ram/array_1_reg_uram_0 (implemented as a Ultra RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance Cache/dataArray/ram/array_2_reg_uram_0 (implemented as a Ultra RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance Cache/dataArray/ram/array_3_reg_uram_0 (implemented as a Ultra RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:01:46 ; elapsed = 00:01:51 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:01:48 ; elapsed = 00:01:54 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:01:48 ; elapsed = 00:01:54 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:49 ; elapsed = 00:01:55 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:01:49 ; elapsed = 00:01:55 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:01:49 ; elapsed = 00:01:55 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:01:49 ; elapsed = 00:01:56 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Static Shift Register Report:
++------------+-----------------------------------------------+--------+-------+--------------+--------------------+-------------------+--------+---------+
+|Module Name | RTL Name                                      | Length | Width | Reset Signal | Pull out first Reg | Pull out last Reg | SRL16E | SRLC32E | 
++------------+-----------------------------------------------+--------+-------+--------------+--------------------+-------------------+--------+---------+
+|NutShell    | nutcore/Backend_inorder/exu/mdu/mul/_T_12_reg | 4      | 1     | NO           | NO                 | YES               | 1      | 0       | 
++------------+-----------------------------------------------+--------+-------+--------------+--------------------+-------------------+--------+---------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+DSP Final Report (the ' indicates corresponding REG is set)
++------------+---------------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name | DSP Mapping         | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++------------+---------------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|MDU         | ((A'*B')')'         | 30     | 18     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 1    | 1    | 
+|MDU         | (A''*B')'           | 17     | 18     | -      | -      | 48     | 2    | 1    | -    | -    | -     | 0    | 1    | 
+|MDU         | PCIN>>17+(A''*B')'  | 17     | 18     | -      | -      | 0      | 2    | 1    | -    | -    | -     | 1    | 0    | 
+|MDU         | (PCIN+(A''*B')')'   | 17     | 18     | -      | -      | 48     | 2    | 1    | -    | -    | -     | 1    | 1    | 
+|MDU         | (A''*B')'           | 17     | 18     | -      | -      | 48     | 2    | 1    | -    | -    | -     | 0    | 1    | 
+|MDU         | PCIN>>17+(A''*B')'  | 17     | 18     | -      | -      | 0      | 2    | 1    | -    | -    | -     | 1    | 0    | 
+|MDU         | (PCIN+(A''*B'')')'  | 17     | 17     | -      | -      | 48     | 2    | 2    | -    | -    | -     | 1    | 1    | 
+|MDU         | (A''*B')'           | 17     | 18     | -      | -      | 0      | 2    | 1    | -    | -    | -     | 0    | 1    | 
+|MDU         | PCIN+(A''*B'')'     | 17     | 17     | -      | -      | 0      | 2    | 2    | -    | -    | -     | 1    | 0    | 
+|MDU         | (PCIN+(A''*B'')')'  | 17     | 17     | -      | -      | 48     | 2    | 2    | -    | -    | -     | 1    | 1    | 
+|MDU         | (A''*B'')'          | 17     | 17     | -      | -      | 0      | 2    | 2    | -    | -    | -     | 0    | 1    | 
+|MDU         | PCIN+(A''*B'')'     | 17     | 17     | -      | -      | 0      | 2    | 2    | -    | -    | -     | 1    | 0    | 
+|MDU         | (PCIN+(A''*B'')')'  | 17     | 17     | -      | -      | 48     | 2    | 2    | -    | -    | -     | 1    | 1    | 
+|MDU         | (A''*B'')'          | 17     | 17     | -      | -      | 48     | 2    | 2    | -    | -    | -     | 0    | 1    | 
+|MDU         | PCIN>>17+(A''*B'')' | 17     | 17     | -      | -      | 0      | 2    | 2    | -    | -    | -     | 1    | 0    | 
+|MDU         | (PCIN+(A''*B'')')'  | 17     | 17     | -      | -      | 48     | 2    | 2    | -    | -    | -     | 1    | 1    | 
++------------+---------------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+----------------+------+
+|      |Cell            |Count |
++------+----------------+------+
+|1     |BUFG            |     1|
+|2     |CARRY8          |   302|
+|3     |DSP48E2         |     1|
+|4     |DSP_ALU         |    15|
+|5     |DSP_A_B_DATA    |    15|
+|6     |DSP_C_DATA      |    15|
+|7     |DSP_MULTIPLIER  |    15|
+|8     |DSP_M_DATA      |    15|
+|9     |DSP_OUTPUT      |    15|
+|10    |DSP_PREADD      |    15|
+|11    |DSP_PREADD_DATA |    15|
+|12    |LUT1            |   297|
+|13    |LUT2            |   816|
+|14    |LUT3            |  3767|
+|15    |LUT4            |  2279|
+|16    |LUT5            |  2965|
+|17    |LUT6            |  4194|
+|18    |MUXF7           |     3|
+|19    |RAM32M16        |    21|
+|20    |RAM64M8         |    48|
+|21    |RAMB18E2        |     4|
+|22    |RAMB36E2        |    16|
+|23    |SRL16E          |     1|
+|24    |URAM288         |     4|
+|25    |FDRE            |  9676|
+|26    |FDSE            |   171|
+|27    |IBUF            |   313|
+|28    |OBUF            |   674|
++------+----------------+------+
+
+Report Instance Areas: 
++------+----------------------------+------------------------------------------------------------+------+
+|      |Instance                    |Module                                                      |Cells |
++------+----------------------------+------------------------------------------------------------+------+
+|1     |top                         |                                                            | 25673|
+|2     |  SimpleBus2AXI4Converter_1 |SimpleBus2AXI4Converter_1                                   |     5|
+|3     |  Cache                     |Cache_2                                                     |  3244|
+|4     |    s1                      |CacheStage1_2                                               |     1|
+|5     |    dataArray               |SRAMTemplateWithArbiter_5_8                                 |  1031|
+|6     |      ram                   |SRAMTemplate_6                                              |   517|
+|7     |    metaArray               |SRAMTemplateWithArbiter_4                                   |   287|
+|8     |      ram                   |SRAMTemplate_5                                              |   210|
+|9     |    s2                      |CacheStage2_2                                               |   250|
+|10    |    s3                      |CacheStage3_2                                               |   946|
+|11    |  Prefetcher                |Prefetcher                                                  |   238|
+|12    |  SimpleBus2AXI4Converter   |SimpleBus2AXI4Converter                                     |     5|
+|13    |  SimpleBus2AXI4Converter_2 |SimpleBus2AXI4Converter_2                                   |     7|
+|14    |  SimpleBus2AXI4Converter_3 |SimpleBus2AXI4Converter_2_0                                 |    10|
+|15    |  axi2sb                    |AXI42SimpleBusConverter                                     |   237|
+|16    |  clint                     |AXI4CLINT                                                   |   400|
+|17    |  cohMg                     |CoherenceManager                                            |   189|
+|18    |  mmioXbar                  |SimpleBusCrossbar1toN                                       |    80|
+|19    |  nutcore                   |NutCore                                                     | 19915|
+|20    |    Backend_inorder         |Backend_inorder                                             |  9260|
+|21    |      exu                   |EXU                                                         |  7856|
+|22    |        csr                 |CSR                                                         |  3347|
+|23    |        lsu                 |UnpipelinedLSU                                              |  1182|
+|24    |          lsExecUnit        |LSExecUnit                                                  |   538|
+|25    |        mdu                 |MDU                                                         |  3321|
+|26    |          div               |Divider                                                     |  1451|
+|27    |          mul               |Multiplier                                                  |  1869|
+|28    |            _T_4_reg        |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg_funnel        |     8|
+|29    |            _T_40           |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__0_funnel__1     |     8|
+|30    |            _T_5_reg__0     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__0_funnel     |     8|
+|31    |            _T_4_reg__0     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg_funnel__2     |     8|
+|32    |            _T_40__0        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__0_funnel        |     8|
+|33    |            _T_5_reg__1     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__3_funnel__2  |     8|
+|34    |            _T_4_reg__1     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg_funnel__1     |     8|
+|35    |            _T_40__1        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__2_funnel__1     |     8|
+|36    |            _T_5_reg__2     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__3_funnel__1  |     8|
+|37    |            _T_4_reg__2     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg__3_funnel__1  |     8|
+|38    |            _T_40__2        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__2_funnel        |     8|
+|39    |            _T_5_reg__3     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__3_funnel     |     8|
+|40    |            _T_4_reg__3     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg__3_funnel     |     8|
+|41    |            _T_40__3        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__2_funnel__2     |     8|
+|42    |            _T_5_reg__4     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__3_funnel__3  |     8|
+|43    |        mou                 |MOU                                                         |     6|
+|44    |      isu                   |ISU                                                         |   298|
+|45    |    Cache                   |Cache                                                       |  3487|
+|46    |      dataArray             |SRAMTemplateWithArbiter_1_4                                 |  1034|
+|47    |        ram                 |SRAMTemplate_2_7                                            |   520|
+|48    |      metaArray             |SRAMTemplateWithArbiter_5                                   |   332|
+|49    |        ram                 |SRAMTemplate_1_6                                            |   251|
+|50    |      s2                    |CacheStage2                                                 |   378|
+|51    |      s3                    |CacheStage3                                                 |   943|
+|52    |    Cache_1                 |Cache_1                                                     |  4349|
+|53    |      dataArray             |SRAMTemplateWithArbiter_1                                   |  1044|
+|54    |        ram                 |SRAMTemplate_2                                              |   530|
+|55    |      metaArray             |SRAMTemplateWithArbiter                                     |   413|
+|56    |        ram                 |SRAMTemplate_1                                              |   328|
+|57    |      s2                    |CacheStage2_1                                               |   464|
+|58    |      s3                    |CacheStage3_1                                               |  1083|
+|59    |    SimpleBusCrossbarNto1   |SimpleBusCrossbarNto1_1                                     |    29|
+|60    |      inputArb              |LockingArbiter_3                                            |    22|
+|61    |    SimpleBusCrossbarNto1_1 |SimpleBusCrossbarNto1_1_2                                   |   150|
+|62    |      inputArb              |LockingArbiter_1                                            |   143|
+|63    |    frontend                |Frontend_inorder                                            |  2036|
+|64    |      FlushableQueue        |FlushableQueue                                              |    67|
+|65    |      ibf                   |NaiveRVCAlignBuffer                                         |   533|
+|66    |      idu                   |IDU                                                         |   131|
+|67    |        decoder1            |Decoder                                                     |   131|
+|68    |      ifu                   |IFU_inorder                                                 |    45|
+|69    |  plic                      |AXI4PLIC                                                    |   264|
+|70    |  xbar                      |SimpleBusCrossbarNto1                                       |    21|
+|71    |    inputArb                |LockingArbiter                                              |    14|
++------+----------------------------+------------------------------------------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:01:49 ; elapsed = 00:01:56 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 2077 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:01:49 ; elapsed = 00:01:56 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+Synthesis Optimization Complete : Time (s): cpu = 00:01:49 ; elapsed = 00:01:56 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.260 . Memory (MB): peak = 2985.551 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 704 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.003 . Memory (MB): peak = 2985.551 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 399 instances were transformed.
+  BUFG => BUFGCE: 1 instance 
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 16 instances
+  IBUF => IBUF (IBUFCTRL, INBUF): 313 instances
+  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 21 instances
+  RAM64M8 => RAM64M8 (RAMD64E(x8)): 48 instances
+
+系统找不到指定的路径。
+Synth Design complete | Checksum: e9dab69c
+INFO: [Common 17-83] Releasing license: Synthesis
+348 Infos, 347 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:01:52 ; elapsed = 00:02:01 . Memory (MB): peak = 2985.551 ; gain = 2398.586
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.026 . Memory (MB): peak = 2985.551 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'd:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.runs/synth_1/NutShell.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file NutShell_utilization_synth.rpt -pb NutShell_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Sun Feb 11 23:20:08 2024...

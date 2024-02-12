@@ -1,0 +1,41 @@
+#-----------------------------------------------------------
+# Vivado v2023.2 (64-bit)
+# SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
+# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+# Start of session at: Sun Feb 11 23:27:44 2024
+# Process ID: 28696
+# Current directory: D:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj
+# Command line: vivado.exe -mode batch -source D:\Imperial\Year4\MasterThesis\FYP_Bayesian_Optimisation\object_functions\tools\run_synthesis.tcl
+# Log file: D:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/vivado.log
+# Journal file: D:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj\vivado.jou
+# Running On: GeorgeWu_ROG, OS: Windows, CPU Frequency: 2419 MHz, CPU Physical cores: 24, Host memory: 25369 MB
+#-----------------------------------------------------------
+source {D:\Imperial\Year4\MasterThesis\FYP_Bayesian_Optimisation\object_functions\tools\run_synthesis.tcl}
+# open_project d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.xpr
+INFO: [ProjectBase 1-489] The host OS only allows 260 characters in a normal path. The project is stored in a path with more than 80 characters. If you experience issues with IP, Block Designs, or files not being found, please consider moving the project to a location with a shorter path. Alternately consider using the OS subst command to map part of the path to a drive letter.
+Current project path is 'd:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj'
+INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory 'd:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.gen/sources_1'.
+Scanning sources...
+Finished scanning sources
+# open_run synth_1 -name synth_1
+Design is defaulting to impl run constrset: constrs_1
+Design is defaulting to synth run part: xczu19eg-ffvc1760-2-i
+INFO: [Device 21-403] Loading part xczu19eg-ffvc1760-2-i
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.178 . Memory (MB): peak = 1820.234 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 703 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 1 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2023.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.003 . Memory (MB): peak = 1981.930 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 398 instances were transformed.
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 16 instances
+  IBUF => IBUF (IBUFCTRL, INBUF): 313 instances
+  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 21 instances
+  RAM64M8 => RAM64M8 (RAMD64E(x8)): 48 instances
+
+open_run: Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 1981.930 ; gain = 1396.191
+# report_utilization -file d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/Syn_Report/NutShell_utilization_synth.rpt
+INFO: [Common 17-206] Exiting Vivado at Sun Feb 11 23:27:59 2024...

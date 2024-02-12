@@ -1,4 +1,5 @@
 from format_constraints import Input_Constraints
+from parameter_tuning import parameter_tuning
 def fill_constraints(self_constraints, coupled_constraints, device):
     """this function is used to fill the constraints in the interface"""
     # self_constraints: {var_name: [lower_bound, upper_bound, scale]}
@@ -36,7 +37,7 @@ def parse_constraints(filename):
     coupled_constraints = []
     output_objective = {}
     output_constraints = {}
-
+    objective_function_category = None
     # Open and read the file
     with open(filename, 'r') as file:
         lines = file.readlines()
@@ -88,18 +89,31 @@ def parse_constraints(filename):
                 elif section == 'output_constraint':
                     range_values = parts[3].strip('[]').split(',')
                     output_constraints[obj_name] = [int(range_values[0]), int(range_values[1])]
-
-    return self_constraints, coupled_constraints, input_constant, output_objective, output_constraints
+            elif line.startswith('objective'):
+                objective_function_category = line.split()[1]
+            elif line.startswith('settings_path'):
+                objective_function_setting_path = line.split()[1]
+            elif line.startswith('vivado_project_path'):
+                vivado_project_path = line.split()[1]
+            elif line.startswith('generation_path'):
+                generation_path = line.split()[1]
+            elif line.startswith('board_settings'):
+                board_settings = line.split()[1]
+    if objective_function_category == 'real':
+        parameter_tuning_obj = parameter_tuning(tuple(self_constraints.keys()), objective_function_setting_path, vivado_project_path, generation_path, board_settings)
+    else:
+        parameter_tuning_obj = None
+    return self_constraints, coupled_constraints, input_constant, output_objective, output_constraints, objective_function_category, parameter_tuning_obj
 
 if __name__ == '__main__':
-    self_constraints, coupled_constraints, output_objective, output_constraints = parse_constraints('../data/input_constraint.txt')
-    print(self_constraints)
-    print(coupled_constraints)
-    print(output_objective)
-    print(output_constraints)
-    (input_dim, input_scales, input_normalized_factor, input_offset, input_names), constraint = fill_constraints(self_constraints, coupled_constraints)
-    print(input_dim)
-    print(input_scales)
-    print(input_normalized_factor)
-    print(input_names)
-    print(constraint)
+    self_constraints, coupled_constraints, input_constant, output_objective, output_constraints, objective_function_category, parameter_tuning_obj = parse_constraints('../data/input_spec2.txt')
+    # print(self_constraints)
+    # print(coupled_constraints)
+    # print(output_objective)
+    # print(output_constraints)
+    # (input_dim, input_scales, input_normalized_factor, input_offset, input_names), constraint = fill_constraints(self_constraints, coupled_constraints)
+    # print(input_dim)
+    # print(input_scales)
+    # print(input_normalized_factor)
+    # print(input_names)
+    # print(constraint)

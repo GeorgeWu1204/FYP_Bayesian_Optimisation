@@ -1,0 +1,21 @@
+#input self constraint
+var: NrExtIntr              range: [1,5]   scale: 1
+var: MMIOSize               range: [4,255] scale: 1
+
+#input coupled constraint
+
+#input constant
+
+#output objective
+obj_name: 'LUT as Logic'        range: [0,20]
+obj_name: 'CLB Registers'       range: [0,30]
+
+#output constraint
+
+
+#data
+objective: real-time
+settings_path: 'D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\NutShell-master\\src\\main\\scala\\top\\Settings.scala'
+vivado_project_path: 'D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\NutShell_Prj\\'
+generation_path: 'D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\NutShell-master\\'
+board_settings: DefaultSettings

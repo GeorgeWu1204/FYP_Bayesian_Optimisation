@@ -2,7 +2,7 @@ import torch
 import itertools
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+import re
 
 def calculate_condition(x, condition):
     """This function is used to calculate the input constraints"""
@@ -133,13 +133,50 @@ def find_max_index_in_list(list):
 
 
 
+def read_utilization_percentage(rpt_file_path, variable_names):
+    """This function is used to read the utilization percentage from the Vivado report file"""
+    in_section = False
+    # Define a pattern to match the rows in the utilization table
+    row_pattern = re.compile(r'\|\s*(.*?)\s*\|\s*(\d+)\s*\|\s*\d+\s*\|\s*\d+\s*\|\s*\d+\s*\|\s*(\d+\.\d+|\d+)\s*\|')
+
+    # Initialize a list to hold multiple matches, if any
+    results = []
+
+    try:
+        with open(rpt_file_path, 'r') as file:
+            table_margin_count = 0
+            for line in file:
+                # Check if we've reached the CLB Logic section, only focus on this section first.
+                if 'CLB Logic' in line:
+                    in_section = True
+                # Check if we've passed the section of interest
+                elif in_section and '+----------------------------+' in line:
+                    table_margin_count += 1  # Exit the loop if we're past the relevant section
+                elif in_section:
+                    # Match the row pattern within the section
+                    match = row_pattern.match(line)
+                    for variable_name in variable_names:
+                        if match and variable_name in match.group(1):
+                            # Append the variable name and its Util% to the results list
+                            results.append(float(match.group(3)))
+                if table_margin_count == 3:
+                    break
+            return results
+    except FileNotFoundError:
+        print(f"File not found: {rpt_file_path}")
+        return
+
+
+
+
+
+#<--------------------------------- Classes for recording the results --------------------------------->
 
 class recorded_training_result:
     """This class is used to record the results of optimisation."""
-    def __init__(self, input_names, objectives, best_values, best_pairs, record_file_name, num_trials, num_iterations):
+    def __init__(self, input_names, objectives, best_values, record_file_name, num_trials, num_iterations):
         self.objs  = objectives
         self.best_vals  = best_values
-        self.best_pairs = best_pairs
         self.history = {}
         self.iterations = num_iterations
         self.trials = num_trials
@@ -288,8 +325,9 @@ class test_posterior_result:
 
 
 
-
-        
-
+if __name__ == '__main__':
+    print("test")
+    result = read_utilization_percentage('D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\Syn_Report\\NutShell_utilization_synth.rpt', ['LUT as Logic', 'CLB Registers'] )
+    print(result)
         
     

@@ -18,7 +18,7 @@ SIMTOP = top.TopMain
 IMAGE ?= ready-to-run/linux.bin
 
 DATAWIDTH ?= 64
-BOARD ?= axu3cg  # sim  pynq  axu3cg
+BOARD ?= sim  # sim  pynq  axu3cg
 CORE  ?= inorder  # inorder  ooo  embedded
 
 MILL_ARGS = -td $(RTL_DIR) BOARD=$(BOARD) CORE=$(CORE)
@@ -28,7 +28,7 @@ ifneq ($(FIRTOOL),)
 MILL_ARGS += --firtool-binary-path $(FIRTOOL)
 endif
 
-MILL_ARGS += --split-verilog
+# MILL_ARGS += --split-verilog
 
 .DEFAULT_GOAL = verilog
 
@@ -38,15 +38,16 @@ help:
 $(TOP_V): $(SCALA_FILE)
 	mkdir -p $(@D)
 	mill -i generator.test.runMain top.$(TOP) $(MILL_ARGS) $(FPGA_ARGS)
-	@mv $(SIM_TOP_V) $(TOP_V)
-	sed -i -e 's/_\(aw\|ar\|w\|r\|b\)_\(\|bits_\)/_\1/g' $@
-	@git log -n 1 >> .__head__
-	@git diff >> .__diff__
-	@sed -i 's/^/\/\// ' .__head__
-	@sed -i 's/^/\/\//' .__diff__
-	@cat .__head__ .__diff__ $@ > .__out__
-	@mv .__out__ $@
-	@rm .__head__ .__diff__
+	awk '/^\/\/ ----- 8< -----/{exit} {print}' $(SIM_TOP_V) > temp_file && mv temp_file $(SIM_TOP_V)
+
+# sed -i -e 's/_\(aw\|ar\|w\|r\|b\)_\(\|bits_\)/_\1/g' $@
+# @git log -n 1 >> .__head__
+# @git diff >> .__diff__
+# @sed -i 's/^/\/\// ' .__head__
+# @sed -i 's/^/\/\//' .__diff__
+# @cat .__head__ .__diff__ $@ > .__out__
+# @mv .__out__ $@
+# @rm .__head__ .__diff__
 
 deploy: build/top.zip
 
@@ -61,10 +62,12 @@ verilog: $(TOP_V)
 $(SIM_TOP_V): $(SCALA_FILE) $(TEST_FILE)
 	mkdir -p $(@D)
 	mill -i generator.test.runMain $(SIMTOP) $(MILL_ARGS)
-	@for file in $(RTL_DIR)/*.$(RTL_SUFFIX); do                               \
-		sed -i -e 's/$$fatal/xs_assert(`__LINE__)/g' "$$file";           \
-		sed -i -e "s/\$$error(/\$$fwrite(32\'h80000002, /g" "$$file";    \
-        done
+	awk '/^\/\/ ----- 8< -----/{exit} {print}' $(SIM_TOP_V) > temp_file && mv temp_file $(SIM_TOP_V)
+
+# @for file in $(RTL_DIR)/*.$(RTL_SUFFIX); do                               \
+# 	sed -i -e 's/$$fatal/xs_assert(`__LINE__)/g' "$$file";           \
+# 	sed -i -e "s/\$$error(/\$$fwrite(32\'h80000002, /g" "$$file";    \
+#     done
 
 sim-verilog: $(SIM_TOP_V)
 

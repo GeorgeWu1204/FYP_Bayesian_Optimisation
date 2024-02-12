@@ -1,15 +1,10 @@
 import ast
 import torch
-from pprint import PrettyPrinter
-from colorama import Fore, Back, Style
 import glob
 import sys
 import pickle
 import os.path as osp
-# Read the file
-from utils import calculate_condition, calculate_smooth_condition, recover_single_input_data
-
-
+from utils import calculate_condition, calculate_smooth_condition, recover_single_input_data, read_utilization_percentage
 
 class Data_Sample:
     def __init__(self, data, objs, data_set_type):
@@ -43,7 +38,8 @@ class Data_Sample:
         return self.PPA.get(obj, None)   
 
 class Data_Set:
-    def __init__(self, data, objs, scales, input_data_normalized_factors, input_offsets, input_constants, output_obj_constraint, data_set_type = 'txt', tensor_type = torch.float64, tensor_device = torch.device('cpu')):
+    """This class is used for DSE where the dataset is provided"""
+    def __init__(self, data, objs, input_scales, input_data_normalized_factors, input_offsets, input_constants, output_obj_constraint, data_set_type = 'txt', tensor_type = torch.float64, tensor_device = torch.device('cpu')):
         val_list = {}
         self.best_value = {}
         self.best_pair = {}
@@ -56,7 +52,7 @@ class Data_Set:
         self.output_normalised_factors = {}
         # to recover the input data
         self.input_normalized_factors = torch.tensor(input_data_normalized_factors, dtype=tensor_type, device=tensor_device)
-        self.scaled_factors = torch.tensor(scales, dtype=tensor_type, device=tensor_device)
+        self.input_scales_factors = torch.tensor(input_scales, dtype=tensor_type, device=tensor_device)
         self.input_offsets = torch.tensor(input_offsets, dtype=tensor_type, device=tensor_device)
         self.input_constants = input_constants
         # tensor type and device
@@ -97,25 +93,19 @@ class Data_Set:
         for obj in output_obj_constraint:
             self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj] for bound in output_obj_constraint[obj]])
     
-    def list_all_contraints(self):
-        constraints = []
-        for i in self.__dict__.keys():
-            constraints.append(self.__dict__.get(i).Constraints)
-        return constraints
-    
     def format_input_data(self, input_data):
         """This function is used to add constant input to the input data to make it able to find the ppa result"""
         for index in self.input_constants.keys():
             input_data.insert(index, self.input_constants[index])
         return tuple(input_data)
     
-    def find_ppa_result(self, sample_inputs, dtype):
+    def find_ppa_result(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
         num_restart= sample_inputs.shape[0]
         results = torch.empty((num_restart, len(self.objs_to_evaluate)), device=sample_inputs.device, dtype=dtype)
         obj_index = 0
         for i in range(num_restart):
-            input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.scaled_factors, self.input_offsets)
+            input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.input_scales_factors, self.input_offsets)
             sample_input = self.format_input_data(input)
             for obj_index in range(self.objs_to_evaluate_dim):
                 obj = self.objs_to_evaluate[obj_index]
@@ -198,7 +188,64 @@ def read_data_from_db(db_name, objs, output_obj_constraint, scales, input_data_n
     return data_set
     
 
+class Explore_Data(Data_Set):
+    def __init__(self, objs, scales, input_data_normalized_factors, input_offsets, input_constants, output_obj_constraint, param_tuner, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
+        
+        self.utilisation_path = 'D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\Syn_Report\\NutShell_utilization_synth.rpt'
+        self.param_tuner = param_tuner
+        # to recover the output data
+        self.objs_direct = objs
+        self.objs_to_optimise_dim = len(objs)
+        self.objs_to_evaluate = list(objs.keys()) + list(output_obj_constraint.keys())
+        self.objs_to_evaluate_dim = len(self.objs_to_evaluate)
+        # assume all the output is percentage
+        self.output_normalised_factors = {}
+        self.worst_value = {}
+        self.best_value = {}
+        for obj in self.objs_to_evaluate:
+            self.output_normalised_factors[obj] = 100.0
+            if objs.get(obj, None) == 'minimise':
+                    self.best_value[obj] = 0.0
+                    self.worst_value[obj] = 100.0
+            else:
+                self.best_value[obj] = 100.0
+                self.worst_value[obj] = 0.0
+        # to recover the input data
+        self.input_normalized_factors = torch.tensor(input_data_normalized_factors, dtype=tensor_type, device=tensor_device)
+        self.input_scales_factors = torch.tensor(scales, dtype=tensor_type, device=tensor_device)
+        self.input_offsets = torch.tensor(input_offsets, dtype=tensor_type, device=tensor_device)
+        self.input_constants = input_constants
+        # tensor type and device
+        self.tensor_type = tensor_type
+        self.tensor_device = tensor_device
+        self.output_constraints_to_check = []
+        for obj in output_obj_constraint:
+            self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj] for bound in output_obj_constraint[obj]])
 
+    def find_ppa_result(self, sample_inputs):
+        """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
+        num_restart= sample_inputs.shape[0]
+        results = torch.empty((num_restart, len(self.objs_to_evaluate)), device=sample_inputs.device, dtype=sample_inputs.dtype)
+        obj_index = 0
+        for i in range(num_restart):
+            # num_restart needs to be fixed to 1
+            input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.input_scales_factors, self.input_offsets)
+            sample_input = self.format_input_data(input)
+            # Modify the paramter settings
+            self.param_tuner.tune_parameter(sample_input)
+            # Regenerate the customised processor
+            self.param_tuner.regenerate_design()
+            # Run the Synthesis on Vivado
+            self.param_tuner.run_synthesis()
+            # Read the utilisation percentage
+            utilisation_percentage = read_utilization_percentage(self.utilisation_path)
+            for obj_index in range(self.objs_to_evaluate_dim):
+                obj = self.objs_to_evaluate[obj_index]
+                results[i][obj_index] = utilisation_percentage[obj_index]
+                if self.objs_direct.get(obj, None) == 'minimise':
+                    results[i][obj_index] = -1 * results[i][obj_index]
+                obj_index += 1
+        return results
 
 if __name__ == '__main__':
     read_data_from_db("../data/ppa_v2.db", ['lut'], [1, 1, 1], [1, 1, 1])
