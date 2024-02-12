@@ -34,7 +34,7 @@ class parameter_tuning:
             param_pattern = re.compile(r'(\"' + re.escape(self.tunable_params[index]) + r'\"\s*->\s*)(0x[0-9a-fA-FL]+|\d+L?)', re.DOTALL)
             
             # Replace the parameter value within the object content
-            modified_object_content, n = param_pattern.subn(r'\g<1>' + str(new_value[index]), modified_object_content)
+            modified_object_content, n = param_pattern.subn(r'\g<1>' + str(round(new_value[index])), modified_object_content)
             if n == 0:
                 raise ValueError(f"Parameter '{self.tunable_params[index]}' not found in board settings object '{self.board_settings}'.")
 

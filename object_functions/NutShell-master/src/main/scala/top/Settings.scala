@@ -19,11 +19,11 @@ package top
 object DefaultSettings {
   def apply() = Map(
     "MemMapBase" -> 0x0000000000000000L,
-    "MemMapRegionBits" -> 0,
+    "MemMapRegionBits" -> 3,
     "MMIOBase" -> 0x0000000040000000L,
     "MMIOSize" -> 0x0000000040000000L,
     "ResetVector" -> 0x80000000L,
-    "NrExtIntr" -> 1,
+    "NrExtIntr" -> 4,
 
     "HasL2cache" -> true,
     "HasPrefetch" -> true,

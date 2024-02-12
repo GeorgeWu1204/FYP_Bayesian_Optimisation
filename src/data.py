@@ -102,7 +102,7 @@ class Data_Set:
     def find_ppa_result(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
         num_restart= sample_inputs.shape[0]
-        results = torch.empty((num_restart, len(self.objs_to_evaluate)), device=sample_inputs.device, dtype=dtype)
+        results = torch.empty((num_restart, len(self.objs_to_evaluate)), device=sample_inputs.device, dtype=sample_inputs.dtype)
         obj_index = 0
         for i in range(num_restart):
             input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.input_scales_factors, self.input_offsets)
@@ -232,11 +232,13 @@ class Explore_Data(Data_Set):
             input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.input_scales_factors, self.input_offsets)
             sample_input = self.format_input_data(input)
             # Modify the paramter settings
+            print("sample_input ", sample_input)
             self.param_tuner.tune_parameter(sample_input)
             # Regenerate the customised processor
-            self.param_tuner.regenerate_design()
+            # self.param_tuner.regenerate_design()
             # Run the Synthesis on Vivado
             self.param_tuner.run_synthesis()
+            quit()
             # Read the utilisation percentage
             utilisation_percentage = read_utilization_percentage(self.utilisation_path)
             for obj_index in range(self.objs_to_evaluate_dim):

@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
-| Date         : Sun Feb 11 23:31:02 2024
+| Date         : Mon Feb 12 09:57:52 2024
 | Host         : GeorgeWu_ROG running 64-bit major release  (build 9200)
 | Command      : report_utilization -file d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/Syn_Report/NutShell_utilization_synth.rpt
 | Design       : NutShell

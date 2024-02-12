@@ -70,8 +70,8 @@ object TopMain extends App {
     // ChiselGeneratorAnnotation(() => new NutShell()(NutCoreConfig()))
   }
   else {
-    ChiselGeneratorAnnotation(() => new Top)
-    // ChiselGeneratorAnnotation(() => new NutShell()(NutCoreConfig()))
+    // ChiselGeneratorAnnotation(() => new Top)
+    ChiselGeneratorAnnotation(() => new NutShell()(NutCoreConfig()))
   }
   var exe_args = args.filter{
     value => value.forall(char => char!='=')

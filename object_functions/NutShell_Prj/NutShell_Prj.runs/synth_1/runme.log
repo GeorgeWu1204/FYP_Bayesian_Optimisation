@@ -23,9 +23,9 @@ INFO: [Designutils 20-5440] No compile time benefit to using incremental synthes
 INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 37856
+INFO: [Synth 8-7075] Helper process launched with PID 24384
 ---------------------------------------------------------------------------------
-Starting Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1032.918 ; gain = 439.355
+Starting Synthesize : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1035.535 ; gain = 441.395
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-6157] synthesizing module 'NutShell' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:26483]
 INFO: [Synth 8-6157] synthesizing module 'NutCore' [d:/Imperial/Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v:16940]
@@ -405,10 +405,10 @@ WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_valid in module CacheSta
 WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_dirty in module CacheStage1_2 is either unconnected or has no load
 INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 ---------------------------------------------------------------------------------
-Finished Synthesize : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1292.980 ; gain = 699.418
+Finished Synthesize : Time (s): cpu = 00:00:04 ; elapsed = 00:00:08 . Memory (MB): peak = 1293.930 ; gain = 699.789
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 1292.980 ; gain = 699.418
+Finished Constraint Validation : Time (s): cpu = 00:00:04 ; elapsed = 00:00:09 . Memory (MB): peak = 1293.930 ; gain = 699.789
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
@@ -416,9 +416,9 @@ Start Loading Part and Timing Information
 Loading part: xczu19eg-ffvc1760-2-i
 INFO: [Synth 8-6742] Reading net delay rules and data
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 1292.980 ; gain = 699.418
----------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:04 ; elapsed = 00:00:09 . Memory (MB): peak = 1293.930 ; gain = 699.789
 INFO: [Device 21-403] Loading part xczu19eg-ffvc1760-2-i
+---------------------------------------------------------------------------------
 INFO: [Synth 8-6904] The RAM "SRAMTemplate:/SRAMTemplate_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-6904] The RAM "IFU_inorder:/IFU_inorder_cov_reg" of size (depth=4 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-6904] The RAM "NaiveRVCAlignBuffer:/NaiveRVCAlignBuffer_cov_reg" of size (depth=32 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
@@ -496,7 +496,7 @@ INFO: [Synth 8-6904] The RAM "SimpleBus2AXI4Converter_1:/SimpleBus2AXI4Converter
 INFO: [Synth 8-6904] The RAM "SimpleBus2AXI4Converter_2:/SimpleBus2AXI4Converter_2_cov_reg" of size (depth=8 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-6904] The RAM "AXI4PLIC:/AXI4PLIC_cov_reg" of size (depth=1024 x width=1) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:12 ; elapsed = 00:00:11 . Memory (MB): peak = 2222.906 ; gain = 1629.344
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:07 ; elapsed = 00:00:14 . Memory (MB): peak = 2230.113 ; gain = 1635.973
 ---------------------------------------------------------------------------------
 RAM Pipeline Warning: Read Address Register Found For RAM array_0_reg. We will not be able to pipeline it. This may degrade performance. 
 RAM Pipeline Warning: Read Address Register Found For RAM array_1_reg. We will not be able to pipeline it. This may degrade performance. 
@@ -1032,7 +1032,7 @@ WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[19]__1) is unused and w
 WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[18]__1) is unused and will be removed from module MDU.
 WARNING: [Synth 8-3332] Sequential element (mul/_T_5_reg[17]__1) is unused and will be removed from module MDU.
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:42 ; elapsed = 00:01:47 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:02:08 ; elapsed = 00:02:23 . Memory (MB): peak = 2990.652 ; gain = 2396.512
 ---------------------------------------------------------------------------------
  Sort Area is NutCore__GB0 mul/_T_4_reg_0 : 0 0 : 3185 9622 : Used 1 time 0
  Sort Area is NutCore__GB0 mul/_T_4_reg_0 : 0 1 : 3204 9622 : Used 1 time 0
@@ -1142,7 +1142,7 @@ No constraint files found.
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:01:42 ; elapsed = 00:01:48 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+Finished Timing Optimization : Time (s): cpu = 00:02:08 ; elapsed = 00:02:23 . Memory (MB): peak = 2990.652 ; gain = 2396.512
 ---------------------------------------------------------------------------------
 WARNING: [Synth 8-6057] Memory: "ram/array_0_reg" defined in module: "Cache/dataArray" implemented as Ultra-Ram has no pipeline registers. It is recommended to use pipeline registers to achieve high performance.
 WARNING: [Synth 8-6057] Memory: "ram/array_1_reg" defined in module: "Cache/dataArray" implemented as Ultra-Ram has no pipeline registers. It is recommended to use pipeline registers to achieve high performance.
@@ -1232,7 +1232,7 @@ INFO: [Synth 8-7052] The timing for the instance Cache/dataArray/ram/array_1_reg
 INFO: [Synth 8-7052] The timing for the instance Cache/dataArray/ram/array_2_reg_uram_0 (implemented as a Ultra RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 INFO: [Synth 8-7052] The timing for the instance Cache/dataArray/ram/array_3_reg_uram_0 (implemented as a Ultra RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:01:46 ; elapsed = 00:01:51 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+Finished Technology Mapping : Time (s): cpu = 00:02:14 ; elapsed = 00:02:29 . Memory (MB): peak = 2990.652 ; gain = 2396.512
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -1250,37 +1250,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:01:48 ; elapsed = 00:01:54 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+Finished IO Insertion : Time (s): cpu = 00:02:20 ; elapsed = 00:02:35 . Memory (MB): peak = 2990.652 ; gain = 2396.512
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:01:48 ; elapsed = 00:01:54 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+Finished Renaming Generated Instances : Time (s): cpu = 00:02:20 ; elapsed = 00:02:35 . Memory (MB): peak = 2990.652 ; gain = 2396.512
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:49 ; elapsed = 00:01:55 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:02:21 ; elapsed = 00:02:37 . Memory (MB): peak = 2990.652 ; gain = 2396.512
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:01:49 ; elapsed = 00:01:55 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+Finished Renaming Generated Ports : Time (s): cpu = 00:02:21 ; elapsed = 00:02:37 . Memory (MB): peak = 2990.652 ; gain = 2396.512
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:01:49 ; elapsed = 00:01:55 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+Finished Handling Custom Attributes : Time (s): cpu = 00:02:22 ; elapsed = 00:02:38 . Memory (MB): peak = 2990.652 ; gain = 2396.512
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:01:49 ; elapsed = 00:01:56 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+Finished Renaming Generated Nets : Time (s): cpu = 00:02:22 ; elapsed = 00:02:38 . Memory (MB): peak = 2990.652 ; gain = 2396.512
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
@@ -1395,20 +1395,20 @@ Report Instance Areas:
 |26    |          div               |Divider                                                     |  1451|
 |27    |          mul               |Multiplier                                                  |  1869|
 |28    |            _T_4_reg        |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg_funnel        |     8|
-|29    |            _T_40           |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__0_funnel__1     |     8|
+|29    |            _T_40           |\nutcore/Backend_inorder/exu/mdu/mul/_T_40_funnel           |     8|
 |30    |            _T_5_reg__0     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__0_funnel     |     8|
-|31    |            _T_4_reg__0     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg_funnel__2     |     8|
-|32    |            _T_40__0        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__0_funnel        |     8|
-|33    |            _T_5_reg__1     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__3_funnel__2  |     8|
-|34    |            _T_4_reg__1     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg_funnel__1     |     8|
-|35    |            _T_40__1        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__2_funnel__1     |     8|
-|36    |            _T_5_reg__2     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__3_funnel__1  |     8|
-|37    |            _T_4_reg__2     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg__3_funnel__1  |     8|
-|38    |            _T_40__2        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__2_funnel        |     8|
-|39    |            _T_5_reg__3     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__3_funnel     |     8|
-|40    |            _T_4_reg__3     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg__3_funnel     |     8|
-|41    |            _T_40__3        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__2_funnel__2     |     8|
-|42    |            _T_5_reg__4     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__3_funnel__3  |     8|
+|31    |            _T_4_reg__0     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg_funnel__1     |     8|
+|32    |            _T_40__0        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40_funnel__1        |     8|
+|33    |            _T_5_reg__1     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__2_funnel__3  |     8|
+|34    |            _T_4_reg__1     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg_funnel__2     |     8|
+|35    |            _T_40__1        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__1_funnel        |     8|
+|36    |            _T_5_reg__2     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__2_funnel     |     8|
+|37    |            _T_4_reg__2     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg__2_funnel     |     8|
+|38    |            _T_40__2        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__1_funnel__2     |     8|
+|39    |            _T_5_reg__3     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__2_funnel__2  |     8|
+|40    |            _T_4_reg__3     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg__2_funnel__1  |     8|
+|41    |            _T_40__3        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__1_funnel__1     |     8|
+|42    |            _T_5_reg__4     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__2_funnel__1  |     8|
 |43    |        mou                 |MOU                                                         |     6|
 |44    |      isu                   |ISU                                                         |   298|
 |45    |    Cache                   |Cache                                                       |  3487|
@@ -1440,18 +1440,18 @@ Report Instance Areas:
 |71    |    inputArb                |LockingArbiter                                              |    14|
 +------+----------------------------+------------------------------------------------------------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:01:49 ; elapsed = 00:01:56 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+Finished Writing Synthesis Report : Time (s): cpu = 00:02:22 ; elapsed = 00:02:38 . Memory (MB): peak = 2990.652 ; gain = 2396.512
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 2077 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:01:49 ; elapsed = 00:01:56 . Memory (MB): peak = 2985.551 ; gain = 2391.988
-Synthesis Optimization Complete : Time (s): cpu = 00:01:49 ; elapsed = 00:01:56 . Memory (MB): peak = 2985.551 ; gain = 2391.988
+Synthesis Optimization Runtime : Time (s): cpu = 00:02:22 ; elapsed = 00:02:38 . Memory (MB): peak = 2990.652 ; gain = 2396.512
+Synthesis Optimization Complete : Time (s): cpu = 00:02:22 ; elapsed = 00:02:38 . Memory (MB): peak = 2990.652 ; gain = 2396.512
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.260 . Memory (MB): peak = 2985.551 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.415 . Memory (MB): peak = 2990.652 ; gain = 0.000
 INFO: [Netlist 29-17] Analyzing 704 Unisim elements for replacement
-INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Netlist 29-28] Unisim Transformation completed in 1 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.003 . Memory (MB): peak = 2985.551 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.002 . Memory (MB): peak = 2990.652 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
   A total of 399 instances were transformed.
   BUFG => BUFGCE: 1 instance 
@@ -1465,8 +1465,8 @@ Synth Design complete | Checksum: e9dab69c
 INFO: [Common 17-83] Releasing license: Synthesis
 348 Infos, 347 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:01:52 ; elapsed = 00:02:01 . Memory (MB): peak = 2985.551 ; gain = 2398.586
-Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.026 . Memory (MB): peak = 2985.551 ; gain = 0.000
+synth_design: Time (s): cpu = 00:02:29 ; elapsed = 00:02:46 . Memory (MB): peak = 2990.652 ; gain = 2404.352
+Write ShapeDB Complete: Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.025 . Memory (MB): peak = 2990.652 ; gain = 0.000
 INFO: [Common 17-1381] The checkpoint 'd:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.runs/synth_1/NutShell.dcp' has been generated.
 INFO: [runtcl-4] Executing : report_utilization -file NutShell_utilization_synth.rpt -pb NutShell_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Sun Feb 11 23:20:08 2024...
+INFO: [Common 17-206] Exiting Vivado at Mon Feb 12 09:57:38 2024...

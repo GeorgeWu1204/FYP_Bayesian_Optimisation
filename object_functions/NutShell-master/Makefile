@@ -18,7 +18,7 @@ SIMTOP = top.TopMain
 IMAGE ?= ready-to-run/linux.bin
 
 DATAWIDTH ?= 64
-BOARD ?= sim  # sim  pynq  axu3cg
+BOARD ?= pynq  # sim  pynq  axu3cg
 CORE  ?= inorder  # inorder  ooo  embedded
 
 MILL_ARGS = -td $(RTL_DIR) BOARD=$(BOARD) CORE=$(CORE)

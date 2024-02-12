@@ -99,7 +99,7 @@ def parse_constraints(filename):
                 generation_path = line.split()[1]
             elif line.startswith('board_settings'):
                 board_settings = line.split()[1]
-    if objective_function_category == 'real':
+    if objective_function_category == 'real-time':
         parameter_tuning_obj = parameter_tuning(tuple(self_constraints.keys()), objective_function_setting_path, vivado_project_path, generation_path, board_settings)
     else:
         parameter_tuning_obj = None
