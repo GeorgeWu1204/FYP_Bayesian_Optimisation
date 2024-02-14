@@ -15,7 +15,7 @@ obj_name: 'CLB Registers'       range: [0,30]
 
 #data
 objective: real-time
-settings_path: D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\NutShell-master\\src\\main\\scala\\top\\Settings.scala
+settings_path: D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\NutShell\\src\\main\\scala\\top\\Settings.scala
 vivado_project_path: D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\NutShell_Prj\\
-generation_path: D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\NutShell-master\\
+generation_path: D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\NutShell\\
 board_settings: DefaultSettings

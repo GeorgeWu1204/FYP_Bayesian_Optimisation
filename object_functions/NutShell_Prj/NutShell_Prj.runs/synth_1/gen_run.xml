@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xczu19eg-ffvc1760-2-i" LaunchTime="1707731683" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/NutShell.dcp">
+<GenRun Id="synth_1" LaunchPart="xczu19eg-ffvc1760-2-i" LaunchTime="1707881085" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/NutShell.dcp">
   <File Type="PA-TCL" Name="NutShell.tcl"/>
   <File Type="RDS-PROPCONSTRS" Name="NutShell_drc_synth.rpt"/>
   <File Type="REPORTS-TCL" Name="NutShell_reports.tcl"/>
@@ -11,7 +11,7 @@
   <File Type="VDS-TIMING-PB" Name="NutShell_timing_summary_synth.pb"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
     <Filter Type="Srcs"/>
-    <File Path="$PPRDIR/../../../../../Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v">
+    <File Path="$PPRDIR/../NutShell/build/TopMain.v">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>

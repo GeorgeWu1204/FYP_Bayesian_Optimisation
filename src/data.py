@@ -235,12 +235,13 @@ class Explore_Data(Data_Set):
             print("sample_input ", sample_input)
             self.param_tuner.tune_parameter(sample_input)
             # Regenerate the customised processor
-            # self.param_tuner.regenerate_design()
+            self.param_tuner.regenerate_design_by_virtual_machine()
             # Run the Synthesis on Vivado
             self.param_tuner.run_synthesis()
-            quit()
             # Read the utilisation percentage
             utilisation_percentage = read_utilization_percentage(self.utilisation_path)
+            print("utilisation_percentage ", utilisation_percentage)
+            quit()
             for obj_index in range(self.objs_to_evaluate_dim):
                 obj = self.objs_to_evaluate[obj_index]
                 results[i][obj_index] = utilisation_percentage[obj_index]

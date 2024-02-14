@@ -4,7 +4,7 @@
 <!-- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.                   -->
 <!-- Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.   -->
 
-<Project Product="Vivado" Version="7" Minor="65" Path="d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.xpr">
+<Project Product="Vivado" Version="7" Minor="65" Path="D:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="e330b1a5c9cb460291c2ba760d2c9fb3"/>
@@ -90,7 +90,7 @@
   <FileSets Version="1" Minor="32">
     <FileSet Name="sources_1" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
       <Filter Type="Srcs"/>
-      <File Path="$PPRDIR/../../../../../Industrial_Placement/Hardware-Fuzzer/src/NutShell/NutShell_with_Cov.v">
+      <File Path="$PPRDIR/../NutShell/build/TopMain.v">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>

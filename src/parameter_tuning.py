@@ -100,6 +100,7 @@ if __name__ == '__main__':
     new_value = ['0x10000000L', '0x0']
     vivado_project_path = 'D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\NutShell_Prj\\'
     pt = parameter_tuning(tunable_params, settings_file, generation_path, vivado_project_path, board_settings)
-    pt.regenerate_design_by_virtual_machine()
+    # pt.regenerate_design_by_virtual_machine()
+    # print("continue")
     # pt.run_synthesis()
     # pt.tune_parameter(new_value)
