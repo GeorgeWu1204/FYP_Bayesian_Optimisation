@@ -8,6 +8,8 @@ xczu19eg-ffvc1760-2-i (active)
 
 Ubuntu 22.04
 
+run ```sudo vmhgfs-fuse .host:/Year4 /mnt/hgfs -o allow_other``` to mount the shared folder
+
 java
 
 ```sudo apt install openjdk-11-jre-headless```\
