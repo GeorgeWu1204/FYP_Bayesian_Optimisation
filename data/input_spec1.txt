@@ -1,6 +1,6 @@
 #input self constraint
-var: arch       range: [1,12]   scale: 1
-var: btb        range: [4,255] scale: 1
+var: arch       range: [1,12]   scale: 1    shift: 0
+var: btb        range: [4,255]  scale: 1    shift: 0
 
 #input coupled constraint
 

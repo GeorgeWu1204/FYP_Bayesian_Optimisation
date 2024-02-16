@@ -20,5 +20,4 @@ mill
 ## Nutshell
 
 ```git clone https://github.com/OSCPU/NutShell.git```\
-
 ```git checkout -q release-211228```

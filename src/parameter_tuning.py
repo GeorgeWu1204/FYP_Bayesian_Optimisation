@@ -1,17 +1,24 @@
 import re
 import subprocess
+import os
+import shutil
 
 class parameter_tuning:
-    def __init__(self, tunable_params, settings_file, generation_path, vivado_project_path, board_settings):
-        self.tunable_params = tunable_params    # A dictionary or list of parameters that can be tuned
-        self.settings_file = settings_file      # Path to the Scala settings file
-        self.board_settings = board_settings    # Name of the Scala object containing the settings
-        self.generation_path = generation_path    # Path to the directory where the Makefile is located
+    def __init__(self, tunable_params, shift_amount, settings_file, generation_path, vivado_project_path, board_settings):
+        self.tunable_params = tunable_params        # A dictionary or list of parameters that can be tuned
+        self.shift_amount = shift_amount            # The amount by which the parameters are shifted
+        self.settings_file = settings_file          # Path to the Scala settings file
+        self.board_settings = board_settings        # Name of the Scala object containing the settings
+        self.generation_path = generation_path      # Path to the directory where the Makefile is located
         self.vivado_project_path = vivado_project_path
         self.tcl_path = 'D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\tools\\run_synthesis.tcl'
         self.ssh_address = 'george@192.168.129.128'
-        self.ssh_password = "001204"
-        self.bash_file_path = "run_on_remote_site.sh"
+        self.ssh_password = '001204'
+        self.bash_file_path = 'run_on_remote_site.sh'
+        self.generated_report_num = 0
+        self.generated_report_directory = 'D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\Syn_Report\\'
+        self.stored_report_directory = 'D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\Syn_Report\\dynamic_set\\'
+        self.generated_filename = 'NutShell_utilization_synth.rpt'
 
     def tune_parameter(self, new_value):
         '''Tune the parameters in the Scala settings file.'''
@@ -33,10 +40,26 @@ class parameter_tuning:
 
         # Define a pattern to find and replace the specific parameter within the object
         for index in range(len(self.tunable_params)):
-            param_pattern = re.compile(r'(\"' + re.escape(self.tunable_params[index]) + r'\"\s*->\s*)(0x[0-9a-fA-FL]+|\d+L?)', re.DOTALL)
-            
+            def replacement_function(match):
+                base_part = match.group(1)
+                original_format = match.group(2)
+                # Determine if the original value ends with 'L'
+                has_L_suffix = original_format.endswith('L')
+                # Calculate the new value after shifting
+                shifted_value = round(new_value[index]) << self.shift_amount[index]
+                # Format the new value according to the original format
+                if has_L_suffix:
+                    new_value_formatted = f'0x{shifted_value:X}L'
+                else:
+                    new_value_formatted = f'{shifted_value}'
+                return f'{base_part}{new_value_formatted}'
+
+            param_pattern = re.compile(r'(\"' + re.escape(self.tunable_params[index]) + r'\"\s*->\s*)(0x[0-9a-fA-F]+L?|\d+)', re.DOTALL)
+        
             # Replace the parameter value within the object content
-            modified_object_content, n = param_pattern.subn(r'\g<1>' + str(round(new_value[index])), modified_object_content)
+            modified_object_content, n = param_pattern.subn(replacement_function, modified_object_content)
+
+            
             if n == 0:
                 raise ValueError(f"Parameter '{self.tunable_params[index]}' not found in board settings object '{self.board_settings}'.")
 
@@ -77,8 +100,6 @@ class parameter_tuning:
         except subprocess.CalledProcessError as e:
             print("An error occurred while executing the bash file.")
             print(e.stderr.decode())  # Printing the error output
-
-
     
     def run_synthesis(self):
         '''Run synthesis using the new parameters.'''
@@ -89,18 +110,26 @@ class parameter_tuning:
             print("Vivado Start successfully.")
         except subprocess.CalledProcessError as e:
             print(f"Error executing Makefile: {e}")
-
+    
+    def store_synthesis_report(self):
+        '''Store the synthesis report in a file.'''
+        name, extension = os.path.splitext(self.generated_filename)
+        new_name = name + '_' + str(self.generated_report_num) + extension
+        shutil.copy(self.generated_report_directory + self.generated_filename, self.stored_report_directory + new_name)
+        self.generated_report_num += 1
 
 
 if __name__ == '__main__':
-    board_settings = 'DefaultSettings'
-    tunable_params = ['MemMapBase', 'MemMapRegionBits']
-    settings_file = '../object_functions/NutShell-master/src/main/scala/top/Settings.scala'
-    generation_path = '../object_functions/NutShell-master/'
-    new_value = ['0x10000000L', '0x0']
+    board_settings = 'PXIeSettings'
+    tunable_params = ['NrExtIntr', 'MMIOSize']
+    settings_file = '../object_functions/NutShell/src/main/scala/top/Settings.scala'
+    generation_path = '../object_functions/NutShell/'
+    new_value = [2, 5]
+    shift_amount = (0, 28)
     vivado_project_path = 'D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\NutShell_Prj\\'
-    pt = parameter_tuning(tunable_params, settings_file, generation_path, vivado_project_path, board_settings)
+    pt = parameter_tuning(tunable_params, shift_amount, settings_file, generation_path, vivado_project_path, board_settings)
     # pt.regenerate_design_by_virtual_machine()
     # print("continue")
     # pt.run_synthesis()
-    # pt.tune_parameter(new_value)
+    pt.tune_parameter(new_value)
+    # pt.store_synthesis_report()

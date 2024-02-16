@@ -34,6 +34,7 @@ def parse_constraints(filename):
     # Define dictionaries to store the parsed data
     self_constraints = {}
     input_constant = {}
+    input_shift_amount = {}
     coupled_constraints = []
     output_objective = {}
     output_constraints = {}
@@ -70,6 +71,7 @@ def parse_constraints(filename):
                     if section == 'self_constraint':
                         scale = int(parts[5])
                         self_constraints[var_name] = [int(range_values[0]), int(range_values[1]), scale]
+                        input_shift_amount[var_name] = int(parts[7])
                     elif section == 'coupled_constraint':
                         coupled_parts = line.split('and')
                         coupled_data = {}
@@ -82,12 +84,18 @@ def parse_constraints(filename):
             elif line.startswith('obj_name:') and section:
                 # Process the objective line
                 parts = line.split()
-                obj_name = parts[1]
+                for i in range(1, len(parts)):
+                        if parts[i] == 'obj_direct:' or parts[i] == 'range:':
+                            obj_name_end_index = i
+                            break
+                obj_name = ' '.join(parts[1:obj_name_end_index])
+                print(obj_name)
+                # obj_name = parts[1]
                 if section == 'output_objective':
-                    obj_direction = parts[3]
+                    obj_direction = parts[obj_name_end_index + 1]
                     output_objective[obj_name] = obj_direction
                 elif section == 'output_constraint':
-                    range_values = parts[3].strip('[]').split(',')
+                    range_values = parts[obj_name_end_index+1].strip('[]').split(',')
                     output_constraints[obj_name] = [int(range_values[0]), int(range_values[1])]
             elif line.startswith('objective'):
                 objective_function_category = line.split()[1]
@@ -100,17 +108,17 @@ def parse_constraints(filename):
             elif line.startswith('board_settings'):
                 board_settings = line.split()[1]
     if objective_function_category == 'real-time':
-        parameter_tuning_obj = parameter_tuning(tuple(self_constraints.keys()), objective_function_setting_path, vivado_project_path, generation_path, board_settings)
+        parameter_tuning_obj = parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), objective_function_setting_path, vivado_project_path, generation_path, board_settings)
     else:
         parameter_tuning_obj = None
     return self_constraints, coupled_constraints, input_constant, output_objective, output_constraints, objective_function_category, parameter_tuning_obj
 
 if __name__ == '__main__':
     self_constraints, coupled_constraints, input_constant, output_objective, output_constraints, objective_function_category, parameter_tuning_obj = parse_constraints('../data/input_spec2.txt')
-    # print(self_constraints)
-    # print(coupled_constraints)
-    # print(output_objective)
-    # print(output_constraints)
+    print(self_constraints)
+    print(coupled_constraints)
+    print(output_objective)
+    print(output_constraints)
     # (input_dim, input_scales, input_normalized_factor, input_offset, input_names), constraint = fill_constraints(self_constraints, coupled_constraints)
     # print(input_dim)
     # print(input_scales)

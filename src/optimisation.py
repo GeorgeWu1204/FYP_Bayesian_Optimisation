@@ -54,8 +54,8 @@ TRAIN_SET_DISTURBANCE_RANGE = 0.01                 # noise standard deviation fo
 TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2            # acceptable distance between the rounded vertex and the real vertex
 
 # Model Settings
-NUM_RESTARTS = 1                # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 3        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
+NUM_RESTARTS = 2                # number of starting points for BO for optimize_acqf
+NUM_OF_INITIAL_POINT = 4        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
 N_BATCH = 10                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
@@ -64,7 +64,7 @@ MC_SAMPLES = 1                  # number of MC samples for qNEI
 # Runtime Settings
 verbose = True
 record = True
-debug = False
+debug = True
 plot_posterior = False
 
 
@@ -111,7 +111,6 @@ def initialize_model(train_x, train_obj, scales, normalized_factors):
                                     normalized_factors,
                                     train_x, 
                                     train_y, 
-                                #    likelihood=MODEL_LIKELIHOOD, 
                                     outcome_transform=Standardize(m=1),
                                     tensor_type=t_type,
                                     tensor_device=device
@@ -136,9 +135,10 @@ def build_qNEHVI_acqf(model, train_x, sampler):
     return acq_func
     
 
-def optimize_acqf_and_get_observation(acq_func, constraint_bounds, data_type):
+def optimize_acqf_and_get_observation(acq_func, constraint_bounds):
     """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
     unnormalised_train_x, *_ = sampler_generator.generate_valid_initial_data(NUM_RESTARTS, OBJECTIVE_DIM, data_set, obj_normalized_factors)
+    print("unnormalised_train_x dim", unnormalised_train_x.shape)
     sampled_initial_conditions = unnormalised_train_x.unsqueeze(1) # to match the dimension n * 1 * m
     candidates, _ = optimize_acqf(
         acq_function=acq_func,
@@ -206,7 +206,7 @@ for trial in range (1, N_TRIALS + 1):
         acqf = build_qNEHVI_acqf(model_ei, train_x_ei, qmc_sampler)
         
         # optimize and get new observation
-        new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimize_acqf_and_get_observation(acqf, constraint_set.constraint_bound, t_type)
+        new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimize_acqf_and_get_observation(acqf, constraint_set.constraint_bound)
 
         # examine the posterior
         if plot_posterior and iteration == 10:
