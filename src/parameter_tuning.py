@@ -11,13 +11,13 @@ class parameter_tuning:
         self.board_settings = board_settings        # Name of the Scala object containing the settings
         self.generation_path = generation_path      # Path to the directory where the Makefile is located
         self.vivado_project_path = vivado_project_path
-        self.tcl_path = 'D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\tools\\run_synthesis.tcl'
+        self.tcl_path = '..\\object_functions\\tools\\run_synthesis.tcl'
         self.ssh_address = 'george@192.168.129.128'
         self.ssh_password = '001204'
         self.bash_file_path = 'run_on_remote_site.sh'
         self.generated_report_num = 0
-        self.generated_report_directory = 'D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\Syn_Report\\'
-        self.stored_report_directory = 'D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\Syn_Report\\dynamic_set\\'
+        self.generated_report_directory = '..\\object_functions\\Syn_Report\\'
+        self.stored_report_directory = '..\\object_functions\\Syn_Report\\dynamic_set\\'
         self.generated_filename = 'NutShell_utilization_synth.rpt'
 
     def tune_parameter(self, new_value):
@@ -126,7 +126,7 @@ if __name__ == '__main__':
     generation_path = '../object_functions/NutShell/'
     new_value = [2, 5]
     shift_amount = (0, 28)
-    vivado_project_path = 'D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\NutShell_Prj\\'
+    vivado_project_path = '..\\object_functions\\NutShell_Prj\\'
     pt = parameter_tuning(tunable_params, shift_amount, settings_file, generation_path, vivado_project_path, board_settings)
     # pt.regenerate_design_by_virtual_machine()
     # print("continue")

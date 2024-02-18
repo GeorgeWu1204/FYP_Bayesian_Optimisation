@@ -189,9 +189,9 @@ def read_data_from_db(db_name, objs, output_obj_constraint, scales, input_data_n
     
 
 class Explore_Data(Data_Set):
-    def __init__(self, objs, scales, input_data_normalized_factors, input_offsets, input_constants, output_obj_constraint, param_tuner, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
+    def __init__(self, input_names, objs, scales, input_data_normalized_factors, input_offsets, input_constants, output_obj_constraint, param_tuner, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
         
-        self.utilisation_path = 'D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\Syn_Report\\NutShell_utilization_synth.rpt'
+        self.utilisation_path = '..\\object_functions\\Syn_Report\\NutShell_utilization_synth.rpt'
         self.param_tuner = param_tuner
         # to recover the output data
         self.objs_direct = objs
@@ -221,6 +221,7 @@ class Explore_Data(Data_Set):
         self.output_constraints_to_check = []
         for obj in output_obj_constraint:
             self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj] for bound in output_obj_constraint[obj]])
+        self.build_new_dataset = create_data_set(input_names, objs.keys())
 
     def find_ppa_result(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
@@ -233,16 +234,20 @@ class Explore_Data(Data_Set):
             sample_input = self.format_input_data(input)
             # Modify the paramter settings
             print("sample_input ", sample_input)
-            self.param_tuner.tune_parameter(sample_input)
-            # Regenerate the customised processor
-            self.param_tuner.regenerate_design_by_virtual_machine()
-            # Run the Synthesis on Vivado
-            self.param_tuner.run_synthesis()
-            # Store the utilisation result
-            self.param_tuner.store_synthesis_report()
-            # Read the utilisation percentage
-            utilisation_percentage = read_utilization_percentage(self.utilisation_path, self.objs_to_evaluate)
+            utilisation_percentage = self.build_new_dataset.find_corresponding_data(sample_input)
+            if utilisation_percentage is None:
+                self.param_tuner.tune_parameter(sample_input)
+                # Regenerate the customised processor
+                self.param_tuner.regenerate_design_by_virtual_machine()
+                # Run the Synthesis on Vivado
+                self.param_tuner.run_synthesis()
+                # Store the utilisation result
+                self.param_tuner.store_synthesis_report()
+                # Read the utilisation percentage
+                utilisation_percentage = read_utilization_percentage(self.utilisation_path, self.objs_to_evaluate)
+                self.build_new_dataset.record_data(sample_input, utilisation_percentage)
             print("utilisation_percentage ", utilisation_percentage)
+            self.build_new_dataset.record_data(input, utilisation_percentage)
             for obj_index in range(self.objs_to_evaluate_dim):
                 obj = self.objs_to_evaluate[obj_index]
                 results[i][obj_index] = utilisation_percentage[obj_index]
@@ -250,8 +255,45 @@ class Explore_Data(Data_Set):
                     results[i][obj_index] = -1 * results[i][obj_index]
                 obj_index += 1
             print("results ", results)
-            quit()
         return results
 
+
+class create_data_set:
+    def __init__(self, input_name, objective_name, file_name = 'Nutshell_dataset_record.txt'):
+        self.input_name = input_name
+        self.input_dim = len(input_name)
+        self.objective_name = list(objective_name)
+        self.file_name = '..\\object_functions\\Dataset\\' + file_name
+
+
+    def record_data(self, input_data, objective_data):
+        with open(self.file_name, 'a') as file:
+            for index in range(self.input_dim):
+                if index == 0:
+                    file.write(f"{input_data[index]}")
+                else:
+                    file.write(f", {input_data[index]}")
+            for data in objective_data:
+                file.write(f", {data}")
+            file.write("\n")    
+
+    def find_corresponding_data(self, input_data):
+        with open(self.file_name, 'r') as file:
+            lines = file.readlines()
+            for line in lines[1:]:
+                line = line.split(',')
+                sample_data = tuple([int(i) for i in line[0:self.input_dim]])
+                print("sample_data ", sample_data)
+                if sample_data == input_data:
+                    result = [float(i) for i in line[self.input_dim:] ]
+                    return result
+        return None
+
+
+
 if __name__ == '__main__':
-    read_data_from_db("../data/ppa_v2.db", ['lut'], [1, 1, 1], [1, 1, 1])
+    input_names = ['LUT', 'FF']
+    objective_names = ['Latency', 'Throughput']
+    dataset = create_data_set(input_names, objective_names)
+    dataset.record_data([3, 2], [3.234, 4.23])
+    print(dataset.find_corresponding_data((3, 2)))

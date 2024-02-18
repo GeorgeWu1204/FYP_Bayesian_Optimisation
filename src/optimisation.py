@@ -34,6 +34,10 @@ t_type = torch.float64
 CONSTRAINT_FILE = '../data/input_spec2.txt'
 self_constraints, coupled_constraints, INPUT_CONSTANT, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, objective_function_category, parameter_tuning_obj = parse_constraints(CONSTRAINT_FILE)
 (INPUT_DATA_DIM, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_NAMES), constraint_set = fill_constraints(self_constraints, coupled_constraints, device)
+print("INPUT_DATA_DIM: ", INPUT_DATA_DIM)
+print("INPUT_DATA_SCALES: ", INPUT_DATA_SCALES)
+print("INPUT_NORMALIZED_FACTOR: ", INPUT_NORMALIZED_FACTOR)
+print("INPUT_OFFSETS: ", INPUT_OFFSETS)
 
 OBJECTIVES_TO_OPTIMISE_DIM = len(OBJECTIVES_TO_OPTIMISE)
 OBJECTIVE_DIM = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONSTRAINT)
@@ -46,8 +50,7 @@ if objective_function_category == 'synthetic':
     data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT , t_type, device)
 else:
     print("Optimisation in real space")
-    data_set = data.Explore_Data(OBJECTIVES_TO_OPTIMISE, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT, OUTPUT_OBJECTIVE_CONSTRAINT, parameter_tuning_obj, t_type, device)
-
+    data_set = data.Explore_Data(INPUT_NAMES, OBJECTIVES_TO_OPTIMISE, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT, OUTPUT_OBJECTIVE_CONSTRAINT, parameter_tuning_obj, t_type, device)
 
 # Train Set Settings
 TRAIN_SET_DISTURBANCE_RANGE = 0.01                 # noise standard deviation for objective
@@ -55,7 +58,7 @@ TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2            # acceptable distance between th
 
 # Model Settings
 NUM_RESTARTS = 2                # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 4        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
+NUM_OF_INITIAL_POINT = 2        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
 N_BATCH = 10                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
@@ -173,7 +176,6 @@ if record:
     for obj_name in OBJECTIVES_TO_OPTIMISE.keys():
         record_file_name = record_file_name + obj_name + '_'
     results_record = utils.recorded_training_result(INPUT_NAMES, OBJECTIVES_TO_OPTIMISE, data_set.best_value, record_file_name, N_TRIALS, N_BATCH)
-
 # Global Best Values
 best_hyper_vol_per_trial = []
 best_sample_points_per_trial = {trial : {input : 0.0 for input in INPUT_NAMES} for trial in range(1, N_TRIALS + 1)}
@@ -186,9 +188,9 @@ for trial in range (1, N_TRIALS + 1):
         train_obj_ei,
         hyper_vol_ei,
     ) = generate_initial_data()
+
     train_set_storage.store_initial_data(train_x_ei)
     mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
-
     #reset the best observation
     best_observation_per_interation = {obj : None for obj in OBJECTIVES_TO_OPTIMISE.keys()}
     best_constraint_per_interation = {obj : None for obj in OUTPUT_OBJECTIVE_CONSTRAINT.keys()}
@@ -220,7 +222,6 @@ for trial in range (1, N_TRIALS + 1):
             print("hyper_vol: ", hyper_vol)
         #-----------------------------------------
 
-
         # update training points
         valid_point, modified_new_train_x, modified_new_train_obj_ei, modified_hyper_vol  = train_set_storage.store_new_data(new_x_ei, new_train_obj_ei, hyper_vol)
         
@@ -239,6 +240,7 @@ for trial in range (1, N_TRIALS + 1):
                 best_observation_per_interation = utils.encapsulate_obj_tensor_into_dict(OBJECTIVES_TO_OPTIMISE, new_exact_obj_ei)
                 best_constraint_per_interation = utils.encapsulate_obj_tensor_into_dict(OUTPUT_OBJECTIVE_CONSTRAINT, new_exact_obj_ei[... , OBJECTIVES_TO_OPTIMISE_DIM :])
                 best_sample_point_per_interation = new_x_ei
+        
         
 
         # reinitialize the models so they are ready for fitting on next iteration

@@ -4,6 +4,8 @@ def fill_constraints(self_constraints, coupled_constraints, device):
     """this function is used to fill the constraints in the interface"""
     # self_constraints: {var_name: [lower_bound, upper_bound, scale]}
     # coupled_constraints: [{var_name: [lower_bound, upper_bound], var_name: [lower_bound, upper_bound]},... ]
+    print(self_constraints)
+    print(coupled_constraints)
     input_dim = len(self_constraints)
     input_scales = [1] * input_dim
     input_normalized_factor = [1] * input_dim
@@ -89,8 +91,6 @@ def parse_constraints(filename):
                             obj_name_end_index = i
                             break
                 obj_name = ' '.join(parts[1:obj_name_end_index])
-                print(obj_name)
-                # obj_name = parts[1]
                 if section == 'output_objective':
                     obj_direction = parts[obj_name_end_index + 1]
                     output_objective[obj_name] = obj_direction

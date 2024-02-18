@@ -1,0 +1,2 @@
+NrExtIntr, MMIOSize, LUT as Logic, CLB Registers
+3, 2, 3.234, 4.23
