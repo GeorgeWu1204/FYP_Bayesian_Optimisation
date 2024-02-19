@@ -1,0 +1,41 @@
+rm -rf ./build
+mkdir -p build
+mill chiselModule.runMain top.TopMain -td build --output-file TopMain.v --infer-rw NutShellFPGATop --repl-seq-mem -c:NutShellFPGATop:-o:build/TopMain.v.conf BOARD=PXIe CORE=inorder  
+[1/35] chiselModule.resources 
+[1A[2K[9999D[6/35] chiselModule.sources.overriden.mill.scalalib.MavenModule.sources 
+[1A[2K[9999D[7/35] chiselModule.sources 
+[1A[2K[9999D[9/35] chiselModule.allSources 
+[1A[2K[9999D[10/35] chiselModule.allSourceFiles 
+[1A[2K[9999D[27/35] chiselModule.compile 
+[0m[[0m[0minfo[0m] [0m[0mCompiling 1 Scala source to /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/out/chiselModule/compile/dest/classes ...[0m
+[0m[[0m[0minfo[0m] [0m[0mDone compiling.[0m
+[28/35] chiselModule.localClasspath 
+[1A[2K[9999D[31/35] chiselModule.runClasspath 
+[1A[2K[9999D[35/35] chiselModule.runMain 
+====== Settings = (PXIe, inorder) ======
+EnableDebug = true
+EnableILA = true
+EnableMultiIssue = false
+EnableOutOfOrderExec = false
+EnableRVC = true
+FPGAPlatform = true
+HasDTLB = true
+HasDcache = true
+HasITLB = true
+HasIcache = true
+HasL2cache = true
+HasPrefetch = true
+IsRV32 = false
+MMIOBase = 0x40000000
+MMIOSize = 0x10000000
+MemMapBase = 0x0
+MemMapRegionBits = 0
+MmodeOnly = false
+NrExtIntr = 2
+ResetVector = 0x80000000
+[[35minfo[0m] [0.001] Elaborating design...
+[[35minfo[0m] [1.362] Done elaborating.
+Computed transform order in: 121.7 ms
+Total FIRRTL Compile Time: 5637.4 ms
+./scripts/vlsi_mem_gen build/TopMain.v.conf >> build/TopMain.v
+sed -i -e 's/_\(aw\|ar\|w\|r\|b\)_\(\|bits_\)/_\1/g' build/TopMain.v

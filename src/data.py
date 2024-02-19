@@ -92,7 +92,7 @@ class Data_Set:
         self.output_constraints_to_check = []
         for obj in output_obj_constraint:
             self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj] for bound in output_obj_constraint[obj]])
-    
+        
     def format_input_data(self, input_data):
         """This function is used to add constant input to the input data to make it able to find the ppa result"""
         for index in self.input_constants.keys():
@@ -191,7 +191,7 @@ def read_data_from_db(db_name, objs, output_obj_constraint, scales, input_data_n
 class Explore_Data(Data_Set):
     def __init__(self, input_names, objs, scales, input_data_normalized_factors, input_offsets, input_constants, output_obj_constraint, param_tuner, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
         
-        self.utilisation_path = '..\\object_functions\\Syn_Report\\NutShell_utilization_synth.rpt'
+        self.utilisation_path = '../object_functions/Syn_Report/NutShell_utilization_synth.rpt'
         self.param_tuner = param_tuner
         # to recover the output data
         self.objs_direct = objs
@@ -202,7 +202,7 @@ class Explore_Data(Data_Set):
         self.output_normalised_factors = {}
         self.worst_value = {}
         self.best_value = {}
-        for obj in self.objs_to_evaluate:
+        for obj in list(objs.keys()):
             self.output_normalised_factors[obj] = 100.0
             if objs.get(obj, None) == 'minimise':
                     self.best_value[obj] = 0.0
@@ -210,6 +210,12 @@ class Explore_Data(Data_Set):
             else:
                 self.best_value[obj] = 100.0
                 self.worst_value[obj] = 0.0
+        # TODO, since for some of the conditions that are very small, the boundary calculation methods does not work well, hence normalising to the largest value of the condition.
+        for obj in list(output_obj_constraint.keys()):
+            self.output_normalised_factors[obj] = output_obj_constraint[obj][1]
+            self.best_value[obj] = output_obj_constraint[obj][1]
+            self.worst_value[obj] = 0.0
+        
         # to recover the input data
         self.input_normalized_factors = torch.tensor(input_data_normalized_factors, dtype=tensor_type, device=tensor_device)
         self.input_scales_factors = torch.tensor(scales, dtype=tensor_type, device=tensor_device)
@@ -221,7 +227,7 @@ class Explore_Data(Data_Set):
         self.output_constraints_to_check = []
         for obj in output_obj_constraint:
             self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj] for bound in output_obj_constraint[obj]])
-        self.build_new_dataset = create_data_set(input_names, objs.keys())
+        self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate)
 
     def find_ppa_result(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
@@ -236,9 +242,14 @@ class Explore_Data(Data_Set):
             print("sample_input ", sample_input)
             utilisation_percentage = self.build_new_dataset.find_corresponding_data(sample_input)
             if utilisation_percentage is None:
+                print("Not found in the dataset, Start to Generate ")
                 self.param_tuner.tune_parameter(sample_input)
                 # Regenerate the customised processor
                 self.param_tuner.regenerate_design_locally()
+                # Check if successfully generated the processor
+                if not osp.exists(self.param_tuner.generation_path + 'build'):
+                    self.build_new_dataset.record_data(sample_input, 'failed')
+                    continue
                 # Run the Synthesis on Vivado
                 self.param_tuner.run_synthesis()
                 # Store the utilisation result
@@ -247,7 +258,6 @@ class Explore_Data(Data_Set):
                 utilisation_percentage = read_utilization_percentage(self.utilisation_path, self.objs_to_evaluate)
                 self.build_new_dataset.record_data(sample_input, utilisation_percentage)
             print("utilisation_percentage ", utilisation_percentage)
-            self.build_new_dataset.record_data(input, utilisation_percentage)
             for obj_index in range(self.objs_to_evaluate_dim):
                 obj = self.objs_to_evaluate[obj_index]
                 results[i][obj_index] = utilisation_percentage[obj_index]
@@ -263,8 +273,7 @@ class create_data_set:
         self.input_name = input_name
         self.input_dim = len(input_name)
         self.objective_name = list(objective_name)
-        self.file_name = '..\\object_functions\\Dataset\\' + file_name
-
+        self.file_name = '../object_functions/Dataset/' + file_name
 
     def record_data(self, input_data, objective_data):
         with open(self.file_name, 'a') as file:
@@ -273,20 +282,25 @@ class create_data_set:
                     file.write(f"{input_data[index]}")
                 else:
                     file.write(f", {input_data[index]}")
-            for data in objective_data:
-                file.write(f", {data}")
-            file.write("\n")    
+            if objective_data == 'failed':
+                file.write(", failed\n")
+            else:
+                for data in objective_data:
+                    file.write(f", {data}")
+                file.write("\n")    
 
     def find_corresponding_data(self, input_data):
         with open(self.file_name, 'r') as file:
             lines = file.readlines()
             for line in lines[1:]:
                 line = line.split(',')
-                sample_data = tuple([int(i) for i in line[0:self.input_dim]])
-                print("sample_data ", sample_data)
+                sample_data = tuple([float(i) for i in line[0:self.input_dim]])
                 if sample_data == input_data:
-                    result = [float(i) for i in line[self.input_dim:] ]
-                    return result
+                    if line[self.input_dim] == ' failed\n':
+                        return [0.0 for i in range(len(self.objective_name))]
+                    else:
+                        result = [float(i) for i in line[self.input_dim:] ]
+                        return result
         return None
 
 
@@ -295,5 +309,5 @@ if __name__ == '__main__':
     input_names = ['LUT', 'FF']
     objective_names = ['Latency', 'Throughput']
     dataset = create_data_set(input_names, objective_names)
-    dataset.record_data([3, 2], [3.234, 4.23])
-    print(dataset.find_corresponding_data((3, 2)))
+    dataset.record_data([3.0, 2.0], [3.234, 4.23])
+    print(dataset.find_corresponding_data((3.0, 2.0)))

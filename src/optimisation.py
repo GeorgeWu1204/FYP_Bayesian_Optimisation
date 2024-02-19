@@ -34,10 +34,6 @@ t_type = torch.float64
 CONSTRAINT_FILE = '../data/input_spec2.txt'
 self_constraints, coupled_constraints, INPUT_CONSTANT, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, objective_function_category, parameter_tuning_obj = parse_constraints(CONSTRAINT_FILE)
 (INPUT_DATA_DIM, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_NAMES), constraint_set = fill_constraints(self_constraints, coupled_constraints, device)
-print("INPUT_DATA_DIM: ", INPUT_DATA_DIM)
-print("INPUT_DATA_SCALES: ", INPUT_DATA_SCALES)
-print("INPUT_NORMALIZED_FACTOR: ", INPUT_NORMALIZED_FACTOR)
-print("INPUT_OFFSETS: ", INPUT_OFFSETS)
 
 OBJECTIVES_TO_OPTIMISE_DIM = len(OBJECTIVES_TO_OPTIMISE)
 OBJECTIVE_DIM = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONSTRAINT)
@@ -58,7 +54,7 @@ TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2            # acceptable distance between th
 
 # Model Settings
 NUM_RESTARTS = 2                # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 2        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
+NUM_OF_INITIAL_POINT = 4        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
 N_BATCH = 10                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
@@ -68,7 +64,7 @@ MC_SAMPLES = 1                  # number of MC samples for qNEI
 verbose = True
 record = True
 debug = True
-plot_posterior = False
+plot_posterior = True
 
 
 #reference point for optimisation used for hypervolume calculation
@@ -188,7 +184,8 @@ for trial in range (1, N_TRIALS + 1):
         train_obj_ei,
         hyper_vol_ei,
     ) = generate_initial_data()
-
+    print("train_x_ei dim", train_x_ei.shape)
+    print("train_obj_ei dim", train_obj_ei.shape)
     train_set_storage.store_initial_data(train_x_ei)
     mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
     #reset the best observation

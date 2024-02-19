@@ -19,6 +19,7 @@ class parameter_tuning:
         self.generated_report_directory = '../object_functions/Syn_Report/'
         self.stored_report_directory = '../object_functions/Syn_Report/dynamic_set/'
         self.generated_filename = 'NutShell_utilization_synth.rpt'
+        self.generated_logfile = '../object_functions/Logs/'
 
     def tune_parameter(self, new_value):
         '''Tune the parameters in the Scala settings file.'''
@@ -76,16 +77,15 @@ class parameter_tuning:
         '''Regenerate the design using the new parameters.'''
         try:
             # Run the 'make' command in the directory where the Makefile is located
-            subprocess.run(['make', 'clean'], check=True, cwd=self.generation_path)
-            subprocess.run(['make', 'verilog', 'BOARD=PXIe'], check=True, cwd=self.generation_path)
-            print("Makefile executed successfully.")
+            with open(self.generated_logfile + 'Processor_Generation.log', 'w') as f:
+                subprocess.run(['make', 'clean'], check=True, cwd=self.generation_path, stdout=f, stderr=f)
+                subprocess.run(['make', 'verilog', 'BOARD=PXIe'], check=True, cwd=self.generation_path, stdout=f, stderr=f)
         except subprocess.CalledProcessError as e:
             print(f"Error executing Makefile: {e}")
 
     def regenerate_design_by_virtual_machine(self):
         # Ensure ssh_address is in the format 'user@host'
         # Ensure bash_file_path is the correct path to the bash file on the remote machine
-        
         # Command to execute the bash file remotely
         bash_command = f'bash {self.bash_file_path}'
         
@@ -106,11 +106,10 @@ class parameter_tuning:
         '''Run synthesis using the new parameters.'''
         command = ["vivado", "-nolog", "-nojournal", "-mode", "batch", "-source", self.tcl_path]
         try:
-            # Run the 'make' command in the directory where the Makefile is located
-            subprocess.run(command, check=True, cwd=self.vivado_project_path, shell=True)
-            print("Vivado Start successfully.")
+            with open(self.generated_logfile + 'Synthesis.log', 'w') as f:
+                subprocess.run(command, check=True, cwd=self.vivado_project_path, stdout=f, stderr=f)
         except subprocess.CalledProcessError as e:
-            print(f"Error executing Makefile: {e}")
+            print(f"Error executing Vivado: {e}")
     
     def store_synthesis_report(self):
         '''Store the synthesis report in a file.'''
@@ -129,8 +128,4 @@ if __name__ == '__main__':
     shift_amount = (0, 28)
     vivado_project_path = '../object_functions/NutShell_Prj/'
     pt = parameter_tuning(tunable_params, shift_amount, settings_file, generation_path, vivado_project_path, board_settings)
-    # pt.regenerate_design_locally()
-    # print("continue")
     pt.run_synthesis()
-    # pt.tune_parameter(new_value)
-    # pt.store_synthesis_report()

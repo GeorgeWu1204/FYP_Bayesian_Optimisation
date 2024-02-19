@@ -141,11 +141,6 @@ class Input_Constraints:
                 inequality_constraints[i][j] = self.check_meet_constraint(individual_constraint, correlated_constraints, i * q_dim + j)
         return inequality_constraints
     
-    # def get_self_bounds(self):
-    #     results = []
-    #     for i in range(self.dim):
-    #         results.append((self.Node[i].individual_constraints[0], self.Node[i].individual_constraints[1]))
-    #     return results
         
             
 class Constraints_Brute_Force:

@@ -15,7 +15,7 @@ obj_name: CARRY8              range: [0,3]
 
 #data
 objective: real-time
-settings_path: ..\\object_functions\\NutShell\\src\\main\\scala\\top\\Settings.scala
-vivado_project_path: ..\\object_functions\\NutShell_Prj\\
-generation_path: ..\\object_functions\\NutShell\\
+settings_path: ../object_functions/NutShell/src/main/scala/top/Settings.scala
+vivado_project_path: ../object_functions/NutShell_Prj/
+generation_path: ../object_functions/NutShell/
 board_settings: PXIeSettings

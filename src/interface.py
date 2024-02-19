@@ -108,7 +108,7 @@ def parse_constraints(filename):
             elif line.startswith('board_settings'):
                 board_settings = line.split()[1]
     if objective_function_category == 'real-time':
-        parameter_tuning_obj = parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), objective_function_setting_path, vivado_project_path, generation_path, board_settings)
+        parameter_tuning_obj = parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), objective_function_setting_path, generation_path, vivado_project_path, board_settings)
     else:
         parameter_tuning_obj = None
     return self_constraints, coupled_constraints, input_constant, output_objective, output_constraints, objective_function_category, parameter_tuning_obj
