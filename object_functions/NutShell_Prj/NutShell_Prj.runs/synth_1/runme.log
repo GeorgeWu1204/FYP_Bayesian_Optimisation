@@ -3,17 +3,16 @@
     with args -log NutShell.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source NutShell.tcl
 
 
-
 ****** Vivado v2023.2 (64-bit)
-  **** SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
+  **** SW Build 4029153 on Fri Oct 13 20:13:54 MDT 2023
   **** IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
   **** SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
     ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
     ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 
 source NutShell.tcl -notrace
-Command: read_checkpoint -auto_incremental -incremental d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.srcs/utils_1/imports/synth_1/NutShell.dcp
-INFO: [Vivado 12-5825] Read reference checkpoint from d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.srcs/utils_1/imports/synth_1/NutShell.dcp for incremental synthesis
+Command: read_checkpoint -auto_incremental -incremental /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.srcs/utils_1/imports/synth_1/NutShell.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.srcs/utils_1/imports/synth_1/NutShell.dcp for incremental synthesis
 INFO: [Vivado 12-7989] Please ensure there are no constraint changes
 Command: synth_design -top NutShell -part xczu19eg-ffvc1760-2-i
 Starting synth_design
@@ -21,194 +20,194 @@ Attempting to get a license for feature 'Synthesis' and/or device 'xczu19eg'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xczu19eg'
 INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
 INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
-INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 22468
+INFO: [Synth 8-7075] Helper process launched with PID 345270
 ---------------------------------------------------------------------------------
-Starting Synthesize : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1032.668 ; gain = 438.430
+Starting Synthesize : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1786.344 ; gain = 410.684 ; free physical = 6707 ; free virtual = 25482
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-6157] synthesizing module 'NutShell' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:24311]
-INFO: [Synth 8-6157] synthesizing module 'NutCore' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:15525]
-INFO: [Synth 8-6157] synthesizing module 'Frontend_inorder' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2809]
-INFO: [Synth 8-6157] synthesizing module 'IFU_inorder' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:742]
-INFO: [Synth 8-6157] synthesizing module 'BPU_inorder' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:449]
-INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:320]
-INFO: [Synth 8-6157] synthesizing module 'array' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25674]
-INFO: [Synth 8-6157] synthesizing module 'array_ext' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25900]
-INFO: [Synth 8-6155] done synthesizing module 'array_ext' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25900]
-INFO: [Synth 8-6155] done synthesizing module 'array' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25674]
-INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:320]
-INFO: [Synth 8-6155] done synthesizing module 'BPU_inorder' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:449]
-INFO: [Synth 8-6155] done synthesizing module 'IFU_inorder' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:742]
-INFO: [Synth 8-6157] synthesizing module 'NaiveRVCAlignBuffer' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:968]
-INFO: [Synth 8-6155] done synthesizing module 'NaiveRVCAlignBuffer' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:968]
-INFO: [Synth 8-6157] synthesizing module 'IDU' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2368]
-INFO: [Synth 8-6157] synthesizing module 'Decoder' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:1347]
-INFO: [Synth 8-6155] done synthesizing module 'Decoder' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:1347]
-INFO: [Synth 8-6157] synthesizing module 'Decoder_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2340]
-INFO: [Synth 8-6155] done synthesizing module 'Decoder_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2340]
-INFO: [Synth 8-6155] done synthesizing module 'IDU' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2368]
-INFO: [Synth 8-6157] synthesizing module 'FlushableQueue' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2590]
-INFO: [Synth 8-6155] done synthesizing module 'FlushableQueue' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2590]
-INFO: [Synth 8-6155] done synthesizing module 'Frontend_inorder' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2809]
-INFO: [Synth 8-6157] synthesizing module 'Backend_inorder' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:6766]
-INFO: [Synth 8-6157] synthesizing module 'ISU' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3327]
-INFO: [Synth 8-6155] done synthesizing module 'ISU' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3327]
-INFO: [Synth 8-6157] synthesizing module 'EXU' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:6213]
-INFO: [Synth 8-6157] synthesizing module 'ALU' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3602]
-INFO: [Synth 8-6155] done synthesizing module 'ALU' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3602]
-INFO: [Synth 8-6157] synthesizing module 'UnpipelinedLSU' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4207]
-INFO: [Synth 8-6157] synthesizing module 'LSExecUnit' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3881]
-INFO: [Synth 8-6155] done synthesizing module 'LSExecUnit' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3881]
-INFO: [Synth 8-6157] synthesizing module 'AtomALU' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4165]
-INFO: [Synth 8-6155] done synthesizing module 'AtomALU' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4165]
-INFO: [Synth 8-6155] done synthesizing module 'UnpipelinedLSU' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4207]
-INFO: [Synth 8-6157] synthesizing module 'MDU' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:5006]
-INFO: [Synth 8-6157] synthesizing module 'Multiplier' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4552]
-INFO: [Synth 8-6155] done synthesizing module 'Multiplier' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4552]
-INFO: [Synth 8-6157] synthesizing module 'Divider' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4672]
-INFO: [Synth 8-6155] done synthesizing module 'Divider' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4672]
-INFO: [Synth 8-6155] done synthesizing module 'MDU' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:5006]
-INFO: [Synth 8-6157] synthesizing module 'CSR' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:5167]
-INFO: [Synth 8-6155] done synthesizing module 'CSR' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:5167]
-INFO: [Synth 8-6157] synthesizing module 'MOU' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:6195]
-INFO: [Synth 8-6155] done synthesizing module 'MOU' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:6195]
-INFO: [Synth 8-6155] done synthesizing module 'EXU' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:6213]
-INFO: [Synth 8-6157] synthesizing module 'WBU' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:6723]
-INFO: [Synth 8-6155] done synthesizing module 'WBU' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:6723]
-INFO: [Synth 8-6155] done synthesizing module 'Backend_inorder' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:6766]
-INFO: [Synth 8-6157] synthesizing module 'SimpleBusCrossbarNto1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:7784]
-INFO: [Synth 8-6157] synthesizing module 'LockingArbiter' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:7677]
-INFO: [Synth 8-6155] done synthesizing module 'LockingArbiter' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:7677]
-INFO: [Synth 8-6155] done synthesizing module 'SimpleBusCrossbarNto1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:7784]
-INFO: [Synth 8-6157] synthesizing module 'SimpleBusCrossbarNto1_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:8160]
-INFO: [Synth 8-6157] synthesizing module 'LockingArbiter_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:8017]
-INFO: [Synth 8-6155] done synthesizing module 'LockingArbiter_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:8017]
-INFO: [Synth 8-6155] done synthesizing module 'SimpleBusCrossbarNto1_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:8160]
-INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLB' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9282]
-INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLBExec' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:8447]
-INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLBExec' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:8447]
-INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLBMD' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9123]
-INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLBMD' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9123]
-INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLB' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9282]
-INFO: [Synth 8-6157] synthesizing module 'Cache' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:11242]
-INFO: [Synth 8-6157] synthesizing module 'CacheStage1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9553]
-INFO: [Synth 8-6155] done synthesizing module 'CacheStage1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9553]
-INFO: [Synth 8-6157] synthesizing module 'CacheStage2' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9599]
-INFO: [Synth 8-6155] done synthesizing module 'CacheStage2' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9599]
-INFO: [Synth 8-6157] synthesizing module 'CacheStage3' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9949]
-INFO: [Synth 8-6157] synthesizing module 'Arbiter' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9903]
-INFO: [Synth 8-6155] done synthesizing module 'Arbiter' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9903]
-INFO: [Synth 8-6157] synthesizing module 'Arbiter_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9928]
-INFO: [Synth 8-6155] done synthesizing module 'Arbiter_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9928]
-INFO: [Synth 8-6155] done synthesizing module 'CacheStage3' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9949]
-INFO: [Synth 8-6157] synthesizing module 'SRAMTemplateWithArbiter' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10653]
-INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10482]
-INFO: [Synth 8-6157] synthesizing module 'array_0' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25703]
-INFO: [Synth 8-6157] synthesizing module 'array_0_ext' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25949]
-INFO: [Synth 8-6155] done synthesizing module 'array_0_ext' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25949]
-INFO: [Synth 8-6155] done synthesizing module 'array_0' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25703]
-INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10482]
-INFO: [Synth 8-6157] synthesizing module 'Arbiter_2' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10641]
-INFO: [Synth 8-6155] done synthesizing module 'Arbiter_2' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10641]
-INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplateWithArbiter' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10653]
-INFO: [Synth 8-6157] synthesizing module 'SRAMTemplateWithArbiter_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:11008]
-INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate_2' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10922]
-INFO: [Synth 8-6157] synthesizing module 'array_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25752]
-INFO: [Synth 8-6157] synthesizing module 'array_1_ext' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:26001]
-INFO: [Synth 8-6155] done synthesizing module 'array_1_ext' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:26001]
-INFO: [Synth 8-6155] done synthesizing module 'array_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25752]
-INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate_2' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10922]
-INFO: [Synth 8-6157] synthesizing module 'Arbiter_3' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10990]
-INFO: [Synth 8-6155] done synthesizing module 'Arbiter_3' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10990]
-INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplateWithArbiter_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:11008]
-INFO: [Synth 8-6157] synthesizing module 'Arbiter_4' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:11227]
-INFO: [Synth 8-6155] done synthesizing module 'Arbiter_4' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:11227]
-INFO: [Synth 8-6155] done synthesizing module 'Cache' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:11242]
-INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLB_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:12977]
-INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLBExec_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:12076]
-INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLBExec_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:12076]
-INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLBEmpty_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:12784]
-INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLBEmpty_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:12784]
-INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLBMD_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:12808]
-INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLBMD_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:12808]
-INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLB_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:12977]
-INFO: [Synth 8-6157] synthesizing module 'Cache_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:14549]
-INFO: [Synth 8-6157] synthesizing module 'CacheStage1_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:13411]
-INFO: [Synth 8-6155] done synthesizing module 'CacheStage1_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:13411]
-INFO: [Synth 8-6157] synthesizing module 'CacheStage2_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:13466]
-INFO: [Synth 8-6155] done synthesizing module 'CacheStage2_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:13466]
-INFO: [Synth 8-6157] synthesizing module 'CacheStage3_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:13779]
-INFO: [Synth 8-6155] done synthesizing module 'CacheStage3_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:13779]
-INFO: [Synth 8-6157] synthesizing module 'Arbiter_9' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:14515]
-INFO: [Synth 8-6155] done synthesizing module 'Arbiter_9' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:14515]
-INFO: [Synth 8-6155] done synthesizing module 'Cache_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:14549]
-INFO: [Synth 8-6155] done synthesizing module 'NutCore' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:15525]
-INFO: [Synth 8-6157] synthesizing module 'CoherenceManager' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:19511]
-INFO: [Synth 8-6155] done synthesizing module 'CoherenceManager' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:19511]
-INFO: [Synth 8-6157] synthesizing module 'AXI42SimpleBusConverter' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:19734]
-INFO: [Synth 8-6155] done synthesizing module 'AXI42SimpleBusConverter' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:19734]
-INFO: [Synth 8-6157] synthesizing module 'Prefetcher' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20098]
-INFO: [Synth 8-6155] done synthesizing module 'Prefetcher' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20098]
-INFO: [Synth 8-6157] synthesizing module 'Cache_2' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:22091]
-INFO: [Synth 8-6157] synthesizing module 'CacheStage1_2' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20229]
-INFO: [Synth 8-6155] done synthesizing module 'CacheStage1_2' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20229]
-INFO: [Synth 8-6157] synthesizing module 'CacheStage2_2' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20281]
-INFO: [Synth 8-6155] done synthesizing module 'CacheStage2_2' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20281]
-INFO: [Synth 8-6157] synthesizing module 'CacheStage3_2' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20636]
-INFO: [Synth 8-6157] synthesizing module 'Arbiter_10' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20591]
-INFO: [Synth 8-6155] done synthesizing module 'Arbiter_10' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20591]
-INFO: [Synth 8-6157] synthesizing module 'Arbiter_11' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20615]
-INFO: [Synth 8-6155] done synthesizing module 'Arbiter_11' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20615]
-INFO: [Synth 8-6155] done synthesizing module 'CacheStage3_2' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20636]
-INFO: [Synth 8-6157] synthesizing module 'SRAMTemplateWithArbiter_4' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21517]
-INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate_5' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21346]
-INFO: [Synth 8-6157] synthesizing module 'array_2' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25801]
-INFO: [Synth 8-6157] synthesizing module 'array_2_ext' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:26053]
-INFO: [Synth 8-6155] done synthesizing module 'array_2_ext' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:26053]
-INFO: [Synth 8-6155] done synthesizing module 'array_2' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25801]
-INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate_5' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21346]
-INFO: [Synth 8-6157] synthesizing module 'Arbiter_12' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21505]
-INFO: [Synth 8-6155] done synthesizing module 'Arbiter_12' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21505]
-INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplateWithArbiter_4' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21517]
-INFO: [Synth 8-6157] synthesizing module 'SRAMTemplateWithArbiter_5' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21872]
-INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate_6' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21786]
-INFO: [Synth 8-6157] synthesizing module 'array_3' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25850]
-INFO: [Synth 8-6157] synthesizing module 'array_3_ext' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:26105]
-INFO: [Synth 8-6155] done synthesizing module 'array_3_ext' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:26105]
-INFO: [Synth 8-6155] done synthesizing module 'array_3' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25850]
-INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate_6' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21786]
-INFO: [Synth 8-6157] synthesizing module 'Arbiter_13' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21854]
-INFO: [Synth 8-6155] done synthesizing module 'Arbiter_13' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21854]
-INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplateWithArbiter_5' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21872]
-INFO: [Synth 8-6155] done synthesizing module 'Cache_2' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:22091]
-INFO: [Synth 8-6157] synthesizing module 'SimpleBusAddressMapper' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:22983]
-INFO: [Synth 8-6155] done synthesizing module 'SimpleBusAddressMapper' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:22983]
-INFO: [Synth 8-6157] synthesizing module 'SimpleBus2AXI4Converter' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23010]
-INFO: [Synth 8-6155] done synthesizing module 'SimpleBus2AXI4Converter' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23010]
-INFO: [Synth 8-6157] synthesizing module 'SimpleBusCrossbar1toN' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23180]
-INFO: [Synth 8-6155] done synthesizing module 'SimpleBusCrossbar1toN' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23180]
-INFO: [Synth 8-6157] synthesizing module 'SimpleBus2AXI4Converter_1' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23391]
-INFO: [Synth 8-6155] done synthesizing module 'SimpleBus2AXI4Converter_1' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23391]
-INFO: [Synth 8-6157] synthesizing module 'AXI4CLINT' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23570]
-INFO: [Synth 8-6155] done synthesizing module 'AXI4CLINT' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23570]
-INFO: [Synth 8-6157] synthesizing module 'SimpleBus2AXI4Converter_2' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23833]
-INFO: [Synth 8-6155] done synthesizing module 'SimpleBus2AXI4Converter_2' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23833]
-INFO: [Synth 8-6157] synthesizing module 'AXI4PLIC' [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23990]
-INFO: [Synth 8-6155] done synthesizing module 'AXI4PLIC' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23990]
-INFO: [Synth 8-6155] done synthesizing module 'NutShell' (0#1) [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:24311]
-WARNING: [Synth 8-6014] Unused sequential element reg_RW0_ren_reg was removed.  [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25923]
-WARNING: [Synth 8-3936] Found unconnected internal register 'reqLatch_pc_reg' and it is trimmed from '39' to '11' bits. [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:601]
-WARNING: [Synth 8-3936] Found unconnected internal register 'reqLatch_fuOpType_reg' and it is trimmed from '7' to '4' bits. [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:552]
-WARNING: [Synth 8-6014] Unused sequential element _T_65_reg was removed.  [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:824]
-WARNING: [Synth 8-6014] Unused sequential element _T_256_reg was removed.  [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4051]
-WARNING: [Synth 8-6014] Unused sequential element _T_260_reg was removed.  [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4054]
-WARNING: [Synth 8-3936] Found unconnected internal register 'addrLatch_reg' and it is trimmed from '64' to '3' bits. [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3974]
-WARNING: [Synth 8-6014] Unused sequential element lr_reg was removed.  [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:6146]
-WARNING: [Synth 8-6014] Unused sequential element reg_RW0_ren_reg was removed.  [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25973]
-WARNING: [Synth 8-6014] Unused sequential element reg_RW0_ren_reg was removed.  [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:26025]
-WARNING: [Synth 8-6014] Unused sequential element reg_RW0_ren_reg was removed.  [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:26077]
-WARNING: [Synth 8-6014] Unused sequential element reg_RW0_ren_reg was removed.  [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:26129]
+INFO: [Synth 8-6157] synthesizing module 'NutShell' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:24039]
+INFO: [Synth 8-6157] synthesizing module 'NutCore' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:15253]
+INFO: [Synth 8-6157] synthesizing module 'Frontend_inorder' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2537]
+INFO: [Synth 8-6157] synthesizing module 'IFU_inorder' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:470]
+INFO: [Synth 8-6157] synthesizing module 'BPU_inorder' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:177]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:48]
+INFO: [Synth 8-6157] synthesizing module 'array' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25402]
+INFO: [Synth 8-6157] synthesizing module 'array_ext' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25628]
+INFO: [Synth 8-6155] done synthesizing module 'array_ext' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25628]
+INFO: [Synth 8-6155] done synthesizing module 'array' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25402]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:48]
+INFO: [Synth 8-6155] done synthesizing module 'BPU_inorder' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:177]
+INFO: [Synth 8-6155] done synthesizing module 'IFU_inorder' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:470]
+INFO: [Synth 8-6157] synthesizing module 'NaiveRVCAlignBuffer' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:696]
+INFO: [Synth 8-6155] done synthesizing module 'NaiveRVCAlignBuffer' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:696]
+INFO: [Synth 8-6157] synthesizing module 'IDU' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2096]
+INFO: [Synth 8-6157] synthesizing module 'Decoder' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:1075]
+INFO: [Synth 8-6155] done synthesizing module 'Decoder' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:1075]
+INFO: [Synth 8-6157] synthesizing module 'Decoder_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2068]
+INFO: [Synth 8-6155] done synthesizing module 'Decoder_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2068]
+INFO: [Synth 8-6155] done synthesizing module 'IDU' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2096]
+INFO: [Synth 8-6157] synthesizing module 'FlushableQueue' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2318]
+INFO: [Synth 8-6155] done synthesizing module 'FlushableQueue' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2318]
+INFO: [Synth 8-6155] done synthesizing module 'Frontend_inorder' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:2537]
+INFO: [Synth 8-6157] synthesizing module 'Backend_inorder' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:6494]
+INFO: [Synth 8-6157] synthesizing module 'ISU' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3055]
+INFO: [Synth 8-6155] done synthesizing module 'ISU' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3055]
+INFO: [Synth 8-6157] synthesizing module 'EXU' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:5941]
+INFO: [Synth 8-6157] synthesizing module 'ALU' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3330]
+INFO: [Synth 8-6155] done synthesizing module 'ALU' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3330]
+INFO: [Synth 8-6157] synthesizing module 'UnpipelinedLSU' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3935]
+INFO: [Synth 8-6157] synthesizing module 'LSExecUnit' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3609]
+INFO: [Synth 8-6155] done synthesizing module 'LSExecUnit' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3609]
+INFO: [Synth 8-6157] synthesizing module 'AtomALU' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3893]
+INFO: [Synth 8-6155] done synthesizing module 'AtomALU' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3893]
+INFO: [Synth 8-6155] done synthesizing module 'UnpipelinedLSU' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3935]
+INFO: [Synth 8-6157] synthesizing module 'MDU' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4734]
+INFO: [Synth 8-6157] synthesizing module 'Multiplier' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4280]
+INFO: [Synth 8-6155] done synthesizing module 'Multiplier' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4280]
+INFO: [Synth 8-6157] synthesizing module 'Divider' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4400]
+INFO: [Synth 8-6155] done synthesizing module 'Divider' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4400]
+INFO: [Synth 8-6155] done synthesizing module 'MDU' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4734]
+INFO: [Synth 8-6157] synthesizing module 'CSR' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4895]
+INFO: [Synth 8-6155] done synthesizing module 'CSR' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4895]
+INFO: [Synth 8-6157] synthesizing module 'MOU' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:5923]
+INFO: [Synth 8-6155] done synthesizing module 'MOU' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:5923]
+INFO: [Synth 8-6155] done synthesizing module 'EXU' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:5941]
+INFO: [Synth 8-6157] synthesizing module 'WBU' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:6451]
+INFO: [Synth 8-6155] done synthesizing module 'WBU' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:6451]
+INFO: [Synth 8-6155] done synthesizing module 'Backend_inorder' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:6494]
+INFO: [Synth 8-6157] synthesizing module 'SimpleBusCrossbarNto1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:7512]
+INFO: [Synth 8-6157] synthesizing module 'LockingArbiter' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:7405]
+INFO: [Synth 8-6155] done synthesizing module 'LockingArbiter' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:7405]
+INFO: [Synth 8-6155] done synthesizing module 'SimpleBusCrossbarNto1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:7512]
+INFO: [Synth 8-6157] synthesizing module 'SimpleBusCrossbarNto1_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:7888]
+INFO: [Synth 8-6157] synthesizing module 'LockingArbiter_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:7745]
+INFO: [Synth 8-6155] done synthesizing module 'LockingArbiter_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:7745]
+INFO: [Synth 8-6155] done synthesizing module 'SimpleBusCrossbarNto1_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:7888]
+INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLB' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9010]
+INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLBExec' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:8175]
+INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLBExec' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:8175]
+INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLBMD' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:8851]
+INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLBMD' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:8851]
+INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLB' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9010]
+INFO: [Synth 8-6157] synthesizing module 'Cache' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10970]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9281]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9281]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage2' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9327]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage2' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9327]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage3' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9677]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9631]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9631]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9656]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9656]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage3' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:9677]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplateWithArbiter' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10381]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10210]
+INFO: [Synth 8-6157] synthesizing module 'array_0' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25431]
+INFO: [Synth 8-6157] synthesizing module 'array_0_ext' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25677]
+INFO: [Synth 8-6155] done synthesizing module 'array_0_ext' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25677]
+INFO: [Synth 8-6155] done synthesizing module 'array_0' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25431]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10210]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_2' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10369]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_2' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10369]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplateWithArbiter' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10381]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplateWithArbiter_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10736]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate_2' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10650]
+INFO: [Synth 8-6157] synthesizing module 'array_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25480]
+INFO: [Synth 8-6157] synthesizing module 'array_1_ext' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25729]
+INFO: [Synth 8-6155] done synthesizing module 'array_1_ext' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25729]
+INFO: [Synth 8-6155] done synthesizing module 'array_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25480]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate_2' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10650]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_3' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10718]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_3' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10718]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplateWithArbiter_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10736]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_4' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10955]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_4' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10955]
+INFO: [Synth 8-6155] done synthesizing module 'Cache' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:10970]
+INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLB_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:12705]
+INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLBExec_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:11804]
+INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLBExec_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:11804]
+INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLBEmpty_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:12512]
+INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLBEmpty_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:12512]
+INFO: [Synth 8-6157] synthesizing module 'EmbeddedTLBMD_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:12536]
+INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLBMD_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:12536]
+INFO: [Synth 8-6155] done synthesizing module 'EmbeddedTLB_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:12705]
+INFO: [Synth 8-6157] synthesizing module 'Cache_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:14277]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage1_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:13139]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage1_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:13139]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage2_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:13194]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage2_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:13194]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage3_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:13507]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage3_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:13507]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_9' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:14243]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_9' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:14243]
+INFO: [Synth 8-6155] done synthesizing module 'Cache_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:14277]
+INFO: [Synth 8-6155] done synthesizing module 'NutCore' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:15253]
+INFO: [Synth 8-6157] synthesizing module 'CoherenceManager' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:19239]
+INFO: [Synth 8-6155] done synthesizing module 'CoherenceManager' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:19239]
+INFO: [Synth 8-6157] synthesizing module 'AXI42SimpleBusConverter' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:19462]
+INFO: [Synth 8-6155] done synthesizing module 'AXI42SimpleBusConverter' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:19462]
+INFO: [Synth 8-6157] synthesizing module 'Prefetcher' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:19826]
+INFO: [Synth 8-6155] done synthesizing module 'Prefetcher' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:19826]
+INFO: [Synth 8-6157] synthesizing module 'Cache_2' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21819]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage1_2' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:19957]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage1_2' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:19957]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage2_2' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20009]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage2_2' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20009]
+INFO: [Synth 8-6157] synthesizing module 'CacheStage3_2' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20364]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_10' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20319]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_10' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20319]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_11' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20343]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_11' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20343]
+INFO: [Synth 8-6155] done synthesizing module 'CacheStage3_2' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:20364]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplateWithArbiter_4' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21245]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate_5' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21074]
+INFO: [Synth 8-6157] synthesizing module 'array_2' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25529]
+INFO: [Synth 8-6157] synthesizing module 'array_2_ext' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25781]
+INFO: [Synth 8-6155] done synthesizing module 'array_2_ext' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25781]
+INFO: [Synth 8-6155] done synthesizing module 'array_2' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25529]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate_5' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21074]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_12' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21233]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_12' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21233]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplateWithArbiter_4' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21245]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplateWithArbiter_5' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21600]
+INFO: [Synth 8-6157] synthesizing module 'SRAMTemplate_6' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21514]
+INFO: [Synth 8-6157] synthesizing module 'array_3' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25578]
+INFO: [Synth 8-6157] synthesizing module 'array_3_ext' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25833]
+INFO: [Synth 8-6155] done synthesizing module 'array_3_ext' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25833]
+INFO: [Synth 8-6155] done synthesizing module 'array_3' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25578]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplate_6' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21514]
+INFO: [Synth 8-6157] synthesizing module 'Arbiter_13' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21582]
+INFO: [Synth 8-6155] done synthesizing module 'Arbiter_13' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21582]
+INFO: [Synth 8-6155] done synthesizing module 'SRAMTemplateWithArbiter_5' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21600]
+INFO: [Synth 8-6155] done synthesizing module 'Cache_2' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:21819]
+INFO: [Synth 8-6157] synthesizing module 'SimpleBusAddressMapper' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:22711]
+INFO: [Synth 8-6155] done synthesizing module 'SimpleBusAddressMapper' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:22711]
+INFO: [Synth 8-6157] synthesizing module 'SimpleBus2AXI4Converter' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:22738]
+INFO: [Synth 8-6155] done synthesizing module 'SimpleBus2AXI4Converter' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:22738]
+INFO: [Synth 8-6157] synthesizing module 'SimpleBusCrossbar1toN' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:22908]
+INFO: [Synth 8-6155] done synthesizing module 'SimpleBusCrossbar1toN' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:22908]
+INFO: [Synth 8-6157] synthesizing module 'SimpleBus2AXI4Converter_1' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23119]
+INFO: [Synth 8-6155] done synthesizing module 'SimpleBus2AXI4Converter_1' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23119]
+INFO: [Synth 8-6157] synthesizing module 'AXI4CLINT' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23298]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4CLINT' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23298]
+INFO: [Synth 8-6157] synthesizing module 'SimpleBus2AXI4Converter_2' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23561]
+INFO: [Synth 8-6155] done synthesizing module 'SimpleBus2AXI4Converter_2' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23561]
+INFO: [Synth 8-6157] synthesizing module 'AXI4PLIC' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23718]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4PLIC' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:23718]
+INFO: [Synth 8-6155] done synthesizing module 'NutShell' (0#1) [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:24039]
+WARNING: [Synth 8-6014] Unused sequential element reg_RW0_ren_reg was removed.  [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25651]
+WARNING: [Synth 8-3936] Found unconnected internal register 'reqLatch_pc_reg' and it is trimmed from '39' to '11' bits. [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:329]
+WARNING: [Synth 8-3936] Found unconnected internal register 'reqLatch_fuOpType_reg' and it is trimmed from '7' to '4' bits. [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:280]
+WARNING: [Synth 8-6014] Unused sequential element _T_65_reg was removed.  [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:552]
+WARNING: [Synth 8-6014] Unused sequential element _T_256_reg was removed.  [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3779]
+WARNING: [Synth 8-6014] Unused sequential element _T_260_reg was removed.  [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3782]
+WARNING: [Synth 8-3936] Found unconnected internal register 'addrLatch_reg' and it is trimmed from '64' to '3' bits. [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:3702]
+WARNING: [Synth 8-6014] Unused sequential element lr_reg was removed.  [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:5874]
+WARNING: [Synth 8-6014] Unused sequential element reg_RW0_ren_reg was removed.  [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25701]
+WARNING: [Synth 8-6014] Unused sequential element reg_RW0_ren_reg was removed.  [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25753]
+WARNING: [Synth 8-6014] Unused sequential element reg_RW0_ren_reg was removed.  [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25805]
+WARNING: [Synth 8-6014] Unused sequential element reg_RW0_ren_reg was removed.  [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:25857]
 WARNING: [Synth 8-3917] design NutShell has port io_mem_wstrb[7] driven by constant 1
 WARNING: [Synth 8-3917] design NutShell has port io_mem_wstrb[6] driven by constant 1
 WARNING: [Synth 8-3917] design NutShell has port io_mem_wstrb[5] driven by constant 1
@@ -363,19 +362,19 @@ WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_valid in module CacheSta
 WARNING: [Synth 8-7129] Port io_metaReadBus_resp_data_0_dirty in module CacheStage1_2 is either unconnected or has no load
 INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 ---------------------------------------------------------------------------------
-Finished Synthesize : Time (s): cpu = 00:00:05 ; elapsed = 00:00:07 . Memory (MB): peak = 1296.414 ; gain = 702.176
+Finished Synthesize : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 1999.312 ; gain = 623.652 ; free physical = 6458 ; free virtual = 25238
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 1296.414 ; gain = 702.176
+Finished Constraint Validation : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2011.188 ; gain = 635.527 ; free physical = 6458 ; free virtual = 25238
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xczu19eg-ffvc1760-2-i
 INFO: [Synth 8-6742] Reading net delay rules and data
----------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 1296.414 ; gain = 702.176
 INFO: [Device 21-403] Loading part xczu19eg-ffvc1760-2-i
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2019.191 ; gain = 643.531 ; free physical = 6458 ; free virtual = 25238
 ---------------------------------------------------------------------------------
 WARNING: [Synth 8-7032] RAM "ram_reg" have possible Byte Write pattern, however the data width (84) is not multiple of supported byte widths of 8 or 9 .
 WARNING: [Synth 8-7032] RAM "ram_reg" have possible Byte Write pattern, however the data width (76) is not multiple of supported byte widths of 8 or 9 .
@@ -424,7 +423,7 @@ INFO: [Synth 8-5780] Default cascade height of 1 will be used for URAM '"array_3
 INFO: [Synth 8-6794] RAM ("array_3_ext:/ram_reg") will be automatically implemented using URAM. 
 INFO: [Synth 8-5780] Default cascade height of 1 will be used for URAM '"array_3_ext:/ram_reg"'.
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2197.012 ; gain = 1602.773
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:11 ; elapsed = 00:00:08 . Memory (MB): peak = 2897.855 ; gain = 1522.195 ; free physical = 5461 ; free virtual = 24389
 ---------------------------------------------------------------------------------
 RAM Pipeline Warning: Read Address Register Found For RAM ram_reg. We will not be able to pipeline it. This may degrade performance. 
 RAM Pipeline Warning: Read Address Register Found For RAM ram_reg. We will not be able to pipeline it. This may degrade performance. 
@@ -598,9 +597,9 @@ INFO: [Synth 8-6904] The RAM "EmbeddedTLB_1/mdTLB/tlbmd_0_reg" of size (depth=16
 INFO: [Synth 8-6904] The RAM "EmbeddedTLB_1/mdTLB/tlbmd_1_reg" of size (depth=16 x width=121) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-6904] The RAM "EmbeddedTLB_1/mdTLB/tlbmd_2_reg" of size (depth=16 x width=121) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-6904] The RAM "EmbeddedTLB_1/mdTLB/tlbmd_3_reg" of size (depth=16 x width=121) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
-WARNING: [Synth 8-3936] Found unconnected internal register 'mdu/mul/_T_6_reg' and it is trimmed from '130' to '128' bits. [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4590]
-WARNING: [Synth 8-3936] Found unconnected internal register 'mdu/mul/_T_5_reg' and it is trimmed from '130' to '128' bits. [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4657]
-WARNING: [Synth 8-3936] Found unconnected internal register 'mdu/mul/_T_4_reg' and it is trimmed from '130' to '128' bits. [d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4656]
+WARNING: [Synth 8-3936] Found unconnected internal register 'mdu/mul/_T_6_reg' and it is trimmed from '130' to '128' bits. [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4318]
+WARNING: [Synth 8-3936] Found unconnected internal register 'mdu/mul/_T_5_reg' and it is trimmed from '130' to '128' bits. [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4385]
+WARNING: [Synth 8-3936] Found unconnected internal register 'mdu/mul/_T_4_reg' and it is trimmed from '130' to '128' bits. [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/build/TopMain.v:4384]
 DSP Report: Generating DSP mdu/mul/_T_5_reg, operation Mode is: (A2*B2)'.
 DSP Report: register mdu/mul/_T_5_reg is absorbed into DSP mdu/mul/_T_5_reg.
 DSP Report: register mdu/mul/_T_5_reg is absorbed into DSP mdu/mul/_T_5_reg.
@@ -957,7 +956,7 @@ WARNING: [Synth 8-3332] Sequential element (mdu/mul/_T_5_reg[19]__1) is unused a
 WARNING: [Synth 8-3332] Sequential element (mdu/mul/_T_5_reg[18]__1) is unused and will be removed from module EXU.
 WARNING: [Synth 8-3332] Sequential element (mdu/mul/_T_5_reg[17]__1) is unused and will be removed from module EXU.
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:02:46 ; elapsed = 00:02:56 . Memory (MB): peak = 3581.977 ; gain = 2987.738
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:02:06 ; elapsed = 00:02:05 . Memory (MB): peak = 4132.434 ; gain = 2756.773 ; free physical = 4204 ; free virtual = 23159
 ---------------------------------------------------------------------------------
  Sort Area is NutCore__GB2 mdu/mul/_T_4_reg_0 : 0 0 : 3185 9622 : Used 1 time 0
  Sort Area is NutCore__GB2 mdu/mul/_T_4_reg_0 : 0 1 : 3204 9622 : Used 1 time 0
@@ -1054,7 +1053,7 @@ No constraint files found.
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:02:47 ; elapsed = 00:02:57 . Memory (MB): peak = 3581.977 ; gain = 2987.738
+Finished Timing Optimization : Time (s): cpu = 00:02:07 ; elapsed = 00:02:05 . Memory (MB): peak = 4132.434 ; gain = 2756.773 ; free physical = 4204 ; free virtual = 23159
 ---------------------------------------------------------------------------------
 WARNING: [Synth 8-6057] Memory: "ram/array/array_3_ext/ram_reg" defined in module: "Cache/dataArray" implemented as Ultra-Ram has no pipeline registers. It is recommended to use pipeline registers to achieve high performance.
 ---------------------------------------------------------------------------------
@@ -1141,7 +1140,7 @@ INFO: [Synth 8-7052] The timing for the instance Cache/dataArray/ram/array/array
 INFO: [Synth 8-7052] The timing for the instance Cache/dataArray/ram/array/array_3_ext/ram_reg_2_uram_0 (implemented as a Ultra RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 INFO: [Synth 8-7052] The timing for the instance Cache/dataArray/ram/array/array_3_ext/ram_reg_3_uram_0 (implemented as a Ultra RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:02:53 ; elapsed = 00:03:03 . Memory (MB): peak = 3581.977 ; gain = 2987.738
+Finished Technology Mapping : Time (s): cpu = 00:02:10 ; elapsed = 00:02:08 . Memory (MB): peak = 4132.434 ; gain = 2756.773 ; free physical = 4204 ; free virtual = 23159
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -1159,37 +1158,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:02:59 ; elapsed = 00:03:09 . Memory (MB): peak = 3581.977 ; gain = 2987.738
+Finished IO Insertion : Time (s): cpu = 00:02:12 ; elapsed = 00:02:10 . Memory (MB): peak = 4132.434 ; gain = 2756.773 ; free physical = 4203 ; free virtual = 23159
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:02:59 ; elapsed = 00:03:09 . Memory (MB): peak = 3581.977 ; gain = 2987.738
+Finished Renaming Generated Instances : Time (s): cpu = 00:02:12 ; elapsed = 00:02:11 . Memory (MB): peak = 4132.434 ; gain = 2756.773 ; free physical = 4203 ; free virtual = 23159
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:03:01 ; elapsed = 00:03:11 . Memory (MB): peak = 3581.977 ; gain = 2987.738
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:02:13 ; elapsed = 00:02:11 . Memory (MB): peak = 4132.434 ; gain = 2756.773 ; free physical = 4203 ; free virtual = 23159
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:03:01 ; elapsed = 00:03:11 . Memory (MB): peak = 3581.977 ; gain = 2987.738
+Finished Renaming Generated Ports : Time (s): cpu = 00:02:13 ; elapsed = 00:02:11 . Memory (MB): peak = 4132.434 ; gain = 2756.773 ; free physical = 4203 ; free virtual = 23159
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:03:02 ; elapsed = 00:03:12 . Memory (MB): peak = 3581.977 ; gain = 2987.738
+Finished Handling Custom Attributes : Time (s): cpu = 00:02:13 ; elapsed = 00:02:12 . Memory (MB): peak = 4132.434 ; gain = 2756.773 ; free physical = 4203 ; free virtual = 23159
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:03:02 ; elapsed = 00:03:12 . Memory (MB): peak = 3581.977 ; gain = 2987.738
+Finished Renaming Generated Nets : Time (s): cpu = 00:02:13 ; elapsed = 00:02:12 . Memory (MB): peak = 4132.434 ; gain = 2756.773 ; free physical = 4204 ; free virtual = 23160
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
@@ -1309,21 +1308,21 @@ Report Instance Areas:
 |30    |        mdu                 |MDU                                                         |  3122|
 |31    |          div               |Divider                                                     |  1427|
 |32    |          mul               |Multiplier                                                  |  1693|
-|33    |            _T_4_reg        |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg_funnel        |     8|
-|34    |            _T_40           |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__0_funnel__1     |     8|
+|33    |            _T_4_reg        |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg__0_funnel__1  |     8|
+|34    |            _T_40           |\nutcore/Backend_inorder/exu/mdu/mul/_T_40_funnel           |     8|
 |35    |            _T_5_reg__0     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__0_funnel     |     8|
-|36    |            _T_4_reg__0     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg_funnel__2     |     8|
-|37    |            _T_40__0        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__0_funnel        |     8|
-|38    |            _T_5_reg__1     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__3_funnel__1  |     8|
-|39    |            _T_4_reg__1     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg_funnel__1     |     8|
+|36    |            _T_4_reg__0     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg__0_funnel     |     8|
+|37    |            _T_40__0        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40_funnel__1        |     8|
+|38    |            _T_5_reg__1     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__4_funnel__1  |     8|
+|39    |            _T_4_reg__1     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg__0_funnel__2  |     8|
 |40    |            _T_40__1        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__1_funnel        |     8|
-|41    |            _T_5_reg__2     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__3_funnel__3  |     8|
-|42    |            _T_4_reg__2     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg__3_funnel__1  |     8|
+|41    |            _T_5_reg__2     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__4_funnel__2  |     8|
+|42    |            _T_4_reg__2     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg__2_funnel     |     8|
 |43    |            _T_40__2        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__1_funnel__2     |     8|
-|44    |            _T_5_reg__3     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__3_funnel     |     8|
-|45    |            _T_4_reg__3     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg__3_funnel     |     8|
+|44    |            _T_5_reg__3     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__4_funnel__3  |     8|
+|45    |            _T_4_reg__3     |\nutcore/Backend_inorder/exu/mdu/mul/_T_4_reg__2_funnel__1  |     8|
 |46    |            _T_40__3        |\nutcore/Backend_inorder/exu/mdu/mul/_T_40__1_funnel__1     |     8|
-|47    |            _T_5_reg__4     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__3_funnel__2  |     8|
+|47    |            _T_5_reg__4     |\nutcore/Backend_inorder/exu/mdu/mul/_T_5_reg__4_funnel     |     8|
 |48    |        mou                 |MOU                                                         |    14|
 |49    |      isu                   |ISU                                                         |   355|
 |50    |    Cache                   |Cache                                                       |  3472|
@@ -1374,18 +1373,18 @@ Report Instance Areas:
 |95    |    inputArb                |LockingArbiter                                              |    18|
 +------+----------------------------+------------------------------------------------------------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:03:02 ; elapsed = 00:03:12 . Memory (MB): peak = 3581.977 ; gain = 2987.738
+Finished Writing Synthesis Report : Time (s): cpu = 00:02:13 ; elapsed = 00:02:12 . Memory (MB): peak = 4132.434 ; gain = 2756.773 ; free physical = 4204 ; free virtual = 23160
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 1753 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:03:02 ; elapsed = 00:03:12 . Memory (MB): peak = 3581.977 ; gain = 2987.738
-Synthesis Optimization Complete : Time (s): cpu = 00:03:02 ; elapsed = 00:03:12 . Memory (MB): peak = 3581.977 ; gain = 2987.738
+Synthesis Optimization Runtime : Time (s): cpu = 00:02:13 ; elapsed = 00:02:12 . Memory (MB): peak = 4132.434 ; gain = 2756.773 ; free physical = 4204 ; free virtual = 23160
+Synthesis Optimization Complete : Time (s): cpu = 00:02:13 ; elapsed = 00:02:12 . Memory (MB): peak = 4132.441 ; gain = 2756.773 ; free physical = 4204 ; free virtual = 23160
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.606 . Memory (MB): peak = 3581.977 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00.16 ; elapsed = 00:00:00.16 . Memory (MB): peak = 4132.441 ; gain = 0.000 ; free physical = 4505 ; free virtual = 23461
 INFO: [Netlist 29-17] Analyzing 759 Unisim elements for replacement
-INFO: [Netlist 29-28] Unisim Transformation completed in 1 CPU seconds
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 3581.977 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4188.461 ; gain = 0.000 ; free physical = 4492 ; free virtual = 23460
 INFO: [Project 1-111] Unisim Transformation Summary:
   A total of 394 instances were transformed.
   BUFG => BUFGCE: 1 instance 
@@ -1395,13 +1394,14 @@ INFO: [Project 1-111] Unisim Transformation Summary:
   RAM256X1D => RAM256X1D (MUXF7(x4), MUXF8(x2), RAMD64E(x8)): 6 instances
   RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 60 instances
 
-The system cannot find the path specified.
 Synth Design complete | Checksum: 2cb6894
 INFO: [Common 17-83] Releasing license: Synthesis
 312 Infos, 334 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:03:12 ; elapsed = 00:03:22 . Memory (MB): peak = 3581.977 ; gain = 2994.637
-Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.037 . Memory (MB): peak = 3581.977 ; gain = 0.000
-INFO: [Common 17-1381] The checkpoint 'd:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.runs/synth_1/NutShell.dcp' has been generated.
+synth_design: Time (s): cpu = 00:02:19 ; elapsed = 00:02:15 . Memory (MB): peak = 4188.496 ; gain = 2829.746 ; free physical = 4492 ; free virtual = 23460
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 3727.242; main = 3400.350; forked = 359.576
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 5133.234; main = 4188.465; forked = 1000.797
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.05 ; elapsed = 00:00:00.02 . Memory (MB): peak = 4212.473 ; gain = 0.000 ; free physical = 4490 ; free virtual = 23462
+INFO: [Common 17-1381] The checkpoint '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.runs/synth_1/NutShell.dcp' has been generated.
 INFO: [runtcl-4] Executing : report_utilization -file NutShell_utilization_synth.rpt -pb NutShell_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Sat Feb 17 11:06:45 2024...
+INFO: [Common 17-206] Exiting Vivado at Mon Feb 19 02:14:56 2024...

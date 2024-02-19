@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xczu19eg-ffvc1760-2-i" LaunchTime="1708167792" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/NutShell.dcp">
-  <File Type="PA-TCL" Name="NutShell.tcl"/>
-  <File Type="RDS-PROPCONSTRS" Name="NutShell_drc_synth.rpt"/>
-  <File Type="REPORTS-TCL" Name="NutShell_reports.tcl"/>
-  <File Type="RDS-RDS" Name="NutShell.vds"/>
-  <File Type="RDS-UTIL" Name="NutShell_utilization_synth.rpt"/>
-  <File Type="RDS-UTIL-PB" Name="NutShell_utilization_synth.pb"/>
-  <File Type="RDS-DCP" Name="NutShell.dcp"/>
-  <File Type="VDS-TIMINGSUMMARY" Name="NutShell_timing_summary_synth.rpt"/>
+<GenRun Id="synth_1" LaunchPart="xczu19eg-ffvc1760-2-i" LaunchTime="1708308754" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/NutShell.dcp">
   <File Type="VDS-TIMING-PB" Name="NutShell_timing_summary_synth.pb"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="NutShell_timing_summary_synth.rpt"/>
+  <File Type="RDS-DCP" Name="NutShell.dcp"/>
+  <File Type="RDS-UTIL-PB" Name="NutShell_utilization_synth.pb"/>
+  <File Type="RDS-UTIL" Name="NutShell_utilization_synth.rpt"/>
+  <File Type="RDS-PROPCONSTRS" Name="NutShell_drc_synth.rpt"/>
+  <File Type="RDS-RDS" Name="NutShell.vds"/>
+  <File Type="REPORTS-TCL" Name="NutShell_reports.tcl"/>
+  <File Type="PA-TCL" Name="NutShell.tcl"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PPRDIR/../NutShell/build/TopMain.v">

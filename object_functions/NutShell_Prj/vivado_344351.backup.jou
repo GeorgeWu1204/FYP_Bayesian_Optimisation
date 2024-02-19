@@ -1,0 +1,17 @@
+#-----------------------------------------------------------
+# Vivado v2023.2 (64-bit)
+# SW Build 4029153 on Fri Oct 13 20:13:54 MDT 2023
+# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+# Start of session at: Mon Feb 19 01:21:55 2024
+# Process ID: 344351
+# Current directory: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj
+# Command line: vivado
+# Log file: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/vivado.log
+# Journal file: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/vivado.jou
+# Running On: cg1710-pi, OS: Linux, CPU Frequency: 4460.805 MHz, CPU Physical cores: 4, Host memory: 33449 MB
+#-----------------------------------------------------------
+start_gui
+open_project /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.xpr
+update_compile_order -fileset sources_1
+pwd

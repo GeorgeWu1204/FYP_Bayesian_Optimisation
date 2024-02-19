@@ -1,14 +1,14 @@
 #-----------------------------------------------------------
 # Vivado v2023.2 (64-bit)
-# SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
+# SW Build 4029153 on Fri Oct 13 20:13:54 MDT 2023
 # IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
 # SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
-# Start of session at: Sat Feb 17 11:03:14 2024
-# Process ID: 16396
-# Current directory: d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.runs/synth_1
-# Command line: vivado.exe -log NutShell.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source NutShell.tcl
-# Log file: d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.runs/synth_1/NutShell.vds
-# Journal file: d:/Imperial/Year4/MasterThesis/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.runs/synth_1\vivado.jou
-# Running On: GeorgeWu_ROG, OS: Windows, CPU Frequency: 2419 MHz, CPU Physical cores: 24, Host memory: 25369 MB
+# Start of session at: Mon Feb 19 02:12:35 2024
+# Process ID: 345259
+# Current directory: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.runs/synth_1
+# Command line: vivado -log NutShell.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source NutShell.tcl
+# Log file: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.runs/synth_1/NutShell.vds
+# Journal file: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/NutShell_Prj.runs/synth_1/vivado.jou
+# Running On: cg1710-pi, OS: Linux, CPU Frequency: 4493.614 MHz, CPU Physical cores: 4, Host memory: 33449 MB
 #-----------------------------------------------------------
 source NutShell.tcl -notrace

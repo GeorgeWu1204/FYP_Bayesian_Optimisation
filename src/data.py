@@ -238,7 +238,7 @@ class Explore_Data(Data_Set):
             if utilisation_percentage is None:
                 self.param_tuner.tune_parameter(sample_input)
                 # Regenerate the customised processor
-                self.param_tuner.regenerate_design_by_virtual_machine()
+                self.param_tuner.regenerate_design_locally()
                 # Run the Synthesis on Vivado
                 self.param_tuner.run_synthesis()
                 # Store the utilisation result
