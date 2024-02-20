@@ -52,12 +52,12 @@ TRAIN_SET_DISTURBANCE_RANGE = 0.01                  # noise standard deviation f
 TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2                # acceptable distance between the rounded vertex and the real vertex
 
 # Model Settings
-NUM_RESTARTS = 2                # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 2        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
+NUM_RESTARTS = 4                # number of starting points for BO for optimize_acqf
+NUM_OF_INITIAL_POINT = 32       # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
 N_BATCH = 10                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
-MC_SAMPLES = 1                  # number of MC samples for qNEI
+MC_SAMPLES = 12                 # number of MC samples for qNEI
 
 # Runtime Settings
 verbose = True
@@ -71,7 +71,7 @@ ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, OBJECTIVES_TO_OPT
 
 #normalise objective to ensure the same scale
 obj_normalized_factors = list(data_set.output_normalised_factors.values())
-sampler_generator = initial_sampler(INPUT_DATA_DIM, constraint_set, data_set, t_type, device)
+sampler_generator = initial_sampler(INPUT_DATA_DIM, OBJECTIVE_DIM, constraint_set, data_set, t_type, device)
 train_set_storage = train_set_records(INPUT_NORMALIZED_FACTOR, obj_normalized_factors, list(self_constraints.values()), ref_points, OBJECTIVES_TO_OPTIMISE_DIM, TRAIN_SET_ACCEPTABLE_THRESHOLD, TRAIN_SET_DISTURBANCE_RANGE, t_type, device)
 
 if plot_posterior:
@@ -88,7 +88,7 @@ def calculate_hypervolume(ref_points, train_obj):
 
 def generate_initial_data():
     """generate training data"""
-    unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, OBJECTIVE_DIM, data_set, obj_normalized_factors)
+    unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set, obj_normalized_factors)
     train_obj = torch.cat([normalised_objs[...,:OBJECTIVES_TO_OPTIMISE_DIM], con_objs], dim=-1)
     # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
     generate_size = train_obj.shape[0]
@@ -135,9 +135,9 @@ def build_qNEHVI_acqf(model, train_x, sampler):
 
 def optimize_acqf_and_get_observation(acq_func, constraint_bounds):
     """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
-    unnormalised_train_x, *_ = sampler_generator.generate_valid_initial_data(NUM_RESTARTS, OBJECTIVE_DIM, data_set, obj_normalized_factors)
-    print("unnormalised_train_x dim", unnormalised_train_x.shape)
+    unnormalised_train_x = sampler_generator.generate_initial_data(NUM_RESTARTS)
     sampled_initial_conditions = unnormalised_train_x.unsqueeze(1) # to match the dimension n * 1 * m
+    print("sampled_initial_conditions: ", sampled_initial_conditions)
     candidates, _ = optimize_acqf(
         acq_function=acq_func,
         bounds=constraint_bounds,
@@ -149,7 +149,9 @@ def optimize_acqf_and_get_observation(acq_func, constraint_bounds):
     )
     # observe new values
     new_x = candidates.detach()
+    print("new_x: ", new_x)
     valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
+    print("valid_generated_sample: ", valid_generated_sample)
     new_normalised_obj = utils.normalise_output_data(new_exact_obj, obj_normalized_factors, device)
     new_con_obj = data_set.check_qNEHVI_constraints(new_normalised_obj)
     if new_con_obj.item() <= 0.0:
@@ -183,8 +185,10 @@ for trial in range (1, N_TRIALS + 1):
         train_obj_ei,
         hyper_vol_ei,
     ) = generate_initial_data()
-    print("train_x_ei dim", train_x_ei.shape)
-    print("train_obj_ei dim", train_obj_ei.shape)
+    print("<----------------Initial Data--------------->")
+    print("train_x_ei: ", train_x_ei)
+    print("train_obj_ei: ", train_obj_ei)
+    print("<------------------------------------------->")
     train_set_storage.store_initial_data(train_x_ei)
     mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
     #reset the best observation
@@ -211,14 +215,14 @@ for trial in range (1, N_TRIALS + 1):
             # posterior_examiner.examine_posterior(model_ei.subset_output([posterior_objective_index]), iteration)
             posterior_examiner.examine_acq_function(acqf, iteration)
         #--------------for debug------------------
-        if debug:
-            if valid_generated_sample:
-                print("new_x_ei: ", new_x_ei)
-                print("recovered new_x_ei: ", utils.recover_all_input_data(new_x_ei.squeeze(0), INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES,INPUT_OFFSETS, t_type, device))
-                print("new_exact_obj_ei: ", new_exact_obj_ei)
-                print("hyper_vol: ", hyper_vol)
-            else:
-                print("No valid sample found")
+        # if debug:
+        #     if valid_generated_sample:
+        #         print("new_x_ei: ", new_x_ei)
+        #         print("recovered new_x_ei: ", utils.recover_all_input_data(new_x_ei.squeeze(0), INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES,INPUT_OFFSETS, t_type, device))
+        #         print("new_exact_obj_ei: ", new_exact_obj_ei)
+        #         print("hyper_vol: ", hyper_vol)
+        #     else:
+        #         print("No valid sample found")
         #-----------------------------------------
 
         # update training points

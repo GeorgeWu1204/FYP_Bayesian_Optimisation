@@ -20,20 +20,6 @@ class Data_Sample:
             self.PPA = {}
             for obj in objs:
                 self.PPA[obj] = data[1][obj]
-    def print_constraints(self):
-        print("Constraints:")
-        for k, v in self.Constraints.items():
-            print(f"{k} = {v}")
-
-    def print_cycle_count(self):
-        print("Cycle count:")
-        for k, v in self.Cycle_count.items():
-            print(f"{k} = {v}")
-    
-    def print_ppa(self):
-        print("PPA:")
-        for k, v in self.PPA.items():
-            print(f"{k} = {v}")
     def get_ppa(self, obj):
         return self.PPA.get(obj, None)   
 
@@ -158,7 +144,6 @@ def read_data_from_txt(file_name, objs, scales, input_data_normalized_factors):
     with open(file_name, 'r') as f:
         content = f.read()
         raw_data = ast.literal_eval(content)
-        print("objs", objs) 
         data_set = Data_Set(raw_data, objs, scales, input_data_normalized_factors, 'txt')
     return data_set
 
@@ -204,7 +189,7 @@ class Explore_Data(Data_Set):
         self.best_value = {}
         # TODO: worst value selection 
         for obj in list(objs.keys()):
-            self.output_normalised_factors[obj] = 100.0
+            self.output_normalised_factors[obj] = 10.0
             if objs.get(obj, None) == 'minimise':
                     self.best_value[obj] = 0.0
                     self.worst_value[obj] = 10.0
@@ -287,7 +272,6 @@ class create_data_set:
         self.objective_name = list(objective_name)
         self.names = input_name + objective_name
         self.file_name = '../object_functions/Dataset/' + file_name + '_dataset_record.txt'
-        print("self.file_name ", self.file_name)
         match_file = True
         with open(self.file_name, 'r') as file:
             line = file.readline()

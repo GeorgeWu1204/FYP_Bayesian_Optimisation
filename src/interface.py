@@ -4,8 +4,6 @@ def fill_constraints(self_constraints, coupled_constraints, device):
     """this function is used to fill the constraints in the interface"""
     # self_constraints: {var_name: [lower_bound, upper_bound, scale]}
     # coupled_constraints: [{var_name: [lower_bound, upper_bound], var_name: [lower_bound, upper_bound]},... ]
-    print(self_constraints)
-    print(coupled_constraints)
     input_dim = len(self_constraints)
     input_scales = [1] * input_dim
     input_normalized_factor = [1] * input_dim

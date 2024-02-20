@@ -99,3 +99,26 @@ NrExtIntr, MMIOSize, LUT as Logic, CLB Registers, CARRY8
 6.0, 1.0, 2.65, 1.22, 0.55
 10.0, 8.0, 2.68, 1.24, 0.55
 10.0, 3.0, failed
+37.0, 37.0, failed
+46.0, 28.0, failed
+46.0, 37.0, failed
+46.0, 46.0, failed
+55.0, 37.0, failed
+19.0, 37.0, failed
+19.0, 46.0, failed
+19.0, 55.0, failed
+28.0, 46.0, failed
+19.0, 64.0, failed
+19.0, 73.0, failed
+19.0, 82.0, failed
+28.0, 73.0, failed
+28.0, 82.0, failed
+37.0, 82.0, failed
+64.0, 46.0, failed
+73.0, 37.0, failed
+73.0, 46.0, failed
+73.0, 55.0, failed
+82.0, 46.0, failed
+28.0, 55.0, failed
+28.0, 64.0, failed
+37.0, 73.0, failed

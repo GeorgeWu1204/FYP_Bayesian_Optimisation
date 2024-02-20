@@ -27,13 +27,13 @@ HasL2cache = true
 HasPrefetch = true
 IsRV32 = false
 MMIOBase = 0x40000000
-MMIOSize = 0x30000000
+MMIOSize = 0x490000000
 MemMapBase = 0x0
 MemMapRegionBits = 0
 MmodeOnly = false
-NrExtIntr = 10
+NrExtIntr = 37
 ResetVector = 0x80000000
-[[35minfo[0m] [0.001] Elaborating design...
+[[35minfo[0m] [0.000] Elaborating design...
 [[31merror[0m] java.lang.IllegalArgumentException: requirement failed
 [[31merror[0m] 	...
 [[31merror[0m] 	at nutcore.AddressSpace$$anonfun$isMMIO$1.apply(NutCore.scala:84)
