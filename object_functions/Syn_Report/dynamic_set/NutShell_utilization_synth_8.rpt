@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date         : Mon Feb 19 16:13:15 2024
+| Date         : Tue Feb 20 08:16:24 2024
 | Host         : cg1710-pi running 64-bit Ubuntu 22.04.4 LTS
 | Command      : report_utilization -file ../Syn_Report/NutShell_utilization_synth.rpt
 | Design       : NutShell
@@ -32,8 +32,8 @@ Table of Contents
 +----------------------------+-------+-------+------------+-----------+-------+
 |          Site Type         |  Used | Fixed | Prohibited | Available | Util% |
 +----------------------------+-------+-------+------------+-----------+-------+
-| CLB LUTs*                  | 14188 |     0 |          0 |    522720 |  2.71 |
-|   LUT as Logic             | 13657 |     0 |          0 |    522720 |  2.61 |
+| CLB LUTs*                  | 14171 |     0 |          0 |    522720 |  2.71 |
+|   LUT as Logic             | 13640 |     0 |          0 |    522720 |  2.61 |
 |   LUT as Memory            |   531 |     0 |          0 |    161280 |  0.33 |
 |     LUT as Distributed RAM |   530 |     0 |            |           |       |
 |     LUT as Shift Register  |     1 |     0 |            |           |       |
@@ -166,15 +166,15 @@ Warning! LUT value is adjusted to account for LUT combining.
 | Ref Name |  Used | Functional Category |
 +----------+-------+---------------------+
 | FDRE     | 12399 |            Register |
-| LUT6     |  4667 |                 CLB |
-| LUT3     |  4312 |                 CLB |
-| LUT5     |  3209 |                 CLB |
-| LUT4     |  2703 |                 CLB |
+| LUT6     |  4657 |                 CLB |
+| LUT3     |  4319 |                 CLB |
+| LUT5     |  3201 |                 CLB |
+| LUT4     |  2700 |                 CLB |
 | LUT2     |  1177 |                 CLB |
 | RAMD32   |   842 |                 CLB |
 | OBUF     |   644 |                 I/O |
 | CARRY8   |   360 |                 CLB |
-| LUT1     |   353 |                 CLB |
+| LUT1     |   355 |                 CLB |
 | INBUF    |   310 |                 I/O |
 | IBUFCTRL |   310 |              Others |
 | FDSE     |   232 |            Register |

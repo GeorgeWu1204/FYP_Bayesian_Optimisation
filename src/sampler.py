@@ -10,11 +10,15 @@ class initial_sampler:
         self.data_set = data_set
         self.type = gen_type
         self.device = gen_device
+        self.sample_counter = 0  # Introduce a sample counter to add variability to the seed
 
     def generate_samples(self, num_samples):
-        # Use current time as seed for the Sobol sampler
-        current_time_seed = int(time.time())
-        self.sampler = qmc.Sobol(d=self.input_dim, scramble=True, seed=current_time_seed)
+        # Dynamic seeding mechanism: combine time and sample counter
+        seed = int(time.time()) + self.sample_counter
+        self.sample_counter += 1  # Increment counter to ensure different seeds in successive calls
+        
+        self.sampler = qmc.Sobol(d=self.input_dim, scramble=True, seed=seed)
+        
         # Generate samples
         samples = torch.tensor(self.sampler.random(n=num_samples), device=self.device, dtype=self.type)
         return samples
@@ -27,13 +31,19 @@ class initial_sampler:
         normalised_objs = torch.empty((num_samples, output_dim), device=self.device, dtype=self.type)
         valid_sample_index = 0
         # print("possible_initial_tensor: ", possible_initial_tensor)
-        while (valid_sample_index) == 0:
+        while (valid_sample_index) <= int(num_samples/2):
             possible_initial_tensor = self.generate_samples(num_samples)
             for i in range(num_samples):
                 if self.constraint_set.check_single_point_meet_constraint(possible_initial_tensor[i,:]) == False:
                     continue
+                if any(possible_initial_tensor[i,:] < 0) or any(possible_initial_tensor[i,:] > 1):
+                    print("possible_initial_tensor[i,:]: ", possible_initial_tensor[i,:])
+                    quit()
                 # check internal constraints
-                possible_obj = data_set.find_ppa_result(possible_initial_tensor[i:i+1,:])
+                valid_sample, possible_obj = data_set.find_ppa_result(possible_initial_tensor[i:i+1,:])
+                # if the generated desgin does not meet the internal constraints that are not disclosed in the spec.
+                if valid_sample == False:
+                    continue
                 normalised_obj = normalise_output_data(possible_obj, obj_normalized_factors, self.device)
                 print("normalised_obj: ", normalised_obj)
                 con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
@@ -44,6 +54,8 @@ class initial_sampler:
                     con_objs[valid_sample_index] = con_obj
                     normalised_objs[valid_sample_index] = normalised_obj
                     valid_sample_index += 1
+                    if valid_sample_index >= num_samples:
+                        return train_x, exact_objs, con_objs, normalised_objs
 
 
         return train_x[:valid_sample_index, : ], exact_objs[:valid_sample_index, :], con_objs[:valid_sample_index, :], normalised_objs[:valid_sample_index, :]

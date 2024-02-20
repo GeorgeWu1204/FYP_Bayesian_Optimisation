@@ -114,7 +114,7 @@ def parse_constraints(filename):
     return self_constraints, coupled_constraints, input_constant, output_objective, output_constraints, objective_function_category, parameter_tuning_obj
 
 if __name__ == '__main__':
-    self_constraints, coupled_constraints, input_constant, output_objective, output_constraints, objective_function_category, parameter_tuning_obj = parse_constraints('../data/input_spec2.txt')
+    self_constraints, coupled_constraints, input_constant, output_objective, output_constraints, objective_function_category, parameter_tuning_obj = parse_constraints('../specification/input_spec2.txt')
     print(self_constraints)
     print(coupled_constraints)
     print(output_objective)

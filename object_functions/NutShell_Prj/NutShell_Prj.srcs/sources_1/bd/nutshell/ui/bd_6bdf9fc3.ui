@@ -1,48 +1,48 @@
 {
    "ActiveEmotionalView":"Default View",
    "Default View_ScaleFactor":"1.0",
-   "Default View_TopLeft":"-502,-94",
+   "Default View_TopLeft":"-227,881",
    "ExpandedHierarchyInLayout":"",
-   "guistr":"# # String gsaved with Nlview 7.5.8 2022-09-21 7111 VDI=41 GEI=38 GUI=JA:10.0
+   "guistr":"# # String gsaved with Nlview 7.5.8 2022-09-21 7111 VDI=41 GEI=38 GUI=JA:10.0 TLS
 #  -string -flagsOSRD
-preplace port AXI_DMA -pg 1 -lvl 0 -x 0 -y 210 -defaultsOSRD
-preplace port AXI_MEM -pg 1 -lvl 6 -x 1760 -y 330 -defaultsOSRD
-preplace port AXI_MMIO -pg 1 -lvl 6 -x 1760 -y 550 -defaultsOSRD
-preplace port port-id_core_clk -pg 1 -lvl 0 -x 0 -y 110 -defaultsOSRD
-preplace port port-id_corerstn -pg 1 -lvl 0 -x 0 -y 130 -defaultsOSRD
-preplace port port-id_uncore_clk -pg 1 -lvl 0 -x 0 -y 230 -defaultsOSRD
-preplace port port-id_uncorerstn -pg 1 -lvl 0 -x 0 -y 250 -defaultsOSRD
-preplace portBus intrs -pg 1 -lvl 0 -x 0 -y 150 -defaultsOSRD
-preplace inst NutShell_0 -pg 1 -lvl 4 -x 1170 -y 340 -defaultsOSRD
-preplace inst axi_interconnect_0 -pg 1 -lvl 3 -x 830 -y 310 -defaultsOSRD
-preplace inst axi_interconnect_1 -pg 1 -lvl 5 -x 1590 -y 550 -defaultsOSRD
-preplace inst axi_interconnect_2 -pg 1 -lvl 5 -x 1590 -y 330 -defaultsOSRD
-preplace inst axi_protocol_convert_0 -pg 1 -lvl 1 -x 180 -y 230 -defaultsOSRD
-preplace inst axi_protocol_convert_1 -pg 1 -lvl 2 -x 490 -y 250 -defaultsOSRD
-preplace inst system_ila_0 -pg 1 -lvl 5 -x 1590 -y 110 -defaultsOSRD
-preplace inst util_vector_logic_0 -pg 1 -lvl 3 -x 830 -y 490 -defaultsOSRD
-preplace netloc NutShell_0_io_ila_InstrCnt 1 4 1 1440 170n
-preplace netloc NutShell_0_io_ila_WBUpc 1 4 1 1340 70n
-preplace netloc NutShell_0_io_ila_WBUrfData 1 4 1 1350 150n
-preplace netloc NutShell_0_io_ila_WBUrfDest 1 4 1 1380 130n
-preplace netloc NutShell_0_io_ila_WBUrfWen 1 4 1 1370 110n
-preplace netloc NutShell_0_io_ila_WBUvalid 1 4 1 1360 90n
-preplace netloc c_shift_ram_0_Q 1 0 5 NJ 130 NJ 130 670 190 NJ 190 1390
-preplace netloc core_clk_1 1 0 5 NJ 110 NJ 110 680 430 990 470 1430
-preplace netloc intrs_1 1 0 4 NJ 150 NJ 150 NJ 150 980J
-preplace netloc uncore_clk_1 1 0 5 30 310 340 170 660 180 NJ 180 1400
-preplace netloc uncorerstn_2 1 0 5 20 320 330 160 650 550 NJ 550 1410
-preplace netloc util_vector_logic_0_Res 1 3 1 1000J 350n
-preplace netloc M_AXI_DMA_1 1 0 1 NJ 210
-preplace netloc NutShell_0_io_mem 1 4 1 N 270
-preplace netloc NutShell_0_io_mmio 1 4 1 1420 290n
-preplace netloc S00_AXI_2 1 2 1 N 250
-preplace netloc axi_clock_converter_0_M_AXI 1 5 1 NJ 330
-preplace netloc axi_interconnect_0_M00_AXI 1 3 1 N 310
-preplace netloc axi_interconnect_1_M00_AXI 1 5 1 NJ 550
-preplace netloc axi_protocol_convert_0_M_AXI 1 1 1 N 230
-levelinfo -pg 1 0 180 490 830 1170 1590 1760
-pagesize -pg 1 -db -bbox -sgen -120 0 1880 660
+preplace port AXI_DMA -pg 1 -lvl 0 -x 0 -y 480 -defaultsOSRD
+preplace port AXI_MEM -pg 1 -lvl 6 -x 1780 -y 600 -defaultsOSRD
+preplace port AXI_MMIO -pg 1 -lvl 6 -x 1780 -y 820 -defaultsOSRD
+preplace port port-id_coreclk -pg 1 -lvl 0 -x 0 -y 620 -defaultsOSRD
+preplace port port-id_corerstn -pg 1 -lvl 0 -x 0 -y 420 -defaultsOSRD
+preplace port port-id_uncoreclk -pg 1 -lvl 0 -x 0 -y 500 -defaultsOSRD
+preplace port port-id_uncorerstn -pg 1 -lvl 0 -x 0 -y 520 -defaultsOSRD
+preplace portBus intrs -pg 1 -lvl 0 -x 0 -y 830 -defaultsOSRD
+preplace inst NutShell_0 -pg 1 -lvl 4 -x 1180 -y 610 -defaultsOSRD
+preplace inst axi_interconnect_0 -pg 1 -lvl 3 -x 830 -y 580 -defaultsOSRD
+preplace inst axi_interconnect_1 -pg 1 -lvl 5 -x 1610 -y 820 -defaultsOSRD
+preplace inst axi_interconnect_2 -pg 1 -lvl 5 -x 1610 -y 600 -defaultsOSRD
+preplace inst axi_protocol_convert_0 -pg 1 -lvl 1 -x 180 -y 500 -defaultsOSRD
+preplace inst axi_protocol_convert_1 -pg 1 -lvl 2 -x 510 -y 520 -defaultsOSRD
+preplace inst system_ila_0 -pg 1 -lvl 5 -x 1610 -y 380 -defaultsOSRD
+preplace inst util_vector_logic_0 -pg 1 -lvl 3 -x 830 -y 760 -defaultsOSRD
+preplace netloc NutShell_0_io_ila_InstrCnt 1 4 1 1460 440n
+preplace netloc NutShell_0_io_ila_WBUpc 1 4 1 1360 340n
+preplace netloc NutShell_0_io_ila_WBUrfData 1 4 1 1380 420n
+preplace netloc NutShell_0_io_ila_WBUrfDest 1 4 1 1370 400n
+preplace netloc NutShell_0_io_ila_WBUrfWen 1 4 1 1410 380n
+preplace netloc NutShell_0_io_ila_WBUvalid 1 4 1 1390 360n
+preplace netloc c_shift_ram_0_Q 1 0 5 NJ 420 NJ 420 670 450 NJ 450 1430
+preplace netloc coreclk_1 1 0 5 NJ 620 NJ 620 680 700 990 740 1450
+preplace netloc intrs_1 1 0 4 NJ 830 NJ 830 NJ 830 1000J
+preplace netloc uncoreclk_1 1 0 5 30 580 350 430 680 460 NJ 460 1400
+preplace netloc uncorerstn_2 1 0 5 20 590 360 440 660 820 NJ 820 1440
+preplace netloc util_vector_logic_0_Res 1 3 1 980J 620n
+preplace netloc M_AXI_DMA_1 1 0 1 NJ 480
+preplace netloc NutShell_0_io_mem 1 4 1 N 540
+preplace netloc NutShell_0_io_mmio 1 4 1 1420 560n
+preplace netloc S00_AXI_2 1 2 1 N 520
+preplace netloc axi_clock_converter_0_M_AXI 1 5 1 NJ 600
+preplace netloc axi_interconnect_0_M00_AXI 1 3 1 N 580
+preplace netloc axi_interconnect_1_M00_AXI 1 5 1 NJ 820
+preplace netloc axi_protocol_convert_0_M_AXI 1 1 1 N 500
+levelinfo -pg 1 0 180 510 830 1180 1610 1780
+pagesize -pg 1 -db -bbox -sgen -130 0 1900 1200
 "
 }
-
+0

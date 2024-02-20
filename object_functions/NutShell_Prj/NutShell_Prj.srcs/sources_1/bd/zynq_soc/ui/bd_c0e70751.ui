@@ -1,0 +1,30 @@
+{
+   "ActiveEmotionalView":"Default View",
+   "Default View_ScaleFactor":"0.836991",
+   "Default View_TopLeft":"-352,-7",
+   "ExpandedHierarchyInLayout":"",
+   "guistr":"# # String gsaved with Nlview 7.5.8 2022-09-21 7111 VDI=41 GEI=38 GUI=JA:10.0 TLS
+#  -string -flagsOSRD
+preplace port CLK_IN_D -pg 1 -lvl 0 -x 0 -y 20 -defaultsOSRD
+preplace port M_AXIS_MM2S -pg 1 -lvl 3 -x 600 -y 20 -defaultsOSRD
+preplace port M_AXI_DMA -pg 1 -lvl 3 -x 600 -y 40 -defaultsOSRD
+preplace port S_AXILITE_MMIO -pg 1 -lvl 0 -x 0 -y 40 -defaultsOSRD
+preplace port S_AXIS_S2MM -pg 1 -lvl 0 -x 0 -y 60 -defaultsOSRD
+preplace port pcie_mgt -pg 1 -lvl 3 -x 600 -y 80 -defaultsOSRD
+preplace port port-id_ARESETN -pg 1 -lvl 0 -x 0 -y 80 -defaultsOSRD
+preplace port port-id_rx -pg 1 -lvl 0 -x 0 -y 100 -defaultsOSRD
+preplace port port-id_sys_rst_n -pg 1 -lvl 0 -x 0 -y 120 -defaultsOSRD
+preplace port port-id_tx -pg 1 -lvl 3 -x 600 -y 100 -defaultsOSRD
+preplace port port-id_uncore_clk -pg 1 -lvl 0 -x 0 -y 140 -defaultsOSRD
+preplace port port-id_uncorerstn -pg 1 -lvl 0 -x 0 -y 160 -defaultsOSRD
+preplace portBus intrs -pg 1 -lvl 3 -x 600 -y 60 -defaultsOSRD
+preplace inst axi_dma_rvcore -pg 1 -lvl 2 -x 420 -y 120 -defaultsOSRD
+preplace inst axi_interconnect_rvcore_dma -pg 1 -lvl 2 -x 420 -y 470 -defaultsOSRD
+preplace inst axi_interconnect_rvcore_mmio -pg 1 -lvl 2 -x 420 -y 1010 -defaultsOSRD
+preplace inst axi_uartlite_0 -pg 1 -lvl 2 -x 420 -y 770 -defaultsOSRD
+preplace inst util_ds_buf_0 -pg 1 -lvl 1 -x 140 -y 50 -defaultsOSRD
+levelinfo -pg 1 0 140 420 600
+pagesize -pg 1 -db -bbox -sgen -150 0 730 1180
+"
+}
+

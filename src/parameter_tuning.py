@@ -59,8 +59,6 @@ class parameter_tuning:
         
             # Replace the parameter value within the object content
             modified_object_content, n = param_pattern.subn(replacement_function, modified_object_content)
-
-            
             if n == 0:
                 raise ValueError(f"Parameter '{self.tunable_params[index]}' not found in board settings object '{self.board_settings}'.")
 
@@ -80,8 +78,9 @@ class parameter_tuning:
             with open(self.generated_logfile + 'Processor_Generation.log', 'w') as f:
                 subprocess.run(['make', 'clean'], check=True, cwd=self.generation_path, stdout=f, stderr=f)
                 subprocess.run(['make', 'verilog', 'BOARD=PXIe'], check=True, cwd=self.generation_path, stdout=f, stderr=f)
+            return True
         except subprocess.CalledProcessError as e:
-            print(f"Error executing Makefile: {e}")
+            return False
 
     def regenerate_design_by_virtual_machine(self):
         # Ensure ssh_address is in the format 'user@host'

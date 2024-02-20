@@ -202,13 +202,14 @@ class Explore_Data(Data_Set):
         self.output_normalised_factors = {}
         self.worst_value = {}
         self.best_value = {}
+        # TODO: worst value selection 
         for obj in list(objs.keys()):
             self.output_normalised_factors[obj] = 100.0
             if objs.get(obj, None) == 'minimise':
                     self.best_value[obj] = 0.0
-                    self.worst_value[obj] = 100.0
+                    self.worst_value[obj] = 10.0
             else:
-                self.best_value[obj] = 100.0
+                self.best_value[obj] = 10.0
                 self.worst_value[obj] = 0.0
         # TODO, since for some of the conditions that are very small, the boundary calculation methods does not work well, hence normalising to the largest value of the condition.
         for obj in list(output_obj_constraint.keys()):
@@ -239,42 +240,74 @@ class Explore_Data(Data_Set):
             input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.input_scales_factors, self.input_offsets)
             sample_input = self.format_input_data(input)
             # Modify the paramter settings
-            print("sample_input ", sample_input)
             utilisation_percentage = self.build_new_dataset.find_corresponding_data(sample_input)
             if utilisation_percentage is None:
                 print("Not found in the dataset, Start to Generate ")
                 self.param_tuner.tune_parameter(sample_input)
                 # Regenerate the customised processor
-                self.param_tuner.regenerate_design_locally()
+                pass_generation = self.param_tuner.regenerate_design_locally()
                 # Check if successfully generated the processor
-                if not osp.exists(self.param_tuner.generation_path + 'build'):
+                if not osp.exists(self.param_tuner.generation_path + 'build') or not pass_generation:
+                    print("Failed to generate the processor")
                     self.build_new_dataset.record_data(sample_input, 'failed')
-                    continue
+                    return False, results
                 # Run the Synthesis on Vivado
+                print("Start to run the synthesis")
                 self.param_tuner.run_synthesis()
                 # Store the utilisation result
                 self.param_tuner.store_synthesis_report()
                 # Read the utilisation percentage
                 utilisation_percentage = read_utilization_percentage(self.utilisation_path, self.objs_to_evaluate)
                 self.build_new_dataset.record_data(sample_input, utilisation_percentage)
-            print("utilisation_percentage ", utilisation_percentage)
-            for obj_index in range(self.objs_to_evaluate_dim):
-                obj = self.objs_to_evaluate[obj_index]
-                results[i][obj_index] = utilisation_percentage[obj_index]
-                if self.objs_direct.get(obj, None) == 'minimise':
-                    results[i][obj_index] = -1 * results[i][obj_index]
-                obj_index += 1
-            print("results ", results)
-        return results
+                print("utilisation_percentage ", utilisation_percentage)
+                for obj_index in range(self.objs_to_evaluate_dim):
+                    obj = self.objs_to_evaluate[obj_index]
+                    results[i][obj_index] = utilisation_percentage[obj_index]
+                    if self.objs_direct.get(obj, None) == 'minimise':
+                        results[i][obj_index] = -1 * results[i][obj_index]
+                    obj_index += 1
+                return True, results
+            else:
+                if utilisation_percentage == 'failed':
+                    return False, results
+                else:
+                    for obj_index in range(self.objs_to_evaluate_dim):
+                        obj = self.objs_to_evaluate[obj_index]
+                        results[i][obj_index] = utilisation_percentage[obj_index]
+                        if self.objs_direct.get(obj, None) == 'minimise':
+                            results[i][obj_index] = -1 * results[i][obj_index]
+                        obj_index += 1
+            return True, results
 
 
 class create_data_set:
-    def __init__(self, input_name, objective_name, file_name = 'Nutshell_dataset_record.txt'):
+    def __init__(self, input_name, objective_name, file_name = 'Nutshell'):
         self.input_name = input_name
         self.input_dim = len(input_name)
         self.objective_name = list(objective_name)
-        self.file_name = '../object_functions/Dataset/' + file_name
-
+        self.names = input_name + objective_name
+        self.file_name = '../object_functions/Dataset/' + file_name + '_dataset_record.txt'
+        print("self.file_name ", self.file_name)
+        match_file = True
+        with open(self.file_name, 'r') as file:
+            line = file.readline()
+            first_line = line.split(',')
+            trimmed_array = [item.lstrip() for item in first_line]
+            #TODO: make it better
+            for index in range (self.input_dim + len(objective_name) - 1):
+                if trimmed_array[index] != self.names[index]:    
+                    print("trimmed_array[index] ", trimmed_array[index])
+                    print("self.names[index] ", self.names[index])
+                    match_file = False
+                    raise ValueError("The input and objective names do not match the dataset")
+        if not match_file:
+            with open(self.file_name, 'w') as file:
+                for index in range(self.input_dim + len(objective_name)):
+                    if index == 0:
+                        file.write(f"{self.names[index]}")
+                    else:
+                        file.write(f", {self.names[index]}")
+                file.write("\n")
     def record_data(self, input_data, objective_data):
         with open(self.file_name, 'a') as file:
             for index in range(self.input_dim):
@@ -296,11 +329,11 @@ class create_data_set:
                 line = line.split(',')
                 sample_data = tuple([float(i) for i in line[0:self.input_dim]])
                 if sample_data == input_data:
-                    if line[self.input_dim] == ' failed\n':
-                        return [0.0 for i in range(len(self.objective_name))]
-                    else:
+                    if line[self.input_dim] != ' failed\n':
                         result = [float(i) for i in line[self.input_dim:] ]
                         return result
+                    else:
+                        return 'failed'
         return None
 
 

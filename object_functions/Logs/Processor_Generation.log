@@ -27,15 +27,40 @@ HasL2cache = true
 HasPrefetch = true
 IsRV32 = false
 MMIOBase = 0x40000000
-MMIOSize = 0x10000000
+MMIOSize = 0x30000000
 MemMapBase = 0x0
 MemMapRegionBits = 0
 MmodeOnly = false
-NrExtIntr = 2
+NrExtIntr = 10
 ResetVector = 0x80000000
 [[35minfo[0m] [0.001] Elaborating design...
-[[35minfo[0m] [1.362] Done elaborating.
-Computed transform order in: 121.7 ms
-Total FIRRTL Compile Time: 5637.4 ms
+[[31merror[0m] java.lang.IllegalArgumentException: requirement failed
+[[31merror[0m] 	...
+[[31merror[0m] 	at nutcore.AddressSpace$$anonfun$isMMIO$1.apply(NutCore.scala:84)
+[[31merror[0m] 	at nutcore.AddressSpace$$anonfun$isMMIO$1.apply(NutCore.scala:83)
+[[31merror[0m] 	at scala.collection.immutable.List.map(List.scala:288)
+[[31merror[0m] 	at nutcore.AddressSpace$.isMMIO(NutCore.scala:83)
+[[31merror[0m] 	at nutcore.EXU.<init>(EXU.scala:58)
+[[31merror[0m] 	at nutcore.Backend_inorder$$anonfun$60.apply(Backend.scala:676)
+[[31merror[0m] 	at nutcore.Backend_inorder$$anonfun$60.apply(Backend.scala:676)
+[[31merror[0m] 	at chisel3.Module$.do_apply(Module.scala:52)
+[[31merror[0m] 	at nutcore.Backend_inorder.<init>(Backend.scala:676)
+[[31merror[0m] 	at nutcore.NutCore$$anonfun$8.apply(NutCore.scala:144)
+[[31merror[0m] 	at nutcore.NutCore$$anonfun$8.apply(NutCore.scala:144)
+[[31merror[0m] 	at chisel3.Module$.do_apply(Module.scala:52)
+[[31merror[0m] 	at nutcore.NutCore.<init>(NutCore.scala:144)
+[[31merror[0m] 	at system.NutShell$$anonfun$1.apply(NutShell.scala:53)
+[[31merror[0m] 	at system.NutShell$$anonfun$1.apply(NutShell.scala:53)
+[[31merror[0m] 	at chisel3.Module$.do_apply(Module.scala:52)
+[[31merror[0m] 	at system.NutShell.<init>(NutShell.scala:53)
+[[31merror[0m] 	at top.TopMain$$anonfun$7.apply(TopMain.scala:69)
+[[31merror[0m] 	at top.TopMain$$anonfun$7.apply(TopMain.scala:69)
+[[31merror[0m] 	... (Stack trace trimmed to user code only, rerun with --full-stacktrace if you wish to see the full stack trace)
 ./scripts/vlsi_mem_gen build/TopMain.v.conf >> build/TopMain.v
-sed -i -e 's/_\(aw\|ar\|w\|r\|b\)_\(\|bits_\)/_\1/g' build/TopMain.v
+Traceback (most recent call last):
+  File "/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/./scripts/vlsi_mem_gen", line 214, in <module>
+    main(args)
+  File "/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell/./scripts/vlsi_mem_gen", line 197, in main
+    for line in open(conf_file):
+FileNotFoundError: [Errno 2] No such file or directory: 'build/TopMain.v.conf'
+make: *** [Makefile:26: build/TopMain.v] Error 1

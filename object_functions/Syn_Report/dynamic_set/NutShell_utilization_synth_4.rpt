@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date         : Mon Feb 19 16:01:50 2024
+| Date         : Tue Feb 20 08:04:15 2024
 | Host         : cg1710-pi running 64-bit Ubuntu 22.04.4 LTS
 | Command      : report_utilization -file ../Syn_Report/NutShell_utilization_synth.rpt
 | Design       : NutShell
@@ -32,13 +32,13 @@ Table of Contents
 +----------------------------+-------+-------+------------+-----------+-------+
 |          Site Type         |  Used | Fixed | Prohibited | Available | Util% |
 +----------------------------+-------+-------+------------+-----------+-------+
-| CLB LUTs*                  | 14180 |     0 |          0 |    522720 |  2.71 |
-|   LUT as Logic             | 13649 |     0 |          0 |    522720 |  2.61 |
+| CLB LUTs*                  | 14485 |     0 |          0 |    522720 |  2.77 |
+|   LUT as Logic             | 13954 |     0 |          0 |    522720 |  2.67 |
 |   LUT as Memory            |   531 |     0 |          0 |    161280 |  0.33 |
 |     LUT as Distributed RAM |   530 |     0 |            |           |       |
 |     LUT as Shift Register  |     1 |     0 |            |           |       |
-| CLB Registers              | 12631 |     0 |          0 |   1045440 |  1.21 |
-|   Register as Flip Flop    | 12631 |     0 |          0 |   1045440 |  1.21 |
+| CLB Registers              | 12850 |     0 |          0 |   1045440 |  1.23 |
+|   Register as Flip Flop    | 12850 |     0 |          0 |   1045440 |  1.23 |
 |   Register as Latch        |     0 |     0 |          0 |   1045440 |  0.00 |
 | CARRY8                     |   360 |     0 |          0 |     65340 |  0.55 |
 | F7 Muxes                   |    29 |     0 |          0 |    261360 |  0.01 |
@@ -64,7 +64,7 @@ Warning! LUT value is adjusted to account for LUT combining.
 | 0     |          Yes |           - |          Set |
 | 0     |          Yes |           - |        Reset |
 | 232   |          Yes |         Set |            - |
-| 12399 |          Yes |       Reset |            - |
+| 12618 |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -101,7 +101,7 @@ Warning! LUT value is adjusted to account for LUT combining.
 +------------+------+-------+------------+-----------+--------+
 |  Site Type | Used | Fixed | Prohibited | Available |  Util% |
 +------------+------+-------+------------+-----------+--------+
-| Bonded IOB |  954 |     0 |          0 |       512 | 186.33 |
+| Bonded IOB |  960 |     0 |          0 |       512 | 187.50 |
 +------------+------+-------+------------+-----------+--------+
 
 
@@ -165,18 +165,18 @@ Warning! LUT value is adjusted to account for LUT combining.
 +----------+-------+---------------------+
 | Ref Name |  Used | Functional Category |
 +----------+-------+---------------------+
-| FDRE     | 12399 |            Register |
-| LUT6     |  4663 |                 CLB |
-| LUT3     |  4319 |                 CLB |
-| LUT5     |  3207 |                 CLB |
-| LUT4     |  2694 |                 CLB |
-| LUT2     |  1181 |                 CLB |
+| FDRE     | 12618 |            Register |
+| LUT6     |  4714 |                 CLB |
+| LUT3     |  4413 |                 CLB |
+| LUT5     |  3347 |                 CLB |
+| LUT4     |  2748 |                 CLB |
+| LUT2     |  1209 |                 CLB |
 | RAMD32   |   842 |                 CLB |
 | OBUF     |   644 |                 I/O |
 | CARRY8   |   360 |                 CLB |
-| LUT1     |   353 |                 CLB |
-| INBUF    |   310 |                 I/O |
-| IBUFCTRL |   310 |              Others |
+| LUT1     |   355 |                 CLB |
+| INBUF    |   316 |                 I/O |
+| IBUFCTRL |   316 |              Others |
 | FDSE     |   232 |            Register |
 | RAMS32   |   120 |                 CLB |
 | RAMD64E  |    48 |                 CLB |

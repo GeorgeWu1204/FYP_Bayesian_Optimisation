@@ -270,7 +270,6 @@ class test_posterior_result:
         combination_array = np.vstack([grid.ravel() for grid in basis_grid]).T
         # Convert the combination array to a PyTorch tensor
         self.testcase = torch.from_numpy(combination_array).to(dtype=dtype, device=device)
-        print("testcase shape is ", self.testcase.shape)
 
     def examine_posterior(self, model, iteration):
         """This function is used to examine the function"""
@@ -309,7 +308,6 @@ class test_posterior_result:
 
     def examine_acq_function(self, acq_function, iteration):
         """This function is used to examine the acquisition function"""
-        print("testcase shape is ", self.testcase.shape)
         acq_values = acq_function(self.testcase.unsqueeze(-2)).cpu().detach().numpy()
         Z = acq_values.reshape([self.num_samples for _ in range(self.dim)])
         X = self.testcase[:,0].cpu().detach().numpy().reshape([self.num_samples for _ in range(self.dim)])

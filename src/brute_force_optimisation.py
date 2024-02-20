@@ -9,7 +9,7 @@ from interface import fill_constraints, parse_constraints
 from format_constraints import Constraints_Brute_Force
 
 
-CONSTRAINT_FILE = '../data/input_constraint.txt'
+CONSTRAINT_FILE = '../specification/input_constraint.txt'
 device = torch.device("cpu")
 t_type = torch.float64
 self_constraints, coupled_constraints, INPUT_CONSTANT, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT = parse_constraints(CONSTRAINT_FILE)
@@ -20,7 +20,7 @@ OBJECTIVES_TO_OPTIMISE_DIM = len(OBJECTIVES_TO_OPTIMISE)
 OBJECTIVE_DIM = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONSTRAINT)
 OBJECTIVES_TO_OPTIMISE_INDEX = list(range(OBJECTIVES_TO_OPTIMISE_DIM))
 
-RAW_DATA_FILE = '../data/ppa_v2.db'
+RAW_DATA_FILE = '../specification/ppa_v2.db'
 data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT , t_type, device)
 
 INPUT_VARIABLES = []

@@ -31,10 +31,9 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 t_type = torch.float64
 
 # Input Settings
-CONSTRAINT_FILE = '../data/input_spec2.txt'
+CONSTRAINT_FILE = '../specification/input_spec2.txt'
 self_constraints, coupled_constraints, INPUT_CONSTANT, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, objective_function_category, parameter_tuning_obj = parse_constraints(CONSTRAINT_FILE)
 (INPUT_DATA_DIM, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_NAMES), constraint_set = fill_constraints(self_constraints, coupled_constraints, device)
-
 OBJECTIVES_TO_OPTIMISE_DIM = len(OBJECTIVES_TO_OPTIMISE)
 OBJECTIVE_DIM = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONSTRAINT)
 OBJECTIVES_TO_OPTIMISE_INDEX = list(range(OBJECTIVES_TO_OPTIMISE_DIM))
@@ -42,19 +41,19 @@ OBJECTIVES_TO_OPTIMISE_INDEX = list(range(OBJECTIVES_TO_OPTIMISE_DIM))
 # Dataset Settings
 if objective_function_category == 'synthetic':
     print("Optimisation in pre-prepared dataset")
-    RAW_DATA_FILE = '../data/ppa_v2.db'
+    RAW_DATA_FILE = '../specification/ppa_v2.db'
     data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT , t_type, device)
 else:
     print("Optimisation in real space")
     data_set = data.Explore_Data(INPUT_NAMES, OBJECTIVES_TO_OPTIMISE, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT, OUTPUT_OBJECTIVE_CONSTRAINT, parameter_tuning_obj, t_type, device)
 
 # Train Set Settings
-TRAIN_SET_DISTURBANCE_RANGE = 0.01                 # noise standard deviation for objective
-TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2            # acceptable distance between the rounded vertex and the real vertex
+TRAIN_SET_DISTURBANCE_RANGE = 0.01                  # noise standard deviation for objective
+TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2                # acceptable distance between the rounded vertex and the real vertex
 
 # Model Settings
 NUM_RESTARTS = 2                # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 4        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
+NUM_OF_INITIAL_POINT = 2        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
 N_BATCH = 10                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
@@ -73,7 +72,7 @@ ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, OBJECTIVES_TO_OPT
 #normalise objective to ensure the same scale
 obj_normalized_factors = list(data_set.output_normalised_factors.values())
 sampler_generator = initial_sampler(INPUT_DATA_DIM, constraint_set, data_set, t_type, device)
-train_set_storage = train_set_records(INPUT_NORMALIZED_FACTOR, TRAIN_SET_ACCEPTABLE_THRESHOLD, TRAIN_SET_DISTURBANCE_RANGE, t_type, device)
+train_set_storage = train_set_records(INPUT_NORMALIZED_FACTOR, obj_normalized_factors, list(self_constraints.values()), ref_points, OBJECTIVES_TO_OPTIMISE_DIM, TRAIN_SET_ACCEPTABLE_THRESHOLD, TRAIN_SET_DISTURBANCE_RANGE, t_type, device)
 
 if plot_posterior:
     posterior_examiner = utils.test_posterior_result(INPUT_DATA_DIM, t_type, device)
@@ -150,7 +149,7 @@ def optimize_acqf_and_get_observation(acq_func, constraint_bounds):
     )
     # observe new values
     new_x = candidates.detach()
-    new_exact_obj = data_set.find_ppa_result(new_x)
+    valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
     new_normalised_obj = utils.normalise_output_data(new_exact_obj, obj_normalized_factors, device)
     new_con_obj = data_set.check_qNEHVI_constraints(new_normalised_obj)
     if new_con_obj.item() <= 0.0:
@@ -158,7 +157,7 @@ def optimize_acqf_and_get_observation(acq_func, constraint_bounds):
     else:
         hyper_vol = 0.0
     new_train_obj = torch.cat([new_normalised_obj[...,:OBJECTIVES_TO_OPTIMISE_DIM], new_con_obj], dim=-1)
-    return new_x, new_exact_obj, new_train_obj, hyper_vol
+    return valid_generated_sample, new_x, new_exact_obj, new_train_obj, hyper_vol
 
 if not debug:
     warnings.filterwarnings("ignore", category=BadInitialCandidatesWarning)
@@ -205,7 +204,7 @@ for trial in range (1, N_TRIALS + 1):
         acqf = build_qNEHVI_acqf(model_ei, train_x_ei, qmc_sampler)
         
         # optimize and get new observation
-        new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimize_acqf_and_get_observation(acqf, constraint_set.constraint_bound)
+        valid_generated_sample, new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimize_acqf_and_get_observation(acqf, constraint_set.constraint_bound)
 
         # examine the posterior
         if plot_posterior and iteration == 10:
@@ -213,14 +212,17 @@ for trial in range (1, N_TRIALS + 1):
             posterior_examiner.examine_acq_function(acqf, iteration)
         #--------------for debug------------------
         if debug:
-            print("new_x_ei: ", new_x_ei)
-            print("recovered new_x_ei: ", utils.recover_all_input_data(new_x_ei.squeeze(0), INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES,INPUT_OFFSETS, t_type, device))
-            print("new_train_obj_ei: ", new_train_obj_ei)
-            print("hyper_vol: ", hyper_vol)
+            if valid_generated_sample:
+                print("new_x_ei: ", new_x_ei)
+                print("recovered new_x_ei: ", utils.recover_all_input_data(new_x_ei.squeeze(0), INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES,INPUT_OFFSETS, t_type, device))
+                print("new_exact_obj_ei: ", new_exact_obj_ei)
+                print("hyper_vol: ", hyper_vol)
+            else:
+                print("No valid sample found")
         #-----------------------------------------
 
         # update training points
-        valid_point, modified_new_train_x, modified_new_train_obj_ei, modified_hyper_vol  = train_set_storage.store_new_data(new_x_ei, new_train_obj_ei, hyper_vol)
+        valid_point_for_storage, modified_new_train_x, modified_new_train_obj_ei, modified_hyper_vol  = train_set_storage.store_new_data(valid_generated_sample, new_x_ei, new_train_obj_ei, hyper_vol, data_set)
         
         #--------------for debug------------------
         if debug:
@@ -228,7 +230,7 @@ for trial in range (1, N_TRIALS + 1):
             print("modified_new_train_obj_ei: ", modified_new_train_obj_ei)
             print("modified_hyper_vol: ", modified_hyper_vol)
 
-        if valid_point:
+        if valid_point_for_storage:
             train_x_ei   = torch.cat([train_x_ei, modified_new_train_x])
             train_obj_ei = torch.cat([train_obj_ei, modified_new_train_obj_ei])
             hyper_vol_ei = torch.cat([hyper_vol_ei, modified_hyper_vol])
@@ -284,7 +286,7 @@ if record:
 # Final stage, find the best sample point and the corresponding best observation
 print("<------------------Final Result------------------>")
 best_trial = utils.find_max_index_in_list(best_hyper_vol_per_trial)
-best_objective = data_set.find_ppa_result(best_sample_points_per_trial[best_trial + 1])
+_, best_objective = data_set.find_ppa_result(best_sample_points_per_trial[best_trial + 1])
 real_sample_point = utils.recover_all_input_data(best_sample_points_per_trial[best_trial + 1], INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES, INPUT_OFFSETS, t_type, device)
 print(f"{Fore.BLUE}Best sample point: {real_sample_point}{Style.RESET_ALL}")
 print(f"{Fore.BLUE}Best objective: {best_objective}{Style.RESET_ALL}")

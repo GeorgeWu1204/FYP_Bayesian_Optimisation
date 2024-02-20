@@ -1,0 +1,22 @@
+#input self constraint
+var: NrExtIntr              range: [1,10]    scale: 1    shift: 0
+var: MMIOSize               range: [1,8]    scale: 1    shift: 28
+var: MemMapRegionBits       range: [0, 28]  scale: 1    shift: 0 
+
+#input coupled constraint
+
+#input constant
+
+#output objective
+obj_name: LUT as Logic        obj_direct: minimise
+obj_name: CLB Registers       obj_direct: minimise
+
+#output constraint
+obj_name: CARRY8              range: [0,3]
+
+#data
+objective: real-time
+settings_path: ../object_functions/NutShell/src/main/scala/top/Settings.scala
+vivado_project_path: ../object_functions/NutShell/fpga/board/PXIe/build/NutShell_Full_Project-PXIe/
+generation_path: ../object_functions/NutShell/
+board_settings: PXIeSettings
