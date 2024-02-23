@@ -1,4 +1,4 @@
-# The environment and steps to generate customised cores
+# The environment and steps to generate customised processors
 
 ## FPGA Board Name
 
@@ -7,6 +7,10 @@ xczu19eg-ffvc1760-2-i (active)
 ## Environment Requirement
 
 Ubuntu 22.04
+
+## NutShell Core
+
+### Prerequisites
 
 run ```sudo vmhgfs-fuse .host:/Year4 /mnt/hgfs -o allow_other``` to mount the shared folder
 
@@ -19,7 +23,20 @@ mill
 
 ```sudo sh -c "curl -L https://github.com/com-lihaoyi/mill/releases/download/0.6.3/0.6.3 > /usr/local/bin/mill && chmod +x /usr/local/bin/mill"```
 
-## Nutshell
+Clone Project
 
 ```git clone https://github.com/OSCPU/NutShell.git```\
 ```git checkout -q release-211228```
+
+### Steps
+
+``` make bitstream BOARD=PXIe ```
+
+## VeeR EL2 RISC-V Core
+
+### Prerequisites
+
+- Verilator (4.106 or later)
+- RISC-V GNU Compiler Toolchain
+
+
