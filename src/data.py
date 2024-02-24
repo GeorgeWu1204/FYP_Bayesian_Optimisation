@@ -173,7 +173,7 @@ def read_data_from_db(db_name, objs, output_obj_constraint, scales, input_data_n
     return data_set
     
 
-class Explore_Data(Data_Set):
+class NutShell_Data(Data_Set):
     def __init__(self, input_names, objs, scales, input_data_normalized_factors, input_offsets, input_constants, output_obj_constraint, param_tuner, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
         
         self.utilisation_path = '../object_functions/Syn_Report/NutShell_utilization_synth.rpt'
@@ -213,7 +213,7 @@ class Explore_Data(Data_Set):
         self.output_constraints_to_check = []
         for obj in output_obj_constraint:
             self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj] for bound in output_obj_constraint[obj]])
-        self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate)
+        self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate, 'NutShell')
 
     def find_ppa_result(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
@@ -265,25 +265,141 @@ class Explore_Data(Data_Set):
             return True, results
 
 
+
+class EL2_Data(Data_Set):
+    def __init__(self, input_names, objs, scales, input_data_normalized_factors, input_offsets, input_constants, input_exp, output_obj_constraint, param_tuner, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
+    
+        self.utilisation_path = '../object_functions/Syn_Report/EL2_utilization_synth.rpt'
+        self.param_tuner = param_tuner
+        # to recover the output data
+        self.objs_direct = objs
+        self.objs_to_optimise_dim = len(objs)
+        self.objs_to_evaluate = list(objs.keys()) + list(output_obj_constraint.keys())
+        self.objs_to_evaluate_dim = len(self.objs_to_evaluate)
+        # this is to check what type of performance objectives are needed to be stored
+        self.performance_objs = []
+        if 'minstret' in self.objs_to_evaluate:
+            self.performance_objs.append(0)
+        if 'mcycle' in self.objs_to_evaluate:
+            self.performance_objs.append(1)
+        # assume all the output is percentage
+        self.output_normalised_factors = {}
+        self.worst_value = {}
+        self.best_value = {}
+        # TODO: worst value selection 
+        for obj in list(objs.keys()):
+            self.output_normalised_factors[obj] = 10.0
+            if objs.get(obj, None) == 'minimise':
+                    self.best_value[obj] = 0.0
+                    self.worst_value[obj] = 10.0
+            else:
+                self.best_value[obj] = 10.0
+                self.worst_value[obj] = 0.0
+        # TODO, since for some of the conditions that are very small, the boundary calculation methods does not work well, hence normalising to the largest value of the condition.
+        for obj in list(output_obj_constraint.keys()):
+            self.output_normalised_factors[obj] = output_obj_constraint[obj][1]
+            self.best_value[obj] = output_obj_constraint[obj][1]
+            self.worst_value[obj] = 0.0
+        
+        # to recover the input data
+        self.input_normalized_factors = torch.tensor(input_data_normalized_factors, dtype=tensor_type, device=tensor_device)
+        self.input_scales_factors = torch.tensor(scales, dtype=tensor_type, device=tensor_device)
+        self.input_offsets = torch.tensor(input_offsets, dtype=tensor_type, device=tensor_device)
+        self.input_exp = torch.tensor(input_exp, dtype=tensor_type, device=tensor_device)
+        self.input_constants = input_constants
+
+        # tensor type and device
+        self.tensor_type = tensor_type
+        self.tensor_device = tensor_device
+        self.output_constraints_to_check = []
+        for obj in output_obj_constraint:
+            self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj] for bound in output_obj_constraint[obj]])
+        self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate, 'EL2')
+
+    def find_ppa_result(self, sample_inputs):
+        """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
+        num_restart= sample_inputs.shape[0]
+        results = torch.empty((num_restart, len(self.objs_to_evaluate)), device=sample_inputs.device, dtype=sample_inputs.dtype)
+        obj_index = 0
+        for i in range(num_restart):
+            # num_restart needs to be fixed to 1
+            input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.input_scales_factors, self.input_offsets, self.input_exp)
+            sample_input = self.format_input_data(input)
+            # Modify the paramter settings
+            utilisation_percentage = self.build_new_dataset.find_corresponding_data(sample_input)
+            if utilisation_percentage is None:
+                print("Not found in the dataset, Start to Generate ")
+                
+                pass_generation = self.param_tuner.tune_parameter(sample_input)
+                # Check if successfully generated the processor
+                if not pass_generation:
+                    print("Failed to generate the processor")
+                    self.build_new_dataset.record_data(sample_input, 'failed')
+                    return False, results
+                objective_results = []
+                # Run the Performance Simulation
+                if self.performance_objs != []:
+                    minstret, mcycle = self.param_tuner.run_performance_simulation()
+                    for perf_obj in self.performance_objs:
+                        if perf_obj == 0:
+                            objective_results.append(minstret)
+                        elif perf_obj == 1:
+                            objective_results.append(mcycle)
+                # Run the Synthesis on Vivado
+                print("Start to run the synthesis")
+                self.param_tuner.run_synthesis()
+                # Store the utilisation result
+                self.param_tuner.store_synthesis_report()
+                # Read the utilisation percentage
+                utilisation_percentage = read_utilization_percentage(self.utilisation_path, self.objs_to_evaluate[len(self.performance_objs) : ])
+                objective_results += utilisation_percentage 
+                self.build_new_dataset.record_data(sample_input, objective_results)
+                print("objective_results ", objective_results)
+                for obj_index in range(self.objs_to_evaluate_dim):
+                    obj = self.objs_to_evaluate[obj_index]
+                    results[i][obj_index] = objective_results[obj_index]
+                    if self.objs_direct.get(obj, None) == 'minimise':
+                        results[i][obj_index] = -1 * results[i][obj_index]
+                    obj_index += 1
+                return True, results
+            else:
+                if utilisation_percentage == 'failed':
+                    return False, results
+                else:
+                    for obj_index in range(self.objs_to_evaluate_dim):
+                        obj = self.objs_to_evaluate[obj_index]
+                        results[i][obj_index] = utilisation_percentage[obj_index]
+                        if self.objs_direct.get(obj, None) == 'minimise':
+                            results[i][obj_index] = -1 * results[i][obj_index]
+                        obj_index += 1
+            quit()
+            return True, results
+
+        
+
 class create_data_set:
-    def __init__(self, input_name, objective_name, file_name = 'Nutshell'):
+    """This class is implemented to accelerate the redundant synthesis and simulation process"""
+    def __init__(self, input_name, objective_name, file_name):
         self.input_name = input_name
         self.input_dim = len(input_name)
         self.objective_name = list(objective_name)
         self.names = input_name + objective_name
         self.file_name = '../object_functions/Dataset/' + file_name + '_dataset_record.txt'
         match_file = True
-        with open(self.file_name, 'r') as file:
-            line = file.readline()
-            first_line = line.split(',')
-            trimmed_array = [item.lstrip() for item in first_line]
-            #TODO: make it better
-            for index in range (self.input_dim + len(objective_name) - 1):
-                if trimmed_array[index] != self.names[index]:    
-                    print("trimmed_array[index] ", trimmed_array[index])
-                    print("self.names[index] ", self.names[index])
-                    match_file = False
-                    raise ValueError("The input and objective names do not match the dataset")
+        if osp.exists(self.file_name):
+            with open(self.file_name, 'r') as file:
+                line = file.readline()
+                first_line = line.split(',')
+                trimmed_array = [item.lstrip() for item in first_line]
+                #TODO: make it better
+                for index in range (self.input_dim + len(objective_name) - 1):
+                    if trimmed_array[index] != self.names[index]:    
+                        print("trimmed_array[index] ", trimmed_array[index])
+                        print("self.names[index] ", self.names[index])
+                        match_file = False
+                        raise ValueError("The input and objective names do not match the dataset")
+        else:
+            match_file = False
         if not match_file:
             with open(self.file_name, 'w') as file:
                 for index in range(self.input_dim + len(objective_name)):

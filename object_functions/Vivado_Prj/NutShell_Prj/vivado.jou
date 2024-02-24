@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2023.2 (64-bit)
+# SW Build 4029153 on Fri Oct 13 20:13:54 MDT 2023
+# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+# Start of session at: Mon Feb 19 09:38:47 2024
+# Process ID: 349064
+# Current directory: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj
+# Command line: vivado -nolog -mode batch -source ../tools/run_synthesis.tcl
+# Log file: 
+# Journal file: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/NutShell_Prj/vivado.jou
+# Running On: cg1710-pi, OS: Linux, CPU Frequency: 800.000 MHz, CPU Physical cores: 4, Host memory: 33449 MB
+#-----------------------------------------------------------
+source ../tools/run_synthesis.tcl

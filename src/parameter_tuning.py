@@ -11,7 +11,7 @@ class NutShell_parameter_tuning:
         self.board_settings = board_settings        # Name of the Scala object containing the settings
         self.generation_path = generation_path      # Path to the directory where the Makefile is located
         self.vivado_project_path = vivado_project_path
-        self.tcl_path = '../tools/run_synthesis.tcl'
+        self.tcl_path = '../../tools/run_synthesis.tcl'
         self.ssh_address = 'george@192.168.129.128'
         self.ssh_password = '001204'
         self.bash_file_path = 'run_on_remote_site.sh'
@@ -125,7 +125,7 @@ class EL2_parameter_tuning:
         self.shift_amount = shift_amount            # The amount by which the parameters are shifted
         self.generation_path = generation_path      # Path to execute the generation command
         self.vivado_project_path = vivado_project_path
-        self.tcl_path = '../tools/run_synthesis.tcl'
+        self.tcl_path = '../../tools/run_EL2_synthesis.tcl'
         # Log file for the generated reports
         self.generated_report_num = 0
         self.generated_report_directory = '../object_functions/Syn_Report/'
@@ -194,12 +194,6 @@ class EL2_parameter_tuning:
     def extract_minstret_mcycle(self, log_file_path):
         """
         Extracts minstret and mcycle values from a log file.
-
-        Parameters:
-        - log_file_path: str, the path to the log file.
-
-        Returns:
-        - A tuple (minstret, mcycle) with the extracted values if found, otherwise (None, None).
         """
         # Regular expression to match the specific line and capture minstret and mcycle values
         pattern = r'Finished : minstret = (\d+), mcycle = (\d+)'
@@ -234,8 +228,8 @@ if __name__ == '__main__':
     generation_path = '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
     new_value = [8, 16]
     shift_amount = [0, 0]
-    vivado_project_path = '../object_functions/EL2_Prj/'
+    vivado_project_path = '../object_functions/Vivado_Prj/EL2_Prj/'
     pt = EL2_parameter_tuning(tunable_params, shift_amount, generation_path, vivado_project_path)
-    pt.tune_parameter(new_value)
-    a, b = pt.run_performance_simulation()
-    print(a, b)
+    # pt.tune_parameter(new_value)
+    # a, b = pt.run_performance_simulation()
+    pt.run_synthesis()

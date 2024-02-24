@@ -54,6 +54,7 @@ Apart from that, the train_obj only considers the objectives that need to optimi
 ## TODO
 
 - Complete the overall flow
+- Constraints format extension, to support variables increasing exponentially, e.g. btb_size = { 8, 16, 32, 64, 128, 256, 512 }
 
 ## Things to Improve
 

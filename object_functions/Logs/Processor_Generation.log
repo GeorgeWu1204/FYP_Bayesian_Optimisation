@@ -1,6 +1,7 @@
 /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2
-veer: Set(s) requested : btb_size=8 icache_size=16
-veer: Overriding btb_size value 512 with 8
+veer: Set(s) requested : btb_size=64 icache_size=128
+veer: Overriding btb_size value 512 with 64
+veer: Overriding icache_size value 16 with 128
 
 VeeR configuration for target=default
 
@@ -10,22 +11,23 @@ veer: bht_array_depth                = 256
 veer: bht_ghr_hash_1                 = 1
 veer: bht_ghr_range                  = 7:0
 veer: bht_ghr_size                   = 8
-veer: bht_hash_string                = {ghr[7:4], hashin[5:2]^ghr[4-1:0]} // cf1
+veer: bht_hash_string                = {ghr[7:5], hashin[6:2]^ghr[5-1:0]} // cf1
 veer: bht_size                       = 512
-veer: btb_addr_hi                    = 5
+veer: btb_addr_hi                    = 6
 veer: btb_addr_lo                    = 2
+veer: btb_array_depth                = 32
 veer: btb_btag_fold                  = 0
-veer: btb_btag_size                  = 31
+veer: btb_btag_size                  = 8
 veer: btb_enable                     = 1
 veer: btb_fold2_index_hash           = 0
-veer: btb_fullya                     = 1
-veer: btb_index1_hi                  = 5
+veer: btb_fullya                     = 0
+veer: btb_index1_hi                  = 6
 veer: btb_index1_lo                  = 2
-veer: btb_index2_hi                  = 8
-veer: btb_index2_lo                  = 6
-veer: btb_index3_hi                  = 11
-veer: btb_index3_lo                  = 9
-veer: btb_size                       = 8
+veer: btb_index2_hi                  = 11
+veer: btb_index2_lo                  = 7
+veer: btb_index3_hi                  = 16
+veer: btb_index3_lo                  = 12
+veer: btb_size                       = 64
 veer: btb_toffset_size               = 12
 veer: bus_prty_default               = 3
 veer: dma_bus_id                     = 1
@@ -92,30 +94,30 @@ veer: icache_banks_way               = 2
 veer: icache_beat_addr_hi            = 5
 veer: icache_beat_bits               = 3
 veer: icache_bypass_enable           = 1
-veer: icache_data_cell               = ram_512x71
-veer: icache_data_depth              = 512
+veer: icache_data_cell               = ram_4096x71
+veer: icache_data_depth              = 4096
 veer: icache_data_index_lo           = 4
 veer: icache_data_width              = 64
 veer: icache_ecc                     = 1
 veer: icache_enable                  = 1
 veer: icache_fdata_width             = 71
-veer: icache_index_hi                = 12
+veer: icache_index_hi                = 15
 veer: icache_ln_sz                   = 64
 veer: icache_num_beats               = 8
 veer: icache_num_bypass              = 2
 veer: icache_num_bypass_width        = 2
-veer: icache_num_lines               = 256
-veer: icache_num_lines_bank          = 64
-veer: icache_num_lines_way           = 128
+veer: icache_num_lines               = 2048
+veer: icache_num_lines_bank          = 512
+veer: icache_num_lines_way           = 1024
 veer: icache_num_ways                = 2
 veer: icache_scnd_last               = 6
-veer: icache_size                    = 16
+veer: icache_size                    = 128
 veer: icache_status_bits             = 1
 veer: icache_tag_bypass_enable       = 1
-veer: icache_tag_cell                = ram_128x25
-veer: icache_tag_depth               = 128
+veer: icache_tag_cell                = ram_1024x25
+veer: icache_tag_depth               = 1024
 veer: icache_tag_index_lo            = 6
-veer: icache_tag_lo                  = 13
+veer: icache_tag_lo                  = 16
 veer: icache_tag_num_bypass          = 2
 veer: icache_tag_num_bypass_width    = 2
 veer: icache_waypack                 = 1

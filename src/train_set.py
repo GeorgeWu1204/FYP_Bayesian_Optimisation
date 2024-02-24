@@ -11,7 +11,6 @@ class train_set_records():
         
         self.normalised_factor = torch.tensor(normalised_factors, dtype=tensor_type, device=tensor_device)
         self.acceptable_threshold = acceptable_threshold
-        print("Acceptable threshold for train_set similarity is ", self.acceptable_threshold)
         self.disturbance_threshold = disturbance_threshold
         self.history_record = {}
         self.tensor_type = tensor_type

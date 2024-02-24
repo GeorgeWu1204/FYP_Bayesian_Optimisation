@@ -1,0 +1,623 @@
+/*
+
+AMD Vivado v2023.2 (64-bit) [Major: 2023, Minor: 2]
+SW Build: 4029153 on Fri Oct 13 20:13:54 MDT 2023
+IP Build: 4028589 on Sat Oct 14 00:45:43 MDT 2023
+IP Build: 4028589 on Sat Oct 14 00:45:43 MDT 2023
+
+Process ID (PID): 1818206
+License: Customer
+Mode: GUI Mode
+
+Current time: 	Sat Feb 24 10:21:48 GMT 2024
+Time zone: 	Greenwich Mean Time (Europe/London)
+
+OS: Ubuntu
+OS Version: 6.5.0-17-generic
+OS Architecture: amd64
+Available processors (cores): 8
+LSB Release Description: DISTRIB_ID=Ubuntu
+
+Display: localhost:10.0
+Screen size: 3440x1440
+Local screen bounds: x = 0, y = 0, width = 3440, height = 1440
+Screen resolution (DPI): 100
+Available screens: 1
+Default font: family=Dialog,name=Dialog,style=plain,size=12
+Scale size: 12
+OS font scaling: 100%
+Anti-Alias Enabled: true
+
+Java version: 	17.0.7 64-bit
+JavaFX version: 17.0.1
+Java home: 	/opt/Xilinx/Vivado/2023.2/tps/lnx64/jre17.0.7_7
+Java executable: 	/opt/Xilinx/Vivado/2023.2/tps/lnx64/jre17.0.7_7/bin/java
+Java arguments: 	[-Dsun.java2d.pmoffscreen=false, -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2, -Dsun.java2d.xrender=false, -Djdk.gtk.version=2, -Dsun.java2d.uiScale.enabled=false, -Dswing.aatext=true, -XX:-UsePerfData, -Djdk.map.althashing.threshold=512, -XX:StringTableSize=4072, -XX:+UseStringDeduplication, -XX:MaxGCPauseMillis=200, -XX:+ParallelRefProcEnabled, --add-opens=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED, --add-opens=java.base/java.nio=ALL-UNNAMED, --add-opens=java.desktop/sun.swing=ALL-UNNAMED, --add-opens=java.desktop/javax.swing=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.tree=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED, --add-opens=java.desktop/javax.swing=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.tree=ALL-UNNAMED, --add-opens=java.desktop/java.awt.event=ALL-UNNAMED, --add-exports=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED, --add-exports=java.base/java.nio=ALL-UNNAMED, --add-exports=java.desktop/sun.swing=ALL-UNNAMED, --add-exports=java.desktop/javax.swing=ALL-UNNAMED, --add-exports=java.desktop/javax.swing.tree=ALL-UNNAMED, --add-exports=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED, --add-exports=java.desktop/sun.swing=ALL-UNNAMED, --add-exports=java.desktop/sun.swing.table=ALL-UNNAMED, --add-exports=java.desktop/sun.swing.plaf.synth=ALL-UNNAMED, --add-exports=java.desktop/sun.awt.shell=ALL-UNNAMED, --add-exports=java.base/sun.security.action=ALL-UNNAMED, --add-exports=java.desktop/sun.font=ALL-UNNAMED, --add-opens=java.desktop/sun.awt.X11=ALL-UNNAMED, -XX:NewSize=80m, -XX:MaxNewSize=80m, -Xms512m, -Xmx4072m, -Xss10m, -Xrs]
+Java initial memory (-Xms): 	512 MB
+Java maximum memory (-Xmx):	 3 GB
+
+User name: 	hw1020
+User home directory: /home/hw1020
+User working directory: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj
+User country: 	US
+User language: 	en
+User locale: 	en_US
+
+RDI_BASEROOT: /opt/Xilinx/Vivado
+HDI_APPROOT: /opt/Xilinx/Vivado/2023.2
+RDI_DATADIR: /opt/Xilinx/SharedData/2023.2/data:/opt/Xilinx/Vivado/2023.2/data
+RDI_BINDIR: /opt/Xilinx/Vivado/2023.2/bin
+
+Vivado preferences file: /home/hw1020/.Xilinx/Vivado/2023.2/vivado.xml
+Vivado preferences directory: /home/hw1020/.Xilinx/Vivado/2023.2/
+Vivado layouts directory: /home/hw1020/.Xilinx/Vivado/2023.2/data/layouts
+PlanAhead jar file: 	/opt/Xilinx/Vivado/2023.2/lib/classes/planAhead.jar
+Vivado log file: 	
+Vivado journal file: 	
+Engine tmp dir: 	./.Xil/Vivado-1818206-cg1710-pi
+Non-Default Parameters:	[]
+
+Xilinx & AMD Environment Variables
+--------------------------------------------------------------------------------------------
+RDI_APPROOT: /opt/Xilinx/Vivado/2023.2
+RDI_BASEROOT: /opt/Xilinx/Vivado
+RDI_BINROOT: /opt/Xilinx/Vivado/2023.2/bin
+RDI_BUILD: yes
+RDI_DATADIR: /opt/Xilinx/SharedData/2023.2/data:/opt/Xilinx/Vivado/2023.2/data
+RDI_INSTALLROOT: /opt/Xilinx
+RDI_INSTALLVER: 2023.2
+RDI_JAVA_PLATFORM: 
+RDI_JAVA_VERSION: 17.0.7_7
+RDI_LIBDIR: /opt/Xilinx/Vivado/2023.2/lib/lnx64.o/Ubuntu/22:/opt/Xilinx/Vivado/2023.2/lib/lnx64.o/Ubuntu:/opt/Xilinx/Vivado/2023.2/lib/lnx64.o
+RDI_OPT_EXT: .o
+RDI_PATCHROOT: 
+RDI_PLATFORM: lnx64
+RDI_PREPEND_PATH: /opt/Xilinx/Vivado/2023.2/ids_lite/ISE/bin/lin64
+RDI_PROG: /opt/Xilinx/Vivado/2023.2/bin/unwrapped/lnx64.o/vivado
+RDI_SESSION_INFO: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj:cg1710-pi_1708770091_1818166
+RDI_SHARED_DATA: /opt/Xilinx/SharedData/2023.2/data
+RDI_TPS_ROOT: /opt/Xilinx/Vivado/2023.2/tps/lnx64
+RDI_USE_JDK17: True
+SHELL: /bin/bash
+XILINX: /opt/Xilinx/Vivado/2023.2/ids_lite/ISE
+XILINX_DSP: /opt/Xilinx/Vivado/2023.2/ids_lite/ISE
+XILINX_HLS: /opt/Xilinx/Vitis_HLS/2023.2
+XILINX_PLANAHEAD: /opt/Xilinx/Vivado/2023.2
+XILINX_VIVADO: /opt/Xilinx/Vivado/2023.2
+XILINX_VIVADO_HLS: /opt/Xilinx/Vivado/2023.2
+
+
+GUI allocated memory:	512 MB
+GUI max memory:		4,072 MB
+Engine allocated memory: 1,537 MB
+
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+*/
+
+// TclEventType: START_GUI
+// Tcl Message: start_gui 
+// WARNING: HEventQueue.dispatchEvent() is taking  4508 ms.
+// HMemoryUtils.trashcanNow. Engine heap size: 1,549 MB. GUI used memory: 68 MB. Current time: 2/24/24, 10:21:48 AM GMT
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+selectButton(PAResourceEtoH.GettingStartedView_CREATE_NEW_PROJECT, "Create Project"); // u (PAResourceEtoH.GettingStartedView_CREATE_NEW_PROJECT)
+// Run Command: PAResourceCommand.PACommandNames_NEW_PROJECT
+// WARNING: HEventQueue.dispatchEvent() is taking  3108 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  2450 ms.
+selectButton("NEXT", "Next >"); // JButton (NEXT)
+setText(PAResourceOtoP.ProjectNameChooser_PROJECT_NAME, "EL2_Prj"); // Q (PAResourceOtoP.ProjectNameChooser_PROJECT_NAME)
+selectButton("NEXT", "Next >"); // JButton (NEXT)
+selectButton("NEXT", "Next >"); // JButton (NEXT)
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_DIRECTORIES, "Add Directories"); // a (PAResourceQtoS.SrcChooserPanel_ADD_DIRECTORIES)
+// WARNING: HEventQueue.dispatchEvent() is taking  2804 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  2672 ms.
+// HMemoryUtils.trashcanNow. Engine heap size: 1,578 MB. GUI used memory: 74 MB. Current time: 2/24/24, 10:22:22 AM GMT
+// WARNING: HEventQueue.dispatchEvent() is taking  1134 ms.
+// Elapsed time: 11 seconds
+setFolderChooser("/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design");
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_HDL_AND_NETLIST_FILES_TO_YOUR_PROJECT, "Add Files"); // a (PAResourceQtoS.SrcChooserPanel_ADD_HDL_AND_NETLIST_FILES_TO_YOUR_PROJECT)
+// WARNING: HEventQueue.dispatchEvent() is taking  2933 ms.
+dismissFileChooser();
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_DIRECTORIES, "Add Directories"); // a (PAResourceQtoS.SrcChooserPanel_ADD_DIRECTORIES)
+// WARNING: HEventQueue.dispatchEvent() is taking  2771 ms.
+// Elapsed time: 29 seconds
+setFolderChooser("/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default");
+selectButton("NEXT", "Next >"); // JButton (NEXT)
+// [GUI Memory]: 151 MB (+155698kb) [00:01:33]
+// [Engine Memory]: 1,573 MB (+1497958kb) [00:01:33]
+selectButton("NEXT", "Next >"); // JButton (NEXT)
+// WARNING: HEventQueue.dispatchEvent() is taking  1188 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  2049 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  3180 ms.
+// Elapsed time: 342 seconds
+setText("PAResourceEtoH.FPGAChooser_FPGA_TABLE_SEARCH_FIELD", "xczu19eg-ffvc1760-2-i"); // OverlayTextField (PAResourceEtoH.FPGAChooser_FPGA_TABLE_SEARCH_FIELD)
+selectTable(PAResourceEtoH.FPGAChooser_FPGA_TABLE, "xczu19eg-ffvc1760-2-i ; 1760 ; 512 ; 522720 ; 1045440 ; 984 ; 128 ; 1968 ; 23921 ; 48 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 32 ; 16 ; 0 ; 0 ; 0 ; 0 ; 0 ; 5 ; 11 ;  ; 4 ;  ;  ; 4 ;  ;  ; -40 ; 100 ; 100 ; I ; 0.825 ; 0.850 ; 0.876", 0, "1760", 1); // c (PAResourceEtoH.FPGAChooser_FPGA_TABLE)
+selectButton("NEXT", "Next >"); // JButton (NEXT)
+// WARNING: HEventQueue.dispatchEvent() is taking  2744 ms.
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// TclEventType: FLOW_ADDED
+// TclEventType: FILE_SET_NEW
+// TclEventType: RUN_ADD
+// TclEventType: RUN_CURRENT
+// TclEventType: PROJECT_DASHBOARD_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_NEW
+// [Engine Memory]: 1,683 MB (+32632kb) [00:07:25]
+// WARNING: HEventQueue.dispatchEvent() is taking  8775 ms.
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Tcl Message: create_project EL2_Prj /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/EL2_Prj -part xczu19eg-ffvc1760-2-i 
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1704] No user IP repositories specified INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/Xilinx/Vivado/2023.2/data/ip'. 
+// HMemoryUtils.trashcanNow. Engine heap size: 1,694 MB. GUI used memory: 76 MB. Current time: 2/24/24, 10:29:06 AM GMT
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// WARNING: HEventQueue.dispatchEvent() is taking  1093 ms.
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// HMemoryUtils.trashcanNow. Engine heap size: 1,697 MB. GUI used memory: 75 MB. Current time: 2/24/24, 10:29:24 AM GMT
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Tcl Message: create_project: Time (s): cpu = 00:00:09 ; elapsed = 00:00:36 . Memory (MB): peak = 7766.070 ; gain = 156.969 ; free physical = 8058 ; free virtual = 22289 
+// TclEventType: FILE_SET_CHANGE
+// WARNING: HEventQueue.dispatchEvent() is taking  1449 ms.
+// Elapsed Time for: 'd': 40s
+// Elapsed time: 42 seconds
+selectButton("FINISH", "Finish"); // JButton (FINISH)
+// 'g' command handler elapsed time: 461 seconds
+dismissDialog("Create Project"); // bq (Create Project Progress)
+dismissDialog("New Project"); // f (dialog0)
+// WARNING: HTimer (FileMgr Design Graph Update Timer) is taking 602ms to process. Increasing delay to 3000 ms.
+// WARNING: updateGUI() is taking  5174 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  5175 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1145 ms.
+// Elapsed Time for: 'L.f': 42s
+// HMemoryUtils.trashcanNow. Engine heap size: 1,732 MB. GUI used memory: 75 MB. Current time: 2/24/24, 10:29:45 AM GMT
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// WARNING: HEventQueue.dispatchEvent() is taking  1522 ms.
+// WARNING: updateGUI() is taking  1053 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1053 ms.
+// Tcl Message: update_compile_order -fileset sources_1 
+// Elapsed Time for: 'L.f': 51s
+// WARNING: updateGUI() is taking  1190 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1190 ms.
+// WARNING: HTimer (FileMgr Design Graph Update Timer) is taking 653ms to process. Increasing delay to 4000 ms.
+// Elapsed Time for: 'L.f': 55s
+// Elapsed Time for: 'L.f': 59s
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_GRAPH_STALE
+// WARNING: HEventQueue.dispatchEvent() is taking  2192 ms.
+// WARNING: updateGUI() is taking  1504 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1504 ms.
+// WARNING: HTimer (FileMgr Design Graph Update Timer) is taking 1052ms to process. Increasing delay to 5000 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1052 ms.
+// WARNING: updateGUI() is taking  1326 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1326 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1030 ms.
+// WARNING: updateGUI() is taking  1278 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1278 ms.
+// Elapsed Time for: 'L.f': 01m:08s
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'L.f': 01m:10s
+// Tcl Message: update_compile_order -fileset sources_1 
+// Elapsed Time for: 'L.f': 01m:15s
+// [Engine Memory]: 1,768 MB (+1103kb) [00:08:41]
+// HMemoryUtils.trashcanNow. Engine heap size: 1,772 MB. GUI used memory: 85 MB. Current time: 2/24/24, 10:30:18 AM GMT
+// Elapsed Time for: 'L.f': 01m:20s
+// Elapsed time: 49 seconds
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header]", 1); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header]", 1); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files]", 2); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, dmi_jtag_to_core_sync.v]", 3, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, rvjtag_tap.v]", 4, false, false, true, false, false, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Control Key
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, beh_lib.sv]", 5, false, false, true, false, false, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Control Key
+selectMoreButton(PAResourceQtoS.SrcFilePropPanels_TYPE, (String) null); // r (PAResourceQtoS.SrcFilePropPanels_TYPE)
+// WARNING: HEventQueue.dispatchEvent() is taking  2799 ms.
+selectComboBox(PAResourceQtoS.SrcFileTypeComboBox_SOURCE_FILE_TYPE, "SrcFileTypeComboBox", "SystemVerilog", 2); // bc (PAResourceQtoS.SrcFileTypeComboBox_SOURCE_FILE_TYPE, SrcFileTypeComboBox)
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (RDIResource.BaseDialog_OK)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: set_property file_type SystemVerilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/dmi/dmi_jtag_to_core_sync.v] 
+dismissDialog("Set Type"); // K (dialog4)
+// Elapsed Time for: 'L.f': 01m:40s
+// [GUI Memory]: 166 MB (+7638kb) [00:09:07]
+// HMemoryUtils.trashcanNow. Engine heap size: 1,816 MB. GUI used memory: 85 MB. Current time: 2/24/24, 10:30:43 AM GMT
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Non-module Files]", 6); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+// Elapsed Time for: 'L.f': 01m:45s
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Non-module Files, defines.h]", 7, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Non-module Files, common_defines.vh]", 6, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Non-module Files, common_defines.vh]", 6, false, false, false, false, true, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Popup Trigger
+selectMenu(PAResourceCommand.PACommandNames_OPEN_FILE_WITH, "Open With"); // al (PAResourceCommand.PACommandNames_OPEN_FILE_WITH, Open With)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // al (PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, Hierarchy Update)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // al (PAResourceQtoS.SrcMenu_IP_HIERARCHY, IP Hierarchy)
+selectMenuItem(PAResourceCommand.PACommandNames_SET_GLOBAL_INCLUDE, "Set Global Include"); // ao (PAResourceCommand.PACommandNames_SET_GLOBAL_INCLUDE, set_global_include_menu)
+// Run Command: PAResourceCommand.PACommandNames_SET_GLOBAL_INCLUDE
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: set_property is_global_include true [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/common_defines.vh] 
+// Elapsed Time for: 'L.f': 01m:55s
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'L.f': 02m:00s
+// Tcl Message: update_compile_order -fileset sources_1 
+// Elapsed Time for: 'L.f': 02m:05s
+// HMemoryUtils.trashcanNow. Engine heap size: 1,851 MB. GUI used memory: 87 MB. Current time: 2/24/24, 10:31:08 AM GMT
+// Elapsed Time for: 'L.f': 02m:10s
+// WARNING: HEventQueue.dispatchEvent() is taking  3533 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  3221 ms.
+// Elapsed time: 1042 seconds
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header]", 2); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header, el2_pdef.vh]", 4, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectMoreButton(PAResourceQtoS.SrcFilePropPanels_TYPE, (String) null); // r (PAResourceQtoS.SrcFilePropPanels_TYPE)
+// WARNING: HEventQueue.dispatchEvent() is taking  2914 ms.
+selectComboBox(PAResourceQtoS.SrcFileTypeComboBox_SOURCE_FILE_TYPE, "SrcFileTypeComboBox", "SystemVerilog", 2); // bc (PAResourceQtoS.SrcFileTypeComboBox_SOURCE_FILE_TYPE, SrcFileTypeComboBox)
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (RDIResource.BaseDialog_OK)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: set_property file_type SystemVerilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_pdef.vh] 
+dismissDialog("Set Type"); // K (dialog5)
+// WARNING: HTimer (FileMgr Design Graph Update Timer) is taking 3935ms to process. Increasing delay to 6000 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  3935 ms.
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header, el2_pdef.vh]", 4, false, false, false, false, true, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Popup Trigger
+// [Engine Memory]: 1,862 MB (+6294kb) [00:26:55]
+// Elapsed Time for: 'L.f': 19m:29s
+// WARNING: HEventQueue.dispatchEvent() is taking  9839 ms.
+// Elapsed time: 10 seconds
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header, el2_pdef.vh]", 4, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header, el2_pdef.vh]", 4, false, false, false, false, true, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Popup Trigger
+selectMenu(PAResourceCommand.PACommandNames_OPEN_FILE_WITH, "Open With"); // al (PAResourceCommand.PACommandNames_OPEN_FILE_WITH, Open With)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // al (PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, Hierarchy Update)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // al (PAResourceQtoS.SrcMenu_IP_HIERARCHY, IP Hierarchy)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // al (PAResourceQtoS.SrcMenu_IP_HIERARCHY, IP Hierarchy)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // al (PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, Hierarchy Update)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // al (PAResourceQtoS.SrcMenu_IP_HIERARCHY, IP Hierarchy)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,891 MB. GUI used memory: 86 MB. Current time: 2/24/24, 10:48:48 AM GMT
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // al (PAResourceQtoS.SrcMenu_IP_HIERARCHY, IP Hierarchy)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // al (PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, Hierarchy Update)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Non-module Files]", 8, true); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Node
+// Elapsed Time for: 'L.f': 19m:54s
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, SystemVerilog]", 5); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, SystemVerilog, el2_pdef.vh]", 6, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, SystemVerilog, el2_pdef.vh]", 6, false, false, false, false, true, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Popup Trigger
+selectMenu(PAResourceCommand.PACommandNames_OPEN_FILE_WITH, "Open With"); // al (PAResourceCommand.PACommandNames_OPEN_FILE_WITH, Open With)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // al (PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, Hierarchy Update)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // al (PAResourceQtoS.SrcMenu_IP_HIERARCHY, IP Hierarchy)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // al (PAResourceQtoS.SrcMenu_IP_HIERARCHY, IP Hierarchy)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // al (PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, Hierarchy Update)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header, el2_param.vh]", 4, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, SystemVerilog, el2_pdef.vh]", 6, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, SystemVerilog, el2_pdef.vh]", 6, false, false, false, false, true, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Popup Trigger
+selectMenu(PAResourceCommand.PACommandNames_OPEN_FILE_WITH, "Open With"); // al (PAResourceCommand.PACommandNames_OPEN_FILE_WITH, Open With)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // al (PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, Hierarchy Update)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // al (PAResourceQtoS.SrcMenu_IP_HIERARCHY, IP Hierarchy)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // al (PAResourceQtoS.SrcMenu_IP_HIERARCHY, IP Hierarchy)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // al (PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, Hierarchy Update)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // al (PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, Hierarchy Update)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // al (PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, Hierarchy Update)
+selectMoreButton(PAResourceQtoS.SrcFilePropPanels_TYPE, (String) null); // r (PAResourceQtoS.SrcFilePropPanels_TYPE)
+// WARNING: HEventQueue.dispatchEvent() is taking  2824 ms.
+selectComboBox(PAResourceQtoS.SrcFileTypeComboBox_SOURCE_FILE_TYPE, "SrcFileTypeComboBox", "Verilog", 0); // bc (PAResourceQtoS.SrcFileTypeComboBox_SOURCE_FILE_TYPE, SrcFileTypeComboBox)
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (RDIResource.BaseDialog_OK)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: set_property file_type Verilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_pdef.vh] 
+dismissDialog("Set Type"); // K (dialog6)
+// Elapsed Time for: 'L.f': 20m:24s
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, SystemVerilog, el2_pdef.vh]", 6, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+// Elapsed Time for: 'L.f': 20m:30s
+// WARNING: HEventQueue.dispatchEvent() is taking  2169 ms.
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, el2_pdef.vh]", 7, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, el2_pdef.vh]", 7, false, false, false, false, true, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Popup Trigger
+selectMenu(PAResourceCommand.PACommandNames_OPEN_FILE_WITH, "Open With"); // al (PAResourceCommand.PACommandNames_OPEN_FILE_WITH, Open With)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // al (PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, Hierarchy Update)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // al (PAResourceQtoS.SrcMenu_IP_HIERARCHY, IP Hierarchy)
+selectMenuItem(PAResourceCommand.PACommandNames_SET_GLOBAL_INCLUDE, "Set Global Include"); // ao (PAResourceCommand.PACommandNames_SET_GLOBAL_INCLUDE, set_global_include_menu)
+// Run Command: PAResourceCommand.PACommandNames_SET_GLOBAL_INCLUDE
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: set_property is_global_include true [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_pdef.vh] 
+// WARNING: HTimer (FileMgr Design Graph Update Timer) is taking 3756ms to process. Increasing delay to 7000 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  3756 ms.
+// HMemoryUtils.trashcanNow. Engine heap size: 1,925 MB. GUI used memory: 86 MB. Current time: 2/24/24, 10:49:41 AM GMT
+// Elapsed Time for: 'L.f': 20m:40s
+// Elapsed Time for: 'L.f': 20m:42s
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Global Include]", 1); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectMoreButton(PAResourceQtoS.SrcFilePropPanels_TYPE, (String) null); // r (PAResourceQtoS.SrcFilePropPanels_TYPE)
+// WARNING: HEventQueue.dispatchEvent() is taking  2741 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1631 ms.
+selectComboBox(PAResourceQtoS.SrcFileTypeComboBox_SOURCE_FILE_TYPE, "SrcFileTypeComboBox", "SystemVerilog", 2); // bc (PAResourceQtoS.SrcFileTypeComboBox_SOURCE_FILE_TYPE, SrcFileTypeComboBox)
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (RDIResource.BaseDialog_OK)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: set_property file_type SystemVerilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_pdef.vh] 
+dismissDialog("Set Type"); // K (dialog7)
+// WARNING: HEventQueue.dispatchEvent() is taking  2212 ms.
+// Elapsed Time for: 'L.f': 21m:04s
+// WARNING: HEventQueue.dispatchEvent() is taking  3084 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  8170 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  4101 ms.
+// Elapsed Time for: 'L.f': 21m:20s
+// WARNING: HEventQueue.dispatchEvent() is taking  3649 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  3933 ms.
+// Elapsed time: 32 seconds
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, rvjtag_tap.v]", 9, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, rvjtag_tap.v]", 9, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+// WARNING: HEventQueue.dispatchEvent() is taking  3300 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1413 ms.
+// Elapsed time: 43 seconds
+selectMoreButton(PAResourceQtoS.SrcFilePropPanels_TYPE, (String) null); // r (PAResourceQtoS.SrcFilePropPanels_TYPE)
+// Elapsed time: 15 seconds
+selectMoreButton(PAResourceQtoS.SrcFilePropPanels_TYPE, (String) null); // r (PAResourceQtoS.SrcFilePropPanels_TYPE)
+// WARNING: HEventQueue.dispatchEvent() is taking  2870 ms.
+selectComboBox(PAResourceQtoS.SrcFileTypeComboBox_SOURCE_FILE_TYPE, "SrcFileTypeComboBox", "Verilog Header", 1); // bc (PAResourceQtoS.SrcFileTypeComboBox_SOURCE_FILE_TYPE, SrcFileTypeComboBox)
+selectComboBox(PAResourceQtoS.SrcFileTypeComboBox_SOURCE_FILE_TYPE, "SrcFileTypeComboBox", "SystemVerilog", 2); // bc (PAResourceQtoS.SrcFileTypeComboBox_SOURCE_FILE_TYPE, SrcFileTypeComboBox)
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (RDIResource.BaseDialog_OK)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: set_property file_type SystemVerilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/dmi/rvjtag_tap.v] 
+dismissDialog("Set Type"); // K (dialog8)
+// WARNING: HTimer (FileMgr Design Graph Update Timer) is taking 1433ms to process. Increasing delay to 8000 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1433 ms.
+// [Engine Memory]: 1,972 MB (+16687kb) [00:30:08]
+// HMemoryUtils.trashcanNow. Engine heap size: 1,972 MB. GUI used memory: 87 MB. Current time: 2/24/24, 10:51:43 AM GMT
+// Elapsed Time for: 'L.f': 22m:42s
+// Elapsed Time for: 'L.f': 22m:48s
+// Elapsed time: 38 seconds
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Verilog Header, pic_map_auto.h]", 5, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+// WARNING: HEventQueue.dispatchEvent() is taking  1946 ms.
+// Elapsed time: 115 seconds
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, SystemVerilog]", 7); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+// Elapsed time: 28 seconds
+selectTree(PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, "[, Synthesis, Run Synthesis]", 15, false); // f (PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, Flow Navigator Tree)
+// Run Command: PAResourceCommand.PACommandNames_RUN_SYNTHESIS
+// WARNING: HEventQueue.dispatchEvent() is taking  2827 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  3216 ms.
+// Elapsed time: 15 seconds
+selectComboBox(PAResourceItoN.NumJobsChooser_NUMBER_OF_JOBS, "8", 7); // d (PAResourceItoN.NumJobsChooser_NUMBER_OF_JOBS)
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (RDIResource.BaseDialog_OK)
+// WARNING: HEventQueue.dispatchEvent() is taking  2649 ms.
+dismissDialog("Launch Runs"); // f (dialog9)
+// TclEventType: RUN_LAUNCH
+// TclEventType: RUN_MODIFY
+// TclEventType: RUN_STATUS_CHANGE
+// Tcl Message: launch_runs synth_1 -jobs 8 
+// Tcl Message: [Sat Feb 24 10:55:00 2024] Launched synth_1... Run output will be captured here: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/EL2_Prj/EL2_Prj.runs/synth_1/runme.log 
+// 'i' command handler elapsed time: 18 seconds
+dismissDialog("Starting Design Runs"); // bq (Starting Design Runs Progress)
+// TclEventType: RUN_STATUS_CHANGE
+// HMemoryUtils.trashcanNow. Engine heap size: 1,998 MB. GUI used memory: 86 MB. Current time: 2/24/24, 10:55:03 AM GMT
+// TclEventType: RUN_FAILED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// WARNING: HEventQueue.dispatchEvent() is taking  2908 ms.
+// Elapsed time: 20 seconds
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (RDIResource.BaseDialog_OK)
+// Run Command: PAResourceCommand.PACommandNames_MESSAGE_WINDOW
+dismissDialog("Synthesis Failed"); // Q.a (dialog10)
+// Elapsed time: 11 seconds
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, el2_veer_wrapper (el2_veer_wrapper.sv)]", 13); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, el2_veer_wrapper (el2_veer_wrapper.sv), veer : el2_veer (el2_veer.sv)]", 14); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+// WARNING: HEventQueue.dispatchEvent() is taking  1103 ms.
+// Elapsed time: 25 seconds
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, el2_veer_wrapper (el2_veer_wrapper.sv), dmi_mux : dmi_mux (dmi_mux.v)]", 31, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, el2_veer_wrapper (el2_veer_wrapper.sv), dmi_mux : dmi_mux (dmi_mux.v)]", 31, false, false, false, false, false, true); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Double Click
+// HMemoryUtils.trashcanNow. Engine heap size: 2,030 MB. GUI used memory: 91 MB. Current time: 2/24/24, 10:56:03 AM GMT
+// Elapsed time: 11 seconds
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, el2_veer_wrapper (el2_veer_wrapper.sv), dmi_mux : dmi_mux (dmi_mux.v)]", 31, false, false, false, false, true, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Popup Trigger
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, el2_veer_wrapper (el2_veer_wrapper.sv), dmi_mux : dmi_mux (dmi_mux.v)]", 31, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, el2_veer_wrapper (el2_veer_wrapper.sv), dmi_wrapper : dmi_wrapper (dmi_wrapper.v)]", 30, true, false, true, false, false, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Control Key - Node
+selectMoreButton(PAResourceQtoS.SrcFilePropPanels_TYPE, (String) null); // r (PAResourceQtoS.SrcFilePropPanels_TYPE)
+// WARNING: HEventQueue.dispatchEvent() is taking  2962 ms.
+selectComboBox(PAResourceQtoS.SrcFileTypeComboBox_SOURCE_FILE_TYPE, "SrcFileTypeComboBox", "SystemVerilog", 2); // bc (PAResourceQtoS.SrcFileTypeComboBox_SOURCE_FILE_TYPE, SrcFileTypeComboBox)
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (RDIResource.BaseDialog_OK)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: set_property file_type SystemVerilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/dmi/dmi_mux.v] 
+dismissDialog("Set Type"); // K (dialog11)
+// HMemoryUtils.trashcanNow. Engine heap size: 2,045 MB. GUI used memory: 90 MB. Current time: 2/24/24, 10:56:28 AM GMT
+// Elapsed Time for: 'L.f': 27m:28s
+// Elapsed Time for: 'L.f': 27m:36s
+// Elapsed time: 20 seconds
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, el2_veer_wrapper (el2_veer_wrapper.sv), veer : el2_veer (el2_veer.sv), dbg : el2_dbg (el2_dbg.sv)]", 19); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, el2_veer_wrapper (el2_veer_wrapper.sv), veer : el2_veer (el2_veer.sv), ifu : el2_ifu (el2_ifu.sv)]", 50); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, el2_veer_wrapper (el2_veer_wrapper.sv), veer : el2_veer (el2_veer.sv), dec : el2_dec (el2_dec.sv)]", 55); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, el2_veer_wrapper (el2_veer_wrapper.sv), veer : el2_veer (el2_veer.sv), exu : el2_exu (el2_exu.sv)]", 61); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, el2_ifu_tb_memread (el2_ifu_tb_memread.sv)]", 84); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+// WARNING: HEventQueue.dispatchEvent() is taking  1896 ms.
+selectTree(PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, "[, Synthesis, Run Synthesis]", 15, false); // f (PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, Flow Navigator Tree)
+// Run Command: PAResourceCommand.PACommandNames_RUN_SYNTHESIS
+// WARNING: HEventQueue.dispatchEvent() is taking  2917 ms.
+// TclEventType: RUN_MODIFY
+// TclEventType: RUN_RESET
+// TclEventType: RUN_STATUS_CHANGE
+// Tcl Message: reset_run synth_1 
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_RESET
+// TclEventType: RUN_MODIFY
+// WARNING: HEventQueue.dispatchEvent() is taking  2713 ms.
+// HMemoryUtils.trashcanNow. Engine heap size: 2,070 MB. GUI used memory: 88 MB. Current time: 2/24/24, 10:57:14 AM GMT
+// WARNING: HEventQueue.dispatchEvent() is taking  2314 ms.
+// Elapsed time: 11 seconds
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (RDIResource.BaseDialog_OK)
+// WARNING: HEventQueue.dispatchEvent() is taking  2540 ms.
+dismissDialog("Launch Runs"); // f (dialog12)
+// TclEventType: RUN_LAUNCH
+// TclEventType: RUN_MODIFY
+// [Engine Memory]: 2,070 MB (+102kb) [00:35:47]
+// TclEventType: RUN_STATUS_CHANGE
+// Tcl Message: launch_runs synth_1 -jobs 8 
+// Tcl Message: [Sat Feb 24 10:57:22 2024] Launched synth_1... Run output will be captured here: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/EL2_Prj/EL2_Prj.runs/synth_1/runme.log 
+// 'i' command handler elapsed time: 14 seconds
+dismissDialog("Starting Design Runs"); // bq (Starting Design Runs Progress)
+// TclEventType: RUN_STATUS_CHANGE
+// WARNING: HEventQueue.dispatchEvent() is taking  2657 ms.
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// Elapsed time: 172 seconds
+selectTab((HResource) null, (HResource) null, "Tcl Console", 0); // aa
+// WARNING: HEventQueue.dispatchEvent() is taking  3059 ms.
+selectRadioButton(PAResourceCommand.PACommandNames_REPORTS_WINDOW, "View Reports"); // a (PAResourceCommand.PACommandNames_REPORTS_WINDOW)
+selectButton(RDIResource.BaseDialog_CANCEL, "Cancel"); // a (RDIResource.BaseDialog_CANCEL)
+dismissDialog("Synthesis Completed"); // Q.a (dialog13)
+// Elapsed time: 33 seconds
+setText(RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE, (String) null); // h.b (RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE)
+// WARNING: HEventQueue.dispatchEvent() is taking  1313 ms.
+// Elapsed time: 32 seconds
+setText(RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE, "create_project EL2_Prj /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/EL2_Prj -part xczu19eg-ffvc1760-2-i"); // h.b (RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE)
+// Elapsed time: 32 seconds
+setText(RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE, "update_compile_order -fileset sources_1"); // h.b (RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE)
+setText(RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE, "set_property file_type SystemVerilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/dmi/dmi_jtag_to_core_sync.v]"); // h.b (RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE)
+setText(RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE, "set_property is_global_include true [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/common_defines.vh]"); // h.b (RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE)
+// Elapsed time: 11 seconds
+setText(RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE, "update_compile_order -fileset sources_1"); // h.b (RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE)
+setText(RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE, "set_property file_type SystemVerilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_pdef.vh]"); // h.b (RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE)
+setText(RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE, "set_property file_type Verilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_pdef.vh]"); // h.b (RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE)
+setText(RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE, "set_property is_global_include true [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_pdef.vh]"); // h.b (RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE)
+setText(RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE, "set_property file_type SystemVerilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_pdef.vh]"); // h.b (RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE)
+setText(RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE, "set_property file_type SystemVerilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/dmi/rvjtag_tap.v]"); // h.b (RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE)
+// WARNING: HEventQueue.dispatchEvent() is taking  3924 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1020 ms.
+// Elapsed time: 26 seconds
+setText(RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE, "set_property file_type SystemVerilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/dmi/dmi_mux.v]"); // h.b (RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE)
+// Elapsed time: 12 seconds
+setText(RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE, (String) null); // h.b (RDIResource.CommandsInput_TYPE_TCL_COMMAND_HERE)
+// WARNING: HEventQueue.dispatchEvent() is taking  1545 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  7146 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  2354 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  1513 ms.
+// WARNING: HEventQueue.dispatchEvent() is taking  2895 ms.
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'L.f': 48m:40s
+// Elapsed Time for: 'L.f': 48m:48s
+// [GUI Memory]: 177 MB (+3039kb) [00:58:01]
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// WARNING: HEventQueue.dispatchEvent() is taking  2474 ms.
+// HMemoryUtils.trashcanNow. Engine heap size: 2,107 MB. GUI used memory: 95 MB. Current time: 2/24/24, 11:22:28 AM GMT
+// WARNING: HEventQueue.dispatchEvent() is taking  2307 ms.
+// Elapsed time: 1636 seconds
+selectButton(RDIResource.BaseDialog_CANCEL, "Cancel"); // a (RDIResource.BaseDialog_CANCEL)
+dismissDialog("Synthesis Completed"); // Q.a (dialog14)
+// HMemoryUtils.trashcanNow. Engine heap size: 2,109 MB. GUI used memory: 77 MB. Current time: 2/24/24, 11:52:28 AM GMT
+// HMemoryUtils.trashcanNow. Engine heap size: 2,109 MB. GUI used memory: 77 MB. Current time: 2/24/24, 12:22:29 PM GMT
+// HMemoryUtils.trashcanNow. Engine heap size: 2,109 MB. GUI used memory: 74 MB. Current time: 2/24/24, 12:52:29 PM GMT
+// HMemoryUtils.trashcanNow. Engine heap size: 2,109 MB. GUI used memory: 74 MB. Current time: 2/24/24, 1:22:29 PM GMT
+// WARNING: HEventQueue.dispatchEvent() is taking  7870 ms.
+// HMemoryUtils.trashcanNow. Engine heap size: 2,109 MB. GUI used memory: 74 MB. Current time: 2/24/24, 1:52:29 PM GMT
+// HMemoryUtils.trashcanNow. Engine heap size: 2,109 MB. GUI used memory: 75 MB. Current time: 2/24/24, 2:22:29 PM GMT
+// HMemoryUtils.trashcanNow. Engine heap size: 2,109 MB. GUI used memory: 74 MB. Current time: 2/24/24, 2:52:29 PM GMT
+// HMemoryUtils.trashcanNow. Engine heap size: 2,109 MB. GUI used memory: 75 MB. Current time: 2/24/24, 3:22:29 PM GMT
+// HMemoryUtils.trashcanNow. Engine heap size: 2,111 MB. GUI used memory: 75 MB. Current time: 2/24/24, 3:52:29 PM GMT
+// HMemoryUtils.trashcanNow. Engine heap size: 2,111 MB. GUI used memory: 74 MB. Current time: 2/24/24, 4:22:29 PM GMT
+// HMemoryUtils.trashcanNow. Engine heap size: 2,111 MB. GUI used memory: 75 MB. Current time: 2/24/24, 4:52:29 PM GMT
+// HMemoryUtils.trashcanNow. Engine heap size: 2,111 MB. GUI used memory: 74 MB. Current time: 2/24/24, 5:22:29 PM GMT
+// HMemoryUtils.trashcanNow. Engine heap size: 2,111 MB. GUI used memory: 75 MB. Current time: 2/24/24, 5:52:29 PM GMT
+// HMemoryUtils.trashcanNow. Engine heap size: 2,111 MB. GUI used memory: 75 MB. Current time: 2/24/24, 6:22:29 PM GMT
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'L.f': 08h:01m:28s
+// TclEventType: RUN_STATUS_CHANGE
+// Elapsed Time for: 'L.f': 08h:01m:36s
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// WARNING: HEventQueue.dispatchEvent() is taking  3663 ms.
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'L.f': 08h:03m:04s
+// HMemoryUtils.trashcanNow. Engine heap size: 2,147 MB. GUI used memory: 76 MB. Current time: 2/24/24, 6:32:09 PM GMT
+// TclEventType: RUN_STATUS_CHANGE
+// Elapsed Time for: 'L.f': 08h:03m:12s
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'L.f': 08h:04m:32s
+// HMemoryUtils.trashcanNow. Engine heap size: 2,167 MB. GUI used memory: 78 MB. Current time: 2/24/24, 6:33:34 PM GMT
+// Elapsed Time for: 'L.f': 08h:04m:40s
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'L.f': 08h:06m:08s
+// [Engine Memory]: 2,185 MB (+12286kb) [08:13:35]
+// HMemoryUtils.trashcanNow. Engine heap size: 2,187 MB. GUI used memory: 77 MB. Current time: 2/24/24, 6:35:14 PM GMT
+// Elapsed Time for: 'L.f': 08h:06m:16s
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'L.f': 08h:07m:44s
+// Elapsed Time for: 'L.f': 08h:07m:52s
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'L.f': 08h:09m:20s
+// HMemoryUtils.trashcanNow. Engine heap size: 2,229 MB. GUI used memory: 78 MB. Current time: 2/24/24, 6:38:24 PM GMT
+// Elapsed Time for: 'L.f': 08h:09m:28s
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'L.f': 08h:10m:56s
+// HMemoryUtils.trashcanNow. Engine heap size: 2,247 MB. GUI used memory: 77 MB. Current time: 2/24/24, 6:39:59 PM GMT
+// Elapsed Time for: 'L.f': 08h:11m:04s
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'L.f': 08h:12m:48s
+// TclEventType: RUN_STATUS_CHANGE
+// Elapsed Time for: 'L.f': 08h:12m:56s
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED

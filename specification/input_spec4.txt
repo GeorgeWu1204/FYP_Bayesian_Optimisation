@@ -1,0 +1,18 @@
+#input self constraint
+var: btb_size                  range: [8,512]    scale: 8     exp: 2      shift: 0
+var: icache_size               range: [8,256]    scale: 8     exp: 2      shift: 0
+
+#input coupled constraint
+
+#input constant
+
+#output objective
+obj_name: mcycle       obj_direct: minimise
+
+#output constraint
+obj_name: LUT as Logic              range: [0,10]
+
+#data
+objective: EL2
+vivado_project_path: ../object_functions/Vivado_Prj/EL2_Prj/
+generation_path: ../object_functions/Cores-VeeR-EL2/

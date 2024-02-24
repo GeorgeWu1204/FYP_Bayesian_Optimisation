@@ -1,5 +1,7 @@
 from format_constraints import Input_Constraints
-from parameter_tuning import NutShell_parameter_tuning
+from parameter_tuning import NutShell_parameter_tuning, EL2_parameter_tuning
+import math
+
 def fill_constraints(self_constraints, coupled_constraints, device):
     """this function is used to fill the constraints in the interface"""
     # self_constraints: {var_name: [lower_bound, upper_bound, scale]}
@@ -8,13 +10,21 @@ def fill_constraints(self_constraints, coupled_constraints, device):
     input_scales = [1] * input_dim
     input_normalized_factor = [1] * input_dim
     input_offset = [0] * input_dim
+    input_exp = [1] * input_dim
     for i, var_obj in enumerate(self_constraints.keys()):
-        input_scales[i] = int(self_constraints[var_obj][2])
-        input_normalized_factor[i] = int((self_constraints[var_obj][1] - self_constraints[var_obj][0])/ input_scales[i])
-        input_offset[i] = int(self_constraints[var_obj][0] / input_scales[i])
+        if self_constraints[var_obj][3] > 1:
+            #no scale
+            input_offset[i] = int(math.log(self_constraints[var_obj][0], self_constraints[var_obj][3]))
+            self_constraints[var_obj][2] = 1
+            input_normalized_factor[i] = int(math.log(self_constraints[var_obj][1], self_constraints[var_obj][3])) - input_offset[i]
+            input_exp[i] = self_constraints[var_obj][3]
+        else:
+            input_scales[i] = int(self_constraints[var_obj][2])
+            input_normalized_factor[i] = int((self_constraints[var_obj][1] - self_constraints[var_obj][0])/ input_scales[i])
+            input_offset[i] = int(self_constraints[var_obj][0])
     input_names = list(self_constraints.keys())
     constraint = Input_Constraints(input_dim, device)
-    constraint.update_scale_and_normalize_factor(input_scales, input_normalized_factor)
+    constraint.update_scale_normalize_exp_factor(input_scales, input_normalized_factor, input_exp)
 
     for index, constraints in enumerate(self_constraints.values()):
         constraint.update_self_constraints(index, list(constraints))
@@ -27,7 +37,7 @@ def fill_constraints(self_constraints, coupled_constraints, device):
                 and_constraints[input_names.index(and_constraint)] = coupled_constraints[or_constraint][and_constraint]
             format_coupled_constraint.append(and_constraints)
         constraint.update_coupled_constraints(format_coupled_constraint)
-    return (input_dim, input_scales, input_normalized_factor, input_offset, input_names), constraint
+    return (input_dim, input_scales, input_normalized_factor, input_exp, input_offset, input_names), constraint
 
 def parse_constraints(filename):
     """this function is used to parse the constraints from the file"""
@@ -70,8 +80,9 @@ def parse_constraints(filename):
                     range_values = parts[3].strip('[]').split(',')
                     if section == 'self_constraint':
                         scale = int(parts[5])
-                        self_constraints[var_name] = [int(range_values[0]), int(range_values[1]), scale]
-                        input_shift_amount[var_name] = int(parts[7])
+                        exp = int(parts[7])
+                        self_constraints[var_name] = [int(range_values[0]), int(range_values[1]), scale, exp]
+                        input_shift_amount[var_name] = int(parts[9])
                     elif section == 'coupled_constraint':
                         coupled_parts = line.split('and')
                         coupled_data = {}
@@ -105,8 +116,10 @@ def parse_constraints(filename):
                 generation_path = line.split()[1]
             elif line.startswith('board_settings'):
                 board_settings = line.split()[1]
-    if objective_function_category == 'real-time':
+    if objective_function_category == 'NutShell':
         parameter_tuning_obj = NutShell_parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), objective_function_setting_path, generation_path, vivado_project_path, board_settings)
+    elif objective_function_category == 'EL2':
+        parameter_tuning_obj = EL2_parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), generation_path, vivado_project_path)
     else:
         parameter_tuning_obj = None
     return self_constraints, coupled_constraints, input_constant, output_objective, output_constraints, objective_function_category, parameter_tuning_obj

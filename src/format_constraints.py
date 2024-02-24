@@ -2,6 +2,7 @@ import torch
 import numpy as np
 import random
 from utils import build_matrix
+import math
 
 MAX_PARAMETER_VALUE = 1000
 NEGATIVE_PARAMETER_VALUE = -1000
@@ -15,8 +16,9 @@ class Constraints_Node:
         self.normalized_factor = 1
         self.rounded_region = 0.45/(self.scale * self.normalized_factor)
         self.offset = 0
+        self.exp_factor = 1
 
-    def initialize_scale_and_normalise_factor(self, scale, normalized_factor):
+    def initialize_scale_normalise_exp_factor(self, scale, normalized_factor, exp_factor):
         self.scale = scale
         self.normalized_factor = normalized_factor
         self.rounded_region = 0.45/(self.scale * self.normalized_factor)
@@ -30,8 +32,12 @@ class Constraints_Node:
     def check_condition_included(self, condition):
         # TODOTODO, need to modify due to the change of normalisation
         """Check whether the condition is included in the condition list. If not, add it to the list."""
-        lower_bound_cond = condition[0] - self.offset / (self.scale * self.normalized_factor) - self.rounded_region
-        upper_bound_cond = condition[1] - self.offset / (self.scale * self.normalized_factor) + self.rounded_region
+        if self.exp_factor != 1:
+            lower_bound_cond = int(math.log(condition[0], self.exp_factor) - self.offset ) / (self.scale * self.normalized_factor) - self.rounded_region 
+            upper_bound_cond = int(math.log(condition[1], self.exp_factor) - self.offset ) / (self.scale * self.normalized_factor) + self.rounded_region
+        else:
+            lower_bound_cond = (condition[0] - self.offset) / (self.scale * self.normalized_factor) - self.rounded_region 
+            upper_bound_cond = (condition[1] - self.offset) / (self.scale * self.normalized_factor) + self.rounded_region 
         
         if lower_bound_cond < self.individual_constraints[0] or upper_bound_cond > self.individual_constraints[1]:
             lower_bound_cond = max(lower_bound_cond, self.individual_constraints[0])
@@ -61,10 +67,10 @@ class Input_Constraints:
         self.normalized_bound[:,index] = torch.tensor([indvidual_constraint[0], indvidual_constraint[1]])
         self.constraint_bound[:,index] = torch.tensor(self.Node[index].individual_constraints)
 
-    def update_scale_and_normalize_factor(self, scales, normalized_factors):
+    def update_scale_normalize_exp_factor(self, scales, normalized_factors, exp_factors):
         self.normalized_factors = normalized_factors
         for index in range(self.dim):
-            self.Node[index].initialize_scale_and_normalise_factor(scales[index], normalized_factors[index])
+            self.Node[index].initialize_scale_normalise_exp_factor(scales[index], normalized_factors[index], exp_factors[index])
 
     def update_coupled_constraints(self, new_constraints):
         # new_constraints = {index: [condition]}
@@ -141,7 +147,6 @@ class Input_Constraints:
                 inequality_constraints[i][j] = self.check_meet_constraint(individual_constraint, correlated_constraints, i * q_dim + j)
         return inequality_constraints
     
-        
             
 class Constraints_Brute_Force:
     def __init__(self, obj_to_optimise_dim, obj_to_check_constraints_dim):

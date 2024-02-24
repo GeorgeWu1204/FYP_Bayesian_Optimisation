@@ -50,21 +50,30 @@ def normalise_output_data(input_tensor, normalized_factors, device):
             output_tensor[j][i] = input_tensor[j][i] / normalized_factors[i]
     return output_tensor
 
-def recover_single_input_data(input_tensor, normalised_factor, scales, offsets):
+def recover_single_input_data(input_tensor, normalised_factor, scales, offsets, exps = None):
     """This function is to find the real input from the x tensor in optimisation process"""
     #assuming the input_tensor is in the shape of num_restarts x d_dim
-    input_var = torch.round(input_tensor * normalised_factor) * scales + offsets
+    if exps is not None:
+        input_var = exps ** (torch.round(input_tensor * normalised_factor) * scales + offsets)  
+    else:
+        input_var = torch.round(input_tensor * normalised_factor) * scales + offsets
     results = input_var.tolist()
     return results
 
-def recover_all_input_data(input_tensor, normalised_factor, scales, offsets, type, device):
+def recover_all_input_data(input_tensor, normalised_factor, scales, offsets, type, device, exps = None):
     """This function is to find the real input from the x tensor in recording process"""
-    results = torch.round(input_tensor * torch.tensor(normalised_factor, dtype=type, device=device)) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)
+    if exps is not None:
+        results = (torch.round(input_tensor * torch.tensor(normalised_factor, dtype=type, device=device)) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)) ** exps
+    else:
+        results = torch.round(input_tensor * torch.tensor(normalised_factor, dtype=type, device=device)) * torch.tensor(scales, dtype=type, device=device) + exps
     return results
 
-def recover_unrounded_input_data(input_tensor, normalised_factor, scales, offsets, type, device):
+def recover_unrounded_input_data(input_tensor, normalised_factor, scales, offsets, type, device, exps = None):
     """This function is to find the unrounded version of the real input from the x tensor in recording process"""
-    results = input_tensor * torch.tensor(normalised_factor, dtype=type, device=device) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)
+    if exps is not None:
+        results = (input_tensor * torch.tensor(normalised_factor, dtype=type, device=device) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)) ** exps
+    else:
+        results = input_tensor * torch.tensor(normalised_factor, dtype=type, device=device) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)
     return results
 
 
