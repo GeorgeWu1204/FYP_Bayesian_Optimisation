@@ -38,5 +38,11 @@ Clone Project
 
 - Verilator (4.106 or later)
 - RISC-V GNU Compiler Toolchain
+- ```export RV_ROOT=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2```
+- TODO: have not came up with a better method to handle this. The current method is to modify the ```configs/veer.config``` line 373 to ```$build_path = "/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/$snapshot" ;```
+
+### Steps
+
+```make -f $RV_ROOT/tools/Makefile```
 
 

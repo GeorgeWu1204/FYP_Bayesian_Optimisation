@@ -3,7 +3,7 @@ import subprocess
 import os
 import shutil
 
-class parameter_tuning:
+class NutShell_parameter_tuning:
     def __init__(self, tunable_params, shift_amount, settings_file, generation_path, vivado_project_path, board_settings):
         self.tunable_params = tunable_params        # A dictionary or list of parameters that can be tuned
         self.shift_amount = shift_amount            # The amount by which the parameters are shifted
@@ -15,6 +15,7 @@ class parameter_tuning:
         self.ssh_address = 'george@192.168.129.128'
         self.ssh_password = '001204'
         self.bash_file_path = 'run_on_remote_site.sh'
+        # Log file for the generated reports
         self.generated_report_num = 0
         self.generated_report_directory = '../object_functions/Syn_Report/'
         self.stored_report_directory = '../object_functions/Syn_Report/dynamic_set/'
@@ -118,13 +119,123 @@ class parameter_tuning:
         self.generated_report_num += 1
 
 
+class EL2_parameter_tuning:
+    def __init__(self, tunable_params, shift_amount, generation_path, vivado_project_path):
+        self.tunable_params = tunable_params        # A dictionary or list of parameters that can be tuned
+        self.shift_amount = shift_amount            # The amount by which the parameters are shifted
+        self.generation_path = generation_path      # Path to execute the generation command
+        self.vivado_project_path = vivado_project_path
+        self.tcl_path = '../tools/run_synthesis.tcl'
+        # Log file for the generated reports
+        self.generated_report_num = 0
+        self.generated_report_directory = '../object_functions/Syn_Report/'
+        self.stored_report_directory = '../object_functions/Syn_Report/dynamic_set/'
+        self.generated_filename = 'EL2_utilization_synth.rpt'
+        self.generated_logfile = '../object_functions/Logs/'
+
+    def tune_parameter(self, new_value):
+        '''Tune the parameters in the Scala settings file.'''
+        try:
+            # Run the 'make' command in the directory where the Makefile is located
+            rv_root = os.environ.get('RV_ROOT')
+            if not rv_root:
+                print("RV_ROOT environment variable is not set.")
+                return False
+            command = [rv_root + '/configs/veer.config']  # Replace '/path/to/tool' with the correct tool or interpreter
+            for index, param in enumerate(self.tunable_params):
+                value = str(round(new_value[index]) << self.shift_amount[index])
+                command.append('-set={param}={value}'.format(param=param, value=value))
+            with open(self.generated_logfile + 'Processor_Generation.log', 'w') as f:
+                subprocess.run(['pwd'], check=True, cwd=self.generation_path, stdout=f, stderr=f)
+                subprocess.run(command, check=True, cwd=self.generation_path, stdout=f, stderr=f)
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"Error tuning the veer.config: {e}")
+            return False
+        
+    def run_performance_simulation(self):
+        try:
+            # Expand the environment variable
+            rv_root = os.environ.get('RV_ROOT', '')  # Default to an empty string if RV_ROOT is not set
+            if not rv_root:
+                print("RV_ROOT environment variable is not set.")
+                return None, None
+
+            # Prepare the command with the expanded environment variable
+            command = ['make', '-f', os.path.join(rv_root, 'tools/Makefile')]
+
+            # Run the 'make' command in the directory where the Makefile is located
+            with open(self.generated_logfile + 'Processor_Generation.log', 'a') as f:
+                subprocess.run(command, check=True, cwd=self.generation_path, stdout=f, stderr=f)
+            minstret, mcycle = self.extract_minstret_mcycle(self.generated_logfile + 'Processor_Generation.log')
+            return minstret, mcycle
+        except subprocess.CalledProcessError as e:
+            # Optionally, log the error message from the exception
+            print(f"Error occurred: {e}")
+            return None, None
+    
+    def run_synthesis(self):
+        '''Run synthesis using the new parameters.'''
+        command = ["vivado", "-nolog", "-nojournal", "-mode", "batch", "-source", self.tcl_path]
+        try:
+            with open(self.generated_logfile + 'Synthesis.log', 'w') as f:
+                subprocess.run(command, check=True, cwd=self.vivado_project_path, stdout=f, stderr=f)
+        except subprocess.CalledProcessError as e:
+            print(f"Error executing Vivado: {e}")
+    
+    def store_synthesis_report(self):
+        '''Store the synthesis report in a file.'''
+        name, extension = os.path.splitext(self.generated_filename)
+        new_name = name + '_' + str(self.generated_report_num) + extension
+        shutil.copy(self.generated_report_directory + self.generated_filename, self.stored_report_directory + new_name)
+        self.generated_report_num += 1
+
+
+    def extract_minstret_mcycle(self, log_file_path):
+        """
+        Extracts minstret and mcycle values from a log file.
+
+        Parameters:
+        - log_file_path: str, the path to the log file.
+
+        Returns:
+        - A tuple (minstret, mcycle) with the extracted values if found, otherwise (None, None).
+        """
+        # Regular expression to match the specific line and capture minstret and mcycle values
+        pattern = r'Finished : minstret = (\d+), mcycle = (\d+)'
+
+        # Initialize variables to store the extracted values
+        minstret = None
+        mcycle = None
+
+        # Open the log file and read line by line
+        try:
+            with open(log_file_path, 'r') as file:
+                for line in file:
+                    # Search for the pattern in each line
+                    match = re.search(pattern, line)
+                    # If a match is found, extract the values
+                    if match:
+                        minstret = int(match.group(1))
+                        mcycle = int(match.group(2))
+                        # Break the loop after finding the first match
+                        break
+        except FileNotFoundError:
+            print(f"Error: The file {log_file_path} was not found.")
+            return None, None
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None, None
+
+        return minstret, mcycle
+
 if __name__ == '__main__':
-    board_settings = 'PXIeSettings'
-    tunable_params = ['NrExtIntr', 'MMIOSize']
-    settings_file = '../object_functions/NutShell/src/main/scala/top/Settings.scala'
-    generation_path = '../object_functions/NutShell/'
-    new_value = [2, 5]
-    shift_amount = (0, 28)
-    vivado_project_path = '../object_functions/NutShell_Prj/'
-    pt = parameter_tuning(tunable_params, shift_amount, settings_file, generation_path, vivado_project_path, board_settings)
-    pt.run_synthesis()
+    tunable_params = ['btb_size', 'icache_size' ]
+    generation_path = '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
+    new_value = [8, 16]
+    shift_amount = [0, 0]
+    vivado_project_path = '../object_functions/EL2_Prj/'
+    pt = EL2_parameter_tuning(tunable_params, shift_amount, generation_path, vivado_project_path)
+    pt.tune_parameter(new_value)
+    a, b = pt.run_performance_simulation()
+    print(a, b)

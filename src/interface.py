@@ -1,5 +1,5 @@
 from format_constraints import Input_Constraints
-from parameter_tuning import parameter_tuning
+from parameter_tuning import NutShell_parameter_tuning
 def fill_constraints(self_constraints, coupled_constraints, device):
     """this function is used to fill the constraints in the interface"""
     # self_constraints: {var_name: [lower_bound, upper_bound, scale]}
@@ -106,7 +106,7 @@ def parse_constraints(filename):
             elif line.startswith('board_settings'):
                 board_settings = line.split()[1]
     if objective_function_category == 'real-time':
-        parameter_tuning_obj = parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), objective_function_setting_path, generation_path, vivado_project_path, board_settings)
+        parameter_tuning_obj = NutShell_parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), objective_function_setting_path, generation_path, vivado_project_path, board_settings)
     else:
         parameter_tuning_obj = None
     return self_constraints, coupled_constraints, input_constant, output_objective, output_constraints, objective_function_category, parameter_tuning_obj
