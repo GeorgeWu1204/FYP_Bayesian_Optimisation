@@ -329,7 +329,6 @@ class EL2_Data(Data_Set):
             utilisation_percentage = self.build_new_dataset.find_corresponding_data(sample_input)
             if utilisation_percentage is None:
                 print("Not found in the dataset, Start to Generate ")
-                
                 pass_generation = self.param_tuner.tune_parameter(sample_input)
                 # Check if successfully generated the processor
                 if not pass_generation:
@@ -339,14 +338,16 @@ class EL2_Data(Data_Set):
                 objective_results = []
                 # Run the Performance Simulation
                 if self.performance_objs != []:
-                    minstret, mcycle = self.param_tuner.run_performance_simulation()
+                    valid_simulation, minstret, mcycle = self.param_tuner.run_performance_simulation()
+                    if valid_simulation == False:
+                        self.build_new_dataset.record_data(sample_input, 'failed')
+                        return False, results
                     for perf_obj in self.performance_objs:
                         if perf_obj == 0:
                             objective_results.append(minstret)
                         elif perf_obj == 1:
                             objective_results.append(mcycle)
                 # Run the Synthesis on Vivado
-                print("Start to run the synthesis")
                 self.param_tuner.run_synthesis()
                 # Store the utilisation result
                 self.param_tuner.store_synthesis_report()
@@ -354,7 +355,6 @@ class EL2_Data(Data_Set):
                 utilisation_percentage = read_utilization_percentage(self.utilisation_path, self.objs_to_evaluate[len(self.performance_objs) : ])
                 objective_results += utilisation_percentage 
                 self.build_new_dataset.record_data(sample_input, objective_results)
-                print("objective_results ", objective_results)
                 for obj_index in range(self.objs_to_evaluate_dim):
                     obj = self.objs_to_evaluate[obj_index]
                     results[i][obj_index] = objective_results[obj_index]
@@ -372,7 +372,6 @@ class EL2_Data(Data_Set):
                         if self.objs_direct.get(obj, None) == 'minimise':
                             results[i][obj_index] = -1 * results[i][obj_index]
                         obj_index += 1
-            quit()
             return True, results
 
         

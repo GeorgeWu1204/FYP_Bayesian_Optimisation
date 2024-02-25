@@ -132,6 +132,7 @@ class EL2_parameter_tuning:
         self.stored_report_directory = '../object_functions/Syn_Report/dynamic_set/'
         self.generated_filename = 'EL2_utilization_synth.rpt'
         self.generated_logfile = '../object_functions/Logs/'
+        self.benchmark = 'cmark'
 
     def tune_parameter(self, new_value):
         '''Tune the parameters in the Scala settings file.'''
@@ -159,20 +160,20 @@ class EL2_parameter_tuning:
             rv_root = os.environ.get('RV_ROOT', '')  # Default to an empty string if RV_ROOT is not set
             if not rv_root:
                 print("RV_ROOT environment variable is not set.")
-                return None, None
-
+                return False, None, None
+            target = 'TEST=' + self.benchmark
             # Prepare the command with the expanded environment variable
-            command = ['make', '-f', os.path.join(rv_root, 'tools/Makefile')]
+            command = ['make', '-f', os.path.join(rv_root, 'tools/Makefile'), target]
 
             # Run the 'make' command in the directory where the Makefile is located
             with open(self.generated_logfile + 'Processor_Generation.log', 'a') as f:
                 subprocess.run(command, check=True, cwd=self.generation_path, stdout=f, stderr=f)
             minstret, mcycle = self.extract_minstret_mcycle(self.generated_logfile + 'Processor_Generation.log')
-            return minstret, mcycle
+            return True, minstret, mcycle
         except subprocess.CalledProcessError as e:
             # Optionally, log the error message from the exception
             print(f"Error occurred: {e}")
-            return None, None
+            return False, None, None
     
     def run_synthesis(self):
         '''Run synthesis using the new parameters.'''

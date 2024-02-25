@@ -1,7 +1,6 @@
 /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2
-veer: Set(s) requested : btb_size=64 icache_size=128
-veer: Overriding btb_size value 512 with 64
-veer: Overriding icache_size value 16 with 128
+veer: Set(s) requested : btb_size=32 icache_size=16
+veer: Overriding btb_size value 512 with 32
 
 VeeR configuration for target=default
 
@@ -11,269 +10,23 @@ veer: bht_array_depth                = 256
 veer: bht_ghr_hash_1                 = 1
 veer: bht_ghr_range                  = 7:0
 veer: bht_ghr_size                   = 8
-veer: bht_hash_string                = {ghr[7:5], hashin[6:2]^ghr[5-1:0]} // cf1
+veer: bht_hash_string                = {ghr[7:4], hashin[5:2]^ghr[4-1:0]} // cf1
 veer: bht_size                       = 512
-veer: btb_addr_hi                    = 6
+veer: btb_addr_hi                    = 5
 veer: btb_addr_lo                    = 2
-veer: btb_array_depth                = 32
-veer: btb_btag_fold                  = 0
-veer: btb_btag_size                  = 8
+veer: btb_array_depth                = 16
+veer: btb_btag_fold                  = 1
+veer: btb_btag_size                  = 9
 veer: btb_enable                     = 1
 veer: btb_fold2_index_hash           = 0
 veer: btb_fullya                     = 0
-veer: btb_index1_hi                  = 6
+veer: btb_index1_hi                  = 5
 veer: btb_index1_lo                  = 2
-veer: btb_index2_hi                  = 11
-veer: btb_index2_lo                  = 7
-veer: btb_index3_hi                  = 16
-veer: btb_index3_lo                  = 12
-veer: btb_size                       = 64
-veer: btb_toffset_size               = 12
-veer: bus_prty_default               = 3
-veer: dma_bus_id                     = 1
-veer: dma_bus_prty                   = 2
-veer: dma_bus_tag                    = 1
-veer: ifu_bus_id                     = 1
-veer: ifu_bus_prty                   = 2
-veer: ifu_bus_tag                    = 3
-veer: lsu_bus_id                     = 1
-veer: lsu_bus_prty                   = 2
-veer: lsu_bus_tag                    = 3
-veer: sb_bus_id                      = 1
-veer: sb_bus_prty                    = 2
-veer: sb_bus_tag                     = 1
-veer: bitmanip_zba                   = 1
-veer: bitmanip_zbb                   = 1
-veer: bitmanip_zbc                   = 1
-veer: bitmanip_zbe                   = 0
-veer: bitmanip_zbf                   = 0
-veer: bitmanip_zbp                   = 0
-veer: bitmanip_zbr                   = 0
-veer: bitmanip_zbs                   = 1
-veer: div_bit                        = 4
-veer: div_new                        = 1
-veer: dma_buf_depth                  = 5
-veer: fast_interrupt_redirect        = 1
-veer: fpga_optimize                  = 1
-veer: iccm_icache                    = 1
-veer: load_to_use_plus1              = 0
-veer: lsu2dma                        = 0
-veer: lsu_num_nbload                 = 4
-veer: lsu_num_nbload_width           = 2
-veer: lsu_stbuf_depth                = 4
-veer: opensource                     = 0
-veer: timer_legal_en                 = 1
-veer: verilator                      = 
-veer: dccm_bank_bits                 = 2
-veer: dccm_bits                      = 16
-veer: dccm_byte_width                = 4
-veer: dccm_data_cell                 = ram_4096x39
-veer: dccm_data_width                = 32
-veer: dccm_eadr                      = 0xf004ffff
-veer: dccm_ecc_width                 = 7
-veer: dccm_enable                    = 1
-veer: dccm_fdata_width               = 39
-veer: dccm_index_bits                = 12
-veer: dccm_num_banks                 = 4
-veer: dccm_num_banks_4               = 
-veer: dccm_offset                    = 0x40000
-veer: dccm_region                    = 0xf
-veer: dccm_reserved                  = 0x1400
-veer: dccm_rows                      = 4096
-veer: dccm_sadr                      = 0xf0040000
-veer: dccm_size                      = 64
-veer: dccm_size_64                   = 
-veer: dccm_width_bits                = 2
-veer: lsu_sb_bits                    = 16
-veer: icache_2banks                  = 1
-veer: icache_bank_bits               = 1
-veer: icache_bank_hi                 = 3
-veer: icache_bank_lo                 = 3
-veer: icache_bank_width              = 8
-veer: icache_banks_way               = 2
-veer: icache_beat_addr_hi            = 5
-veer: icache_beat_bits               = 3
-veer: icache_bypass_enable           = 1
-veer: icache_data_cell               = ram_4096x71
-veer: icache_data_depth              = 4096
-veer: icache_data_index_lo           = 4
-veer: icache_data_width              = 64
-veer: icache_ecc                     = 1
-veer: icache_enable                  = 1
-veer: icache_fdata_width             = 71
-veer: icache_index_hi                = 15
-veer: icache_ln_sz                   = 64
-veer: icache_num_beats               = 8
-veer: icache_num_bypass              = 2
-veer: icache_num_bypass_width        = 2
-veer: icache_num_lines               = 2048
-veer: icache_num_lines_bank          = 512
-veer: icache_num_lines_way           = 1024
-veer: icache_num_ways                = 2
-veer: icache_scnd_last               = 6
-veer: icache_size                    = 128
-veer: icache_status_bits             = 1
-veer: icache_tag_bypass_enable       = 1
-veer: icache_tag_cell                = ram_1024x25
-veer: icache_tag_depth               = 1024
-veer: icache_tag_index_lo            = 6
-veer: icache_tag_lo                  = 16
-veer: icache_tag_num_bypass          = 2
-veer: icache_tag_num_bypass_width    = 2
-veer: icache_waypack                 = 1
-veer: iccm_bank_bits                 = 2
-veer: iccm_bank_hi                   = 3
-veer: iccm_bank_index_lo             = 4
-veer: iccm_bits                      = 16
-veer: iccm_data_cell                 = ram_4096x39
-veer: iccm_eadr                      = 0xee00ffff
-veer: iccm_enable                    = 1
-veer: iccm_index_bits                = 12
-veer: iccm_num_banks                 = 4
-veer: iccm_num_banks_4               = 
-veer: iccm_offset                    = 0xe000000
-veer: iccm_region                    = 0xe
-veer: iccm_reserved                  = 0x1000
-veer: iccm_rows                      = 4096
-veer: iccm_sadr                      = 0xee000000
-veer: iccm_size                      = 64
-veer: iccm_size_64                   = 
-veer: debug_sb_mem                   = 0xa0580000
-veer: external_data                  = 0xc0580000
-veer: external_data_1                = 0xb0000000
-veer: serialio                       = 0xd0580000
-veer: unused_region0                 = 0x90000000
-veer: unused_region1                 = 0x70000000
-veer: unused_region2                 = 0x60000000
-veer: unused_region3                 = 0x50000000
-veer: unused_region4                 = 0x40000000
-veer: unused_region5                 = 0x30000000
-veer: unused_region6                 = 0x20000000
-veer: unused_region7                 = 0x10000000
-veer: unused_region8                 = 0x00000000
-veer: pic_2cycle                     = 0
-veer: pic_base_addr                  = 0xf00c0000
-veer: pic_bits                       = 15
-veer: pic_int_words                  = 1
-veer: pic_meie_count                 = 31
-veer: pic_meie_mask                  = 0x1
-veer: pic_meie_offset                = 0x2000
-veer: pic_meigwclr_count             = 31
-veer: pic_meigwclr_mask              = 0x0
-veer: pic_meigwclr_offset            = 0x5000
-veer: pic_meigwctrl_count            = 31
-veer: pic_meigwctrl_mask             = 0x3
-veer: pic_meigwctrl_offset           = 0x4000
-veer: pic_meip_count                 = 1
-veer: pic_meip_mask                  = 0x0
-veer: pic_meip_offset                = 0x1000
-veer: pic_meipl_count                = 31
-veer: pic_meipl_mask                 = 0xf
-veer: pic_meipl_offset               = 0x0000
-veer: pic_meipt_count                = 31
-veer: pic_meipt_mask                 = 0x0
-veer: pic_meipt_offset               = 0x3004
-veer: pic_mpiccfg_count              = 1
-veer: pic_mpiccfg_mask               = 0x1
-veer: pic_mpiccfg_offset             = 0x3000
-veer: pic_offset                     = 0xc0000
-veer: pic_region                     = 0xf
-veer: pic_size                       = 32
-veer: pic_total_int                  = 31
-veer: pic_total_int_plus1            = 32
-veer: data_access_addr0              = 0x00000000
-veer: data_access_addr1              = 0x00000000
-veer: data_access_addr2              = 0x00000000
-veer: data_access_addr3              = 0x00000000
-veer: data_access_addr4              = 0x00000000
-veer: data_access_addr5              = 0x00000000
-veer: data_access_addr6              = 0x00000000
-veer: data_access_addr7              = 0x00000000
-veer: data_access_enable0            = 0x0
-veer: data_access_enable1            = 0x0
-veer: data_access_enable2            = 0x0
-veer: data_access_enable3            = 0x0
-veer: data_access_enable4            = 0x0
-veer: data_access_enable5            = 0x0
-veer: data_access_enable6            = 0x0
-veer: data_access_enable7            = 0x0
-veer: data_access_mask0              = 0xffffffff
-veer: data_access_mask1              = 0xffffffff
-veer: data_access_mask2              = 0xffffffff
-veer: data_access_mask3              = 0xffffffff
-veer: data_access_mask4              = 0xffffffff
-veer: data_access_mask5              = 0xffffffff
-veer: data_access_mask6              = 0xffffffff
-veer: data_access_mask7              = 0xffffffff
-veer: inst_access_addr0              = 0x00000000
-veer: inst_access_addr1              = 0x00000000
-veer: inst_access_addr2              = 0x00000000
-veer: inst_access_addr3              = 0x00000000
-veer: inst_access_addr4              = 0x00000000
-veer: inst_access_addr5              = 0x00000000
-veer: inst_access_addr6              = 0x00000000
-veer: inst_access_addr7              = 0x00000000
-veer: inst_access_enable0            = 0x0
-veer: inst_access_enable1            = 0x0
-veer: inst_access_enable2            = 0x0
-veer: inst_access_enable3            = 0x0
-veer: inst_access_enable4            = 0x0
-veer: inst_access_enable5            = 0x0
-veer: inst_access_enable6            = 0x0
-veer: inst_access_enable7            = 0x0
-veer: inst_access_mask0              = 0xffffffff
-veer: inst_access_mask1              = 0xffffffff
-veer: inst_access_mask2              = 0xffffffff
-veer: inst_access_mask3              = 0xffffffff
-veer: inst_access_mask4              = 0xffffffff
-veer: inst_access_mask5              = 0xffffffff
-veer: inst_access_mask6              = 0xffffffff
-veer: inst_access_mask7              = 0xffffffff
-veer: pmp_entries                    = 16
-veer: ret_stack_size                 = 8
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_pdef.vh
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_param.vh
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/common_defines.vh
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/defines.h
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/pd_defines.vh
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/whisper.json
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/perl_configs.pl
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/link.ld
-rm -rf *.log *.s *.hex *.dis *.tbl irun* vcs* simv* *.map snapshots veer* \
-verilator* *.exe obj* *.o *.sym ucli.key vc_hdrs.h csrc *.csv work \
-dataset.asdb library.cfg vsimsa.cfg riviera-build wave.asdb
-make -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/tools/picolibc.mk all
-make[1]: Entering directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
-make[1]: Nothing to be done for 'all'.
-make[1]: Leaving directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
-BUILD_PATH=snapshots/default /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/configs/veer.config -target=default -set build_axi4
-veer: Set(s) requested : build_axi4
-
-VeeR configuration for target=default
-
-veer: bht_addr_hi                    = 9
-veer: bht_addr_lo                    = 2
-veer: bht_array_depth                = 256
-veer: bht_ghr_hash_1                 = 
-veer: bht_ghr_range                  = 7:0
-veer: bht_ghr_size                   = 8
-veer: bht_hash_string                = {hashin[8+1:2]^ghr[8-1:0]}// cf2
-veer: bht_size                       = 512
-veer: btb_addr_hi                    = 9
-veer: btb_addr_lo                    = 2
-veer: btb_array_depth                = 256
-veer: btb_btag_fold                  = 0
-veer: btb_btag_size                  = 5
-veer: btb_enable                     = 1
-veer: btb_fold2_index_hash           = 0
-veer: btb_fullya                     = 0
-veer: btb_index1_hi                  = 9
-veer: btb_index1_lo                  = 2
-veer: btb_index2_hi                  = 17
-veer: btb_index2_lo                  = 10
-veer: btb_index3_hi                  = 25
-veer: btb_index3_lo                  = 18
-veer: btb_size                       = 512
+veer: btb_index2_hi                  = 9
+veer: btb_index2_lo                  = 6
+veer: btb_index3_hi                  = 13
+veer: btb_index3_lo                  = 10
+veer: btb_size                       = 32
 veer: btb_toffset_size               = 12
 veer: bus_prty_default               = 3
 veer: dma_bus_id                     = 1
@@ -477,16 +230,23 @@ veer: inst_access_mask6              = 0xffffffff
 veer: inst_access_mask7              = 0xffffffff
 veer: pmp_entries                    = 16
 veer: ret_stack_size                 = 8
-veer: Writing snapshots/default/el2_pdef.vh
-veer: Writing snapshots/default/el2_param.vh
-veer: Writing snapshots/default/common_defines.vh
-veer: Writing snapshots/default/defines.h
-veer: Writing snapshots/default/pd_defines.vh
-veer: Writing snapshots/default/whisper.json
-veer: Writing snapshots/default/perl_configs.pl
-veer: Writing snapshots/default/link.ld
+veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_pdef.vh
+veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_param.vh
+veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/common_defines.vh
+veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/defines.h
+veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/pd_defines.vh
+veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/whisper.json
+veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/perl_configs.pl
+veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/link.ld
+rm -rf *.log *.s *.hex *.dis *.tbl irun* vcs* simv* *.map veer* \
+verilator* *.exe obj* *.o *.sym ucli.key vc_hdrs.h csrc *.csv work \
+dataset.asdb library.cfg vsimsa.cfg riviera-build wave.asdb
+make -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/tools/picolibc.mk all
+make[1]: Entering directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
  !!! No riscv64-unknown-elf-gcc in path, using canned hex files !!
-cp /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/hex/hello_world.hex program.hex
+cp /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/hex/cmark.hex program.hex
 verilator  --cc -CFLAGS -std=c++11 snapshots/default/common_defines.vh /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/include/el2_def.sv snapshots/default/el2_pdef.vh \
   -Isnapshots/default -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/flist \
   -Wno-WIDTH -Wno-UNOPTFLAT -Wno-IMPLICITSTATIC \
@@ -537,10 +297,10 @@ make[1]: Leaving directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/obj
 touch verilator-build
 # FIXME: Assuming here that either begin_signature or end_signature implies
 # that both symbols are present.
-grep -E "(begin|end)_signature" hello_world.sym >/dev/null 2>&1; \
+grep -E "(begin|end)_signature" cmark.sym >/dev/null 2>&1; \
 if [ $? -eq 0 ]; then \
-	BEG=`grep "begin_signature" hello_world.sym | cut -d\  -f 1`;\
-	END=`grep "end_signature"   hello_world.sym | cut -d\  -f 1`;\
+	BEG=`grep "begin_signature" cmark.sym | cut -d\  -f 1`;\
+	END=`grep "end_signature"   cmark.sym | cut -d\  -f 1`;\
 	./obj_dir/Vtb_top --mem-signature ${BEG} ${END}; \
 else \
 	./obj_dir/Vtb_top; \
@@ -551,12 +311,27 @@ VerilatorTB: Start of sim
 mem_signature_begin = 00000000
 mem_signature_end   = 00000000
 mem_mailbox         = D0580000
--------------------------
-Hello World from VeeR EL2
--------------------------
+2K performance run parameters for coremark.
+CoreMark Size    : 666
+Total ticks      : 376193
+Total time (secs): 376
+Iterat/Sec/MHz   : 2.65
+Iterations       : 1
+Compiler version : GCC12.2.0
+
+Compiler flags   : -finline-limit=400 -mbranch-cost=1 -Ofast -fno-code-hoisting -funroll-all-loops
+
+Memory location  : STATIC
+
+seedcrc          : 0xe9f5
+[0]crclist       : 0xe714
+[0]crcmatrix     : 0x1fd7
+[0]crcstate      : 0x8e3a
+[0]crcfinal      : 0xe714
+Correct operation validated. See readme.txt for run and reporting rules.
 TEST_PASSED
 
-Finished : minstret = 329, mcycle = 706
+Finished : minstret = 259941, mcycle = 398916
 See "exec.log" for execution trace with register updates..
 
 - /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tb_top.sv:380: Verilog $finish
