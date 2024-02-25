@@ -1,16 +1,17 @@
 #input self constraint
-var: btb_size                  range: [8,512]    scale: 8     exp: 2      shift: 0
-var: icache_size               range: [8,256]    scale: 8     exp: 2      shift: 0
+var: btb_size                  range: [32,512]    scale: 32    exp: 2      shift: 0
+var: icache_size               range: [8,256]     scale: 8     exp: 2      shift: 0
 
 #input coupled constraint
 
 #input constant
 
 #output objective
-obj_name: mcycle       obj_direct: minimise
+obj_name: mcycle   benchmark: cmark               obj_direct: minimise     range: [396000,399000]
+obj_name: mcycle   benchmark: hello_world_dccm    obj_direct: minimise     range: [70,80]
 
 #output constraint
-obj_name: LUT as Logic              range: [0,10]
+obj_name: LUT as Logic              range: [0,40000]
 
 #data
 objective: EL2

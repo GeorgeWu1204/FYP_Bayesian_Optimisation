@@ -141,8 +141,8 @@ def find_max_index_in_list(list):
 
 
 
-def read_utilization_percentage(rpt_file_path, variable_names):
-    """This function is used to read the utilization percentage from the Vivado report file"""
+def read_utilization(rpt_file_path, variable_names):
+    """This function is used to read the utilization from the Vivado report file"""
     in_section = False
     # Define a pattern to match the rows in the utilization table
     row_pattern = re.compile(r'\|\s*(.*?)\s*\|\s*(\d+)\s*\|\s*\d+\s*\|\s*\d+\s*\|\s*\d+\s*\|\s*(\d+\.\d+|\d+)\s*\|')
@@ -166,7 +166,7 @@ def read_utilization_percentage(rpt_file_path, variable_names):
                     for variable_name in variable_names:
                         if match and variable_name in match.group(1):
                             # Append the variable name and its Util% to the results list
-                            results.append(float(match.group(3)))
+                            results.append(float(match.group(2)))
                 if table_margin_count == 3:
                     break
             return results
@@ -333,14 +333,16 @@ class test_posterior_result:
 
 if __name__ == '__main__':
     # print("test")
-    # result = read_utilization_percentage('D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\Syn_Report\\NutShell_utilization_synth.rpt', ['LUT as Logic', 'CLB Registers'] )
+    # result = read_utilization('D:\\Imperial\\Year4\\MasterThesis\\FYP_Bayesian_Optimisation\\object_functions\\Syn_Report\\NutShell_utilization_synth.rpt', ['LUT as Logic', 'CLB Registers'] )
     # print(result)
-    x_values = torch.linspace(-0, 0.5, 1000)
-    # Define the condition (start and end points of the step)
-    condition = [0, 0.03]  # Example condition
-    # Calculate y values using the smooth condition function
-    y_values = calculate_smooth_condition(x_values, condition)
+    # x_values = torch.linspace(-0, 0.5, 1000)
+    # # Define the condition (start and end points of the step)
+    # condition = [0, 0.03]  # Example condition
+    # # Calculate y values using the smooth condition function
+    # y_values = calculate_smooth_condition(x_values, condition)
+    # print(y_values)
+    test = read_utilization('../object_functions/Syn_Report/EL2_utilization_synth.rpt', ['LUT as Logic', 'CLB Registers'])
+    print(test)
 
-    print(y_values)
 
     

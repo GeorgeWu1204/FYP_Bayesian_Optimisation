@@ -64,7 +64,7 @@ TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2                # acceptable distance betwee
 
 # Model Settings
 NUM_RESTARTS = 4                # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 32       # number of initial points for BO  Note: has to be power of 2 for sobol sampler
+NUM_OF_INITIAL_POINT = 40       # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
 N_BATCH = 10                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
@@ -78,7 +78,7 @@ plot_posterior = True
 
 
 #reference point for optimisation used for hypervolume calculation
-ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, OBJECTIVES_TO_OPTIMISE, data_set.worst_value, data_set.output_normalised_factors, t_type, device)
+ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, data_set.objs_direct, data_set.worst_value, data_set.output_normalised_factors, t_type, device)
 
 #normalise objective to ensure the same scale
 obj_normalized_factors = list(data_set.output_normalised_factors.values())
@@ -93,7 +93,6 @@ def calculate_hypervolume(ref_points, train_obj):
     """Calculate the hypervolume"""
     # Y dimension (batch_shape) x n x m-dim
     partitioning = NondominatedPartitioning(ref_point=ref_points, Y = train_obj[..., : OBJECTIVES_TO_OPTIMISE_DIM])
-
     hv = partitioning.compute_hypervolume().item()
     return hv
 
@@ -200,7 +199,6 @@ for trial in range (1, N_TRIALS + 1):
     print("train_x_ei: ", train_x_ei)
     print("train_obj_ei: ", train_obj_ei)
     print("<------------------------------------------->")
-    quit()
     train_set_storage.store_initial_data(train_x_ei)
     mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
     #reset the best observation

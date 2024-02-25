@@ -4,7 +4,7 @@ import glob
 import sys
 import pickle
 import os.path as osp
-from utils import calculate_condition, calculate_smooth_condition, recover_single_input_data, read_utilization_percentage
+from utils import calculate_condition, calculate_smooth_condition, recover_single_input_data, read_utilization
 
 class Data_Sample:
     def __init__(self, data, objs, data_set_type):
@@ -31,11 +31,11 @@ class Data_Set:
         self.best_pair = {}
         self.worst_value = {}
         # to recover the output data
-        self.objs_direct = objs
         self.objs_to_optimise_dim = len(objs)
         self.objs_to_evaluate = list(objs.keys()) + list(output_obj_constraint.keys())
         self.objs_to_evaluate_dim = len(self.objs_to_evaluate)
         self.output_normalised_factors = {}
+        objs_direct = {}    
         # to recover the input data
         self.input_normalized_factors = torch.tensor(input_data_normalized_factors, dtype=tensor_type, device=tensor_device)
         self.input_scales_factors = torch.tensor(input_scales, dtype=tensor_type, device=tensor_device)
@@ -58,13 +58,18 @@ class Data_Set:
                 self.__dict__[i] = Data_Sample([i, data[i]], self.objs_to_evaluate, data_set_type)
                 for obj in self.objs_to_evaluate:
                     val_list[obj].append(data[i][obj])
-            for obj in self.objs_to_evaluate:
-                if objs.get(obj, None) == 'minimise':
-                    self.best_value[obj] = min(val_list[obj])
-                    self.worst_value[obj] = max(val_list[obj])
+
+            # Iterate over each item in output_objective
+            for obj, values in objs.items():
+                # Extract the obj_direction from the values list
+                obj_direction = values[0]
+                self.objs_direct[obj] = obj_direction
+                if obj_direction == 'minimise':
+                    self.best_value[obj] = values[1]
+                    self.worst_value[obj] = values[2]
                 else:
-                    self.best_value[obj] = max(val_list[obj])
-                    self.worst_value[obj] = min(val_list[obj])
+                    self.best_value[obj] = values[2]
+                    self.worst_value[obj] = values[1]
                 # for recording the best pair
                 self.best_pair[obj] = [[i] for i in data.keys() if data[i][obj] == self.best_value[obj]][0]
                 
@@ -78,7 +83,10 @@ class Data_Set:
         self.output_constraints_to_check = []
         for obj in output_obj_constraint:
             self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj] for bound in output_obj_constraint[obj]])
-        
+            self.output_normalised_factors[obj] = output_obj_constraint[obj][1]
+            self.best_value[obj] = output_obj_constraint[obj][1]
+            self.worst_value[obj] = 0.0
+    
     def format_input_data(self, input_data):
         """This function is used to add constant input to the input data to make it able to find the ppa result"""
         for index in self.input_constants.keys():
@@ -179,7 +187,6 @@ class NutShell_Data(Data_Set):
         self.utilisation_path = '../object_functions/Syn_Report/NutShell_utilization_synth.rpt'
         self.param_tuner = param_tuner
         # to recover the output data
-        self.objs_direct = objs
         self.objs_to_optimise_dim = len(objs)
         self.objs_to_evaluate = list(objs.keys()) + list(output_obj_constraint.keys())
         self.objs_to_evaluate_dim = len(self.objs_to_evaluate)
@@ -188,14 +195,18 @@ class NutShell_Data(Data_Set):
         self.worst_value = {}
         self.best_value = {}
         # TODO: worst value selection 
-        for obj in list(objs.keys()):
-            self.output_normalised_factors[obj] = 10.0
-            if objs.get(obj, None) == 'minimise':
-                    self.best_value[obj] = 0.0
-                    self.worst_value[obj] = 10.0
+        self.objs_direct = {}
+        # Iterate over each item in output_objective
+        for obj_name, values in objs.items():
+            # Extract the obj_direction from the values list
+            obj_direction = values[0]
+            self.objs_direct[obj_name] = obj_direction
+            if obj_direction == 'minimise':
+                self.best_value[obj_name] = values[1]
+                self.worst_value[obj_name] = values[2]
             else:
-                self.best_value[obj] = 10.0
-                self.worst_value[obj] = 0.0
+                self.best_value[obj_name] = values[2]
+                self.worst_value[obj_name] = values[1]
         # TODO, since for some of the conditions that are very small, the boundary calculation methods does not work well, hence normalising to the largest value of the condition.
         for obj in list(output_obj_constraint.keys()):
             self.output_normalised_factors[obj] = output_obj_constraint[obj][1]
@@ -242,7 +253,7 @@ class NutShell_Data(Data_Set):
                 # Store the utilisation result
                 self.param_tuner.store_synthesis_report()
                 # Read the utilisation percentage
-                utilisation_percentage = read_utilization_percentage(self.utilisation_path, self.objs_to_evaluate)
+                utilisation_percentage = read_utilization(self.utilisation_path, self.objs_to_evaluate)
                 self.build_new_dataset.record_data(sample_input, utilisation_percentage)
                 print("utilisation_percentage ", utilisation_percentage)
                 for obj_index in range(self.objs_to_evaluate_dim):
@@ -271,35 +282,47 @@ class EL2_Data(Data_Set):
     
         self.utilisation_path = '../object_functions/Syn_Report/EL2_utilization_synth.rpt'
         self.param_tuner = param_tuner
+
         # to recover the output data
-        self.objs_direct = objs
         self.objs_to_optimise_dim = len(objs)
         self.objs_to_evaluate = list(objs.keys()) + list(output_obj_constraint.keys())
         self.objs_to_evaluate_dim = len(self.objs_to_evaluate)
         # this is to check what type of performance objectives are needed to be stored
-        self.performance_objs = []
-        if 'minstret' in self.objs_to_evaluate:
-            self.performance_objs.append(0)
-        if 'mcycle' in self.objs_to_evaluate:
-            self.performance_objs.append(1)
+        self.performance_objs_benchmarks = []
         # assume all the output is percentage
         self.output_normalised_factors = {}
         self.worst_value = {}
         self.best_value = {}
-        # TODO: worst value selection 
-        for obj in list(objs.keys()):
-            self.output_normalised_factors[obj] = 10.0
-            if objs.get(obj, None) == 'minimise':
-                    self.best_value[obj] = 0.0
-                    self.worst_value[obj] = 10.0
+        self.objs_direct = {}
+
+        # Iterate over each item in output_objective
+        for obj_name, values in objs.items():
+            # Extract the obj_direction from the values list
+            obj_direction = values[0]
+            self.objs_direct[obj_name] = obj_direction
+            if obj_direction == 'minimise':
+                self.best_value[obj_name] = values[1]
+                self.worst_value[obj_name] = values[2]
             else:
-                self.best_value[obj] = 10.0
-                self.worst_value[obj] = 0.0
+                self.best_value[obj_name] = values[2]
+                self.worst_value[obj_name] = values[1]
+            if self.best_value[obj_name] == self.worst_value[obj_name]:
+                # if the best value is the same as the worst value, then the normalised factor is 1
+                self.output_normalised_factors[obj_name] = 1.0
+            else:
+                # self.output_normalised_factors[obj] = abs(self.best_value[obj] - self.worst_value[obj])
+                self.output_normalised_factors[obj_name] = max(self.best_value[obj_name], self.worst_value[obj_name])
+            if values[3] != 'NotBenchmark':
+                self.performance_objs_benchmarks.append(values[3])
+
         # TODO, since for some of the conditions that are very small, the boundary calculation methods does not work well, hence normalising to the largest value of the condition.
-        for obj in list(output_obj_constraint.keys()):
-            self.output_normalised_factors[obj] = output_obj_constraint[obj][1]
-            self.best_value[obj] = output_obj_constraint[obj][1]
-            self.worst_value[obj] = 0.0
+        self.output_constraints_to_check = []
+        for obj_name in list(output_obj_constraint.keys()):
+            self.output_normalised_factors[obj_name] = output_obj_constraint[obj_name][1]
+            self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj_name] for bound in output_obj_constraint[obj_name]])
+            
+            self.best_value[obj_name] = output_obj_constraint[obj_name][1]
+            self.worst_value[obj_name] = output_obj_constraint[obj_name][0]
         
         # to recover the input data
         self.input_normalized_factors = torch.tensor(input_data_normalized_factors, dtype=tensor_type, device=tensor_device)
@@ -311,10 +334,13 @@ class EL2_Data(Data_Set):
         # tensor type and device
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
-        self.output_constraints_to_check = []
-        for obj in output_obj_constraint:
-            self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj] for bound in output_obj_constraint[obj]])
         self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate, 'EL2')
+        print("self.objs_to_evaluate ", self.objs_to_evaluate)
+        print("obj_direct ", self.objs_direct)
+        print("self.output_constraints_to_check ", self.output_constraints_to_check)
+        print("self.output_normalised_factors ", self.output_normalised_factors)
+        print("self.best_value ", self.best_value)
+        print("self.worst_value ", self.worst_value)
 
     def find_ppa_result(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
@@ -336,23 +362,21 @@ class EL2_Data(Data_Set):
                     self.build_new_dataset.record_data(sample_input, 'failed')
                     return False, results
                 objective_results = []
-                # Run the Performance Simulation
-                if self.performance_objs != []:
-                    valid_simulation, minstret, mcycle = self.param_tuner.run_performance_simulation()
+
+                # Run the Performance Simulation (Recording mcycle only)
+                for benchmark in self.performance_objs_benchmarks:
+                    valid_simulation, _, mcycle = self.param_tuner.run_performance_simulation(benchmark)
                     if valid_simulation == False:
                         self.build_new_dataset.record_data(sample_input, 'failed')
                         return False, results
-                    for perf_obj in self.performance_objs:
-                        if perf_obj == 0:
-                            objective_results.append(minstret)
-                        elif perf_obj == 1:
-                            objective_results.append(mcycle)
+                    objective_results.append(mcycle)
+                
                 # Run the Synthesis on Vivado
                 self.param_tuner.run_synthesis()
                 # Store the utilisation result
                 self.param_tuner.store_synthesis_report()
                 # Read the utilisation percentage
-                utilisation_percentage = read_utilization_percentage(self.utilisation_path, self.objs_to_evaluate[len(self.performance_objs) : ])
+                utilisation_percentage = read_utilization(self.utilisation_path, self.objs_to_evaluate[len(self.performance_objs) : ])
                 objective_results += utilisation_percentage 
                 self.build_new_dataset.record_data(sample_input, objective_results)
                 for obj_index in range(self.objs_to_evaluate_dim):

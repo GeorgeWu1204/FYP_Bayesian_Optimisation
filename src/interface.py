@@ -96,13 +96,20 @@ def parse_constraints(filename):
                 # Process the objective line
                 parts = line.split()
                 for i in range(1, len(parts)):
-                        if parts[i] == 'obj_direct:' or parts[i] == 'range:':
+                        if parts[i] == 'obj_direct:' or parts[i] == 'range:' or parts[i] == 'benchmark:':
                             obj_name_end_index = i
                             break
                 obj_name = ' '.join(parts[1:obj_name_end_index])
                 if section == 'output_objective':
-                    obj_direction = parts[obj_name_end_index + 1]
-                    output_objective[obj_name] = obj_direction
+                    if parts[obj_name_end_index] == 'benchmark:':
+                        obj_name += '_' + parts[obj_name_end_index+1]
+                        obj_direction = parts[obj_name_end_index+3]
+                        range_values = parts[obj_name_end_index+5].strip('[]').split(',')
+                        output_objective[obj_name] = [obj_direction, int(range_values[0]), int(range_values[1]), parts[obj_name_end_index+1]]
+                    else:
+                        obj_direction = parts[obj_name_end_index+1]
+                        range_values = parts[obj_name_end_index+3].strip('[]').split(',')
+                        output_objective[obj_name] = [obj_direction, int(range_values[0]), int(range_values[1]), 'NotBenchmark']
                 elif section == 'output_constraint':
                     range_values = parts[obj_name_end_index+1].strip('[]').split(',')
                     output_constraints[obj_name] = [int(range_values[0]), int(range_values[1])]

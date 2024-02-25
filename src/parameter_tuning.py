@@ -117,6 +117,7 @@ class NutShell_parameter_tuning:
         new_name = name + '_' + str(self.generated_report_num) + extension
         shutil.copy(self.generated_report_directory + self.generated_filename, self.stored_report_directory + new_name)
         self.generated_report_num += 1
+    
 
 
 class EL2_parameter_tuning:
@@ -132,7 +133,6 @@ class EL2_parameter_tuning:
         self.stored_report_directory = '../object_functions/Syn_Report/dynamic_set/'
         self.generated_filename = 'EL2_utilization_synth.rpt'
         self.generated_logfile = '../object_functions/Logs/'
-        self.benchmark = 'cmark'
 
     def tune_parameter(self, new_value):
         '''Tune the parameters in the Scala settings file.'''
@@ -154,14 +154,14 @@ class EL2_parameter_tuning:
             print(f"Error tuning the veer.config: {e}")
             return False
         
-    def run_performance_simulation(self):
+    def run_performance_simulation(self, benchmark):
         try:
             # Expand the environment variable
             rv_root = os.environ.get('RV_ROOT', '')  # Default to an empty string if RV_ROOT is not set
             if not rv_root:
                 print("RV_ROOT environment variable is not set.")
                 return False, None, None
-            target = 'TEST=' + self.benchmark
+            target = 'TEST=' + benchmark
             # Prepare the command with the expanded environment variable
             command = ['make', '-f', os.path.join(rv_root, 'tools/Makefile'), target]
 
@@ -223,14 +223,25 @@ class EL2_parameter_tuning:
             return None, None
 
         return minstret, mcycle
+    
+    def find_all_combinations_of_simulation_results(self):
+        btb_set = [ 32, 64, 128, 256, 512]
+        icache_set = [32, 64, 128, 256]
+        for btb in btb_set:
+            for icache in icache_set:
+                print("sample input: ", btb, icache)
+                valid = self.tune_parameter([btb, icache])
+                if valid:
+                    print("simulation result: ", self.run_performance_simulation())
 
 if __name__ == '__main__':
-    tunable_params = ['btb_size', 'icache_size' ]
+    tunable_params = ['btb_size', 'dccm_size' ]
     generation_path = '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
     new_value = [8, 16]
     shift_amount = [0, 0]
     vivado_project_path = '../object_functions/Vivado_Prj/EL2_Prj/'
     pt = EL2_parameter_tuning(tunable_params, shift_amount, generation_path, vivado_project_path)
+    pt.find_all_combinations_of_simulation_results()
     # pt.tune_parameter(new_value)
     # a, b = pt.run_performance_simulation()
-    pt.run_synthesis()
+    # pt.run_synthesis()
