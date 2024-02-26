@@ -1,6 +1,5 @@
 from scipy.stats import qmc
 import torch
-from utils import normalise_output_data
 import time
 
 class initial_sampler:
@@ -24,7 +23,7 @@ class initial_sampler:
         samples = torch.tensor(self.sampler.random(n=num_samples), device=self.device, dtype=self.type)
         return samples
     
-    def generate_valid_initial_data(self, num_samples, data_set, obj_normalized_factors):
+    def generate_valid_initial_data(self, num_samples, data_set):
         """This function is used to generate valid initial data that meet the input constraints and also the output constraints"""
         train_x = torch.empty((num_samples, self.input_dim), device=self.device, dtype=self.type)
         exact_objs = torch.empty((num_samples, self.output_dim), device=self.device, dtype=self.type)
@@ -42,7 +41,7 @@ class initial_sampler:
                 # if the generated desgin does not meet the internal constraints that are not disclosed in the spec.
                 if valid_sample == False:
                     continue
-                normalised_obj = normalise_output_data(possible_obj, obj_normalized_factors, self.device)
+                normalised_obj = data_set.normalise_output_data_tensor(possible_obj)
                 con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
                 if con_obj.item() <= 0.0:
                     train_x[valid_sample_index] = possible_initial_tensor[i,:]

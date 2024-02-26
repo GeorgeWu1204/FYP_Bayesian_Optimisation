@@ -64,30 +64,29 @@ TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2                # acceptable distance betwee
 
 # Model Settings
 NUM_RESTARTS = 4                # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 40       # number of initial points for BO  Note: has to be power of 2 for sobol sampler
+NUM_OF_INITIAL_POINT = 8        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
 N_BATCH = 10                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 12                 # number of MC samples for qNEI
+RAW_SAMPLES = 8                 # number of raw samples for qNEI
 
 # Runtime Settings
 verbose = True
 record = True
 debug = True
-plot_posterior = True
+plot_posterior = False
 
 
 #reference point for optimisation used for hypervolume calculation
-ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, data_set.objs_direct, data_set.worst_value, data_set.output_normalised_factors, t_type, device)
-
+ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, data_set.objs_direct, t_type, device)
 #normalise objective to ensure the same scale
-obj_normalized_factors = list(data_set.output_normalised_factors.values())
 sampler_generator = initial_sampler(INPUT_DATA_DIM, OBJECTIVE_DIM, constraint_set, data_set, t_type, device)
-train_set_storage = train_set_records(INPUT_NORMALIZED_FACTOR, obj_normalized_factors, list(self_constraints.values()), ref_points, OBJECTIVES_TO_OPTIMISE_DIM, TRAIN_SET_ACCEPTABLE_THRESHOLD, TRAIN_SET_DISTURBANCE_RANGE, t_type, device)
+train_set_storage = train_set_records(INPUT_NORMALIZED_FACTOR, list(self_constraints.values()), ref_points, OBJECTIVES_TO_OPTIMISE_DIM, TRAIN_SET_ACCEPTABLE_THRESHOLD, TRAIN_SET_DISTURBANCE_RANGE, t_type, device)
 
 if plot_posterior:
-    posterior_examiner = utils.test_posterior_result(INPUT_DATA_DIM, t_type, device)
-    posterior_objective_index = 1
+    posterior_examiner = utils.test_posterior_result(INPUT_NAMES, t_type, device)
+    posterior_objective_index = 0
 
 def calculate_hypervolume(ref_points, train_obj):
     """Calculate the hypervolume"""
@@ -98,7 +97,7 @@ def calculate_hypervolume(ref_points, train_obj):
 
 def generate_initial_data():
     """generate training data"""
-    unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set, obj_normalized_factors)
+    unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set)
     train_obj = torch.cat([normalised_objs[...,:OBJECTIVES_TO_OPTIMISE_DIM], con_objs], dim=-1)
     # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
     generate_size = train_obj.shape[0]
@@ -111,7 +110,6 @@ def initialize_model(train_x, train_obj, scales, normalized_factors):
     """define models for objective and constraint"""
     ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
     models = []
-    
     for obj_index in range(train_obj.shape[-1]): 
         train_y = train_obj[..., obj_index : obj_index + 1]
         models.append(SingleTaskGP_transformed(
@@ -131,6 +129,7 @@ def initialize_model(train_x, train_obj, scales, normalized_factors):
 
 def build_qNEHVI_acqf(model, train_x, sampler):
     """Build the qNEHVI acquisition function"""
+
     acq_func = qNoisyExpectedHypervolumeImprovement(
         model=model,
         ref_point=ref_points.tolist(), 
@@ -145,24 +144,28 @@ def build_qNEHVI_acqf(model, train_x, sampler):
 
 def optimize_acqf_and_get_observation(acq_func, constraint_bounds):
     """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
-    unnormalised_train_x = sampler_generator.generate_initial_data(NUM_RESTARTS)
-    sampled_initial_conditions = unnormalised_train_x.unsqueeze(1) # to match the dimension n * 1 * m
-    print("sampled_initial_conditions: ", sampled_initial_conditions)
-    candidates, _ = optimize_acqf(
+    # Initial Conditions
+    # initial_cond = sampler_generator.generate_initial_data(NUM_RESTARTS).unsqueeze(1) # to match the dimension n * 1 * m
+    # print("sampled_initial_conditions: ", initial_cond)
+    candidates, acqf_val = optimize_acqf(
         acq_function=acq_func,
         bounds=constraint_bounds,
         q=BATCH_SIZE,
         num_restarts=NUM_RESTARTS,
         options={"batch_limit": 1, "maxiter": 200},
-        nonlinear_inequality_constraints = [constraint_set.get_nonlinear_inequality_constraints],
-        batch_initial_conditions = sampled_initial_conditions,
+        # nonlinear_inequality_constraints = [constraint_set.get_nonlinear_inequality_constraints],
+        # batch_initial_conditions = initial_cond,
+        raw_samples=RAW_SAMPLES,
+        sequential=True
     )
     # observe new values
+    print("candidates: ", candidates)
+    print("acqf_val: ", acqf_val)
     new_x = candidates.detach()
     print("new_x: ", new_x)
     valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
     print("valid_generated_sample: ", valid_generated_sample)
-    new_normalised_obj = utils.normalise_output_data(new_exact_obj, obj_normalized_factors, device)
+    new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
     new_con_obj = data_set.check_qNEHVI_constraints(new_normalised_obj)
     if new_con_obj.item() <= 0.0:
         hyper_vol = calculate_hypervolume(ref_points, new_normalised_obj)
@@ -195,9 +198,11 @@ for trial in range (1, N_TRIALS + 1):
         train_obj_ei,
         hyper_vol_ei,
     ) = generate_initial_data()
+
     print("<----------------Initial Data--------------->")
     print("train_x_ei: ", train_x_ei)
     print("train_obj_ei: ", train_obj_ei)
+    print("hyper_vol_ei: ", hyper_vol_ei)
     print("<------------------------------------------->")
     train_set_storage.store_initial_data(train_x_ei)
     mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
@@ -222,8 +227,8 @@ for trial in range (1, N_TRIALS + 1):
 
         # examine the posterior
         if plot_posterior and iteration == 10:
-            # posterior_examiner.examine_posterior(model_ei.subset_output([posterior_objective_index]), iteration)
-            posterior_examiner.examine_acq_function(acqf, iteration)
+            posterior_examiner.examine_posterior(model_ei.subset_output([posterior_objective_index]), iteration)
+            # posterior_examiner.examine_acq_function(acqf, iteration)
         #--------------for debug------------------
         # if debug:
         #     if valid_generated_sample:
@@ -301,6 +306,6 @@ if record:
 print("<------------------Final Result------------------>")
 best_trial = utils.find_max_index_in_list(best_hyper_vol_per_trial)
 _, best_objective = data_set.find_ppa_result(best_sample_points_per_trial[best_trial + 1])
-real_sample_point = utils.recover_all_input_data(best_sample_points_per_trial[best_trial + 1], INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES, INPUT_OFFSETS, t_type, device)
+real_sample_point = utils.recover_all_input_data(best_sample_points_per_trial[best_trial + 1], INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES, INPUT_OFFSETS, t_type, device, INPUT_EXP)
 print(f"{Fore.BLUE}Best sample point: {real_sample_point}{Style.RESET_ALL}")
 print(f"{Fore.BLUE}Best objective: {best_objective}{Style.RESET_ALL}")

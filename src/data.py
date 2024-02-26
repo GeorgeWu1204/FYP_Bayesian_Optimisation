@@ -5,6 +5,7 @@ import sys
 import pickle
 import os.path as osp
 from utils import calculate_condition, calculate_smooth_condition, recover_single_input_data, read_utilization
+from botorch.utils.transforms import normalize
 
 class Data_Sample:
     def __init__(self, data, objs, data_set_type):
@@ -35,7 +36,7 @@ class Data_Set:
         self.objs_to_evaluate = list(objs.keys()) + list(output_obj_constraint.keys())
         self.objs_to_evaluate_dim = len(self.objs_to_evaluate)
         self.output_normalised_factors = {}
-        objs_direct = {}    
+        self.objs_direct = {}    
         # to recover the input data
         self.input_normalized_factors = torch.tensor(input_data_normalized_factors, dtype=tensor_type, device=tensor_device)
         self.input_scales_factors = torch.tensor(input_scales, dtype=tensor_type, device=tensor_device)
@@ -44,7 +45,7 @@ class Data_Set:
         # tensor type and device
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
-            
+        self.normaliser_bounds = torch.empty((2, len(objs)), dtype=tensor_type, device=tensor_device)
         if data_set_type == 'txt':
             for i in range(len(data)):
                 d_input_dic = data[i][0]
@@ -60,6 +61,7 @@ class Data_Set:
                     val_list[obj].append(data[i][obj])
 
             # Iterate over each item in output_objective
+            obj_index = 0
             for obj, values in objs.items():
                 # Extract the obj_direction from the values list
                 obj_direction = values[0]
@@ -71,21 +73,27 @@ class Data_Set:
                     self.best_value[obj] = values[2]
                     self.worst_value[obj] = values[1]
                 # for recording the best pair
+                self.normaliser_bounds[0][obj_index] = min(val_list[obj])
+                self.normaliser_bounds[1][obj_index] = max(val_list[obj])
                 self.best_pair[obj] = [[i] for i in data.keys() if data[i][obj] == self.best_value[obj]][0]
-                
-                if self.best_value[obj] == self.worst_value[obj]:
-                    # if the best value is the same as the worst value, then the normalised factor is 1
-                    self.output_normalised_factors[obj] = 1.0
-                else:
-                    # self.output_normalised_factors[obj] = abs(self.best_value[obj] - self.worst_value[obj])
-                    self.output_normalised_factors[obj] = max(self.best_value[obj], self.worst_value[obj])
-        
+                obj_index += 1
         self.output_constraints_to_check = []
         for obj in output_obj_constraint:
-            self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj] for bound in output_obj_constraint[obj]])
-            self.output_normalised_factors[obj] = output_obj_constraint[obj][1]
+            self.output_constraints_to_check.append([self.normalise_single_output_data(bound,obj) for bound in output_obj_constraint[obj]])
             self.best_value[obj] = output_obj_constraint[obj][1]
             self.worst_value[obj] = 0.0
+        print("self.constrains_to_check: ", self.output_constraints_to_check)
+
+    def normalise_output_data_tensor(self, input_tensor):
+        """This function is used to normalise the output data in tensor format"""
+        sign_tensor = torch.sign(input_tensor)
+        normalised_result = normalize(input_tensor, self.normaliser_bounds)
+        return normalised_result * sign_tensor
+    
+    def normalise_single_output_data(self, input_data, obj):
+        """This function is used to normalise the output data in single data format"""
+        result = (input_data - min(self.best_value[obj], self.worst_value[obj])) / abs(self.best_value[obj] - self.worst_value[obj])
+        return result
     
     def format_input_data(self, input_data):
         """This function is used to add constant input to the input data to make it able to find the ppa result"""
@@ -290,12 +298,13 @@ class EL2_Data(Data_Set):
         # this is to check what type of performance objectives are needed to be stored
         self.performance_objs_benchmarks = []
         # assume all the output is percentage
-        self.output_normalised_factors = {}
         self.worst_value = {}
         self.best_value = {}
         self.objs_direct = {}
+        self.normaliser_bounds = torch.empty((2, self.objs_to_evaluate_dim), dtype=tensor_type, device=tensor_device)
 
         # Iterate over each item in output_objective
+        obj_index = 0   
         for obj_name, values in objs.items():
             # Extract the obj_direction from the values list
             obj_direction = values[0]
@@ -303,27 +312,27 @@ class EL2_Data(Data_Set):
             if obj_direction == 'minimise':
                 self.best_value[obj_name] = values[1]
                 self.worst_value[obj_name] = values[2]
+                self.normaliser_bounds[0][obj_index] = -1 * values[2]
+                self.normaliser_bounds[1][obj_index] = -1 * values[1]
             else:
                 self.best_value[obj_name] = values[2]
                 self.worst_value[obj_name] = values[1]
-            if self.best_value[obj_name] == self.worst_value[obj_name]:
-                # if the best value is the same as the worst value, then the normalised factor is 1
-                self.output_normalised_factors[obj_name] = 1.0
-            else:
-                # self.output_normalised_factors[obj] = abs(self.best_value[obj] - self.worst_value[obj])
-                self.output_normalised_factors[obj_name] = max(self.best_value[obj_name], self.worst_value[obj_name])
+                self.normaliser_bounds[0][obj_index] = values[1]
+                self.normaliser_bounds[1][obj_index] = values[2]
+
             if values[3] != 'NotBenchmark':
                 self.performance_objs_benchmarks.append(values[3])
-
+            obj_index += 1
+        
         # TODO, since for some of the conditions that are very small, the boundary calculation methods does not work well, hence normalising to the largest value of the condition.
         self.output_constraints_to_check = []
         for obj_name in list(output_obj_constraint.keys()):
-            self.output_normalised_factors[obj_name] = output_obj_constraint[obj_name][1]
-            self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj_name] for bound in output_obj_constraint[obj_name]])
-            
             self.best_value[obj_name] = output_obj_constraint[obj_name][1]
             self.worst_value[obj_name] = output_obj_constraint[obj_name][0]
-        
+            self.output_constraints_to_check.append([self.normalise_single_output_data(bound, obj_name) for bound in output_obj_constraint[obj_name]])
+            
+            self.normaliser_bounds[0][obj_index] = output_obj_constraint[obj_name][0]
+            self.normaliser_bounds[1][obj_index] = output_obj_constraint[obj_name][1]
         # to recover the input data
         self.input_normalized_factors = torch.tensor(input_data_normalized_factors, dtype=tensor_type, device=tensor_device)
         self.input_scales_factors = torch.tensor(scales, dtype=tensor_type, device=tensor_device)
@@ -335,12 +344,6 @@ class EL2_Data(Data_Set):
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
         self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate, 'EL2')
-        print("self.objs_to_evaluate ", self.objs_to_evaluate)
-        print("obj_direct ", self.objs_direct)
-        print("self.output_constraints_to_check ", self.output_constraints_to_check)
-        print("self.output_normalised_factors ", self.output_normalised_factors)
-        print("self.best_value ", self.best_value)
-        print("self.worst_value ", self.worst_value)
 
     def find_ppa_result(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
@@ -362,7 +365,7 @@ class EL2_Data(Data_Set):
                     self.build_new_dataset.record_data(sample_input, 'failed')
                     return False, results
                 objective_results = []
-
+                # print("Start to run the performance simulation for ", type(self.performance_objs_benchmarks))
                 # Run the Performance Simulation (Recording mcycle only)
                 for benchmark in self.performance_objs_benchmarks:
                     valid_simulation, _, mcycle = self.param_tuner.run_performance_simulation(benchmark)
@@ -370,13 +373,12 @@ class EL2_Data(Data_Set):
                         self.build_new_dataset.record_data(sample_input, 'failed')
                         return False, results
                     objective_results.append(mcycle)
-                
                 # Run the Synthesis on Vivado
                 self.param_tuner.run_synthesis()
                 # Store the utilisation result
                 self.param_tuner.store_synthesis_report()
                 # Read the utilisation percentage
-                utilisation_percentage = read_utilization(self.utilisation_path, self.objs_to_evaluate[len(self.performance_objs) : ])
+                utilisation_percentage = read_utilization(self.utilisation_path, self.objs_to_evaluate[len(self.performance_objs_benchmarks) : ])
                 objective_results += utilisation_percentage 
                 self.build_new_dataset.record_data(sample_input, objective_results)
                 for obj_index in range(self.objs_to_evaluate_dim):

@@ -12,7 +12,6 @@ def calculate_smooth_condition(x, condition):
     """Smooth, differentiable step function. Used for calculating the output constraints"""
     return (1 / (1 + torch.exp(-10 * (x - condition[1]))) - 1 / (1 + torch.exp(-10 * (x - condition[0]))) + 0.5) * 1e-4
 
-
 def build_matrix(data, constraints, num_restarts, q_dim, d_dim):
     """Build a matrix to store all the results of whether the input data meet the constraints."""
     # formatted_correlated_constraints = {d_dim : [condition_size, num_restarts * q_dim]}
@@ -42,14 +41,6 @@ def normalise_input_data(input_tensor, normalized_factors):
             output_tensor[i][j] = input_tensor[i][j] / normalized_factors[j]
     return output_tensor
 
-def normalise_output_data(input_tensor, normalized_factors, device):
-    num_restarts, obj_m = input_tensor.shape
-    output_tensor = torch.empty((num_restarts, obj_m), device=device,dtype=input_tensor.dtype)
-    for i in range(obj_m):
-        for j in range(num_restarts):
-            output_tensor[j][i] = input_tensor[j][i] / normalized_factors[i]
-    return output_tensor
-
 def recover_single_input_data(input_tensor, normalised_factor, scales, offsets, exps = None):
     """This function is to find the real input from the x tensor in optimisation process"""
     #assuming the input_tensor is in the shape of num_restarts x d_dim
@@ -63,15 +54,15 @@ def recover_single_input_data(input_tensor, normalised_factor, scales, offsets, 
 def recover_all_input_data(input_tensor, normalised_factor, scales, offsets, type, device, exps = None):
     """This function is to find the real input from the x tensor in recording process"""
     if exps is not None:
-        results = (torch.round(input_tensor * torch.tensor(normalised_factor, dtype=type, device=device)) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)) ** exps
+        results = torch.tensor(exps, dtype=type, device=device) ** (torch.round(input_tensor * torch.tensor(normalised_factor, dtype=type, device=device)) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device))
     else:
-        results = torch.round(input_tensor * torch.tensor(normalised_factor, dtype=type, device=device)) * torch.tensor(scales, dtype=type, device=device) + exps
+        results = torch.round(input_tensor * torch.tensor(normalised_factor, dtype=type, device=device)) * torch.tensor(scales, dtype=type, device=device)
     return results
 
 def recover_unrounded_input_data(input_tensor, normalised_factor, scales, offsets, type, device, exps = None):
     """This function is to find the unrounded version of the real input from the x tensor in recording process"""
     if exps is not None:
-        results = (input_tensor * torch.tensor(normalised_factor, dtype=type, device=device) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)) ** exps
+        results = torch.tensor(exps, dtype=type, device=device) ** (input_tensor * torch.tensor(normalised_factor, dtype=type, device=device) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)) 
     else:
         results = input_tensor * torch.tensor(normalised_factor, dtype=type, device=device) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)
     return results
@@ -104,15 +95,15 @@ def encapsulate_input_tensor_into_dict(input_tensor, input_var_names):
         input_index += 1
     return input_dict
 
-def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, worst_value, output_normalised_factors, t_type, device):
+def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, t_type, device):
     """This function is used to find the reference points for qNEHVI optimisation"""
     ref_points = torch.empty((OBJECTIVES_DIM), device=device, dtype=t_type)
     ref_point_index = 0
     for obj in OBJECTIVES.keys():
         if(OBJECTIVES[obj] == 'minimise'):
-            ref_points[ref_point_index] = -1 * (worst_value[obj] / output_normalised_factors[obj])
+            ref_points[ref_point_index] = -1
         else:
-            ref_points[ref_point_index] = (worst_value[obj] / output_normalised_factors[obj])
+            ref_points[ref_point_index] = 1
         ref_point_index += 1
     return ref_points
 
@@ -266,8 +257,9 @@ class brute_force_training_result:
 
 class test_posterior_result:
     """This class is used to visualise the posterior funcitons"""
-    def __init__(self, input_dim, dtype, device, num_samples = 100):
-        self.dim = input_dim
+    def __init__(self, input_names, dtype, device, num_samples = 100):
+        self.dim = len(input_names)
+        self.input_names = input_names
         self.X = np.linspace(0, 1, num_samples) 
         self.num_samples = num_samples
         # Create multi-dimensional grids
@@ -287,11 +279,9 @@ class test_posterior_result:
 
         Z_mean = mean_prediction.reshape([self.num_samples for _ in range(self.dim)])
         Z_uncertainty = std_deviation.reshape([self.num_samples for _ in range(self.dim)])
-        print("Z_mean shape is ", Z_mean.shape)
 
         X = self.testcase[:,0].cpu().detach().numpy().reshape([self.num_samples for _ in range(self.dim)])
         Y = self.testcase[:,1].cpu().detach().numpy().reshape([self.num_samples for _ in range(self.dim)])
-
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
         surf = ax.plot_surface(X, Y, Z_mean, cmap='viridis', edgecolor='none', alpha=0.7)
@@ -304,8 +294,8 @@ class test_posterior_result:
 
         contour = ax.contourf(X, Y, Z_uncertainty, zdir='z', offset=Z_mean.min()-0.25, levels=levels, cmap='inferno', alpha=0.5)
 
-        ax.set_xlabel('arch')
-        ax.set_ylabel('btb')
+        ax.set_xlabel(self.input_names[0])
+        ax.set_ylabel(self.input_names[1])
         ax.set_zlabel('Mean Prediction')
         ax.set_title('Posterior Mean and Uncertainty at Iteration ' + str(iteration))
 
@@ -322,8 +312,8 @@ class test_posterior_result:
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
         surf = ax.plot_surface(X, Y, Z, cmap='viridis', edgecolor='none', alpha=0.7)
-        ax.set_xlabel('arch')
-        ax.set_ylabel('btb')
+        ax.set_xlabel(self.input_names[0])
+        ax.set_ylabel(self.input_names[1])
         ax.set_zlabel('Acquisition Function Value')
         ax.set_title('Acquisition Function Examination at Iteration ' + str(iteration))
         plt.show()

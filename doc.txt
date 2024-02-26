@@ -1,0 +1,26 @@
+    opt_acqf_inputs = OptimizeAcqfInputs(
+        acq_function=acq_function,
+        bounds=bounds,
+        q=q,
+        num_restarts=num_restarts,
+        raw_samples=raw_samples,
+        options=options,
+        inequality_constraints=inequality_constraints,
+        equality_constraints=equality_constraints,
+        nonlinear_inequality_constraints=nonlinear_inequality_constraints,
+        fixed_features=fixed_features,
+        post_processing_func=post_processing_func,
+        batch_initial_conditions=batch_initial_conditions,
+        return_best_only=return_best_only,
+        gen_candidates=gen_candidates,
+        sequential=sequential,
+        ic_generator=ic_generator,
+        timeout_sec=timeout_sec,
+        return_full_tree=return_full_tree,
+        retry_on_optimization_warning=retry_on_optimization_warning,
+        ic_gen_kwargs=ic_gen_kwargs,
+    )
+    return _optimize_acqf(opt_acqf_inputs)
+
+->
+

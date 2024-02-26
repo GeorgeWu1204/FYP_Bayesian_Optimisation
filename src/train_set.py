@@ -2,12 +2,11 @@ import torch
 import numpy as np
 from itertools import product
 from botorch.utils.multi_objective.box_decompositions.non_dominated import NondominatedPartitioning
-from utils import normalise_output_data
 
 
 class train_set_records():
     """This class is used to record the training set"""
-    def __init__(self, normalised_factors, obj_normalized_factors, self_constraints, worst_ref_objective, objective_to_optimise_dim, acceptable_threshold = 0.0001, disturbance_threshold = 0.0001, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
+    def __init__(self, normalised_factors, self_constraints, worst_ref_objective, objective_to_optimise_dim, acceptable_threshold = 0.0001, disturbance_threshold = 0.0001, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
         
         self.normalised_factor = torch.tensor(normalised_factors, dtype=tensor_type, device=tensor_device)
         self.acceptable_threshold = acceptable_threshold
@@ -21,7 +20,6 @@ class train_set_records():
         self.worst_ref_objective = worst_ref_objective
         self.fake_worst_point = torch.tensor(worst_ref_objective.tolist() + [0.0], dtype = tensor_type, device = tensor_device).unsqueeze(0)
         self.objective_to_optimise_dim = objective_to_optimise_dim
-        self.obj_normalized_factors = obj_normalized_factors
 
     def recover_input_data_for_storage(self, input_tensor):
         """This function is to find the real input from the x tensor in recording process"""
@@ -134,7 +132,7 @@ class train_set_records():
                 neighbour_tensor = torch.tensor(neighbour, dtype = self.tensor_type, device = self.tensor_device)
                 valid_neighbour, neighbor_obj = dataset.find_ppa_result(neighbour_tensor.unsqueeze(0))
                 if valid_neighbour:
-                    normalised_obj = normalise_output_data(neighbor_obj, self.obj_normalized_factors, self.tensor_device)
+                    normalised_obj = dataset.normalise_output_data_tensor(neighbor_obj, self.obj_normalized_factors, self.tensor_device)
                     con_obj = dataset.check_qNEHVI_constraints(normalised_obj)
                     if con_obj.item() <= 0.0:
                         return True, neighbour_tensor, neighbor_obj, torch.tensor([self.calculate_hypervolume(neighbor_obj)], dtype = self.tensor_type, device = self.tensor_device)

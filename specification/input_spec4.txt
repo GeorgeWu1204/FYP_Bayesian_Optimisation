@@ -11,7 +11,7 @@ obj_name: mcycle   benchmark: cmark               obj_direct: minimise     range
 obj_name: mcycle   benchmark: hello_world_dccm    obj_direct: minimise     range: [70,80]
 
 #output constraint
-obj_name: LUT as Logic              range: [0,40000]
+obj_name: LUT as Logic              range: [30000,40000]
 
 #data
 objective: EL2
