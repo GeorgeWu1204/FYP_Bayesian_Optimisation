@@ -68,13 +68,13 @@ NUM_OF_INITIAL_POINT = 8        # number of initial points for BO  Note: has to 
 N_TRIALS = 1                    # number of trials of BO (outer loop)
 N_BATCH = 10                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
-MC_SAMPLES = 12                 # number of MC samples for qNEI
+MC_SAMPLES = 128                # number of MC samples for qNEI
 RAW_SAMPLES = 8                 # number of raw samples for qNEI
 
 # Runtime Settings
 verbose = True
 record = True
-debug = True
+debug = False
 plot_posterior = False
 
 
@@ -159,12 +159,8 @@ def optimize_acqf_and_get_observation(acq_func, constraint_bounds):
         sequential=True
     )
     # observe new values
-    print("candidates: ", candidates)
-    print("acqf_val: ", acqf_val)
     new_x = candidates.detach()
-    print("new_x: ", new_x)
     valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
-    print("valid_generated_sample: ", valid_generated_sample)
     new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
     new_con_obj = data_set.check_qNEHVI_constraints(new_normalised_obj)
     if new_con_obj.item() <= 0.0:
@@ -221,7 +217,6 @@ for trial in range (1, N_TRIALS + 1):
         #QMC sampler
         qmc_sampler = SobolQMCNormalSampler(sample_shape=torch.Size([MC_SAMPLES]))
         acqf = build_qNEHVI_acqf(model_ei, train_x_ei, qmc_sampler)
-        
         # optimize and get new observation
         valid_generated_sample, new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimize_acqf_and_get_observation(acqf, constraint_set.constraint_bound)
 
@@ -259,8 +254,6 @@ for trial in range (1, N_TRIALS + 1):
                 best_constraint_per_interation = utils.encapsulate_obj_tensor_into_dict(OUTPUT_OBJECTIVE_CONSTRAINT, new_exact_obj_ei[... , OBJECTIVES_TO_OPTIMISE_DIM :])
                 best_sample_point_per_interation = new_x_ei
         
-        
-
         # reinitialize the models so they are ready for fitting on next iteration
         mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
         t1 = time.monotonic()
@@ -297,7 +290,7 @@ for trial in range (1, N_TRIALS + 1):
     best_sample_points_per_trial[trial] = best_sample_point_per_interation
 
     if record:
-        unnormalized_train_x = utils.recover_unrounded_input_data(train_x_ei, INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES, INPUT_OFFSETS, t_type, device)
+        unnormalized_train_x = utils.recover_unrounded_input_data(train_x_ei, INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES, INPUT_OFFSETS, t_type, device, INPUT_EXP)
         results_record.record_input(trial, unnormalized_train_x, hyper_vol_ei)
 
 if record:

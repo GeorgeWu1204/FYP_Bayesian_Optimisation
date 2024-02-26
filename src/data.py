@@ -153,6 +153,7 @@ class Data_Set:
                 condition_val = calculate_smooth_condition(X[i][obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
                 condition_vals.append(condition_val)
             results[i] = max(condition_vals)
+
         return results
 
 
@@ -312,8 +313,8 @@ class EL2_Data(Data_Set):
             if obj_direction == 'minimise':
                 self.best_value[obj_name] = values[1]
                 self.worst_value[obj_name] = values[2]
-                self.normaliser_bounds[0][obj_index] = -1 * values[2]
-                self.normaliser_bounds[1][obj_index] = -1 * values[1]
+                self.normaliser_bounds[0][obj_index] = -1 * values[1]
+                self.normaliser_bounds[1][obj_index] = -1 * values[2]
             else:
                 self.best_value[obj_name] = values[2]
                 self.worst_value[obj_name] = values[1]

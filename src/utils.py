@@ -10,7 +10,7 @@ def calculate_condition(x, condition):
 
 def calculate_smooth_condition(x, condition):
     """Smooth, differentiable step function. Used for calculating the output constraints"""
-    return (1 / (1 + torch.exp(-10 * (x - condition[1]))) - 1 / (1 + torch.exp(-10 * (x - condition[0]))) + 0.5) * 1e-4
+    return (1 / (1 + torch.exp(-10 * (x - condition[1]))) - 1 / (1 + torch.exp(-10 * (x - condition[0]))) + 0.5) * 1e-1
 
 def build_matrix(data, constraints, num_restarts, q_dim, d_dim):
     """Build a matrix to store all the results of whether the input data meet the constraints."""
@@ -62,7 +62,7 @@ def recover_all_input_data(input_tensor, normalised_factor, scales, offsets, typ
 def recover_unrounded_input_data(input_tensor, normalised_factor, scales, offsets, type, device, exps = None):
     """This function is to find the unrounded version of the real input from the x tensor in recording process"""
     if exps is not None:
-        results = torch.tensor(exps, dtype=type, device=device) ** (input_tensor * torch.tensor(normalised_factor, dtype=type, device=device) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)) 
+        results = torch.tensor(exps, dtype=type, device=device) ** (torch.round(input_tensor * torch.tensor(normalised_factor, dtype=type, device=device)) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device))
     else:
         results = input_tensor * torch.tensor(normalised_factor, dtype=type, device=device) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)
     return results

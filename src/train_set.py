@@ -101,7 +101,6 @@ class train_set_records():
             if stored_samples == None:
                 # if the new data is aways from the rounded vertex  in the integer space, return together with the rounded vertex  to improve the quality of the dataset 
                 normalised_vertex  = self.normalise_input_data(recovered_train_x)
-                print("Distance is ", self.calculate_distance(new_train_x, normalised_vertex).item())
                 # if self.calculate_distance(new_train_x, normalised_vertex ).item() > self.acceptable_threshold:
                 #     self.history_record[self.convert_tensor_to_tuple(recovered_train_x.squeeze())] = [normalised_vertex , new_train_x]
                 #     return True,torch.cat([new_train_x, normalised_vertex ]), torch.cat([new_train_y, new_train_y]), torch.tensor([new_hyper_vol, new_hyper_vol], dtype = self.tensor_type, device = self.tensor_device)
