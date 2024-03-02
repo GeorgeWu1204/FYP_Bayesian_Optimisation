@@ -1,33 +1,39 @@
-/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2
-veer: Set(s) requested : btb_size=256 icache_size=64
-veer: Overriding btb_size value 512 with 256
-veer: Overriding icache_size value 16 with 64
+rm -rf *.log *.s *.hex *.dis *.tbl irun* vcs* simv* *.map snapshots veer* \
+verilator* *.exe obj* *.o *.sym ucli.key vc_hdrs.h csrc *.csv work \
+dataset.asdb library.cfg vsimsa.cfg riviera-build wave.asdb
+make -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/tools/picolibc.mk all
+make[1]: Entering directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
+BUILD_PATH=snapshots/default /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/configs/veer.config -target=default '-set=pmp_entries=64 '
+veer: Set(s) requested : pmp_entries=64 
+veer: Overriding pmp_entries value 16 with 64
 
 VeeR configuration for target=default
 
 veer: bht_addr_hi                    = 9
 veer: bht_addr_lo                    = 2
 veer: bht_array_depth                = 256
-veer: bht_ghr_hash_1                 = 1
+veer: bht_ghr_hash_1                 = 
 veer: bht_ghr_range                  = 7:0
 veer: bht_ghr_size                   = 8
-veer: bht_hash_string                = {ghr[7:7], hashin[8:2]^ghr[7-1:0]} // cf1
+veer: bht_hash_string                = {hashin[8+1:2]^ghr[8-1:0]}// cf2
 veer: bht_size                       = 512
-veer: btb_addr_hi                    = 8
+veer: btb_addr_hi                    = 9
 veer: btb_addr_lo                    = 2
-veer: btb_array_depth                = 128
+veer: btb_array_depth                = 256
 veer: btb_btag_fold                  = 0
-veer: btb_btag_size                  = 6
+veer: btb_btag_size                  = 5
 veer: btb_enable                     = 1
 veer: btb_fold2_index_hash           = 0
 veer: btb_fullya                     = 0
-veer: btb_index1_hi                  = 8
+veer: btb_index1_hi                  = 9
 veer: btb_index1_lo                  = 2
-veer: btb_index2_hi                  = 15
-veer: btb_index2_lo                  = 9
-veer: btb_index3_hi                  = 22
-veer: btb_index3_lo                  = 16
-veer: btb_size                       = 256
+veer: btb_index2_hi                  = 17
+veer: btb_index2_lo                  = 10
+veer: btb_index3_hi                  = 25
+veer: btb_index3_lo                  = 18
+veer: btb_size                       = 512
 veer: btb_toffset_size               = 12
 veer: bus_prty_default               = 3
 veer: dma_bus_id                     = 1
@@ -94,30 +100,30 @@ veer: icache_banks_way               = 2
 veer: icache_beat_addr_hi            = 5
 veer: icache_beat_bits               = 3
 veer: icache_bypass_enable           = 1
-veer: icache_data_cell               = ram_2048x71
-veer: icache_data_depth              = 2048
+veer: icache_data_cell               = ram_512x71
+veer: icache_data_depth              = 512
 veer: icache_data_index_lo           = 4
 veer: icache_data_width              = 64
 veer: icache_ecc                     = 1
 veer: icache_enable                  = 1
 veer: icache_fdata_width             = 71
-veer: icache_index_hi                = 14
+veer: icache_index_hi                = 12
 veer: icache_ln_sz                   = 64
 veer: icache_num_beats               = 8
 veer: icache_num_bypass              = 2
 veer: icache_num_bypass_width        = 2
-veer: icache_num_lines               = 1024
-veer: icache_num_lines_bank          = 256
-veer: icache_num_lines_way           = 512
+veer: icache_num_lines               = 256
+veer: icache_num_lines_bank          = 64
+veer: icache_num_lines_way           = 128
 veer: icache_num_ways                = 2
 veer: icache_scnd_last               = 6
-veer: icache_size                    = 64
+veer: icache_size                    = 16
 veer: icache_status_bits             = 1
 veer: icache_tag_bypass_enable       = 1
-veer: icache_tag_cell                = ram_512x25
-veer: icache_tag_depth               = 512
+veer: icache_tag_cell                = ram_128x25
+veer: icache_tag_depth               = 128
 veer: icache_tag_index_lo            = 6
-veer: icache_tag_lo                  = 15
+veer: icache_tag_lo                  = 13
 veer: icache_tag_num_bypass          = 2
 veer: icache_tag_num_bypass_width    = 2
 veer: icache_waypack                 = 1
@@ -229,25 +235,47 @@ veer: inst_access_mask4              = 0xffffffff
 veer: inst_access_mask5              = 0xffffffff
 veer: inst_access_mask6              = 0xffffffff
 veer: inst_access_mask7              = 0xffffffff
-veer: pmp_entries                    = 16
+veer: pmp_entries                    = 64
 veer: ret_stack_size                 = 8
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_pdef.vh
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_param.vh
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/common_defines.vh
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/defines.h
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/pd_defines.vh
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/whisper.json
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/perl_configs.pl
-veer: Writing /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/link.ld
-rm -rf *.log *.s *.hex *.dis *.tbl irun* vcs* simv* *.map veer* \
-verilator* *.exe obj* *.o *.sym ucli.key vc_hdrs.h csrc *.csv work \
-dataset.asdb library.cfg vsimsa.cfg riviera-build wave.asdb
-make -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/tools/picolibc.mk all
-make[1]: Entering directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
-make[1]: Nothing to be done for 'all'.
-make[1]: Leaving directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
- !!! No riscv64-unknown-elf-gcc in path, using canned hex files !!
-cp /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/hex/cmark.hex program.hex
+veer: Writing snapshots/default/el2_pdef.vh
+veer: Writing snapshots/default/el2_param.vh
+veer: Writing snapshots/default/common_defines.vh
+veer: Writing snapshots/default/defines.h
+veer: Writing snapshots/default/pd_defines.vh
+veer: Writing snapshots/default/whisper.json
+veer: Writing snapshots/default/perl_configs.pl
+veer: Writing snapshots/default/link.ld
+riscv64-unknown-elf-cpp -Isnapshots/default  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tests/pmp/crt0.s  > crt0.cpp.s
+riscv64-unknown-elf-as -mabi=ilp32 -march=rv32imc crt0.cpp.s -o crt0.o
+riscv64-unknown-elf-gcc -Isnapshots/default --specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs -g -O3 -falign-functions=16 -DCOMPILER_FLAGS="\"-g -O3 -falign-functions=16\"" -mabi=ilp32 -march=rv32imc -c /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tests/pmp/main.c -o main.o
+riscv64-unknown-elf-gcc -Isnapshots/default --specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs -g -O3 -falign-functions=16 -DCOMPILER_FLAGS="\"-g -O3 -falign-functions=16\"" -mabi=ilp32 -march=rv32imc -c /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tests/pmp/pmp.c -o pmp.o
+riscv64-unknown-elf-gcc -Isnapshots/default --specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs -g -O3 -falign-functions=16 -DCOMPILER_FLAGS="\"-g -O3 -falign-functions=16\"" -mabi=ilp32 -march=rv32imc -c /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tests/pmp/veer.c -o veer.o
+riscv64-unknown-elf-gcc -Isnapshots/default --specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs -g -O3 -falign-functions=16 -DCOMPILER_FLAGS="\"-g -O3 -falign-functions=16\"" -mabi=ilp32 -march=rv32imc -c /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tests/pmp/trap.c -o trap.o
+riscv64-unknown-elf-gcc -Isnapshots/default --specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs -g -O3 -falign-functions=16 -DCOMPILER_FLAGS="\"-g -O3 -falign-functions=16\"" -mabi=ilp32 -march=rv32imc -c /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tests/pmp/fault.c -o fault.o
+Building pmp
+riscv64-unknown-elf-gcc -mabi=ilp32 -march=rv32imac --verbose -Wl,-Map=pmp.map -T/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tests/pmp/pmp.ld --specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs  -nostartfiles crt0.o main.o pmp.o veer.o trap.o fault.o -o pmp.exe
+Using built-in specs.
+Reading specs from /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs
+rename spec link to picolibc_link
+rename spec cpp to picolibc_cpp
+rename spec cc1 to picolibc_cc1
+rename spec cc1plus to picolibc_cc1plus
+COLLECT_GCC=riscv64-unknown-elf-gcc
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/lto-wrapper
+Target: riscv64-unknown-elf
+Configured with: ../configure --build=x86_64-linux-gnu --prefix=/usr --includedir='/usr/include' --mandir='/usr/share/man' --infodir='/usr/share/info' --sysconfdir=/etc --localstatedir=/var --disable-option-checking --disable-silent-rules --libdir='/usr/lib/x86_64-linux-gnu' --libexecdir='/usr/lib/x86_64-linux-gnu' --disable-maintainer-mode --disable-dependency-tracking --target=riscv64-unknown-elf --prefix=/usr --infodir=/usr/share/doc/gcc-riscv64-unknown-elf/info --mandir=/usr/share/man --htmldir=/usr/share/doc/gcc-riscv64-unknown-elf/html --pdfdir=/usr/share/doc/gcc-riscv64-unknown-elf/pdf --bindir=/usr/bin --libexecdir=/usr/lib --libdir=/usr/lib --with-pkgversion= --disable-shared --disable-threads --enable-languages=c,c++ --enable-tls --with-newlib --with-native-system-header-dir=/include --disable-libmudflap --disable-libssp --disable-libquadmath --disable-libgomp --disable-nls --with-system-zlib --enable-checking=yes --enable-multilib --with-abi=lp64d --disable-libstdcxx-pch --disable-libstdcxx --disable-fixinc --with-arch=rv64imafdc --with-gnu-as --with-gnu-ld --with-as=/usr/lib/riscv64-unknown-elf/bin/as --with-ld=/usr/lib/riscv64-unknown-elf/bin/ld AR_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/ar AS_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/as NM_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/nm LD_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/ld OBJDUMP_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/objdump RANLIB_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/ranlib READELF_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/readelf STRIP_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/strip CFLAGS='-g -O2 -fdebug-prefix-map=/build/gcc-riscv64-unknown-elf-LkcieF/gcc-riscv64-unknown-elf-10.2.0=. -fstack-protector-strong' CPPFLAGS='-Wdate-time -D_FORTIFY_SOURCE=2' CXXFLAGS='-g -O2 -fdebug-prefix-map=/build/gcc-riscv64-unknown-elf-LkcieF/gcc-riscv64-unknown-elf-10.2.0=. -fstack-protector-strong' FCFLAGS='-g -O2 -fdebug-prefix-map=/build/gcc-riscv64-unknown-elf-LkcieF/gcc-riscv64-unknown-elf-10.2.0=. -fstack-protector-strong' FFLAGS='-g -O2 -fdebug-prefix-map=/build/gcc-riscv64-unknown-elf-LkcieF/gcc-riscv64-unknown-elf-10.2.0=. -fstack-protector-strong' GCJFLAGS='-g -O2 -fdebug-prefix-map=/build/gcc-riscv64-unknown-elf-LkcieF/gcc-riscv64-unknown-elf-10.2.0=. -fstack-protector-strong' LDFLAGS='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now' OBJCFLAGS='-g -O2 -fdebug-prefix-map=/build/gcc-riscv64-unknown-elf-LkcieF/gcc-riscv64-unknown-elf-10.2.0=. -fstack-protector-strong' OBJCXXFLAGS='-g -O2 -fdebug-prefix-map=/build/gcc-riscv64-unknown-elf-LkcieF/gcc-riscv64-unknown-elf-10.2.0=. -fstack-protector-strong' 'CFLAGS_FOR_TARGET=-Os -mcmodel=medany' 'CXXFLAGS_FOR_TARGET=-Os -mcmodel=medany'
+Thread model: single
+Supported LTO compression algorithms: zlib
+gcc version 10.2.0 () 
+COMPILER_PATH=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/:/usr/lib/gcc/riscv64-unknown-elf/10.2.0/:/usr/lib/gcc/riscv64-unknown-elf/:/usr/lib/gcc/riscv64-unknown-elf/10.2.0/:/usr/lib/gcc/riscv64-unknown-elf/
+LIBRARY_PATH=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/rv32imac/ilp32/:/usr/lib/gcc/riscv64-unknown-elf/10.2.0/
+COLLECT_GCC_OPTIONS='-mabi=ilp32' '-march=rv32imac' '-v' '-T' '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tests/pmp/pmp.ld' '-specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs' '-nostartfiles' '-o' 'pmp.exe'
+ /usr/lib/gcc/riscv64-unknown-elf/10.2.0/collect2 -plugin /usr/lib/gcc/riscv64-unknown-elf/10.2.0/liblto_plugin.so -plugin-opt=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/cchmomrO.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -L/home/hw1020/Documents/Possible_Designs/Cores-VeeR-EL2/third_party/picolibc/install/picolibc/riscv64-unknown-elf/lib/rv32imac/ilp32 -L/home/hw1020/Documents/Possible_Designs/Cores-VeeR-EL2/third_party/picolibc/install/picolibc/riscv64-unknown-elf/lib -melf32lriscv --gc-sections -o pmp.exe -L/usr/lib/gcc/riscv64-unknown-elf/10.2.0/rv32imac/ilp32 -L/usr/lib/gcc/riscv64-unknown-elf/10.2.0 -Map=pmp.map crt0.o main.o pmp.o veer.o trap.o fault.o -lgcc --start-group -lgcc -lc --end-group -lgcc -T /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tests/pmp/pmp.ld
+COLLECT_GCC_OPTIONS='-mabi=ilp32' '-march=rv32imac' '-v' '-T' '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tests/pmp/pmp.ld' '-specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs' '-nostartfiles' '-o' 'pmp.exe'
+riscv64-unknown-elf-objcopy -O verilog  pmp.exe program.hex
+riscv64-unknown-elf-objdump -S  pmp.exe > pmp.dis
+riscv64-unknown-elf-nm -B -n pmp.exe > pmp.sym
+Completed building pmp
 verilator  --cc -CFLAGS -std=c++11 snapshots/default/common_defines.vh /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/include/el2_def.sv snapshots/default/el2_pdef.vh \
   -Isnapshots/default -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/flist \
   -Wno-WIDTH -Wno-UNOPTFLAT -Wno-IMPLICITSTATIC \
@@ -263,6 +291,7 @@ ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/shar
 ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top.o Vtb_top.cpp
 ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h7f86b803__0.o Vtb_top___024root__DepSet_h7f86b803__0.cpp
 ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h7f86b803__1.o Vtb_top___024root__DepSet_h7f86b803__1.cpp
+ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h7f86b803__2.o Vtb_top___024root__DepSet_h7f86b803__2.cpp
 ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__0.o Vtb_top___024root__DepSet_h9ad02603__0.cpp
 ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__1.o Vtb_top___024root__DepSet_h9ad02603__1.cpp
 ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__2.o Vtb_top___024root__DepSet_h9ad02603__2.cpp
@@ -273,6 +302,7 @@ ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/shar
 ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__7.o Vtb_top___024root__DepSet_h9ad02603__7.cpp
 ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__8.o Vtb_top___024root__DepSet_h9ad02603__8.cpp
 ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__9.o Vtb_top___024root__DepSet_h9ad02603__9.cpp
+ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__10.o Vtb_top___024root__DepSet_h9ad02603__10.cpp
 ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0.o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0.cpp
 ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0.o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0.cpp
 ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -x c++-header Vtb_top__pch.h -o Vtb_top__pch.h.slow.gch
@@ -295,17 +325,17 @@ ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/v
 ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0__Slow.o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0__Slow.cpp
 ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top__Syms.o Vtb_top__Syms.cpp
 echo "" > Vtb_top__ALL.verilator_deplist.tmp
-Archive ar -rcs Vtb_top__ALL.a Vtb_top.o Vtb_top___024root__DepSet_h7f86b803__0.o Vtb_top___024root__DepSet_h7f86b803__1.o Vtb_top___024root__DepSet_h9ad02603__0.o Vtb_top___024root__DepSet_h9ad02603__1.o Vtb_top___024root__DepSet_h9ad02603__2.o Vtb_top___024root__DepSet_h9ad02603__3.o Vtb_top___024root__DepSet_h9ad02603__4.o Vtb_top___024root__DepSet_h9ad02603__5.o Vtb_top___024root__DepSet_h9ad02603__6.o Vtb_top___024root__DepSet_h9ad02603__7.o Vtb_top___024root__DepSet_h9ad02603__8.o Vtb_top___024root__DepSet_h9ad02603__9.o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0.o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0.o Vtb_top__ConstPool_0.o Vtb_top___024root__Slow.o Vtb_top___024root__DepSet_h7f86b803__0__Slow.o Vtb_top___024root__DepSet_h7f86b803__1__Slow.o Vtb_top___024root__DepSet_h9ad02603__0__Slow.o Vtb_top___024root__DepSet_h9ad02603__1__Slow.o Vtb_top___024root__DepSet_h9ad02603__2__Slow.o Vtb_top___024root__DepSet_h9ad02603__3__Slow.o Vtb_top___024root__DepSet_h9ad02603__4__Slow.o Vtb_top___024root__DepSet_h9ad02603__5__Slow.o Vtb_top___024unit__Slow.o Vtb_top___024unit__DepSet_hba4cee98__0__Slow.o Vtb_top_el2_configurable_gw__Slow.o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0__Slow.o Vtb_top_el2_configurable_gw__DepSet_hb570c3f5__0__Slow.o Vtb_top_el2_mem_if__Slow.o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0__Slow.o Vtb_top__Syms.o
+Archive ar -rcs Vtb_top__ALL.a Vtb_top.o Vtb_top___024root__DepSet_h7f86b803__0.o Vtb_top___024root__DepSet_h7f86b803__1.o Vtb_top___024root__DepSet_h7f86b803__2.o Vtb_top___024root__DepSet_h9ad02603__0.o Vtb_top___024root__DepSet_h9ad02603__1.o Vtb_top___024root__DepSet_h9ad02603__2.o Vtb_top___024root__DepSet_h9ad02603__3.o Vtb_top___024root__DepSet_h9ad02603__4.o Vtb_top___024root__DepSet_h9ad02603__5.o Vtb_top___024root__DepSet_h9ad02603__6.o Vtb_top___024root__DepSet_h9ad02603__7.o Vtb_top___024root__DepSet_h9ad02603__8.o Vtb_top___024root__DepSet_h9ad02603__9.o Vtb_top___024root__DepSet_h9ad02603__10.o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0.o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0.o Vtb_top__ConstPool_0.o Vtb_top___024root__Slow.o Vtb_top___024root__DepSet_h7f86b803__0__Slow.o Vtb_top___024root__DepSet_h7f86b803__1__Slow.o Vtb_top___024root__DepSet_h9ad02603__0__Slow.o Vtb_top___024root__DepSet_h9ad02603__1__Slow.o Vtb_top___024root__DepSet_h9ad02603__2__Slow.o Vtb_top___024root__DepSet_h9ad02603__3__Slow.o Vtb_top___024root__DepSet_h9ad02603__4__Slow.o Vtb_top___024root__DepSet_h9ad02603__5__Slow.o Vtb_top___024unit__Slow.o Vtb_top___024unit__DepSet_hba4cee98__0__Slow.o Vtb_top_el2_configurable_gw__Slow.o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0__Slow.o Vtb_top_el2_configurable_gw__DepSet_hb570c3f5__0__Slow.o Vtb_top_el2_mem_if__Slow.o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0__Slow.o Vtb_top__Syms.o
 g++     test_tb_top.o verilated.o verilated_threads.o Vtb_top__ALL.a    -pthread -lpthread -latomic   -o Vtb_top
 rm Vtb_top__ALL.verilator_deplist.tmp
 make[1]: Leaving directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/obj_dir'
 touch verilator-build
 # FIXME: Assuming here that either begin_signature or end_signature implies
 # that both symbols are present.
-grep -E "(begin|end)_signature" cmark.sym >/dev/null 2>&1; \
+grep -E "(begin|end)_signature" pmp.sym >/dev/null 2>&1; \
 if [ $? -eq 0 ]; then \
-	BEG=`grep "begin_signature" cmark.sym | cut -d\  -f 1`;\
-	END=`grep "end_signature"   cmark.sym | cut -d\  -f 1`;\
+	BEG=`grep "begin_signature" pmp.sym | cut -d\  -f 1`;\
+	END=`grep "end_signature"   pmp.sym | cut -d\  -f 1`;\
 	./obj_dir/Vtb_top --mem-signature ${BEG} ${END}; \
 else \
 	./obj_dir/Vtb_top; \
@@ -316,115 +346,2734 @@ VerilatorTB: Start of sim
 mem_signature_begin = 00000000
 mem_signature_end   = 00000000
 mem_mailbox         = D0580000
-2K performance run parameters for coremark.
-CoreMark Size    : 666
-Total ticks      : 373542
-Total time (secs): 373
-Iterat/Sec/MHz   : 2.68
-Iterations       : 1
-Compiler version : GCC12.2.0
+console.log : P
+Pconsole.log : M
+Mconsole.log : P
+Pconsole.log : /
+/console.log : e
+econsole.log : x
+xconsole.log : c
+cconsole.log : e
+econsole.log : p
+pconsole.log : t
+tconsole.log : i
+iconsole.log : o
+oconsole.log : n
+nconsole.log :  
+ console.log : t
+tconsole.log : e
+econsole.log : s
+sconsole.log : t
+tconsole.log :  
+ console.log : p
+pconsole.log : r
+rconsole.log : o
+oconsole.log : g
+gconsole.log : r
+rconsole.log : a
+aconsole.log : m
+mconsole.log : 
 
-Compiler flags   : -finline-limit=400 -mbranch-cost=1 -Ofast -fno-code-hoisting -funroll-all-loops
 
-Memory location  : STATIC
+console.log : :
+:console.log : :
+:console.log :  
+ console.log : t
+tconsole.log : e
+econsole.log : s
+sconsole.log : t
+tconsole.log : _
+_console.log : l
+lconsole.log : o
+oconsole.log : a
+aconsole.log : d
+dconsole.log : 
 
-seedcrc          : 0xe9f5
-[0]crclist       : 0xe714
-[0]crcmatrix     : 0x1fd7
-[0]crcstate      : 0x8e3a
-[0]crcfinal      : 0xe714
-Correct operation validated. See readme.txt for run and reporting rules.
+
+console.log : R
+Rconsole.log : I
+Iconsole.log : S
+Sconsole.log : C
+Cconsole.log : -
+-console.log : V
+Vconsole.log :  
+ console.log : f
+fconsole.log : a
+aconsole.log : u
+uconsole.log : l
+lconsole.log : t
+tconsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 0
+0console.log :  
+ console.log : z
+zconsole.log : e
+econsole.log : r
+rconsole.log : o
+oconsole.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log :  
+ console.log : r
+rconsole.log : a
+aconsole.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 8
+8console.log : 8
+8console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log :  
+ console.log : s
+sconsole.log : p
+pconsole.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : c
+cconsole.log : 4
+4console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 3
+3console.log :  
+ console.log : g
+gconsole.log : p
+pconsole.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 4
+4console.log :  
+ console.log : t
+tconsole.log : p
+pconsole.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 5
+5console.log :  
+ console.log : t
+tconsole.log : 0
+0console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : e
+econsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 6
+6console.log :  
+ console.log : t
+tconsole.log : 1
+1console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 7
+7console.log : 8
+8console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 7
+7console.log :  
+ console.log : t
+tconsole.log : 2
+2console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 8
+8console.log :  
+ console.log : s
+sconsole.log : 0
+0console.log : /
+/console.log : f
+fconsole.log : p
+pconsole.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 9
+9console.log :  
+ console.log : s
+sconsole.log : 1
+1console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 0
+0console.log :  
+ console.log : a
+aconsole.log : 0
+0console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 1
+1console.log :  
+ console.log : a
+aconsole.log : 1
+1console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : d
+dconsole.log : 1
+1console.log : 8
+8console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 2
+2console.log :  
+ console.log : a
+aconsole.log : 2
+2console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 3
+3console.log :  
+ console.log : a
+aconsole.log : 3
+3console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 4
+4console.log :  
+ console.log : a
+aconsole.log : 4
+4console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 9
+9console.log : 6
+6console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 5
+5console.log :  
+ console.log : a
+aconsole.log : 5
+5console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : a
+aconsole.log : a
+aconsole.log : a
+aconsole.log : a
+aconsole.log : a
+aconsole.log : a
+aconsole.log : a
+aconsole.log : a
+aconsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 6
+6console.log :  
+ console.log : a
+aconsole.log : 6
+6console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 6
+6console.log : 8
+8console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 7
+7console.log :  
+ console.log : a
+aconsole.log : 7
+7console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 4
+4console.log : c
+cconsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 8
+8console.log :  
+ console.log : s
+sconsole.log : 2
+2console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : 8
+8console.log : d
+dconsole.log : 4
+4console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 9
+9console.log :  
+ console.log : s
+sconsole.log : 3
+3console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : 8
+8console.log : e
+econsole.log : c
+cconsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 0
+0console.log :  
+ console.log : s
+sconsole.log : 4
+4console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : e
+econsole.log : 1
+1console.log : 4
+4console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 1
+1console.log :  
+ console.log : s
+sconsole.log : 5
+5console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 2
+2console.log :  
+ console.log : s
+sconsole.log : 6
+6console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 3
+3console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 3
+3console.log :  
+ console.log : s
+sconsole.log : 7
+7console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 4
+4console.log :  
+ console.log : s
+sconsole.log : 8
+8console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 5
+5console.log :  
+ console.log : s
+sconsole.log : 9
+9console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 6
+6console.log :  
+ console.log : s
+sconsole.log : 1
+1console.log : 0
+0console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 7
+7console.log :  
+ console.log : s
+sconsole.log : 1
+1console.log : 1
+1console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 8
+8console.log :  
+ console.log : t
+tconsole.log : 3
+3console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 7
+7console.log : a
+aconsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 9
+9console.log :  
+ console.log : t
+tconsole.log : 4
+4console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 7
+7console.log : 4
+4console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 3
+3console.log : 0
+0console.log :  
+ console.log : t
+tconsole.log : 5
+5console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 9
+9console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 3
+3console.log : 1
+1console.log :  
+ console.log : t
+tconsole.log : 6
+6console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : a
+aconsole.log : 
+
+
+console.log : 	
+	console.log : m
+mconsole.log : e
+econsole.log : p
+pconsole.log : c
+cconsole.log : :
+:console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 9
+9console.log : 4
+4console.log : 
+
+
+console.log : 	
+	console.log : m
+mconsole.log : c
+cconsole.log : a
+aconsole.log : u
+uconsole.log : s
+sconsole.log : e
+econsole.log : :
+:console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 5
+5console.log : 
+
+
+console.log : 	
+	console.log : m
+mconsole.log : t
+tconsole.log : v
+vconsole.log : a
+aconsole.log : l
+lconsole.log : :
+:console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : f
+fconsole.log : 3
+3console.log : c
+cconsole.log : 
+
+
+console.log : :
+:console.log : :
+:console.log :  
+ console.log : t
+tconsole.log : e
+econsole.log : s
+sconsole.log : t
+tconsole.log : _
+_console.log : l
+lconsole.log : o
+oconsole.log : a
+aconsole.log : d
+dconsole.log : :
+:console.log :  
+ console.log : p
+pconsole.log : a
+aconsole.log : s
+sconsole.log : s
+sconsole.log : e
+econsole.log : d
+dconsole.log :  
+ console.log : (
+(console.log : 0
+0console.log : )
+)console.log : 
+
+
+console.log : :
+:console.log : :
+:console.log :  
+ console.log : t
+tconsole.log : e
+econsole.log : s
+sconsole.log : t
+tconsole.log : _
+_console.log : s
+sconsole.log : t
+tconsole.log : o
+oconsole.log : r
+rconsole.log : e
+econsole.log : 
+
+
+console.log : R
+Rconsole.log : I
+Iconsole.log : S
+Sconsole.log : C
+Cconsole.log : -
+-console.log : V
+Vconsole.log :  
+ console.log : f
+fconsole.log : a
+aconsole.log : u
+uconsole.log : l
+lconsole.log : t
+tconsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 0
+0console.log :  
+ console.log : z
+zconsole.log : e
+econsole.log : r
+rconsole.log : o
+oconsole.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log :  
+ console.log : r
+rconsole.log : a
+aconsole.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 3
+3console.log : 6
+6console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log :  
+ console.log : s
+sconsole.log : p
+pconsole.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : c
+cconsole.log : 4
+4console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 3
+3console.log :  
+ console.log : g
+gconsole.log : p
+pconsole.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 4
+4console.log :  
+ console.log : t
+tconsole.log : p
+pconsole.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 5
+5console.log :  
+ console.log : t
+tconsole.log : 0
+0console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : e
+econsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 6
+6console.log :  
+ console.log : t
+tconsole.log : 1
+1console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 7
+7console.log : 8
+8console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 7
+7console.log :  
+ console.log : t
+tconsole.log : 2
+2console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 8
+8console.log :  
+ console.log : s
+sconsole.log : 0
+0console.log : /
+/console.log : f
+fconsole.log : p
+pconsole.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 9
+9console.log :  
+ console.log : s
+sconsole.log : 1
+1console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 0
+0console.log :  
+ console.log : a
+aconsole.log : 0
+0console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 1
+1console.log :  
+ console.log : a
+aconsole.log : 1
+1console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : d
+dconsole.log : 1
+1console.log : 8
+8console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 2
+2console.log :  
+ console.log : a
+aconsole.log : 2
+2console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 3
+3console.log :  
+ console.log : a
+aconsole.log : 3
+3console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 9
+9console.log : 6
+6console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 4
+4console.log :  
+ console.log : a
+aconsole.log : 4
+4console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 9
+9console.log : 5
+5console.log : 9
+9console.log : 6
+6console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 5
+5console.log :  
+ console.log : a
+aconsole.log : 5
+5console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 5
+5console.log : 5
+5console.log : 5
+5console.log : 5
+5console.log : 5
+5console.log : 5
+5console.log : 5
+5console.log : 5
+5console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 6
+6console.log :  
+ console.log : a
+aconsole.log : 6
+6console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 6
+6console.log : 8
+8console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 7
+7console.log :  
+ console.log : a
+aconsole.log : 7
+7console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 4
+4console.log : c
+cconsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 8
+8console.log :  
+ console.log : s
+sconsole.log : 2
+2console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : 8
+8console.log : d
+dconsole.log : 8
+8console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 9
+9console.log :  
+ console.log : s
+sconsole.log : 3
+3console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : 8
+8console.log : f
+fconsole.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 0
+0console.log :  
+ console.log : s
+sconsole.log : 4
+4console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : e
+econsole.log : 2
+2console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 1
+1console.log :  
+ console.log : s
+sconsole.log : 5
+5console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 2
+2console.log :  
+ console.log : s
+sconsole.log : 6
+6console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 3
+3console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 3
+3console.log :  
+ console.log : s
+sconsole.log : 7
+7console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 4
+4console.log :  
+ console.log : s
+sconsole.log : 8
+8console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 5
+5console.log :  
+ console.log : s
+sconsole.log : 9
+9console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 6
+6console.log :  
+ console.log : s
+sconsole.log : 1
+1console.log : 0
+0console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 7
+7console.log :  
+ console.log : s
+sconsole.log : 1
+1console.log : 1
+1console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 8
+8console.log :  
+ console.log : t
+tconsole.log : 3
+3console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 7
+7console.log : a
+aconsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 9
+9console.log :  
+ console.log : t
+tconsole.log : 4
+4console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 7
+7console.log : 4
+4console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 3
+3console.log : 0
+0console.log :  
+ console.log : t
+tconsole.log : 5
+5console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 9
+9console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 3
+3console.log : 1
+1console.log :  
+ console.log : t
+tconsole.log : 6
+6console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : a
+aconsole.log : 
+
+
+console.log : 	
+	console.log : m
+mconsole.log : e
+econsole.log : p
+pconsole.log : c
+cconsole.log : :
+:console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : 3
+3console.log : e
+econsole.log : 
+
+
+console.log : 	
+	console.log : m
+mconsole.log : c
+cconsole.log : a
+aconsole.log : u
+uconsole.log : s
+sconsole.log : e
+econsole.log : :
+:console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 7
+7console.log : 
+
+
+console.log : 	
+	console.log : m
+mconsole.log : t
+tconsole.log : v
+vconsole.log : a
+aconsole.log : l
+lconsole.log : :
+:console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : f
+fconsole.log : 3
+3console.log : 8
+8console.log : 
+
+
+console.log : :
+:console.log : :
+:console.log :  
+ console.log : t
+tconsole.log : e
+econsole.log : s
+sconsole.log : t
+tconsole.log : _
+_console.log : s
+sconsole.log : t
+tconsole.log : o
+oconsole.log : r
+rconsole.log : e
+econsole.log : :
+:console.log :  
+ console.log : p
+pconsole.log : a
+aconsole.log : s
+sconsole.log : s
+sconsole.log : e
+econsole.log : d
+dconsole.log :  
+ console.log : (
+(console.log : 0
+0console.log : )
+)console.log : 
+
+
+console.log : :
+:console.log : :
+:console.log :  
+ console.log : t
+tconsole.log : e
+econsole.log : s
+sconsole.log : t
+tconsole.log : _
+_console.log : e
+econsole.log : x
+xconsole.log : e
+econsole.log : c
+cconsole.log : 
+
+
+console.log : R
+Rconsole.log : I
+Iconsole.log : S
+Sconsole.log : C
+Cconsole.log : -
+-console.log : V
+Vconsole.log :  
+ console.log : f
+fconsole.log : a
+aconsole.log : u
+uconsole.log : l
+lconsole.log : t
+tconsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 0
+0console.log :  
+ console.log : z
+zconsole.log : e
+econsole.log : r
+rconsole.log : o
+oconsole.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log :  
+ console.log : r
+rconsole.log : a
+aconsole.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : 9
+9console.log : 4
+4console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log :  
+ console.log : s
+sconsole.log : p
+pconsole.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : c
+cconsole.log : 4
+4console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 3
+3console.log :  
+ console.log : g
+gconsole.log : p
+pconsole.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 4
+4console.log :  
+ console.log : t
+tconsole.log : p
+pconsole.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 5
+5console.log :  
+ console.log : t
+tconsole.log : 0
+0console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : e
+econsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 6
+6console.log :  
+ console.log : t
+tconsole.log : 1
+1console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 7
+7console.log : 8
+8console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 7
+7console.log :  
+ console.log : t
+tconsole.log : 2
+2console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 8
+8console.log :  
+ console.log : s
+sconsole.log : 0
+0console.log : /
+/console.log : f
+fconsole.log : p
+pconsole.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 9
+9console.log :  
+ console.log : s
+sconsole.log : 1
+1console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 0
+0console.log :  
+ console.log : a
+aconsole.log : 0
+0console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 1
+1console.log :  
+ console.log : a
+aconsole.log : 1
+1console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : d
+dconsole.log : 1
+1console.log : 8
+8console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 2
+2console.log :  
+ console.log : a
+aconsole.log : 2
+2console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 3
+3console.log :  
+ console.log : a
+aconsole.log : 3
+3console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 9
+9console.log : 5
+5console.log : 9
+9console.log : 6
+6console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 4
+4console.log :  
+ console.log : a
+aconsole.log : 4
+4console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 9
+9console.log : 3
+3console.log : 9
+9console.log : 5
+5console.log : 9
+9console.log : 6
+6console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 5
+5console.log :  
+ console.log : a
+aconsole.log : 5
+5console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 6
+6console.log :  
+ console.log : a
+aconsole.log : 6
+6console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 6
+6console.log : 8
+8console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 7
+7console.log :  
+ console.log : a
+aconsole.log : 7
+7console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 4
+4console.log : c
+cconsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 8
+8console.log :  
+ console.log : s
+sconsole.log : 2
+2console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : 8
+8console.log : d
+dconsole.log : c
+cconsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 1
+1console.log : 9
+9console.log :  
+ console.log : s
+sconsole.log : 3
+3console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : 8
+8console.log : f
+fconsole.log : 4
+4console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 0
+0console.log :  
+ console.log : s
+sconsole.log : 4
+4console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : e
+econsole.log : 2
+2console.log : c
+cconsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 1
+1console.log :  
+ console.log : s
+sconsole.log : 5
+5console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 2
+2console.log :  
+ console.log : s
+sconsole.log : 6
+6console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 3
+3console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 3
+3console.log :  
+ console.log : s
+sconsole.log : 7
+7console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 4
+4console.log :  
+ console.log : s
+sconsole.log : 8
+8console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 5
+5console.log :  
+ console.log : s
+sconsole.log : 9
+9console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 6
+6console.log :  
+ console.log : s
+sconsole.log : 1
+1console.log : 0
+0console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 7
+7console.log :  
+ console.log : s
+sconsole.log : 1
+1console.log : 1
+1console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 8
+8console.log :  
+ console.log : t
+tconsole.log : 3
+3console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 7
+7console.log : a
+aconsole.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 2
+2console.log : 9
+9console.log :  
+ console.log : t
+tconsole.log : 4
+4console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 7
+7console.log : 4
+4console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 3
+3console.log : 0
+0console.log :  
+ console.log : t
+tconsole.log : 5
+5console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 9
+9console.log : 
+
+
+console.log : 	
+	console.log : x
+xconsole.log : 3
+3console.log : 1
+1console.log :  
+ console.log : t
+tconsole.log : 6
+6console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 2
+2console.log : a
+aconsole.log : 
+
+
+console.log : 	
+	console.log : m
+mconsole.log : e
+econsole.log : p
+pconsole.log : c
+cconsole.log : :
+:console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : 5
+5console.log : 0
+0console.log : 
+
+
+console.log : 	
+	console.log : m
+mconsole.log : c
+cconsole.log : a
+aconsole.log : u
+uconsole.log : s
+sconsole.log : e
+econsole.log : :
+:console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : 
+
+
+console.log : 	
+	console.log : m
+mconsole.log : t
+tconsole.log : v
+vconsole.log : a
+aconsole.log : l
+lconsole.log : :
+:console.log :  
+ console.log :  
+ console.log :  
+ console.log :  
+ console.log : 0
+0console.log : x
+xconsole.log : 8
+8console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 0
+0console.log : 1
+1console.log : 5
+5console.log : 0
+0console.log : 
+
+
+console.log : :
+:console.log : :
+:console.log :  
+ console.log : t
+tconsole.log : e
+econsole.log : s
+sconsole.log : t
+tconsole.log : _
+_console.log : e
+econsole.log : x
+xconsole.log : e
+econsole.log : c
+cconsole.log : :
+:console.log :  
+ console.log : p
+pconsole.log : a
+aconsole.log : s
+sconsole.log : s
+sconsole.log : e
+econsole.log : d
+dconsole.log :  
+ console.log : (
+(console.log : 0
+0console.log : )
+)console.log : 
+
+
+Dumping memory signature
 TEST_PASSED
 
-Finished : minstret = 259941, mcycle = 396242
+Finished : minstret = 181441, mcycle = 236520
 See "exec.log" for execution trace with register updates..
 
-- /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tb_top.sv:380: Verilog $finish
-
-VerilatorTB: End of sim
-rm -rf *.log *.s *.hex *.dis *.tbl irun* vcs* simv* *.map veer* \
-verilator* *.exe obj* *.o *.sym ucli.key vc_hdrs.h csrc *.csv work \
-dataset.asdb library.cfg vsimsa.cfg riviera-build wave.asdb
-make -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/tools/picolibc.mk all
-make[1]: Entering directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
-make[1]: Nothing to be done for 'all'.
-make[1]: Leaving directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
- !!! No riscv64-unknown-elf-gcc in path, using canned hex files !!
-cp /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/hex/hello_world_dccm.hex program.hex
-verilator  --cc -CFLAGS -std=c++11 snapshots/default/common_defines.vh /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/include/el2_def.sv snapshots/default/el2_pdef.vh \
-  -Isnapshots/default -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/flist \
-  -Wno-WIDTH -Wno-UNOPTFLAT -Wno-IMPLICITSTATIC \
-  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tb_top.sv /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/ahb_sif.sv --top-module tb_top \
-  -exe test_tb_top.cpp --autoflush  
-cp /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/test_tb_top.cpp obj_dir/
-make -e -C obj_dir/ -f Vtb_top.mk OPT_FAST="-Os"
-make[1]: Entering directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/obj_dir'
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -Os -c -o test_tb_top.o test_tb_top.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -c -o verilated.o /usr/local/share/verilator/include/verilated.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -c -o verilated_threads.o /usr/local/share/verilator/include/verilated_threads.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -x c++-header Vtb_top__pch.h -o Vtb_top__pch.h.fast.gch
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top.o Vtb_top.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h7f86b803__0.o Vtb_top___024root__DepSet_h7f86b803__0.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h7f86b803__1.o Vtb_top___024root__DepSet_h7f86b803__1.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__0.o Vtb_top___024root__DepSet_h9ad02603__0.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__1.o Vtb_top___024root__DepSet_h9ad02603__1.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__2.o Vtb_top___024root__DepSet_h9ad02603__2.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__3.o Vtb_top___024root__DepSet_h9ad02603__3.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__4.o Vtb_top___024root__DepSet_h9ad02603__4.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__5.o Vtb_top___024root__DepSet_h9ad02603__5.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__6.o Vtb_top___024root__DepSet_h9ad02603__6.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__7.o Vtb_top___024root__DepSet_h9ad02603__7.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__8.o Vtb_top___024root__DepSet_h9ad02603__8.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__9.o Vtb_top___024root__DepSet_h9ad02603__9.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0.o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0.cpp
-ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0.o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -x c++-header Vtb_top__pch.h -o Vtb_top__pch.h.slow.gch
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top__ConstPool_0.o Vtb_top__ConstPool_0.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__Slow.o Vtb_top___024root__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__DepSet_h7f86b803__0__Slow.o Vtb_top___024root__DepSet_h7f86b803__0__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__DepSet_h7f86b803__1__Slow.o Vtb_top___024root__DepSet_h7f86b803__1__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__DepSet_h9ad02603__0__Slow.o Vtb_top___024root__DepSet_h9ad02603__0__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__DepSet_h9ad02603__1__Slow.o Vtb_top___024root__DepSet_h9ad02603__1__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__DepSet_h9ad02603__2__Slow.o Vtb_top___024root__DepSet_h9ad02603__2__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__DepSet_h9ad02603__3__Slow.o Vtb_top___024root__DepSet_h9ad02603__3__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__DepSet_h9ad02603__4__Slow.o Vtb_top___024root__DepSet_h9ad02603__4__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__DepSet_h9ad02603__5__Slow.o Vtb_top___024root__DepSet_h9ad02603__5__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024unit__Slow.o Vtb_top___024unit__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024unit__DepSet_hba4cee98__0__Slow.o Vtb_top___024unit__DepSet_hba4cee98__0__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top_el2_configurable_gw__Slow.o Vtb_top_el2_configurable_gw__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0__Slow.o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top_el2_configurable_gw__DepSet_hb570c3f5__0__Slow.o Vtb_top_el2_configurable_gw__DepSet_hb570c3f5__0__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top_el2_mem_if__Slow.o Vtb_top_el2_mem_if__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0__Slow.o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0__Slow.cpp
-ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top__Syms.o Vtb_top__Syms.cpp
-echo "" > Vtb_top__ALL.verilator_deplist.tmp
-Archive ar -rcs Vtb_top__ALL.a Vtb_top.o Vtb_top___024root__DepSet_h7f86b803__0.o Vtb_top___024root__DepSet_h7f86b803__1.o Vtb_top___024root__DepSet_h9ad02603__0.o Vtb_top___024root__DepSet_h9ad02603__1.o Vtb_top___024root__DepSet_h9ad02603__2.o Vtb_top___024root__DepSet_h9ad02603__3.o Vtb_top___024root__DepSet_h9ad02603__4.o Vtb_top___024root__DepSet_h9ad02603__5.o Vtb_top___024root__DepSet_h9ad02603__6.o Vtb_top___024root__DepSet_h9ad02603__7.o Vtb_top___024root__DepSet_h9ad02603__8.o Vtb_top___024root__DepSet_h9ad02603__9.o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0.o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0.o Vtb_top__ConstPool_0.o Vtb_top___024root__Slow.o Vtb_top___024root__DepSet_h7f86b803__0__Slow.o Vtb_top___024root__DepSet_h7f86b803__1__Slow.o Vtb_top___024root__DepSet_h9ad02603__0__Slow.o Vtb_top___024root__DepSet_h9ad02603__1__Slow.o Vtb_top___024root__DepSet_h9ad02603__2__Slow.o Vtb_top___024root__DepSet_h9ad02603__3__Slow.o Vtb_top___024root__DepSet_h9ad02603__4__Slow.o Vtb_top___024root__DepSet_h9ad02603__5__Slow.o Vtb_top___024unit__Slow.o Vtb_top___024unit__DepSet_hba4cee98__0__Slow.o Vtb_top_el2_configurable_gw__Slow.o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0__Slow.o Vtb_top_el2_configurable_gw__DepSet_hb570c3f5__0__Slow.o Vtb_top_el2_mem_if__Slow.o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0__Slow.o Vtb_top__Syms.o
-g++     test_tb_top.o verilated.o verilated_threads.o Vtb_top__ALL.a    -pthread -lpthread -latomic   -o Vtb_top
-rm Vtb_top__ALL.verilator_deplist.tmp
-make[1]: Leaving directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/obj_dir'
-touch verilator-build
-# FIXME: Assuming here that either begin_signature or end_signature implies
-# that both symbols are present.
-grep -E "(begin|end)_signature" hello_world_dccm.sym >/dev/null 2>&1; \
-if [ $? -eq 0 ]; then \
-	BEG=`grep "begin_signature" hello_world_dccm.sym | cut -d\  -f 1`;\
-	END=`grep "end_signature"   hello_world_dccm.sym | cut -d\  -f 1`;\
-	./obj_dir/Vtb_top --mem-signature ${BEG} ${END}; \
-else \
-	./obj_dir/Vtb_top; \
-fi
-
-VerilatorTB: Start of sim
-
-mem_signature_begin = 00000000
-mem_signature_end   = 00000000
-mem_mailbox         = D0580000
-DCCM pre-load from f0040000 to f0041050
-TEST_PASSED
-
-Finished : minstret = 17, mcycle = 75
-See "exec.log" for execution trace with register updates..
-
-- /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tb_top.sv:380: Verilog $finish
+- /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tb_top.sv:382: Verilog $finish
 
 VerilatorTB: End of sim

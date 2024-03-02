@@ -134,27 +134,8 @@ class EL2_parameter_tuning:
         self.generated_filename = 'EL2_utilization_synth.rpt'
         self.generated_logfile = '../object_functions/Logs/'
 
-    def tune_parameter(self, new_value):
-        '''Tune the parameters in the Scala settings file.'''
-        try:
-            # Run the 'make' command in the directory where the Makefile is located
-            rv_root = os.environ.get('RV_ROOT')
-            if not rv_root:
-                print("RV_ROOT environment variable is not set.")
-                return False
-            command = [rv_root + '/configs/veer.config']  # Replace '/path/to/tool' with the correct tool or interpreter
-            for index, param in enumerate(self.tunable_params):
-                value = str(round(new_value[index]) << self.shift_amount[index])
-                command.append('-set={param}={value}'.format(param=param, value=value))
-            with open(self.generated_logfile + 'Processor_Generation.log', 'w') as f:
-                subprocess.run(['pwd'], check=True, cwd=self.generation_path, stdout=f, stderr=f)
-                subprocess.run(command, check=True, cwd=self.generation_path, stdout=f, stderr=f)
-            return True
-        except subprocess.CalledProcessError as e:
-            print(f"Error tuning the veer.config: {e}")
-            return False
         
-    def run_performance_simulation(self, benchmark):
+    def tune_and_run_performance_simulation(self, new_value, benchmark):
         try:
             # Expand the environment variable
             rv_root = os.environ.get('RV_ROOT', '')  # Default to an empty string if RV_ROOT is not set
@@ -162,11 +143,17 @@ class EL2_parameter_tuning:
                 print("RV_ROOT environment variable is not set.")
                 return False, None, None
             target = 'TEST=' + benchmark
+            param_setting = 'CONF_PARAMS=\''
+            for index, param in enumerate(self.tunable_params):
+                value = str(round(new_value[index]) << self.shift_amount[index])
+                param_setting+= '-set={param}={value} '.format(param=param, value=value)  
+            param_setting += '\''
+            print(param_setting)
+            command = ['make', '-f', os.path.join(rv_root, 'tools/Makefile'), target, param_setting, 'debug=1']
+                    
             # Prepare the command with the expanded environment variable
-            command = ['make', '-f', os.path.join(rv_root, 'tools/Makefile'), target]
-
             # Run the 'make' command in the directory where the Makefile is located
-            with open(self.generated_logfile + 'Processor_Generation.log', 'a') as f:
+            with open(self.generated_logfile + 'Processor_Generation.log', 'w') as f:
                 subprocess.run(command, check=True, cwd=self.generation_path, stdout=f, stderr=f)
             minstret, mcycle = self.extract_minstret_mcycle(self.generated_logfile + 'Processor_Generation.log')
             return True, minstret, mcycle
@@ -237,11 +224,10 @@ class EL2_parameter_tuning:
 if __name__ == '__main__':
     tunable_params = ['btb_size', 'dccm_size' ]
     generation_path = '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
-    new_value = [8, 16]
+    new_value = [128, 512]
     shift_amount = [0, 0]
     vivado_project_path = '../object_functions/Vivado_Prj/EL2_Prj/'
     pt = EL2_parameter_tuning(tunable_params, shift_amount, generation_path, vivado_project_path)
-    pt.find_all_combinations_of_simulation_results()
+    pt.tune_and_run_performance_simulation(new_value, 'cmark')
     # pt.tune_parameter(new_value)
-    # a, b = pt.run_performance_simulation()
     # pt.run_synthesis()

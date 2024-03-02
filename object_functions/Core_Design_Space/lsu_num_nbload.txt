@@ -1,0 +1,4 @@
+lsu_num_nbload, hello_world_minstret, hello_world_mcycle, cmark_minstret, cmark_mcycle, pmp_minstret, pmp_mcycle
+2, 329, 706, 282995, 448061, 181441, 257672
+4, 329, 706, 282995, 409709, 181441, 236520
+8, 329, 706, 282995, 407585, 181441, 234102

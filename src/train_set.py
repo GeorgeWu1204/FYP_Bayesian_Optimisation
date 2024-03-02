@@ -124,8 +124,8 @@ class train_set_records():
                 return True, train_x_with_disturb, new_train_y, torch.tensor([new_hyper_vol], dtype = self.tensor_type, device = self.tensor_device) 
         else:
             neighbour_samples = self.get_close_neighbours(recovered_train_x)
-            print("recovered_train_x: ", recovered_train_x)
-            print("neighbour_samples: ", neighbour_samples)
+            # print("recovered_train_x: ", recovered_train_x)
+            # print("neighbour_samples: ", neighbour_samples)
             # neighbour_tensor = torch.empty((1, len(self.self_constraints)), dtype = self.tensor_type, device = self.tensor_device)
             for neighbour in neighbour_samples:
                 neighbour_tensor = torch.tensor(neighbour, dtype = self.tensor_type, device = self.tensor_device)

@@ -1,0 +1,8 @@
+btb_size, hello_world_minstret, hello_world_mcycle, cmark_minstret, cmark_mcycle, pmp_minstret, pmp_mcycle
+8, Invalid, Invalid, Invalid, Invalid, Invalid, Invalid
+16, Invalid, Invalid, Invalid, Invalid, Invalid, Invalid
+32, 329, 706, 282995, 410217, 181441, 249250
+64, 329, 706, 282995, 409626, 181441, 244734
+128, 329, 706, 282995, 409406, 181441, 240428
+256, 329, 706, 282995, 409414, 181441, 236626
+512, 329, 706, 282995, 409709, 181441, 236520

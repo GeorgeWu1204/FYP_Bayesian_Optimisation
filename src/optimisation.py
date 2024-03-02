@@ -75,7 +75,7 @@ RAW_SAMPLES = 8                 # number of raw samples for qNEI
 verbose = True
 record = True
 debug = False
-plot_posterior = False
+plot_posterior = True
 
 
 #reference point for optimisation used for hypervolume calculation

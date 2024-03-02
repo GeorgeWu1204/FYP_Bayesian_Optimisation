@@ -359,17 +359,11 @@ class EL2_Data(Data_Set):
             utilisation_percentage = self.build_new_dataset.find_corresponding_data(sample_input)
             if utilisation_percentage is None:
                 print("Not found in the dataset, Start to Generate ")
-                pass_generation = self.param_tuner.tune_parameter(sample_input)
-                # Check if successfully generated the processor
-                if not pass_generation:
-                    print("Failed to generate the processor")
-                    self.build_new_dataset.record_data(sample_input, 'failed')
-                    return False, results
                 objective_results = []
                 # print("Start to run the performance simulation for ", type(self.performance_objs_benchmarks))
                 # Run the Performance Simulation (Recording mcycle only)
                 for benchmark in self.performance_objs_benchmarks:
-                    valid_simulation, _, mcycle = self.param_tuner.run_performance_simulation(benchmark)
+                    valid_simulation, _, mcycle = self.param_tuner.tune_and_run_performance_simulation(sample_input, benchmark)
                     if valid_simulation == False:
                         self.build_new_dataset.record_data(sample_input, 'failed')
                         return False, results
