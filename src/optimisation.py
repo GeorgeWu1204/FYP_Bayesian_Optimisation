@@ -46,8 +46,6 @@ elif objective_function_category == 'NutShell':
     data_set = data.NutShell_Data(INPUT_NAMES, OBJECTIVES_TO_OPTIMISE, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT, OUTPUT_OBJECTIVE_CONSTRAINT, parameter_tuning_obj, t_type, device)
 elif objective_function_category == 'EL2':
     data_set = data.EL2_Data(INPUT_NAMES, OBJECTIVES_TO_OPTIMISE, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT, INPUT_EXP, OUTPUT_OBJECTIVE_CONSTRAINT, parameter_tuning_obj, t_type, device)
-
-
 print("<-------------- Optimisation Settings -------------->")
 print(f"Input Names: {INPUT_NAMES}")
 print(f"Input Self Constraints: {self_constraints}")
@@ -56,7 +54,6 @@ print(f"Optimisation Device : {objective_function_category}")
 print(f"Objectives to Optimise: {OBJECTIVES_TO_OPTIMISE}")
 print(f"Output Objective Constraint: {OUTPUT_OBJECTIVE_CONSTRAINT}")
 print("<--------------------------------------------------->")
-
 
 # Train Set Settings
 TRAIN_SET_DISTURBANCE_RANGE = 0.01                  # noise standard deviation for objective

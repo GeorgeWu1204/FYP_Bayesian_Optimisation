@@ -31,7 +31,7 @@ def plot_benchmark_performance(data, parameter_names):
     r = np.arange(n_parameters)
     
     # Creating the figure and the axes
-    fig, ax = plt.subplots(figsize=(20, 5))
+    fig, ax = plt.subplots(figsize=(25, 5))
     
     for i, (benchmark, performances) in enumerate(filtered_data.items()):
         # Calculate the position for each benchmark
@@ -111,8 +111,8 @@ class Find_all_combinations_of_parameters:
         }
         self.generation_path = '../Cores-VeeR-EL2'      # Path to execute the generation command
         self.generated_logfile = '../Logs/'
-        self.benchmarks = ['hello_world', 'cmark', 'pmp']
-        self.benchmark_minstret =  {'hello_world': 329, 'cmark': 282995, 'pmp': 181441}
+        self.benchmarks = ['hello_world', 'cmark', 'pmp', 'dhry']
+        self.benchmark_minstret =  {'hello_world': 329, 'cmark': 282995, 'pmp': 181441, 'dhry': 343110}
 
     def find_and_record_all_combinations_of_single_param(self):
         for param_name in self.tunable_params.keys():
@@ -134,6 +134,40 @@ class Find_all_combinations_of_parameters:
                         else:
                             f.write(f", Invalid, Invalid")
                     f.write('\n')
+
+    def find_and_record_all_combinations_of_all_params_of_additional_benchmarks(self, append_benchmarks):
+        for param_name in self.tunable_params.keys():
+            print(f"Testing parameter: {param_name}")
+            print(f"Possible values: {self.tunable_params[param_name]}")
+            print(f"Additional Benchmark: {append_benchmarks}")
+            path = '../Core_Design_Space/' + param_name
+            copy_path = '../Core_Design_Space/Copy/' + param_name
+            modified_lines = []
+            with open(copy_path + '.txt', 'r') as file:
+                lines = file.readlines()
+                modified_line = lines[0].strip('\n')
+                for benchmark in append_benchmarks:
+                    modified_line += f", {benchmark}_minstret, {benchmark}_mcycle"
+                modified_lines.append(modified_line)
+                line_index = 1
+                for value in self.tunable_params[param_name]:
+                    modified_line = lines[line_index]
+                    modified_line = modified_line.strip('\n')
+                    for benchmark in append_benchmarks:
+                        valid, minstret, mcycle = self.tune_and_run_performance_simulation_for_single_param(param_name, value, benchmark)
+                        if valid:
+                            modified_line += f", {minstret}, {mcycle}"
+                        else:
+                            modified_line += f", Invalid, Invalid"
+                    modified_lines.append(modified_line)
+                    line_index += 1
+            print(modified_lines)
+            
+            with open(path + '.txt', 'w') as file:
+                for line in modified_lines:
+                    # Write each modified line back to the file with a newline character at the end
+                    file.write(line + '\n')
+           
         
     def tune_and_run_performance_simulation_for_single_param(self, param_name, param_value, benchmark):
         try:
@@ -191,7 +225,6 @@ class Find_all_combinations_of_parameters:
         except Exception as e:
             print(f"An error occurred: {e}")
             return None, None
-
         return minstret, mcycle
     
     def plot_design_space_of_single_param(self, parameter_name):
@@ -234,13 +267,17 @@ class Find_all_combinations_of_parameters:
                         if values[2*i+1] == ' Invalid' or values[2*i+1] == ' None':
                             continue
                         results[self.benchmarks[i]].append((int(values[2*i+2])))
-                        
+                
                 for benchmark in self.benchmarks:
-                    difference_in_benchmark_performance[benchmark].append((max(results[benchmark]) - min(results[benchmark]))/(self.benchmark_minstret[benchmark]))
-                    print(f"Parameter: {param_name}, Benchmark: {benchmark}, Difference: {difference_in_benchmark_performance[benchmark][-1]}")
-
+                    if len(results[benchmark]) > 0:
+                        difference_in_benchmark_performance[benchmark].append((max(results[benchmark]) - min(results[benchmark]))/(self.benchmark_minstret[benchmark]))
+                        print(f"Parameter: {param_name}, Benchmark: {benchmark}, Difference: {difference_in_benchmark_performance[benchmark][-1]}")
+                    else:
+                        print(f"Parameter: {param_name}, Benchmark: {benchmark}, No valid results")
+                        difference_in_benchmark_performance[benchmark].append(0)
         plot_benchmark_performance(difference_in_benchmark_performance, list(self.tunable_params.keys()))
 if __name__ == '__main__':
     pt = Find_all_combinations_of_parameters()
-    # pt.find_and_record_all_combinations_of_single_param()
     pt.extract_min_max_of_params()
+    # pt.find_and_record_all_combinations_of_single_param()
+    # pt.find_and_record_all_combinations_of_all_params_of_additional_benchmarks(['dhry'])

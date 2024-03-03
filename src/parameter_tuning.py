@@ -133,6 +133,7 @@ class EL2_parameter_tuning:
         self.stored_report_directory = '../object_functions/Syn_Report/dynamic_set/'
         self.generated_filename = 'EL2_utilization_synth.rpt'
         self.generated_logfile = '../object_functions/Logs/'
+        print("tunable_params: ", self.tunable_params)
 
         
     def tune_and_run_performance_simulation(self, new_value, benchmark):

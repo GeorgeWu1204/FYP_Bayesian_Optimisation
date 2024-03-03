@@ -14,10 +14,10 @@ Finished scanning sources
 # reset_run synth_1
 INFO: [Project 1-1161] Replacing file /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/EL2_Prj/EL2_Prj.srcs/utils_1/imports/synth_1/el2_veer_wrapper.dcp with file /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/EL2_Prj/EL2_Prj.runs/synth_1/el2_veer_wrapper.dcp
 # launch_runs synth_1 -jobs 8
-[Sun Mar  3 00:37:09 2024] Launched synth_1...
+[Sun Mar  3 20:27:00 2024] Launched synth_1...
 Run output will be captured here: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/EL2_Prj/EL2_Prj.runs/synth_1/runme.log
 # wait_on_run synth_1
-[Sun Mar  3 00:37:09 2024] Waiting for synth_1 to finish...
+[Sun Mar  3 20:27:00 2024] Waiting for synth_1 to finish...
 
 *** Running vivado
     with args -log el2_veer_wrapper.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source el2_veer_wrapper.tcl
@@ -40,9 +40,9 @@ Attempting to get a license for feature 'Synthesis' and/or device 'xczu19eg'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xczu19eg'
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 2631583
+INFO: [Synth 8-7075] Helper process launched with PID 2960113
 ---------------------------------------------------------------------------------
-Starting Synthesize : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1785.578 ; gain = 408.598 ; free physical = 9764 ; free virtual = 17322
+Starting Synthesize : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 1785.184 ; gain = 409.598 ; free physical = 5519 ; free virtual = 16763
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-6157] synthesizing module 'el2_veer_wrapper' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/el2_veer_wrapper.sv:24]
 INFO: [Synth 8-6157] synthesizing module 'el2_mem_if' [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/lib/el2_mem_if.sv:22]
@@ -7708,244 +7708,72 @@ WARNING: [Synth 8-7129] Port iccm_mem_export\.dccm_wr_data_bank[2][24] in module
 WARNING: [Synth 8-7129] Port iccm_mem_export\.dccm_wr_data_bank[2][23] in module el2_ifu_iccm_mem is either unconnected or has no load
 INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 ---------------------------------------------------------------------------------
-Finished Synthesize : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2229.797 ; gain = 852.816 ; free physical = 9276 ; free virtual = 16875
+Finished Synthesize : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 2229.402 ; gain = 853.816 ; free physical = 5019 ; free virtual = 16329
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2229.797 ; gain = 852.816 ; free physical = 9270 ; free virtual = 16875
+Finished Constraint Validation : Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2229.402 ; gain = 853.816 ; free physical = 5014 ; free virtual = 16325
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'rvjtag_tap'
-INFO: [Synth 8-6904] The RAM "ram_be_128x52:/ram_core_reg" of size (depth=128 x width=52) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-  TEST_LOGIC_RESET_STATE |                 0001000000000000 |                             0000
-     RUN_TEST_IDLE_STATE |                 0000100000000000 |                             0001
-    SELECT_DR_SCAN_STATE |                 0000000000100000 |                             0010
-    SELECT_IR_SCAN_STATE |                 0000000001000000 |                             1001
-        CAPTURE_IR_STATE |                 0000010000000000 |                             1010
-          SHIFT_IR_STATE |                 0000001000000000 |                             1011
-          EXIT1_IR_STATE |                 0000000010000000 |                             1100
-          PAUSE_IR_STATE |                 0000000000001000 |                             1101
-          EXIT2_IR_STATE |                 0000000000010000 |                             1110
-         UPDATE_IR_STATE |                 0000000100000000 |                             1111
-        CAPTURE_DR_STATE |                 0000000000000001 |                             0011
-          SHIFT_DR_STATE |                 0000000000000100 |                             0100
-          EXIT1_DR_STATE |                 0000000000000010 |                             0101
-          PAUSE_DR_STATE |                 1000000000000000 |                             0110
-          EXIT2_DR_STATE |                 0010000000000000 |                             0111
-         UPDATE_DR_STATE |                 0100000000000000 |                             1000
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 'one-hot' in module 'rvjtag_tap'
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:23 ; elapsed = 00:00:21 . Memory (MB): peak = 3343.402 ; gain = 1966.422 ; free physical = 5205 ; free virtual = 12863
+Finished Mimic Skeleton from Reference : Time (s): cpu = 00:00:24 ; elapsed = 00:00:21 . Memory (MB): peak = 3379.977 ; gain = 2004.391 ; free physical = 2575 ; free virtual = 13530
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-223] decloning instance 'veer/lsu/bus_intf/bus_buffer/lsu_axi_bready_ff' (rvdff_fpga) to 'veer/lsu/bus_intf/bus_buffer/lsu_axi_rready_ff'
 
 
 Incremental Synthesis Report Summary:
 
-1. Incremental synthesis run: no
+1. Incremental synthesis run: yes
 
-   Reason for not running incremental synthesis : Design change found in an area of the design that prevents previous synthesis information being used
+   Stitch points used : changed
 
 
-INFO: [Synth 8-7130] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+2. Change Summary
+
+Report Incremental Modules: 
++-+----------------+------------+----------+----------+
+| |Changed Modules |Replication |Instances |Changed % |
++-+----------------+------------+----------+----------+
++-+----------------+------------+----------+----------+
+
+
+   Full Design Size (number of cells) : 230044
+   Resynthesis Design Size (number of cells) : 0
+   Resynth % : 0.0000,  Reuse % : 100.0000
+
+3. Reference Checkpoint Information
+
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| DCP Location:  | /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/EL2_Prj/EL2_Prj.srcs/utils_1/imports/synth_1/el2_veer_wrapper.dcp |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
++--------------------------------+------------------------------+
+|         DCP Information        |             Value            |
++--------------------------------+------------------------------+
+| Vivado Version                 |                    v2023.2 |
+| DCP State                      |                              |
++--------------------------------+------------------------------+
+
+
+
+Report RTL Partitions: 
++------+------------------------------+------------+----------+
+|      |RTL Partition                 |Replication |Instances |
++------+------------------------------+------------+----------+
+|1     |el2_ifu_bp_ctl__GB0_#REUSE#   |           1|         0|
+|2     |el2_ifu_bp_ctl__GB1_#REUSE#   |           1|         0|
+|3     |el2_ifu_bp_ctl__GB2_#REUSE#   |           1|         0|
+|4     |el2_ifu_bp_ctl__GB3_#REUSE#   |           1|         0|
+|5     |el2_ifu__GC0_#REUSE#          |           1|         0|
+|6     |el2_veer__GCB0_#REUSE#        |           1|         0|
+|7     |el2_veer__GCB1_#REUSE#        |           1|         0|
+|8     |el2_veer__GCB2_#REUSE#        |           1|         0|
+|9     |el2_veer__GCB3_#REUSE#        |           1|         0|
+|10    |el2_veer_wrapper__GC0_#REUSE# |           1|         0|
++------+------------------------------+------------+----------+
 No constraint files found.
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
 ---------------------------------------------------------------------------------
 Detailed RTL Component Info : 
-+---Adders : 
-	   2 Input   64 Bit       Adders := 5     
-	   2 Input   38 Bit       Adders := 12    
-	   3 Input   37 Bit       Adders := 1     
-	   2 Input   36 Bit       Adders := 1     
-	   2 Input   35 Bit       Adders := 1     
-	   3 Input   33 Bit       Adders := 1     
-	   2 Input   32 Bit       Adders := 7     
-	   2 Input   31 Bit       Adders := 3     
-	   2 Input   30 Bit       Adders := 2     
-	   2 Input   27 Bit       Adders := 3     
-	   2 Input   25 Bit       Adders := 2     
-	   2 Input   24 Bit       Adders := 2     
-	   2 Input   20 Bit       Adders := 2     
-	   2 Input   19 Bit       Adders := 8     
-	   2 Input   15 Bit       Adders := 1     
-	   2 Input   14 Bit       Adders := 1     
-	   2 Input   13 Bit       Adders := 6     
-	   2 Input    9 Bit       Adders := 4     
-	   3 Input    7 Bit       Adders := 2     
-	   2 Input    6 Bit       Adders := 1     
-	  32 Input    6 Bit       Adders := 1     
-	   2 Input    5 Bit       Adders := 1     
-	  17 Input    5 Bit       Adders := 1     
-	   9 Input    4 Bit       Adders := 1     
-	   6 Input    4 Bit       Adders := 1     
-	   7 Input    4 Bit       Adders := 1     
-	   8 Input    4 Bit       Adders := 1     
-	   2 Input    3 Bit       Adders := 10    
-	   5 Input    3 Bit       Adders := 1     
-	   4 Input    3 Bit       Adders := 4     
-	   2 Input    2 Bit       Adders := 8     
-	   3 Input    2 Bit       Adders := 1     
-+---XORs : 
-	  32 Input     63 Bit         XORs := 1     
-	   2 Input     39 Bit         XORs := 6     
-	   2 Input     32 Bit         XORs := 3     
-	   2 Input     31 Bit         XORs := 1     
-	   2 Input     19 Bit         XORs := 1     
-	   2 Input     18 Bit         XORs := 1     
-	   2 Input     16 Bit         XORs := 1     
-	   2 Input     15 Bit         XORs := 1     
-	   2 Input     12 Bit         XORs := 1     
-	   2 Input     11 Bit         XORs := 3     
-	   2 Input     10 Bit         XORs := 10    
-	   2 Input      9 Bit         XORs := 2     
-	   3 Input      8 Bit         XORs := 4     
-	   2 Input      8 Bit         XORs := 7     
-	   2 Input      7 Bit         XORs := 1     
-	   2 Input      6 Bit         XORs := 1     
-	   3 Input      5 Bit         XORs := 4     
-	   2 Input      1 Bit         XORs := 99    
-	   4 Input      1 Bit         XORs := 13    
-	   8 Input      1 Bit         XORs := 4     
-	  32 Input      1 Bit         XORs := 2     
-	  34 Input      1 Bit         XORs := 2     
-	  35 Input      1 Bit         XORs := 2     
-	   6 Input      1 Bit         XORs := 7     
-	  19 Input      1 Bit         XORs := 14    
-	  26 Input      1 Bit         XORs := 2     
-	  16 Input      1 Bit         XORs := 17    
-	   7 Input      1 Bit         XORs := 12    
-	  10 Input      1 Bit         XORs := 22    
-	  17 Input      1 Bit         XORs := 5     
-	  18 Input      1 Bit         XORs := 5     
-	   3 Input      1 Bit         XORs := 2     
-	  12 Input      1 Bit         XORs := 2     
-	   9 Input      1 Bit         XORs := 2     
-	  28 Input      1 Bit         XORs := 4     
-	  36 Input      1 Bit         XORs := 2     
-	  30 Input      1 Bit         XORs := 2     
-+---XORs : 
-	               32 Bit    Wide XORs := 11    
-	                7 Bit    Wide XORs := 6     
-	                6 Bit    Wide XORs := 5     
-+---Registers : 
-	              256 Bit    Registers := 1     
-	              142 Bit    Registers := 6     
-	               71 Bit    Registers := 1     
-	               64 Bit    Registers := 10    
-	               57 Bit    Registers := 1     
-	               56 Bit    Registers := 1     
-	               53 Bit    Registers := 4     
-	               52 Bit    Registers := 3     
-	               41 Bit    Registers := 2     
-	               39 Bit    Registers := 2     
-	               38 Bit    Registers := 1     
-	               37 Bit    Registers := 1     
-	               34 Bit    Registers := 1     
-	               33 Bit    Registers := 4     
-	               32 Bit    Registers := 137   
-	               31 Bit    Registers := 20    
-	               30 Bit    Registers := 17    
-	               29 Bit    Registers := 2     
-	               28 Bit    Registers := 4     
-	               26 Bit    Registers := 1     
-	               24 Bit    Registers := 7     
-	               22 Bit    Registers := 513   
-	               21 Bit    Registers := 2     
-	               19 Bit    Registers := 2     
-	               18 Bit    Registers := 1     
-	               17 Bit    Registers := 3     
-	               16 Bit    Registers := 13    
-	               15 Bit    Registers := 1     
-	               14 Bit    Registers := 3     
-	               13 Bit    Registers := 2     
-	               12 Bit    Registers := 3     
-	               11 Bit    Registers := 3     
-	               10 Bit    Registers := 19    
-	                9 Bit    Registers := 2     
-	                8 Bit    Registers := 32    
-	                7 Bit    Registers := 8     
-	                6 Bit    Registers := 4     
-	                5 Bit    Registers := 4     
-	                4 Bit    Registers := 58    
-	                3 Bit    Registers := 40    
-	                2 Bit    Registers := 591   
-	                1 Bit    Registers := 751   
-+---RAMs : 
-	              71K Bit	(512 X 142 bit)          RAMs := 2     
-	               6K Bit	(128 X 52 bit)          RAMs := 1     
-+---Muxes : 
-	   2 Input  256 Bit        Muxes := 1     
-	   2 Input  142 Bit        Muxes := 11    
-	   2 Input   80 Bit        Muxes := 1     
-	   2 Input   78 Bit        Muxes := 1     
-	   2 Input   71 Bit        Muxes := 4     
-	   2 Input   64 Bit        Muxes := 38    
-	   4 Input   64 Bit        Muxes := 2     
-	   2 Input   57 Bit        Muxes := 1     
-	   2 Input   56 Bit        Muxes := 1     
-	   2 Input   53 Bit        Muxes := 4     
-	   2 Input   52 Bit        Muxes := 5     
-	   5 Input   41 Bit        Muxes := 1     
-	   4 Input   41 Bit        Muxes := 2     
-	   3 Input   41 Bit        Muxes := 1     
-	   2 Input   41 Bit        Muxes := 1     
-	   2 Input   39 Bit        Muxes := 20    
-	   4 Input   39 Bit        Muxes := 4     
-	   2 Input   38 Bit        Muxes := 1     
-	   2 Input   37 Bit        Muxes := 1     
-	   2 Input   34 Bit        Muxes := 17    
-	   2 Input   33 Bit        Muxes := 5     
-	   2 Input   32 Bit        Muxes := 247   
-	   4 Input   32 Bit        Muxes := 8     
-	   8 Input   32 Bit        Muxes := 4     
-	   2 Input   31 Bit        Muxes := 31    
-	   2 Input   30 Bit        Muxes := 17    
-	   2 Input   29 Bit        Muxes := 4     
-	   2 Input   28 Bit        Muxes := 4     
-	   2 Input   26 Bit        Muxes := 4     
-	   2 Input   24 Bit        Muxes := 7     
-	   2 Input   22 Bit        Muxes := 513   
-	   2 Input   21 Bit        Muxes := 2     
-	   2 Input   19 Bit        Muxes := 2     
-	   2 Input   18 Bit        Muxes := 1     
-	   2 Input   17 Bit        Muxes := 3     
-	   2 Input   16 Bit        Muxes := 42    
-	   4 Input   16 Bit        Muxes := 1     
-	  16 Input   16 Bit        Muxes := 1     
-	   2 Input   15 Bit        Muxes := 4     
-	   2 Input   14 Bit        Muxes := 5     
-	   2 Input   12 Bit        Muxes := 31    
-	   2 Input   11 Bit        Muxes := 3     
-	   2 Input   10 Bit        Muxes := 24    
-	   2 Input    9 Bit        Muxes := 3     
-	   2 Input    8 Bit        Muxes := 222   
-	   2 Input    7 Bit        Muxes := 10    
-	   2 Input    6 Bit        Muxes := 6     
-	   2 Input    5 Bit        Muxes := 22    
-	   2 Input    4 Bit        Muxes := 147   
-	  11 Input    4 Bit        Muxes := 2     
-	   4 Input    4 Bit        Muxes := 3     
-	   2 Input    3 Bit        Muxes := 68    
-	  10 Input    3 Bit        Muxes := 1     
-	   6 Input    3 Bit        Muxes := 2     
-	  11 Input    3 Bit        Muxes := 1     
-	   4 Input    3 Bit        Muxes := 9     
-	   3 Input    3 Bit        Muxes := 4     
-	   2 Input    2 Bit        Muxes := 1167  
-	   3 Input    2 Bit        Muxes := 2     
-	   7 Input    2 Bit        Muxes := 1     
-	   4 Input    2 Bit        Muxes := 7     
-	   8 Input    2 Bit        Muxes := 4     
-	  95 Input    2 Bit        Muxes := 1     
-	   2 Input    1 Bit        Muxes := 1128  
-	   4 Input    1 Bit        Muxes := 53    
-	   6 Input    1 Bit        Muxes := 3     
-	  11 Input    1 Bit        Muxes := 13    
-	   8 Input    1 Bit        Muxes := 24    
-	   5 Input    1 Bit        Muxes := 1     
 ---------------------------------------------------------------------------------
 Finished RTL Component Statistics 
 ---------------------------------------------------------------------------------
@@ -7962,142 +7790,37 @@ No constraint files found.
 ---------------------------------------------------------------------------------
 Start Cross Boundary and Area Optimization
 ---------------------------------------------------------------------------------
-WARNING: [Synth 8-3917] design el2_veer__GCB0 has port trace_rv_i_address_ip[0] driven by constant 0
-INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
-DSP Report: Generating DSP prod_x, operation Mode is: A*B.
-DSP Report: operator prod_x is absorbed into DSP prod_x.
-DSP Report: operator prod_x is absorbed into DSP prod_x.
-DSP Report: Generating DSP prod_x, operation Mode is: (PCIN>>17)+A*B.
-DSP Report: operator prod_x is absorbed into DSP prod_x.
-DSP Report: operator prod_x is absorbed into DSP prod_x.
-DSP Report: Generating DSP prod_x, operation Mode is: A*B.
-DSP Report: operator prod_x is absorbed into DSP prod_x.
-DSP Report: operator prod_x is absorbed into DSP prod_x.
-DSP Report: Generating DSP prod_x, operation Mode is: (PCIN>>17)+A*B.
-DSP Report: operator prod_x is absorbed into DSP prod_x.
-DSP Report: operator prod_x is absorbed into DSP prod_x.
-INFO: [Synth 8-5546] ROM "mask" won't be mapped to RAM because it is too sparse
-INFO: [Synth 8-5546] ROM "mask" won't be mapped to RAM because it is too sparse
-INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
-INFO: [Synth 8-3333] propagating constant 0 across sequential element (lsu/lsu_lsc_ctl/\exc_mscause_mff/dout_reg[3] )
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/claimid_ff/dout_reg[5]' (FDC) to 'pic_ctrl_inst/claimid_ff/dout_reg[7]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/claimid_ff/dout_reg[6]' (FDC) to 'pic_ctrl_inst/claimid_ff/dout_reg[7]'
-INFO: [Synth 8-3333] propagating constant 0 across sequential element (pic_ctrl_inst/\claimid_ff/dout_reg[7] )
-INFO: [Synth 8-3886] merging instance 'lsu/bus_intf/lsu_byten_rff/dout_reg[2]' (FDC) to 'lsu/bus_intf/lsu_byten_rff/dout_reg[3]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[30]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[31]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[31]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[29]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[27]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[26]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[28]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[29]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[29]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[19]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[24]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[26]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[25]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[26]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[26]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[23]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[21]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[23]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[22]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[23]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[23]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[20]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[18]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[19]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[19]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[18]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[20]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[17]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[15]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[17]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[16]' (FDC) to 'pic_ctrl_inst/picm_wadd_flop/dout_reg[17]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_wadd_flop/dout_reg[17]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[15]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[27]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[15]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[26]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[15]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[25]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[15]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[24]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[15]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[23]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[15]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[22]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[15]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[21]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[15]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[20]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[15]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[17]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[15]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[16]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[15]'
-INFO: [Synth 8-3333] propagating constant 0 across sequential element (pic_ctrl_inst/\picm_radd_flop/dout_reg[15] )
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[30]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[18]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[18]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[19]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[19]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[28]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[28]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[29]'
-INFO: [Synth 8-3886] merging instance 'pic_ctrl_inst/picm_radd_flop/dout_reg[29]' (FDC) to 'pic_ctrl_inst/picm_radd_flop/dout_reg[31]'
-INFO: [Synth 8-6904] The RAM "mem/\icache.icm /ic_tag_inst/PACKED_1.ECC1.size_128.WAYS.ic_way_tag/ram_core_reg" of size (depth=128 x width=52) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
-INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
-INFO: [Synth 8-6904] The RAM "mem/\icache.icm /ic_tag_inst/PACKED_1.ECC1.size_128.WAYS.ic_way_tag/ram_core_reg" of size (depth=128 x width=52) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-7077] IncrSyn: subsequent runs will still be incremental as the reference run was parallel and that data is reused
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:06 ; elapsed = 00:01:10 . Memory (MB): peak = 3359.414 ; gain = 1982.434 ; free physical = 430 ; free virtual = 6897
----------------------------------------------------------------------------------
- Sort Area is el2_veer__GCB1 prod_x_0 : 0 0 : 2701 5008 : Used 1 time 0
- Sort Area is el2_veer__GCB1 prod_x_0 : 0 1 : 2307 5008 : Used 1 time 0
- Sort Area is el2_veer__GCB1 prod_x_3 : 0 0 : 2304 4330 : Used 1 time 0
- Sort Area is el2_veer__GCB1 prod_x_3 : 0 1 : 2026 4330 : Used 1 time 0
----------------------------------------------------------------------------------
-Start ROM, RAM, DSP, Shift Register and Retiming Reporting
----------------------------------------------------------------------------------
-
-Distributed RAM: Preliminary Mapping Report (see note below)
-+------------------------------+---------------------------------------------------------------------------+-----------+----------------------+------------------+
-|Module Name                   | RTL Object                                                                | Inference | Size (Depth x Width) | Primitives       | 
-+------------------------------+---------------------------------------------------------------------------+-----------+----------------------+------------------+
-|mem/\icache.icm               | ic_tag_inst/PACKED_1.ECC1.size_128.WAYS.ic_way_tag/ram_core_reg           | Implied   | 128 x 52             | RAM128X1S x 52   | 
-|mem/\icache.icm /ic_data_inst | PACKED_1.BANKS_WAY[0].ECC1.size_512.WAYS.ic_bank_sb_way_data/ram_core_reg | Implied   | 512 x 142            | RAM512X1S x 142  | 
-|mem/\icache.icm /ic_data_inst | PACKED_1.BANKS_WAY[1].ECC1.size_512.WAYS.ic_bank_sb_way_data/ram_core_reg | Implied   | 512 x 142            | RAM512X1S x 142  | 
-+------------------------------+---------------------------------------------------------------------------+-----------+----------------------+------------------+
-
-Note: The table above is a preliminary report that shows the Distributed RAMs at the current stage of the synthesis flow. Some Distributed RAMs may be reimplemented as non Distributed RAM primitives later in the synthesis flow. Multiple instantiated RAMs are reported only once.
-
-DSP: Preliminary Mapping Report (see note below. The ' indicates corresponding REG is set)
-+----------------+----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
-|Module Name     | DSP Mapping    | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
-+----------------+----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
-|el2_exu_mul_ctl | A*B            | 18     | 16     | -      | -      | 48     | 0    | 0    | -    | -    | -     | 0    | 0    | 
-|el2_exu_mul_ctl | (PCIN>>17)+A*B | 16     | 16     | -      | -      | 30     | 0    | 0    | -    | -    | -     | 0    | 0    | 
-|el2_exu_mul_ctl | A*B            | 18     | 18     | -      | -      | 48     | 0    | 0    | -    | -    | -     | 0    | 0    | 
-|el2_exu_mul_ctl | (PCIN>>17)+A*B | 18     | 16     | -      | -      | 47     | 0    | 0    | -    | -    | -     | 0    | 0    | 
-+----------------+----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
-
-Note: The table above is a preliminary report that shows the DSPs inferred at the current stage of the synthesis flow. Some DSP may be reimplemented as non DSP primitives later in the synthesis flow. Multiple instantiated DSPs are reported only once.
----------------------------------------------------------------------------------
-Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:27 ; elapsed = 00:00:37 . Memory (MB): peak = 3384.062 ; gain = 2008.477 ; free physical = 405 ; free virtual = 7184
 ---------------------------------------------------------------------------------
 No constraint files found.
+---------------------------------------------------------------------------------
+Start Stitch Unchanged AreaOpt Partitions
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Stitch Unchanged AreaOpt Partitions : Time (s): cpu = 00:00:28 ; elapsed = 00:00:37 . Memory (MB): peak = 3384.062 ; gain = 2008.477 ; free physical = 383 ; free virtual = 7163
+---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:01:16 ; elapsed = 00:01:22 . Memory (MB): peak = 3359.414 ; gain = 1982.434 ; free physical = 473 ; free virtual = 6882
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start ROM, RAM, DSP, Shift Register and Retiming Reporting
----------------------------------------------------------------------------------
-
-Distributed RAM: Final Mapping Report
-+------------------------------+---------------------------------------------------------------------------+-----------+----------------------+------------------+
-|Module Name                   | RTL Object                                                                | Inference | Size (Depth x Width) | Primitives       | 
-+------------------------------+---------------------------------------------------------------------------+-----------+----------------------+------------------+
-|mem/\icache.icm               | ic_tag_inst/PACKED_1.ECC1.size_128.WAYS.ic_way_tag/ram_core_reg           | Implied   | 128 x 52             | RAM128X1S x 52   | 
-|mem/\icache.icm /ic_data_inst | PACKED_1.BANKS_WAY[0].ECC1.size_512.WAYS.ic_bank_sb_way_data/ram_core_reg | Implied   | 512 x 142            | RAM512X1S x 142  | 
-|mem/\icache.icm /ic_data_inst | PACKED_1.BANKS_WAY[1].ECC1.size_512.WAYS.ic_bank_sb_way_data/ram_core_reg | Implied   | 512 x 142            | RAM512X1S x 142  | 
-+------------------------------+---------------------------------------------------------------------------+-----------+----------------------+------------------+
-
----------------------------------------------------------------------------------
-Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+Finished Timing Optimization : Time (s): cpu = 00:00:29 ; elapsed = 00:00:38 . Memory (MB): peak = 3384.062 ; gain = 2008.477 ; free physical = 324 ; free virtual = 7170
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-3886] merging instance 'ifui_5/veer/ifu/mem_ctl/misc_ff/genblock.dff/genblock.dffs/dout_reg[9]' (FDC) to 'ifui_5/veer/ifu/mem_ctl/ifu_pmu_sigs_ff/genblock.dff/genblock.dffs/dout_reg[4]'
-INFO: [Synth 8-3886] merging instance 'ifui_5/veer/ifu/ifc/fbwrite_ff/genblock.dff/genblock.dffs/dout_reg[3]' (FDC) to 'ifui_5/veer/ifu/ifc/fbwrite_ff/genblock.dff/genblock.dffs/dout_reg[4]'
-INFO: [Synth 8-3886] merging instance 'veeri_6/veer/dec/decode/lsu_idle_ff/dout_reg[0]' (FDC) to 'veeri_6/veer/dec/tlu/halt_ff/genblock.dff/genblock.dffs/dout_reg[15]'
-INFO: [Synth 8-3886] merging instance 'veeri_6/veer/dec/tlu/mstatus_ff/genblock.dff/genblock.dffs/dout_reg[26]' (FDC) to 'veeri_6/veer/dec/decode/misc1ff/genblock.dff/genblock.dffs/dout_reg[5]'
-INFO: [Synth 8-3886] merging instance 'veeri_7/veer/exu/i_predictpacket_x_ff/genblock.dff/genblock.dffs/dout_reg[53]' (FDCE) to 'veeri_7/veer/exu/i_alu/i_pc_ff/genblock.dff/genblock.dffs/dout_reg[0]'
-INFO: [Synth 8-5844] Detected registers with asynchronous reset at DSP/BRAM block boundary. Consider using synchronous reset for optimal packing [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/lib/beh_lib.sv:40]
-INFO: [Synth 8-5844] Detected registers with asynchronous reset at DSP/BRAM block boundary. Consider using synchronous reset for optimal packing [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/lib/beh_lib.sv:40]
-INFO: [Synth 8-5844] Detected registers with asynchronous reset at DSP/BRAM block boundary. Consider using synchronous reset for optimal packing [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/lib/beh_lib.sv:40]
-INFO: [Synth 8-5844] Detected registers with asynchronous reset at DSP/BRAM block boundary. Consider using synchronous reset for optimal packing [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/lib/beh_lib.sv:40]
-INFO: [Synth 8-5844] Detected registers with asynchronous reset at DSP/BRAM block boundary. Consider using synchronous reset for optimal packing [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/lib/beh_lib.sv:40]
-INFO: [Synth 8-5844] Detected registers with asynchronous reset at DSP/BRAM block boundary. Consider using synchronous reset for optimal packing [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/lib/beh_lib.sv:40]
-INFO: [Synth 8-5844] Detected registers with asynchronous reset at DSP/BRAM block boundary. Consider using synchronous reset for optimal packing [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/lib/beh_lib.sv:40]
-INFO: [Synth 8-5844] Detected registers with asynchronous reset at DSP/BRAM block boundary. Consider using synchronous reset for optimal packing [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/lib/beh_lib.sv:40]
-INFO: [Synth 8-3886] merging instance 'veeri_8/veer/lsu/lsu_lsc_ctl/lsu_pkt_rff/dout_reg[8]' (FDC) to 'veeri_8/veer/lsu/bus_intf/lsu_byten_rff/dout_reg[3]'
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-7077] IncrSyn: subsequent runs will still be incremental as the reference run was parallel and that data is reused
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:01:21 ; elapsed = 00:01:27 . Memory (MB): peak = 3367.418 ; gain = 1990.438 ; free physical = 399 ; free virtual = 6610
+Finished Technology Mapping : Time (s): cpu = 00:00:29 ; elapsed = 00:00:38 . Memory (MB): peak = 3384.062 ; gain = 2008.477 ; free physical = 323 ; free virtual = 7169
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Stitch Unchanged Partitions
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Stitch Unchanged Partitions : Time (s): cpu = 00:00:29 ; elapsed = 00:00:39 . Memory (MB): peak = 3384.062 ; gain = 2008.477 ; free physical = 357 ; free virtual = 7167
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -8115,37 +7838,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:01:27 ; elapsed = 00:01:33 . Memory (MB): peak = 3367.418 ; gain = 1990.438 ; free physical = 648 ; free virtual = 6712
+Finished IO Insertion : Time (s): cpu = 00:00:36 ; elapsed = 00:00:45 . Memory (MB): peak = 3404.102 ; gain = 2028.516 ; free physical = 433 ; free virtual = 7133
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:01:27 ; elapsed = 00:01:33 . Memory (MB): peak = 3367.418 ; gain = 1990.438 ; free physical = 642 ; free virtual = 6708
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:36 ; elapsed = 00:00:46 . Memory (MB): peak = 3404.102 ; gain = 2028.516 ; free physical = 377 ; free virtual = 7134
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:31 ; elapsed = 00:01:37 . Memory (MB): peak = 3367.418 ; gain = 1990.438 ; free physical = 584 ; free virtual = 6679
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:40 ; elapsed = 00:00:50 . Memory (MB): peak = 3404.102 ; gain = 2028.516 ; free physical = 367 ; free virtual = 7117
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:01:33 ; elapsed = 00:01:39 . Memory (MB): peak = 3367.418 ; gain = 1990.438 ; free physical = 522 ; free virtual = 6670
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:43 ; elapsed = 00:00:52 . Memory (MB): peak = 3404.102 ; gain = 2028.516 ; free physical = 354 ; free virtual = 7112
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:01:34 ; elapsed = 00:01:40 . Memory (MB): peak = 3367.418 ; gain = 1990.438 ; free physical = 546 ; free virtual = 6664
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:44 ; elapsed = 00:00:54 . Memory (MB): peak = 3404.102 ; gain = 2028.516 ; free physical = 355 ; free virtual = 7113
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:01:34 ; elapsed = 00:01:40 . Memory (MB): peak = 3367.418 ; gain = 1990.438 ; free physical = 532 ; free virtual = 6651
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:44 ; elapsed = 00:00:54 . Memory (MB): peak = 3404.102 ; gain = 2028.516 ; free physical = 358 ; free virtual = 7117
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -14489,18 +14212,18 @@ Report Instance Areas:
 |6291  |      wake_up_ff                                                                             |rvdff_126                        |     1|
 +------+---------------------------------------------------------------------------------------------+---------------------------------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:01:34 ; elapsed = 00:01:41 . Memory (MB): peak = 3367.418 ; gain = 1990.438 ; free physical = 527 ; free virtual = 6657
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:44 ; elapsed = 00:00:54 . Memory (MB): peak = 3404.102 ; gain = 2028.516 ; free physical = 348 ; free virtual = 7117
 ---------------------------------------------------------------------------------
-Synthesis finished with 0 errors, 0 critical warnings and 3265 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:01:36 ; elapsed = 00:01:45 . Memory (MB): peak = 3367.418 ; gain = 1990.438 ; free physical = 9533 ; free virtual = 15733
-Synthesis Optimization Complete : Time (s): cpu = 00:01:36 ; elapsed = 00:01:45 . Memory (MB): peak = 3367.418 ; gain = 1990.438 ; free physical = 9559 ; free virtual = 15738
+Synthesis finished with 0 errors, 0 critical warnings and 2891 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:46 ; elapsed = 00:00:56 . Memory (MB): peak = 3408.012 ; gain = 2032.426 ; free physical = 8820 ; free virtual = 15567
+Synthesis Optimization Complete : Time (s): cpu = 00:00:46 ; elapsed = 00:00:56 . Memory (MB): peak = 3408.012 ; gain = 2032.426 ; free physical = 8817 ; free virtual = 15566
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00.92 ; elapsed = 00:00:00.91 . Memory (MB): peak = 3367.418 ; gain = 0.000 ; free physical = 9506 ; free virtual = 15679
+Netlist sorting complete. Time (s): cpu = 00:00:00.96 ; elapsed = 00:00:00.96 . Memory (MB): peak = 3408.012 ; gain = 0.000 ; free physical = 8801 ; free virtual = 15563
 INFO: [Netlist 29-17] Analyzing 6860 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3541.551 ; gain = 0.000 ; free physical = 9329 ; free virtual = 15589
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3475.906 ; gain = 0.000 ; free physical = 8769 ; free virtual = 15545
 INFO: [Project 1-111] Unisim Transformation Summary:
   A total of 1231 instances were transformed.
   BUFG => BUFGCE: 2 instances
@@ -14511,29 +14234,29 @@ INFO: [Project 1-111] Unisim Transformation Summary:
 
 Synth Design complete | Checksum: b7f4e366
 INFO: [Common 17-83] Releasing license: Synthesis
-384 Infos, 208 Warnings, 0 Critical Warnings and 0 Errors encountered.
+320 Infos, 210 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:01:48 ; elapsed = 00:01:56 . Memory (MB): peak = 3541.586 ; gain = 2178.547 ; free physical = 9361 ; free virtual = 15578
-INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 11853.359; main = 2788.745; forked = 9393.910
-INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 16873.113; main = 3541.555; forked = 13509.613
-Write ShapeDB Complete: Time (s): cpu = 00:00:00.18 ; elapsed = 00:00:00.07 . Memory (MB): peak = 3565.562 ; gain = 0.000 ; free physical = 9365 ; free virtual = 15589
+synth_design: Time (s): cpu = 00:00:59 ; elapsed = 00:01:09 . Memory (MB): peak = 3475.941 ; gain = 2118.266 ; free physical = 8785 ; free virtual = 15542
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 11277.064; main = 2734.754; forked = 8731.248
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 16262.957; main = 3475.910; forked = 12858.852
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.26 ; elapsed = 00:00:00.09 . Memory (MB): peak = 3499.918 ; gain = 0.000 ; free physical = 8778 ; free virtual = 15549
 INFO: [Common 17-1381] The checkpoint '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/EL2_Prj/EL2_Prj.runs/synth_1/el2_veer_wrapper.dcp' has been generated.
-write_checkpoint: Time (s): cpu = 00:00:10 ; elapsed = 00:00:08 . Memory (MB): peak = 3565.562 ; gain = 23.977 ; free physical = 9221 ; free virtual = 15565
+write_checkpoint: Time (s): cpu = 00:00:10 ; elapsed = 00:00:08 . Memory (MB): peak = 3499.918 ; gain = 23.977 ; free physical = 8728 ; free virtual = 15522
 INFO: [runtcl-4] Executing : report_utilization -file el2_veer_wrapper_utilization_synth.rpt -pb el2_veer_wrapper_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Sun Mar  3 00:39:21 2024...
-[Sun Mar  3 00:39:24 2024] synth_1 finished
-wait_on_runs: Time (s): cpu = 00:02:05 ; elapsed = 00:02:15 . Memory (MB): peak = 1362.570 ; gain = 0.000 ; free physical = 12147 ; free virtual = 18127
+INFO: [Common 17-206] Exiting Vivado at Sun Mar  3 20:28:26 2024...
+[Sun Mar  3 20:28:27 2024] synth_1 finished
+wait_on_runs: Time (s): cpu = 00:01:18 ; elapsed = 00:01:27 . Memory (MB): peak = 1363.023 ; gain = 0.000 ; free physical = 11689 ; free virtual = 18063
 # open_run synth_1 -name synth_1
 Design is defaulting to impl run constrset: constrs_1
 Design is defaulting to synth run part: xczu19eg-ffvc1760-2-i
 INFO: [Device 21-403] Loading part xczu19eg-ffvc1760-2-i
-Netlist sorting complete. Time (s): cpu = 00:00:00.77 ; elapsed = 00:00:00.76 . Memory (MB): peak = 2610.141 ; gain = 0.000 ; free physical = 10821 ; free virtual = 16848
+Netlist sorting complete. Time (s): cpu = 00:00:00.78 ; elapsed = 00:00:00.78 . Memory (MB): peak = 2610.953 ; gain = 0.000 ; free physical = 10403 ; free virtual = 16819
 INFO: [Netlist 29-17] Analyzing 6858 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-479] Netlist was created with Vivado 2023.2
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2890.949 ; gain = 0.000 ; free physical = 10568 ; free virtual = 16632
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2891.793 ; gain = 0.000 ; free physical = 10236 ; free virtual = 16603
 INFO: [Project 1-111] Unisim Transformation Summary:
   A total of 1229 instances were transformed.
   DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 4 instances
@@ -14541,7 +14264,7 @@ INFO: [Project 1-111] Unisim Transformation Summary:
   RAM128X1S => RAM128X1S (MUXF7, RAMS64E(x2)): 52 instances
   RAM512X1S => RAM512X1S (MUXF7(x4), MUXF8(x2), MUXF9, RAMS64E1(x8)): 284 instances
 
-open_run: Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2890.984 ; gain = 1528.414 ; free physical = 10524 ; free virtual = 16624
+open_run: Time (s): cpu = 00:00:12 ; elapsed = 00:00:12 . Memory (MB): peak = 2891.828 ; gain = 1528.805 ; free physical = 10190 ; free virtual = 16596
 # report_utilization -file ../../Syn_Report/EL2_utilization_synth.rpt
 # close_project
-INFO: [Common 17-206] Exiting Vivado at Sun Mar  3 00:39:36 2024...
+INFO: [Common 17-206] Exiting Vivado at Sun Mar  3 20:28:39 2024...

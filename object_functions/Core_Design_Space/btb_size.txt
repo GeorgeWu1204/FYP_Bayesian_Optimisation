@@ -1,8 +1,8 @@
-btb_size, hello_world_minstret, hello_world_mcycle, cmark_minstret, cmark_mcycle, pmp_minstret, pmp_mcycle
-8, Invalid, Invalid, Invalid, Invalid, Invalid, Invalid
-16, Invalid, Invalid, Invalid, Invalid, Invalid, Invalid
-32, 329, 706, 282995, 410217, 181441, 249250
-64, 329, 706, 282995, 409626, 181441, 244734
-128, 329, 706, 282995, 409406, 181441, 240428
-256, 329, 706, 282995, 409414, 181441, 236626
-512, 329, 706, 282995, 409709, 181441, 236520
+btb_size, hello_world_minstret, hello_world_mcycle, cmark_minstret, cmark_mcycle, pmp_minstret, pmp_mcycle, dhry_minstret, dhry_mcycle
+8, Invalid, Invalid, Invalid, Invalid, Invalid, Invalid, Invalid, Invalid
+16, Invalid, Invalid, Invalid, Invalid, Invalid, Invalid, Invalid, Invalid
+32, 329, 706, 282995, 410217, 181441, 249250, 343100, 363032
+64, 329, 706, 282995, 409626, 181441, 244734, 343110, 358971
+128, 329, 706, 282995, 409406, 181441, 240428, 343110, 357920
+256, 329, 706, 282995, 409414, 181441, 236626, 343110, 357919
+512, 329, 706, 282995, 409709, 181441, 236520, 343110, 356914

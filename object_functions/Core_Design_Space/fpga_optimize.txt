@@ -1,3 +1,3 @@
-fpga_optimize, hello_world_minstret, hello_world_mcycle, cmark_minstret, cmark_mcycle, pmp_minstret, pmp_mcycle
-0, 329, 706, 282995, 409709, 181441, 236520
-1, 329, 706, 282995, 409709, 181441, 236520
+fpga_optimize, hello_world_minstret, hello_world_mcycle, cmark_minstret, cmark_mcycle, pmp_minstret, pmp_mcycle, dhry_minstret, dhry_mcycle
+0, 329, 706, 282995, 409709, 181441, 236520, 343110, 356914
+1, 329, 706, 282995, 409709, 181441, 236520, 343110, 356914

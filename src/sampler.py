@@ -55,21 +55,3 @@ class initial_sampler:
 
         return train_x[:valid_sample_index, : ], exact_objs[:valid_sample_index, :], con_objs[:valid_sample_index, :], normalised_objs[:valid_sample_index, :]
 
-    def generate_initial_data(self, num_samples):
-        """This function is used to generate initial data"""
-        train_x = torch.empty((num_samples, self.input_dim), device=self.device, dtype=self.type)
-        valid_sample_index = 0
-        # print("possible_initial_tensor: ", possible_initial_tensor)
-        while (valid_sample_index) <= int(num_samples/2):
-            possible_initial_tensor = self.generate_samples(num_samples)
-            for i in range(num_samples):
-                if self.constraint_set.check_single_point_meet_constraint(possible_initial_tensor[i,:]) == False:
-                    continue
-                train_x[valid_sample_index] = possible_initial_tensor[i,:]
-                valid_sample_index += 1
-                if valid_sample_index >= num_samples:
-                    return train_x
-        return train_x
-
-
-        return train_x[:valid_sample_index, : ], exact_objs[:valid_sample_index, :], con_objs[:valid_sample_index, :], normalised_objs[:valid_sample_index, :]

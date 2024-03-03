@@ -1,5 +1,5 @@
-div_bit, hello_world_minstret, hello_world_mcycle, cmark_minstret, cmark_mcycle, pmp_minstret, pmp_mcycle
-1, 329, 706, 282995, 409934, 181441, 254827
-2, 329, 706, 282995, 409782, 181441, 242531
-3, 329, 706, 282995, 409744, 181441, 240059
-4, 329, 706, 282995, 409709, 181441, 236520
+div_bit, hello_world_minstret, hello_world_mcycle, cmark_minstret, cmark_mcycle, pmp_minstret, pmp_mcycle, dhry_minstret, dhry_mcycle
+1, 329, 706, 282995, 409934, 181441, 254827, 343110, 357287
+2, 329, 706, 282995, 409782, 181441, 242531, 343110, 357040
+3, 329, 706, 282995, 409744, 181441, 240059, 343110, 357005
+4, 329, 706, 282995, 409709, 181441, 236520, 343110, 356914

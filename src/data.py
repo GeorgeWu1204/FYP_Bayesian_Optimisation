@@ -345,7 +345,7 @@ class EL2_Data(Data_Set):
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
         self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate, 'EL2')
-
+    
     def find_ppa_result(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
         num_restart= sample_inputs.shape[0]
@@ -394,8 +394,20 @@ class EL2_Data(Data_Set):
                             results[i][obj_index] = -1 * results[i][obj_index]
                         obj_index += 1
             return True, results
-
-        
+    def find_all_possible_designs(self):
+        """This function is used to find all the possible designs"""
+        print("normalised_Factors", self.input_normalized_factors)
+        ranges = [torch.linspace(0, 1, steps=int(factor) * 2 + 1, device=self.tensor_device) for factor in self.input_normalized_factors]
+        # Generate all combinations using torch.meshgrid with the 'indexing' argument for future compatibility
+        grids = torch.meshgrid(*ranges, indexing='ij')
+        # Stack the grids to form a tensor of shape (5*3*2*3, 4)
+        combinations = torch.stack(grids, dim=-1).reshape(-1, self.input_normalized_factors.size(0))
+        # Use .to() method to ensure the tensor is on the right device and has the right dtype
+        combinations = combinations.to(device=self.tensor_device, dtype=self.tensor_type)
+        for index in range(combinations.shape[0]):
+            print("combinations[index]: ", combinations[index])
+            valid, result = self.find_ppa_result(combinations[index].unsqueeze(0))
+            print("valid: ", valid, "result: ", result)
 
 class create_data_set:
     """This class is implemented to accelerate the redundant synthesis and simulation process"""
