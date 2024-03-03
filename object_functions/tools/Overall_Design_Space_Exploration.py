@@ -31,7 +31,7 @@ def plot_benchmark_performance(data, parameter_names):
     r = np.arange(n_parameters)
     
     # Creating the figure and the axes
-    fig, ax = plt.subplots(figsize=(16, 5))
+    fig, ax = plt.subplots(figsize=(20, 5))
     
     for i, (benchmark, performances) in enumerate(filtered_data.items()):
         # Calculate the position for each benchmark

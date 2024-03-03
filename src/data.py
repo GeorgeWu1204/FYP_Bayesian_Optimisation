@@ -404,7 +404,8 @@ class create_data_set:
         self.input_dim = len(input_name)
         self.objective_name = list(objective_name)
         self.names = input_name + objective_name
-        self.file_name = '../object_functions/Dataset/' + file_name + '_dataset_record.txt'
+        self.file_name = f'../object_functions/Dataset/{file_name}_dataset_record_{self.input_dim}_{len(self.objective_name)}.txt'
+        print("self.file_name: ", self.file_name)
         match_file = True
         if osp.exists(self.file_name):
             with open(self.file_name, 'r') as file:

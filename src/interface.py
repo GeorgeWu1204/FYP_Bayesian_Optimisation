@@ -13,7 +13,7 @@ def fill_constraints(self_constraints, coupled_constraints, device):
     input_exp = [1] * input_dim
     for i, var_obj in enumerate(self_constraints.keys()):
         if self_constraints[var_obj][3] > 1:
-            #no scale
+            #has exps
             input_offset[i] = int(math.log(self_constraints[var_obj][0], self_constraints[var_obj][3]))
             self_constraints[var_obj][2] = 1
             input_normalized_factor[i] = int(math.log(self_constraints[var_obj][1], self_constraints[var_obj][3])) - input_offset[i]

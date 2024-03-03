@@ -64,9 +64,9 @@ TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2                # acceptable distance betwee
 
 # Model Settings
 NUM_RESTARTS = 4                # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 8        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
+NUM_OF_INITIAL_POINT = 16       # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
-N_BATCH = 10                    # number of BO batches (inner loop)
+N_BATCH = 8                     # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 128                # number of MC samples for qNEI
 RAW_SAMPLES = 8                 # number of raw samples for qNEI
@@ -75,7 +75,7 @@ RAW_SAMPLES = 8                 # number of raw samples for qNEI
 verbose = True
 record = True
 debug = False
-plot_posterior = True
+plot_posterior = False
 
 
 #reference point for optimisation used for hypervolume calculation
@@ -160,6 +160,7 @@ def optimize_acqf_and_get_observation(acq_func, constraint_bounds):
     )
     # observe new values
     new_x = candidates.detach()
+    print("new_x: ", new_x)
     valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
     new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
     new_con_obj = data_set.check_qNEHVI_constraints(new_normalised_obj)
