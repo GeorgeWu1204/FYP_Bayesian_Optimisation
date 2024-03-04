@@ -144,18 +144,18 @@ class EL2_parameter_tuning:
                 print("RV_ROOT environment variable is not set.")
                 return False, None, None
             target = 'TEST=' + benchmark
-            param_setting = 'CONF_PARAMS=\''
+            param_setting = 'CONF_PARAMS='
             for index, param in enumerate(self.tunable_params):
                 value = str(round(new_value[index]) << self.shift_amount[index])
                 param_setting+= '-set={param}={value} '.format(param=param, value=value)  
-            param_setting += '\''
+            param_setting += ''
             print(param_setting)
-            command = ['make', '-f', os.path.join(rv_root, 'tools/Makefile'), target, param_setting, 'debug=1']
-                    
+            command = ['make', '-f', os.path.join(rv_root, 'tools/Makefile'), target, param_setting]
+            print(command)
             # Prepare the command with the expanded environment variable
             # Run the 'make' command in the directory where the Makefile is located
             with open(self.generated_logfile + 'Processor_Generation.log', 'w') as f:
-                subprocess.run(command, check=True, cwd=self.generation_path, stdout=f, stderr=f)
+                subprocess.run(command, check=True, stdout=f, stderr=f, cwd=self.generation_path)
             minstret, mcycle = self.extract_minstret_mcycle(self.generated_logfile + 'Processor_Generation.log')
             return True, minstret, mcycle
         except subprocess.CalledProcessError as e:

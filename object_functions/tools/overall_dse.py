@@ -31,7 +31,7 @@ def plot_benchmark_performance(data, parameter_names):
     r = np.arange(n_parameters)
     
     # Creating the figure and the axes
-    fig, ax = plt.subplots(figsize=(25, 5))
+    fig, ax = plt.subplots(figsize=(30, 5))
     
     for i, (benchmark, performances) in enumerate(filtered_data.items()):
         # Calculate the position for each benchmark
@@ -141,7 +141,7 @@ class Find_all_combinations_of_parameters:
             print(f"Possible values: {self.tunable_params[param_name]}")
             print(f"Additional Benchmark: {append_benchmarks}")
             path = '../Core_Design_Space/' + param_name
-            copy_path = '../Core_Design_Space/Copy/' + param_name
+            copy_path = '../Core_Design_Space/' + param_name
             modified_lines = []
             with open(copy_path + '.txt', 'r') as file:
                 lines = file.readlines()
@@ -167,7 +167,6 @@ class Find_all_combinations_of_parameters:
                 for line in modified_lines:
                     # Write each modified line back to the file with a newline character at the end
                     file.write(line + '\n')
-           
         
     def tune_and_run_performance_simulation_for_single_param(self, param_name, param_value, benchmark):
         try:
@@ -253,24 +252,38 @@ class Find_all_combinations_of_parameters:
             self.plot_design_space_of_single_param(param_name)
     
     def extract_min_max_of_params(self):
-        difference_in_benchmark_performance = {benchmark: [] for benchmark in self.benchmarks}
-
+        
+        additional_benchmarks = ['cmark_iccm', 'cmark_dccm']
+        all_possible_benchmark = self.benchmarks + additional_benchmarks
+        all_possible_benchmark_minstret = self.benchmark_minstret
+        all_possible_benchmark_minstret.update({'cmark_iccm': 304047, 'cmark_dccm': 282995})
+        
+        difference_in_benchmark_performance = {benchmark: [] for benchmark in all_possible_benchmark}
         for param_name in self.tunable_params.keys():
             with open('../Core_Design_Space/' + param_name + '.txt', 'r') as f:
                 lines = f.readlines()
+                title = lines[0].strip('\n')
                 lines = lines[1:]
-                results = {benchmark: [] for benchmark in self.benchmarks}
-
+                results = {benchmark: [] for benchmark in all_possible_benchmark}
+                total_valid_benchmarks = self.benchmarks.copy()
+                print(total_valid_benchmarks)
+                title = title.split(',')
+                for possible_benchmark in additional_benchmarks:
+                    if ' ' + possible_benchmark + '_minstret' in title:
+                        total_valid_benchmarks.append(possible_benchmark)
+                        continue
+                print(total_valid_benchmarks)
+                
                 for line in lines:
                     values = line.split(',')
-                    for i in range(len(self.benchmarks)):
+                    for i in range(len(total_valid_benchmarks)):
                         if values[2*i+1] == ' Invalid' or values[2*i+1] == ' None':
                             continue
-                        results[self.benchmarks[i]].append((int(values[2*i+2])))
-                
-                for benchmark in self.benchmarks:
+                        results[total_valid_benchmarks[i]].append((int(values[2*i+2])))
+                print(results)
+                for benchmark in all_possible_benchmark_minstret:
                     if len(results[benchmark]) > 0:
-                        difference_in_benchmark_performance[benchmark].append((max(results[benchmark]) - min(results[benchmark]))/(self.benchmark_minstret[benchmark]))
+                        difference_in_benchmark_performance[benchmark].append((max(results[benchmark]) - min(results[benchmark]))/(all_possible_benchmark_minstret[benchmark]))
                         print(f"Parameter: {param_name}, Benchmark: {benchmark}, Difference: {difference_in_benchmark_performance[benchmark][-1]}")
                     else:
                         print(f"Parameter: {param_name}, Benchmark: {benchmark}, No valid results")
@@ -280,4 +293,4 @@ if __name__ == '__main__':
     pt = Find_all_combinations_of_parameters()
     pt.extract_min_max_of_params()
     # pt.find_and_record_all_combinations_of_single_param()
-    # pt.find_and_record_all_combinations_of_all_params_of_additional_benchmarks(['dhry'])
+    # pt.find_and_record_all_combinations_of_all_params_of_additional_benchmarks(['cmark_iccm'])

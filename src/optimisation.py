@@ -46,6 +46,8 @@ elif objective_function_category == 'NutShell':
     data_set = data.NutShell_Data(INPUT_NAMES, OBJECTIVES_TO_OPTIMISE, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT, OUTPUT_OBJECTIVE_CONSTRAINT, parameter_tuning_obj, t_type, device)
 elif objective_function_category == 'EL2':
     data_set = data.EL2_Data(INPUT_NAMES, OBJECTIVES_TO_OPTIMISE, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT, INPUT_EXP, OUTPUT_OBJECTIVE_CONSTRAINT, parameter_tuning_obj, t_type, device)
+    data_set.find_all_possible_designs()
+    quit()
 print("<-------------- Optimisation Settings -------------->")
 print(f"Input Names: {INPUT_NAMES}")
 print(f"Input Self Constraints: {self_constraints}")
@@ -70,8 +72,8 @@ RAW_SAMPLES = 8                 # number of raw samples for qNEI
 
 # Runtime Settings
 verbose = True
-record = True
-debug = False
+record = False
+debug = True
 plot_posterior = False
 
 
@@ -203,7 +205,6 @@ for trial in range (1, N_TRIALS + 1):
     #reset the best observation
     best_observation_per_interation = {obj : None for obj in OBJECTIVES_TO_OPTIMISE.keys()}
     best_constraint_per_interation = {obj : None for obj in OUTPUT_OBJECTIVE_CONSTRAINT.keys()}
-    best_sample_point_per_interation = {input : None for input in INPUT_NAMES}
     best_hyper_vol_per_interation = 0.0
 
     for iteration in range(1, N_BATCH + 1):
@@ -297,6 +298,6 @@ if record:
 print("<------------------Final Result------------------>")
 best_trial = utils.find_max_index_in_list(best_hyper_vol_per_trial)
 _, best_objective = data_set.find_ppa_result(best_sample_points_per_trial[best_trial + 1])
-real_sample_point = utils.recover_all_input_data(best_sample_points_per_trial[best_trial + 1], INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES, INPUT_OFFSETS, t_type, device, INPUT_EXP)
+real_sample_point = utils.recover_single_input_data(best_sample_points_per_trial[best_trial + 1], INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES, INPUT_OFFSETS, INPUT_EXP)
 print(f"{Fore.BLUE}Best sample point: {real_sample_point}{Style.RESET_ALL}")
 print(f"{Fore.BLUE}Best objective: {best_objective}{Style.RESET_ALL}")

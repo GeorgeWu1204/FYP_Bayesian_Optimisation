@@ -46,25 +46,15 @@ def recover_single_input_data(input_tensor, normalised_factor, scales, offsets, 
     # Assuming input_tensor is in the shape of num_restarts x d_dim
     # Initialize an empty tensor for the results with the same shape as input_tensor
     input_var = torch.empty_like(input_tensor)
-    print("input_tensor: ", input_tensor.shape)
     for i in range(input_tensor.shape[0]):
         # Check if exps is not None and the element in exps is larger than one
         if exps is not None and exps[i] > 1:
             input_var[i] = exps[i] ** (torch.round(input_tensor[i] * normalised_factor[i]) * scales[i] + offsets[i])
         else:
             # Apply the else part of the transformation
-            print(f"Rounding input tensor at [{i}]: ", torch.round(input_tensor[i] * normalised_factor[i]))
             input_var[i] = torch.round(input_tensor[i] * normalised_factor[i]) * scales[i] + offsets[i]
 
     results = input_var.tolist()
-    return results
-
-def recover_all_input_data(input_tensor, normalised_factor, scales, offsets, type, device, exps = None):
-    """This function is to find the real input from the x tensor in recording process"""
-    if exps is not None:
-        results = torch.tensor(exps, dtype=type, device=device) ** (torch.round(input_tensor * torch.tensor(normalised_factor, dtype=type, device=device)) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device))
-    else:
-        results = torch.round(input_tensor * torch.tensor(normalised_factor, dtype=type, device=device)) * torch.tensor(scales, dtype=type, device=device)
     return results
 
 def recover_unrounded_input_data(input_tensor, normalised_factor, scales, offsets, type, device, exps = None):

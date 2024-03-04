@@ -344,7 +344,7 @@ class EL2_Data(Data_Set):
         # tensor type and device
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
-        self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate, 'EL2')
+        self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate, 'EL2', 'btb_focus')
     
     def find_ppa_result(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
@@ -358,7 +358,8 @@ class EL2_Data(Data_Set):
             # Modify the paramter settings
             utilisation_percentage = self.build_new_dataset.find_corresponding_data(sample_input)
             if utilisation_percentage is None:
-                print("Not found in the dataset, Start to Generate ")
+                print(f"{sample_input} not found in the dataset, Start to Generate ")
+                
                 objective_results = []
                 # print("Start to run the performance simulation for ", type(self.performance_objs_benchmarks))
                 # Run the Performance Simulation (Recording mcycle only)
@@ -374,6 +375,8 @@ class EL2_Data(Data_Set):
                 self.param_tuner.store_synthesis_report()
                 # Read the utilisation percentage
                 utilisation_percentage = read_utilization(self.utilisation_path, self.objs_to_evaluate[len(self.performance_objs_benchmarks) : ])
+                print("objective_results ", objective_results)
+                print("utilisation_percentage ", utilisation_percentage)
                 objective_results += utilisation_percentage 
                 self.build_new_dataset.record_data(sample_input, objective_results)
                 for obj_index in range(self.objs_to_evaluate_dim):
@@ -411,12 +414,12 @@ class EL2_Data(Data_Set):
 
 class create_data_set:
     """This class is implemented to accelerate the redundant synthesis and simulation process"""
-    def __init__(self, input_name, objective_name, file_name):
+    def __init__(self, input_name, objective_name, proc_name, optimisation_set_name):
         self.input_name = input_name
         self.input_dim = len(input_name)
         self.objective_name = list(objective_name)
         self.names = input_name + objective_name
-        self.file_name = f'../object_functions/Dataset/{file_name}_dataset_record_{self.input_dim}_{len(self.objective_name)}.txt'
+        self.file_name = f'../object_functions/Dataset/{proc_name}_dataset_record_{self.input_dim}_{len(self.objective_name)}_P{optimisation_set_name}.txt'
         print("self.file_name: ", self.file_name)
         match_file = True
         if osp.exists(self.file_name):
