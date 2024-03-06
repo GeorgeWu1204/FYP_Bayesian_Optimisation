@@ -344,7 +344,7 @@ class EL2_Data(Data_Set):
         # tensor type and device
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
-        self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate, 'EL2', 'btb_focus')
+        self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate, 'EL2', 'iccm_dccm')
     
     def find_ppa_result(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""

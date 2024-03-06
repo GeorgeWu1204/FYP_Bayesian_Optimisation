@@ -157,6 +157,8 @@ class EL2_parameter_tuning:
             with open(self.generated_logfile + 'Processor_Generation.log', 'w') as f:
                 subprocess.run(command, check=True, stdout=f, stderr=f, cwd=self.generation_path)
             minstret, mcycle = self.extract_minstret_mcycle(self.generated_logfile + 'Processor_Generation.log')
+            if mcycle is None:
+                return False, None, None
             return True, minstret, mcycle
         except subprocess.CalledProcessError as e:
             # Optionally, log the error message from the exception

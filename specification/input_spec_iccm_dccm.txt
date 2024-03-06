@@ -1,0 +1,21 @@
+#input self constraint
+var: dccm_size                 range: [4,512]     scale: 4     exp: 2      shift: 0
+var: dccm_num_banks            range: [2,4]       scale: 2     exp: 2      shift: 0
+var: iccm_size                 range: [4,512]     scale: 4     exp: 2      shift: 0
+var: iccm_num_banks            range: [2,8]       scale: 2     exp: 2      shift: 0     
+
+#input coupled constraint
+
+#input constant
+
+#output objective
+obj_name: mcycle   benchmark: cmark_iccm                obj_direct: minimise     range: [400000,420000]
+obj_name: mcycle   benchmark: cmark_dccm                obj_direct: minimise     range: [350000,370000]
+
+#output constraint
+obj_name: LUT as Logic              range: [30000,33000]
+
+#data
+objective: EL2
+vivado_project_path: ../object_functions/Vivado_Prj/EL2_Prj/
+generation_path: ../object_functions/Cores-VeeR-EL2/
