@@ -93,6 +93,17 @@ def encapsulate_input_tensor_into_dict(input_tensor, input_var_names):
         input_index += 1
     return input_dict
 
+
+def extract_best_from_initialisation_results(initial_train_x, initial_obj, hypervolumes, obj_to_opt, obj_const):
+    """This function is used to extract the best results from the initialisation sampling process."""
+    max_value, max_index = torch.max(hypervolumes, 0)
+    best_observation_per_interation = encapsulate_obj_tensor_into_dict(obj_to_opt, initial_obj[max_index.item()])
+    best_constraint_per_interation = encapsulate_obj_tensor_into_dict(obj_const, initial_obj[max_index.item(), len(obj_to_opt):])
+    best_hyper_vol_per_interation = max_value.item()
+    best_sample_point_per_interation = initial_train_x[max_index.item()].unsqueeze(0)
+    return best_sample_point_per_interation, best_observation_per_interation, best_constraint_per_interation, best_hyper_vol_per_interation
+
+
 def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, t_type, device):
     """This function is used to find the reference points for qNEHVI optimisation"""
     ref_points = torch.empty((OBJECTIVES_DIM), device=device, dtype=t_type)

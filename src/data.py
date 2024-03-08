@@ -117,7 +117,7 @@ class Data_Set:
                 obj_index += 1
         return results
 
-    def find_single_ppa_result_for_brute_force(self, sample_input):
+    def find_single_ppa_result_for_unnormalised_sample(self, sample_input):
         """This function is used to find the ppa result for a single input, only used in result recording"""
         formatted_input = self.format_input_data(sample_input)
         result = []
@@ -344,7 +344,7 @@ class EL2_Data(Data_Set):
         # tensor type and device
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
-        self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate, 'EL2', 'iccm_dccm')
+        self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate, 'EL2', 'optimisation_set_3')
     
     def find_ppa_result(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
