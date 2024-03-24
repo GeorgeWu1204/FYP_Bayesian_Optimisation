@@ -2,6 +2,7 @@ import torch
 import itertools
 import numpy as np
 import matplotlib.pyplot as plt
+from botorch.utils.multi_objective.box_decompositions.non_dominated import NondominatedPartitioning
 import re
 
 def calculate_condition(x, condition):
@@ -11,6 +12,14 @@ def calculate_condition(x, condition):
 def calculate_smooth_condition(x, condition):
     """Smooth, differentiable step function. Used for calculating the output constraints"""
     return (1 / (1 + torch.exp(-10 * (x - condition[1]))) - 1 / (1 + torch.exp(-10 * (x - condition[0]))) + 0.5) * 1e-1
+
+def calculate_hypervolume(ref_points, train_obj, obj_to_optimise_dim = 0):
+    """Calculate the hypervolume"""
+    # Y dimension (batch_shape) x n x m-dim
+    partitioning = NondominatedPartitioning(ref_point=ref_points, Y = train_obj[..., : obj_to_optimise_dim])
+    hv = partitioning.compute_hypervolume().item()
+    return hv
+
 
 def build_matrix(data, constraints, num_restarts, q_dim, d_dim):
     """Build a matrix to store all the results of whether the input data meet the constraints."""
@@ -57,12 +66,12 @@ def recover_single_input_data(input_tensor, normalised_factor, scales, offsets, 
     results = input_var.tolist()
     return results
 
-def recover_unrounded_input_data(input_tensor, normalised_factor, scales, offsets, type, device, exps = None):
+def recover_unrounded_input_data(input_tensor, input_info, type, device):
     """This function is to find the unrounded version of the real input from the x tensor in recording process"""
-    if exps is not None:
-        results = torch.tensor(exps, dtype=type, device=device) ** (torch.round(input_tensor * torch.tensor(normalised_factor, dtype=type, device=device)) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device))
+    if input_info.input_exp is not None:
+        results = torch.tensor(input_info.input_exp, dtype=type, device=device) ** (torch.round(input_tensor * torch.tensor(input_info.input_normalized_factor, dtype=type, device=device)) * torch.tensor(input_info.input_scales, dtype=type, device=device) + torch.tensor(input_info.input_offsets, dtype=type, device=device))
     else:
-        results = input_tensor * torch.tensor(normalised_factor, dtype=type, device=device) * torch.tensor(scales, dtype=type, device=device) + torch.tensor(offsets, dtype=type, device=device)
+        results = input_tensor * torch.tensor(input_info.input_normalized_factor, dtype=type, device=device) * torch.tensor(input_info.input_scales, dtype=type, device=device) + torch.tensor(input_info.input_offsets, dtype=type, device=device)
     return results
 
 
@@ -106,6 +115,9 @@ def extract_best_from_initialisation_results(initial_train_x, initial_obj, hyper
 
 def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, t_type, device):
     """This function is used to find the reference points for qNEHVI optimisation"""
+    print("-----test-----")
+    print(OBJECTIVES_DIM)
+    print(OBJECTIVES)
     ref_points = torch.empty((OBJECTIVES_DIM), device=device, dtype=t_type)
     ref_point_index = 0
     for obj in OBJECTIVES.keys():

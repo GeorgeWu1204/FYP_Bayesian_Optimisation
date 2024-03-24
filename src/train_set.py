@@ -2,7 +2,7 @@ import torch
 import numpy as np
 from itertools import product
 from botorch.utils.multi_objective.box_decompositions.non_dominated import NondominatedPartitioning
-
+from utils import calculate_hypervolume
 
 class train_set_records():
     """This class is used to record the training set"""
@@ -76,12 +76,12 @@ class train_set_records():
                 if valid_initial_data:
                     self.history_record[recovered_sample].append(recovered_train_x[i])
 
-    def calculate_hypervolume(self, train_obj):
-        """Calculate the hypervolume"""
-        # Y dimension (batch_shape) x n x m-dim
-        partitioning = NondominatedPartitioning(ref_point=self.worst_ref_objective, Y = train_obj[..., : self.objective_to_optimise_dim])
-        hv = partitioning.compute_hypervolume().item()
-        return hv
+    # def calculate_hypervolume(self, train_obj):
+    #     """Calculate the hypervolume"""
+    #     # Y dimension (batch_shape) x n x m-dim
+    #     partitioning = NondominatedPartitioning(ref_point=self.worst_ref_objective, Y = train_obj[..., : self.objective_to_optimise_dim])
+    #     hv = partitioning.compute_hypervolume().item()
+    #     return hv
         
     def calculate_distance(self, x1, x2):
         """This function is used to calculate the distance between two points"""
@@ -134,7 +134,7 @@ class train_set_records():
                     normalised_obj = dataset.normalise_output_data_tensor(neighbor_obj, self.obj_normalized_factors, self.tensor_device)
                     con_obj = dataset.check_qNEHVI_constraints(normalised_obj)
                     if con_obj.item() <= 0.0:
-                        return True, neighbour_tensor, neighbor_obj, torch.tensor([self.calculate_hypervolume(neighbor_obj)], dtype = self.tensor_type, device = self.tensor_device)
+                        return True, neighbour_tensor, neighbor_obj, torch.tensor([calculate_hypervolume(self.worst_ref_objective, neighbor_obj, self.objective_to_optimise_dim)], dtype = self.tensor_type, device = self.tensor_device)
 
             
             return True, recovered_train_x, self.fake_worst_point, torch.tensor([0.0], dtype = self.tensor_type, device = self.tensor_device)

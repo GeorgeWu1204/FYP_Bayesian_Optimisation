@@ -1,8 +1,104 @@
 import random
 import time
-from utils import calculate_volumes_for_brute_force, find_samples_brute_force
+import torch
+from utils import calculate_volumes_for_brute_force, find_samples_brute_force, calculate_hypervolume
 from colorama import Fore, Style
 
+from customised_model import SingleTaskGP_transformed
+from botorch.models.transforms.outcome import Standardize
+from botorch.models.model_list_gp_regression import ModelListGP
+from gpytorch.mlls.sum_marginal_log_likelihood import SumMarginalLogLikelihood
+from botorch.acquisition.multi_objective.monte_carlo import qNoisyExpectedHypervolumeImprovement
+from botorch.acquisition.multi_objective.objective import IdentityMCMultiOutputObjective
+from botorch.optim import optimize_acqf
+### Implemented Models
+
+
+class optimisation_model():
+    def __init__(self, NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type):
+        self.NUM_RESTARTS = NUM_RESTARTS
+        self.RAW_SAMPLES = RAW_SAMPLES
+        self.BATCH_SIZE = BATCH_SIZE
+        self.OBJECTIVES_TO_OPTIMISE_INDEX = output_info.obj_to_optimise_index
+        self.OBJECTIVES_TO_OPTIMISE_DIM = output_info.obj_to_optimise_dim
+        self.ref_points = ref_points
+        self.input_info = input_info
+        self.output_info = output_info  
+        self.device = device
+        self.t_type = t_type
+
+    def initialize_model(self, train_x, train_obj):
+        """define models for objective and constraint"""
+        ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
+        models = []
+        for obj_index in range(train_obj.shape[-1]): 
+            train_y = train_obj[..., obj_index : obj_index + 1]
+            models.append(SingleTaskGP_transformed(
+                                        self.input_info.input_scales,
+                                        self.input_info.input_normalized_factor,
+                                        train_x, 
+                                        train_y, 
+                                        outcome_transform=Standardize(m=1),
+                                        tensor_type=self.t_type,
+                                        tensor_device=self.device
+                                    ))
+        
+        model = ModelListGP(*models)
+        mll = SumMarginalLogLikelihood(model.likelihood, model)
+        return mll, model
+
+
+    def build_qNEHVI_acqf(self, model, train_x, sampler):
+        """Build the qNEHVI acquisition function"""
+
+        acq_func = qNoisyExpectedHypervolumeImprovement(
+            model=model,
+            ref_point=self.ref_points.tolist(), 
+            X_baseline=train_x,
+            sampler=sampler,
+            prune_baseline=True,
+            objective=IdentityMCMultiOutputObjective(outcomes = self.OBJECTIVES_TO_OPTIMISE_INDEX),
+            constraints=[lambda Z: Z[..., -1]],
+        )
+        return acq_func
+    
+
+    def optimize_acqf_and_get_observation(self, acq_func, data_set):
+        """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
+        # TODO: Noticed that if there is an input constraint, the points are selected from the generated condition.
+        # initial_cond = sampler_generator.generate_initial_data(NUM_RESTARTS).unsqueeze(1) # to match the dimension n * 1 * m
+        # print("sampled_initial_conditions: ", initial_cond)
+        candidates, _ = optimize_acqf(
+            acq_function=acq_func,
+            bounds=self.input_info.constraints.constraint_bound,
+            q=self.BATCH_SIZE,
+            num_restarts=self.NUM_RESTARTS,
+            options={"batch_limit": 1, "maxiter": 200},
+            # nonlinear_inequality_constraints = [constraint_set.get_nonlinear_inequality_constraints],
+            # batch_initial_conditions = initial_cond,
+            raw_samples=self.RAW_SAMPLES,
+            sequential=True
+        )
+        # observe new values
+        new_x = candidates.detach()
+        print("new_x: ", new_x)
+        valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
+        new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
+        new_con_obj = data_set.check_qNEHVI_constraints(new_normalised_obj)
+        if new_con_obj.item() <= 0.0:
+            hyper_vol = calculate_hypervolume(self.ref_points, new_normalised_obj)
+        else:
+            hyper_vol = 0.0
+        new_train_obj = torch.cat([new_normalised_obj[..., : self.OBJECTIVES_TO_OPTIMISE_DIM], new_con_obj], dim=-1)
+        return valid_generated_sample, new_x, new_exact_obj, new_train_obj, hyper_vol
+
+
+
+
+
+
+
+### Other Models
 def brute_force(INPUT_VARIABLES, data_set, constraint_set, obj_normalized_factors, OBJECTIVES_TO_OPTIMISE_DIM, record, results_record, INPUT_CONSTANT):
     # Global Best Values
     best_volume = 100
@@ -36,9 +132,6 @@ def brute_force(INPUT_VARIABLES, data_set, constraint_set, obj_normalized_factor
     print(f"{Fore.GREEN}best_volume: {best_volume}, best_sample: {best_sample}, best_results: {best_results}{Style.RESET_ALL}")
     if record:
         results_record.store()
-
-
-
 
 
 def hill_climbing(var_ranges, objective_function, max_iterations=1000, step_size=1):

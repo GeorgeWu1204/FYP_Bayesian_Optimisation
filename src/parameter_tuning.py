@@ -121,6 +121,7 @@ class NutShell_parameter_tuning:
 
 
 class EL2_parameter_tuning:
+    """This is the tuner for EL2 Cores, it could automatically customise the processor according to the param settings"""
     def __init__(self, tunable_params, shift_amount, generation_path, vivado_project_path):
         self.tunable_params = tunable_params        # A dictionary or list of parameters that can be tuned
         self.shift_amount = shift_amount            # The amount by which the parameters are shifted

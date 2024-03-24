@@ -1,5 +1,6 @@
 from format_constraints import Input_Constraints
 from parameter_tuning import NutShell_parameter_tuning, EL2_parameter_tuning
+from data import Input_Info, Output_Info
 import math
 
 def fill_constraints(self_constraints, coupled_constraints, device):
@@ -15,6 +16,7 @@ def fill_constraints(self_constraints, coupled_constraints, device):
         if self_constraints[var_obj][3] > 1:
             #has exps
             input_offset[i] = int(math.log(self_constraints[var_obj][0], self_constraints[var_obj][3]))
+            #force the scales to be 1 if the exps is used
             self_constraints[var_obj][2] = 1
             input_normalized_factor[i] = int(math.log(self_constraints[var_obj][1], self_constraints[var_obj][3])) - input_offset[i]
             input_exp[i] = self_constraints[var_obj][3]
@@ -37,9 +39,10 @@ def fill_constraints(self_constraints, coupled_constraints, device):
                 and_constraints[input_names.index(and_constraint)] = coupled_constraints[or_constraint][and_constraint]
             format_coupled_constraint.append(and_constraints)
         constraint.update_coupled_constraints(format_coupled_constraint)
-    return (input_dim, input_scales, input_normalized_factor, input_exp, input_offset, input_names), constraint
+    
+    return Input_Info(input_dim, input_scales, input_normalized_factor, input_exp, input_offset, input_names, constraint, self_constraints, coupled_constraints) 
 
-def parse_constraints(filename):
+def parse_constraints(filename, device):
     """this function is used to parse the constraints from the file"""
     # Define dictionaries to store the parsed data
     self_constraints = {}
@@ -48,7 +51,7 @@ def parse_constraints(filename):
     coupled_constraints = []
     output_objective = {}
     output_constraints = {}
-    objective_function_category = None
+    optimisation_target = None
     # Open and read the file
     with open(filename, 'r') as file:
         lines = file.readlines()
@@ -114,7 +117,7 @@ def parse_constraints(filename):
                     range_values = parts[obj_name_end_index+1].strip('[]').split(',')
                     output_constraints[obj_name] = [int(range_values[0]), int(range_values[1])]
             elif line.startswith('objective'):
-                objective_function_category = line.split()[1]
+                optimisation_target = line.split()[1]
             elif line.startswith('settings_path'):
                 objective_function_setting_path = line.split()[1]
             elif line.startswith('vivado_project_path'):
@@ -123,23 +126,20 @@ def parse_constraints(filename):
                 generation_path = line.split()[1]
             elif line.startswith('board_settings'):
                 board_settings = line.split()[1]
-    if objective_function_category == 'NutShell':
-        parameter_tuning_obj = NutShell_parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), objective_function_setting_path, generation_path, vivado_project_path, board_settings)
-    elif objective_function_category == 'EL2':
-        parameter_tuning_obj = EL2_parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), generation_path, vivado_project_path)
+    if optimisation_target == 'NutShell':
+        parameter_tuner = NutShell_parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), objective_function_setting_path, generation_path, vivado_project_path, board_settings)
+    elif optimisation_target == 'EL2':
+        parameter_tuner = EL2_parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), generation_path, vivado_project_path)
     else:
-        parameter_tuning_obj = None
-    return self_constraints, coupled_constraints, input_constant, output_objective, output_constraints, objective_function_category, parameter_tuning_obj
+        parameter_tuner = None
+    
+    output_info = Output_Info(output_objective, output_constraints, optimisation_target)
+    # Start to Fill in the constraints information
+    input_info = fill_constraints(self_constraints, coupled_constraints, device)
+    
+    return input_info, output_info, parameter_tuner
 
 if __name__ == '__main__':
-    self_constraints, coupled_constraints, input_constant, output_objective, output_constraints, objective_function_category, parameter_tuning_obj = parse_constraints('../specification/input_spec2.txt')
-    print(self_constraints)
-    print(coupled_constraints)
-    print(output_objective)
-    print(output_constraints)
-    # (input_dim, input_scales, input_normalized_factor, input_offset, input_names), constraint = fill_constraints(self_constraints, coupled_constraints)
-    # print(input_dim)
-    # print(input_scales)
-    # print(input_normalized_factor)
-    # print(input_names)
-    # print(constraint)
+    input_info, output_info, _ = parse_constraints('../specification/input_spec_optimisation_set_3.txt', )
+    print(input_info.input_names)
+    print(output_info.output_objective)

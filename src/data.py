@@ -4,10 +4,35 @@ import glob
 import sys
 import pickle
 import os.path as osp
-from utils import calculate_condition, calculate_smooth_condition, recover_single_input_data, read_utilization
+from utils import calculate_condition, calculate_smooth_condition, recover_single_input_data, read_utilization, calculate_hypervolume
 from botorch.utils.transforms import normalize
 
+class Input_Info:
+    """Class to store all the related input information"""
+    def __init__(self, input_dim, input_scales, input_normalized_factor, input_exp, input_offsets, input_names, input_constraints, self_constraints, coupled_constraints):
+        self.input_dim = input_dim
+        self.input_scales = input_scales
+        self.input_normalized_factor = input_normalized_factor
+        self.input_exp = input_exp
+        self.input_offsets = input_offsets
+        self.input_names = input_names
+        self.constraints = input_constraints
+        self.constants = None
+        self.self_constraints = self_constraints
+        self.coupled_constraints = coupled_constraints
+
+class Output_Info:
+    """Class to store all the related output information"""
+    def __init__(self, obj_to_optimise, output_constraints, optimisation_target):
+        self.obj_to_optimise = obj_to_optimise
+        self.output_constraints = output_constraints
+        self.optimisation_target = optimisation_target
+        self.obj_to_optimise_dim = len(obj_to_optimise)
+        self.obj_to_evaluate_dim = self.obj_to_optimise_dim + len(output_constraints)
+        self.obj_to_optimise_index = list(range(self.obj_to_optimise_dim))
+
 class Data_Sample:
+    """Individual Storage Element"""
     def __init__(self, data, objs, data_set_type):
         if (data_set_type == 'txt'):
             self.Constraints = data[0]
@@ -26,26 +51,26 @@ class Data_Sample:
 
 class Data_Set:
     """This class is used for DSE where the dataset is provided"""
-    def __init__(self, data, objs, input_scales, input_data_normalized_factors, input_offsets, input_constants, output_obj_constraint, data_set_type = 'txt', tensor_type = torch.float64, tensor_device = torch.device('cpu')):
+    def __init__(self, data, input_info, output_info, data_set_type = 'txt', tensor_type = torch.float64, tensor_device = torch.device('cpu')):
         val_list = {}
         self.best_value = {}
         self.best_pair = {}
         self.worst_value = {}
         # to recover the output data
-        self.objs_to_optimise_dim = len(objs)
-        self.objs_to_evaluate = list(objs.keys()) + list(output_obj_constraint.keys())
+        self.objs_to_optimise_dim = output_info.obj_to_optimise_dim
+        self.objs_to_evaluate = list(output_info.obj_to_optimise.keys()) + list(output_info.output_constraints.keys())
         self.objs_to_evaluate_dim = len(self.objs_to_evaluate)
         self.output_normalised_factors = {}
         self.objs_direct = {}    
         # to recover the input data
-        self.input_normalized_factors = torch.tensor(input_data_normalized_factors, dtype=tensor_type, device=tensor_device)
-        self.input_scales_factors = torch.tensor(input_scales, dtype=tensor_type, device=tensor_device)
-        self.input_offsets = torch.tensor(input_offsets, dtype=tensor_type, device=tensor_device)
-        self.input_constants = input_constants
+        self.input_normalized_factors = torch.tensor(input_info.input_data_normalized_factors, dtype=tensor_type, device=tensor_device)
+        self.input_scales_factors = torch.tensor(input_info.input_scales, dtype=tensor_type, device=tensor_device)
+        self.input_offsets = torch.tensor(input_info.input_offsets, dtype=tensor_type, device=tensor_device)
+        self.input_constants = input_info.input_constants
         # tensor type and device
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
-        self.normaliser_bounds = torch.empty((2, len(objs)), dtype=tensor_type, device=tensor_device)
+        self.normaliser_bounds = torch.empty((2, len(output_info.obj_to_optimise)), dtype=tensor_type, device=tensor_device)
         if data_set_type == 'txt':
             for i in range(len(data)):
                 d_input_dic = data[i][0]
@@ -62,7 +87,7 @@ class Data_Set:
 
             # Iterate over each item in output_objective
             obj_index = 0
-            for obj, values in objs.items():
+            for obj, values in output_info.obj_to_optimise.items():
                 # Extract the obj_direction from the values list
                 obj_direction = values[0]
                 self.objs_direct[obj] = obj_direction
@@ -78,9 +103,9 @@ class Data_Set:
                 self.best_pair[obj] = [[i] for i in data.keys() if data[i][obj] == self.best_value[obj]][0]
                 obj_index += 1
         self.output_constraints_to_check = []
-        for obj in output_obj_constraint:
+        for obj in output_info.output_constraints:
             self.output_constraints_to_check.append([self.normalise_single_output_data(bound,obj) for bound in output_obj_constraint[obj]])
-            self.best_value[obj] = output_obj_constraint[obj][1]
+            self.best_value[obj] = output_info.output_constraints[obj][1]
             self.worst_value[obj] = 0.0
         print("self.constrains_to_check: ", self.output_constraints_to_check)
 
@@ -287,14 +312,14 @@ class NutShell_Data(Data_Set):
 
 
 class EL2_Data(Data_Set):
-    def __init__(self, input_names, objs, scales, input_data_normalized_factors, input_offsets, input_constants, input_exp, output_obj_constraint, param_tuner, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
+    def __init__(self, input_info, output_info, param_tuner, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
     
         self.utilisation_path = '../object_functions/Syn_Report/EL2_utilization_synth.rpt'
         self.param_tuner = param_tuner
 
         # to recover the output data
-        self.objs_to_optimise_dim = len(objs)
-        self.objs_to_evaluate = list(objs.keys()) + list(output_obj_constraint.keys())
+        self.objs_to_optimise_dim = output_info.obj_to_optimise_dim
+        self.objs_to_evaluate = list(output_info.obj_to_optimise.keys()) + list(output_info.output_constraints.keys())
         self.objs_to_evaluate_dim = len(self.objs_to_evaluate)
         # this is to check what type of performance objectives are needed to be stored
         self.performance_objs_benchmarks = []
@@ -306,7 +331,7 @@ class EL2_Data(Data_Set):
 
         # Iterate over each item in output_objective
         obj_index = 0   
-        for obj_name, values in objs.items():
+        for obj_name, values in output_info.obj_to_optimise.items():
             # Extract the obj_direction from the values list
             obj_direction = values[0]
             self.objs_direct[obj_name] = obj_direction
@@ -327,24 +352,24 @@ class EL2_Data(Data_Set):
         
         # TODO, since for some of the conditions that are very small, the boundary calculation methods does not work well, hence normalising to the largest value of the condition.
         self.output_constraints_to_check = []
-        for obj_name in list(output_obj_constraint.keys()):
-            self.best_value[obj_name] = output_obj_constraint[obj_name][1]
-            self.worst_value[obj_name] = output_obj_constraint[obj_name][0]
-            self.output_constraints_to_check.append([self.normalise_single_output_data(bound, obj_name) for bound in output_obj_constraint[obj_name]])
+        print("output_info.output_constraints.keys(): ", output_info.output_constraints.keys())
+        for obj_name in list(output_info.output_constraints.keys()):
+            self.best_value[obj_name] = output_info.output_constraints[obj_name][1]
+            self.worst_value[obj_name] = output_info.output_constraints[obj_name][0]
+            self.output_constraints_to_check.append([self.normalise_single_output_data(bound, obj_name) for bound in output_info.output_constraints[obj_name]])
             
-            self.normaliser_bounds[0][obj_index] = output_obj_constraint[obj_name][0]
-            self.normaliser_bounds[1][obj_index] = output_obj_constraint[obj_name][1]
+            self.normaliser_bounds[0][obj_index] = output_info.output_constraints[obj_name][0]
+            self.normaliser_bounds[1][obj_index] = output_info.output_constraints[obj_name][1]
         # to recover the input data
-        self.input_normalized_factors = torch.tensor(input_data_normalized_factors, dtype=tensor_type, device=tensor_device)
-        self.input_scales_factors = torch.tensor(scales, dtype=tensor_type, device=tensor_device)
-        self.input_offsets = torch.tensor(input_offsets, dtype=tensor_type, device=tensor_device)
-        self.input_exp = torch.tensor(input_exp, dtype=tensor_type, device=tensor_device)
-        self.input_constants = input_constants
-
+        self.input_normalized_factors = torch.tensor(input_info.input_normalized_factor, dtype=tensor_type, device=tensor_device)
+        self.input_scales_factors = torch.tensor(input_info.input_scales, dtype=tensor_type, device=tensor_device)
+        self.input_offsets = torch.tensor(input_info.input_offsets, dtype=tensor_type, device=tensor_device)
+        self.input_exp = torch.tensor(input_info.input_exp, dtype=tensor_type, device=tensor_device)
+        self.input_constants = input_info.constants
         # tensor type and device
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
-        self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate, 'EL2', 'optimisation_set_3')
+        self.build_new_dataset = create_data_set(input_info.input_names, self.objs_to_evaluate, 'EL2', 'optimisation_set_3')
     
     def find_ppa_result(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
@@ -472,6 +497,19 @@ class create_data_set:
                         return 'failed'
         return None
 
+
+
+## Functions
+def generate_initial_data(sampler_generator, NUM_OF_INITIAL_POINT, data_set, ref_points, device, OBJECTIVES_TO_OPTIMISE_DIM, NOISE_SE=0.0):
+    """generate training data"""
+    unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set)
+    train_obj = torch.cat([normalised_objs[...,:OBJECTIVES_TO_OPTIMISE_DIM], con_objs], dim=-1)
+    # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
+    generate_size = train_obj.shape[0]
+    hypervolumes = torch.zeros(generate_size, device=device)
+    for i in range(generate_size):
+        hypervolumes[i] = calculate_hypervolume(ref_points, train_obj[i].unsqueeze(0))
+    return unnormalised_train_x, exact_objs, train_obj, hypervolumes
 
 
 if __name__ == '__main__':

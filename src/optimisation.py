@@ -5,18 +5,11 @@ import utils
 import warnings
 from colorama import Fore, Style
 
-from interface import fill_constraints, parse_constraints
+from interface import parse_constraints
 from sampler import initial_sampler
-from customised_model import SingleTaskGP_transformed
-from train_set import train_set_records
+from optimisation_models import optimisation_models
 
-from botorch.models.model_list_gp_regression import ModelListGP
-from botorch.models.transforms.outcome import Standardize
-from gpytorch.mlls.sum_marginal_log_likelihood import SumMarginalLogLikelihood
-from botorch.utils.multi_objective.box_decompositions.non_dominated import NondominatedPartitioning
-from botorch.acquisition.multi_objective.objective import IdentityMCMultiOutputObjective
-from botorch.acquisition.multi_objective.monte_carlo import qNoisyExpectedHypervolumeImprovement
-from botorch.optim import optimize_acqf
+from train_set import train_set_records
 from botorch.sampling.normal import SobolQMCNormalSampler
 from botorch.fit import fit_gpytorch_model
 
@@ -32,34 +25,30 @@ t_type = torch.float64
 
 # Input Settings
 CONSTRAINT_FILE = '../specification/input_spec_optimisation_set_3.txt'
-self_constraints, coupled_constraints, INPUT_CONSTANT, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, objective_function_category, parameter_tuning_obj = parse_constraints(CONSTRAINT_FILE)
-(INPUT_DATA_DIM, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_EXP, INPUT_OFFSETS, INPUT_NAMES), constraint_set = fill_constraints(self_constraints, coupled_constraints, device)
-OBJECTIVES_TO_OPTIMISE_DIM = len(OBJECTIVES_TO_OPTIMISE)
-OBJECTIVE_DIM = OBJECTIVES_TO_OPTIMISE_DIM + len(OUTPUT_OBJECTIVE_CONSTRAINT)
-OBJECTIVES_TO_OPTIMISE_INDEX = list(range(OBJECTIVES_TO_OPTIMISE_DIM))
+input_info, output_info, param_tuner = parse_constraints(CONSTRAINT_FILE, device)
+print(input_info.input_names)
+print(output_info.obj_to_optimise)
+print(output_info.optimisation_target)
 
 # Dataset Settings
-if objective_function_category == 'synthetic':
+if output_info.optimisation_target == 'synthetic':
     RAW_DATA_FILE = '../specification/ppa_v2.db'
-    data_set = data.read_data_from_db(RAW_DATA_FILE, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT , t_type, device)
-elif objective_function_category == 'NutShell':
-    data_set = data.NutShell_Data(INPUT_NAMES, OBJECTIVES_TO_OPTIMISE, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT, OUTPUT_OBJECTIVE_CONSTRAINT, parameter_tuning_obj, t_type, device)
-elif objective_function_category == 'EL2':
-    data_set = data.EL2_Data(INPUT_NAMES, OBJECTIVES_TO_OPTIMISE, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT, INPUT_EXP, OUTPUT_OBJECTIVE_CONSTRAINT, parameter_tuning_obj, t_type, device)
-
-data_set.find_all_possible_designs()
-quit()
+    data_set = data.read_data_from_db(RAW_DATA_FILE, input_info, output_info, t_type, device)
+elif output_info.optimisation_target == 'NutShell':
+    data_set = data.NutShell_Data(input_info, output_info, param_tuner, t_type, device)
+elif output_info.optimisation_target == 'EL2':
+    data_set = data.EL2_Data(input_info, output_info, param_tuner, t_type, device)
 
 print("<-------------- Optimisation Settings -------------->")
-print(f"Input Names: {INPUT_NAMES}")
-print(f"Input Self Constraints: {self_constraints}")
-print(f"Input Offset: {INPUT_OFFSETS}")
-print(f"Input Scales: {INPUT_DATA_SCALES}")
-print(f"Input Normalised Factor: {INPUT_NORMALIZED_FACTOR}")
-print(f"Input Exponential: {INPUT_EXP}")
-print(f"Optimisation Device : {objective_function_category}")
-print(f"Objectives to Optimise: {OBJECTIVES_TO_OPTIMISE}")
-print(f"Output Objective Constraint: {OUTPUT_OBJECTIVE_CONSTRAINT}")
+print(f"Input Names: {input_info.input_names}")
+print(f"Input Self Constraints: {input_info.self_constraints}")
+print(f"Input Offset: {input_info.input_offsets}")
+print(f"Input Scales: {input_info.input_scales}")
+print(f"Input Normalised Factor: {input_info.input_normalized_factor}")
+print(f"Input Exponential: {input_info.input_exp}")
+print(f"Optimisation Device : {output_info.optimisation_target}")
+print(f"Objectives to Optimise: {output_info.obj_to_optimise}")
+print(f"Output Objective Constraint: {output_info.output_constraints}")
 print("<--------------------------------------------------->")
 
 # Train Set Settings
@@ -83,97 +72,15 @@ plot_posterior = False
 
 
 #reference point for optimisation used for hypervolume calculation
-ref_points = utils.find_ref_points(OBJECTIVES_TO_OPTIMISE_DIM, data_set.objs_direct, t_type, device)
+ref_points = utils.find_ref_points(output_info.obj_to_optimise_dim, data_set.objs_direct, t_type, device)
 #normalise objective to ensure the same scale
-sampler_generator = initial_sampler(INPUT_DATA_DIM, OBJECTIVE_DIM, constraint_set, data_set, t_type, device)
-train_set_storage = train_set_records(INPUT_NORMALIZED_FACTOR, list(self_constraints.values()), ref_points, OBJECTIVES_TO_OPTIMISE_DIM, TRAIN_SET_ACCEPTABLE_THRESHOLD, TRAIN_SET_DISTURBANCE_RANGE, t_type, device)
+sampler_generator = initial_sampler(input_info.input_dim, output_info.obj_to_evaluate_dim, input_info.constraints, data_set, t_type, device)
+train_set_storage = train_set_records(input_info.input_normalized_factor, list(input_info.self_constraints.values()), ref_points, output_info.obj_to_optimise_dim, TRAIN_SET_ACCEPTABLE_THRESHOLD, TRAIN_SET_DISTURBANCE_RANGE, t_type, device)
 
 if plot_posterior:
-    posterior_examiner = utils.test_posterior_result(INPUT_NAMES, t_type, device)
+    posterior_examiner = utils.test_posterior_result(input_info.input_names, t_type, device)
     posterior_objective_index = 0
 
-def calculate_hypervolume(ref_points, train_obj):
-    """Calculate the hypervolume"""
-    # Y dimension (batch_shape) x n x m-dim
-    partitioning = NondominatedPartitioning(ref_point=ref_points, Y = train_obj[..., : OBJECTIVES_TO_OPTIMISE_DIM])
-    hv = partitioning.compute_hypervolume().item()
-    return hv
-
-def generate_initial_data():
-    """generate training data"""
-    unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set)
-    train_obj = torch.cat([normalised_objs[...,:OBJECTIVES_TO_OPTIMISE_DIM], con_objs], dim=-1)
-    # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
-    generate_size = train_obj.shape[0]
-    hypervolumes = torch.zeros(generate_size, device=device)
-    for i in range(generate_size):
-        hypervolumes[i] = calculate_hypervolume(ref_points, train_obj[i].unsqueeze(0))
-    return unnormalised_train_x, exact_objs, train_obj, hypervolumes
-
-def initialize_model(train_x, train_obj, scales, normalized_factors):
-    """define models for objective and constraint"""
-    ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
-    models = []
-    for obj_index in range(train_obj.shape[-1]): 
-        train_y = train_obj[..., obj_index : obj_index + 1]
-        models.append(SingleTaskGP_transformed(
-                                    scales,
-                                    normalized_factors,
-                                    train_x, 
-                                    train_y, 
-                                    outcome_transform=Standardize(m=1),
-                                    tensor_type=t_type,
-                                    tensor_device=device
-                                   ))
-       
-    model = ModelListGP(*models)
-    mll = SumMarginalLogLikelihood(model.likelihood, model)
-    return mll, model
-
-
-def build_qNEHVI_acqf(model, train_x, sampler):
-    """Build the qNEHVI acquisition function"""
-
-    acq_func = qNoisyExpectedHypervolumeImprovement(
-        model=model,
-        ref_point=ref_points.tolist(), 
-        X_baseline=train_x,
-        sampler=sampler,
-        prune_baseline=True,
-        objective=IdentityMCMultiOutputObjective(outcomes = OBJECTIVES_TO_OPTIMISE_INDEX),
-        constraints=[lambda Z: Z[..., -1]],
-    )
-    return acq_func
-    
-
-def optimize_acqf_and_get_observation(acq_func, constraint_bounds):
-    """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
-    # Initial Conditions
-    # initial_cond = sampler_generator.generate_initial_data(NUM_RESTARTS).unsqueeze(1) # to match the dimension n * 1 * m
-    # print("sampled_initial_conditions: ", initial_cond)
-    candidates, _ = optimize_acqf(
-        acq_function=acq_func,
-        bounds=constraint_bounds,
-        q=BATCH_SIZE,
-        num_restarts=NUM_RESTARTS,
-        options={"batch_limit": 1, "maxiter": 200},
-        # nonlinear_inequality_constraints = [constraint_set.get_nonlinear_inequality_constraints],
-        # batch_initial_conditions = initial_cond,
-        raw_samples=RAW_SAMPLES,
-        sequential=True
-    )
-    # observe new values
-    new_x = candidates.detach()
-    print("new_x: ", new_x)
-    valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
-    new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
-    new_con_obj = data_set.check_qNEHVI_constraints(new_normalised_obj)
-    if new_con_obj.item() <= 0.0:
-        hyper_vol = calculate_hypervolume(ref_points, new_normalised_obj)
-    else:
-        hyper_vol = 0.0
-    new_train_obj = torch.cat([new_normalised_obj[...,:OBJECTIVES_TO_OPTIMISE_DIM], new_con_obj], dim=-1)
-    return valid_generated_sample, new_x, new_exact_obj, new_train_obj, hyper_vol
 
 if not debug:
     warnings.filterwarnings("ignore", category=BadInitialCandidatesWarning)
@@ -184,24 +91,25 @@ if not debug:
 
 if record:
     record_file_name = '../test/test_results/'
-    for obj_name in OBJECTIVES_TO_OPTIMISE.keys():
+    for obj_name in output_info.obj_to_optimise.keys():
         record_file_name = record_file_name + obj_name + '_'
-    results_record = utils.recorded_training_result(INPUT_NAMES, OBJECTIVES_TO_OPTIMISE, data_set.best_value, record_file_name, N_TRIALS, N_BATCH)
+    results_record = utils.recorded_training_result(input_info.input_names, output_info.obj_to_optimise, data_set.best_value, record_file_name, N_TRIALS, N_BATCH)
 # Global Best Values
 best_hyper_vols_per_trial = []
-best_sample_points_per_trial = {trial : {input : 0.0 for input in INPUT_NAMES} for trial in range(1, N_TRIALS + 1)}
+best_sample_points_per_trial = {trial : {input : 0.0 for input in input_info.input_names} for trial in range(1, N_TRIALS + 1)}
+optimisation_model = optimisation_models(NUM_RESTARTS, NUM_OF_INITIAL_POINT, BATCH_SIZE, RAW_SAMPLES, MC_SAMPLES, ref_points, output_info.obj_to_optimise_dim, t_type, device)
 
 #Optimisation Loop
 for trial in range (1, N_TRIALS + 1):
 
     print(f"\nTrial {trial:>2} of {N_TRIALS} ")
-
+    
     (   train_x_ei,
         exact_obj_ei,
         train_obj_ei,
         hyper_vol_ei,
-    ) = generate_initial_data()
-
+    ) = data.generate_initial_data(sampler_generator, NUM_OF_INITIAL_POINT, data_set, ref_points, device, output_info.obj_to_optimise_dim)
+    
     print("<----------------Initial Data--------------->")
     print("train_x_ei: ", train_x_ei)
     print("train_obj_ei: ", train_obj_ei)
@@ -209,13 +117,13 @@ for trial in range (1, N_TRIALS + 1):
     print("<------------------------------------------->")
 
     train_set_storage.store_initial_data(train_x_ei)
-    mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
+    mll_ei, model_ei = optimisation_model.initialize_model(train_x_ei, train_obj_ei)
     #reset the best observation
     # best_observation_per_interation = {obj : None for obj in OBJECTIVES_TO_OPTIMISE.keys()}
     # best_constraint_per_interation = {obj : None for obj in OUTPUT_OBJECTIVE_CONSTRAINT.keys()}
     # best_hyper_vol_per_interation = 0.0
     best_sample_point_per_interation, best_observation_per_interation, best_constraint_per_interation, best_hyper_vol_per_interation = \
-        utils.extract_best_from_initialisation_results(train_x_ei, exact_obj_ei, hyper_vol_ei, OBJECTIVES_TO_OPTIMISE, OUTPUT_OBJECTIVE_CONSTRAINT)
+        utils.extract_best_from_initialisation_results(train_x_ei, exact_obj_ei, hyper_vol_ei, output_info.obj_to_optimise, output_info.output_constraints)
     for iteration in range(1, N_BATCH + 1):
         t0 = time.monotonic()
 
@@ -224,9 +132,9 @@ for trial in range (1, N_TRIALS + 1):
 
         #QMC sampler
         qmc_sampler = SobolQMCNormalSampler(sample_shape=torch.Size([MC_SAMPLES]))
-        acqf = build_qNEHVI_acqf(model_ei, train_x_ei, qmc_sampler)
+        acqf = optimisation_model.build_qNEHVI_acqf(model_ei, train_x_ei, qmc_sampler)
         # optimize and get new observation
-        valid_generated_sample, new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimize_acqf_and_get_observation(acqf, constraint_set.constraint_bound)
+        valid_generated_sample, new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimisation_model.optimize_acqf_and_get_observation(acqf, data_set)
 
         # examine the posterior
         if plot_posterior and iteration == 10:
@@ -259,36 +167,36 @@ for trial in range (1, N_TRIALS + 1):
             hyper_vol_ei = torch.cat([hyper_vol_ei, modified_hyper_vol])
             if hyper_vol > best_hyper_vol_per_interation:
                 best_hyper_vol_per_interation = hyper_vol
-                best_observation_per_interation = utils.encapsulate_obj_tensor_into_dict(OBJECTIVES_TO_OPTIMISE, new_exact_obj_ei)
-                best_constraint_per_interation = utils.encapsulate_obj_tensor_into_dict(OUTPUT_OBJECTIVE_CONSTRAINT, new_exact_obj_ei[... , OBJECTIVES_TO_OPTIMISE_DIM :])
+                best_observation_per_interation = utils.encapsulate_obj_tensor_into_dict(output_info.obj_to_optimise, new_exact_obj_ei)
+                best_constraint_per_interation = utils.encapsulate_obj_tensor_into_dict(output_info.output_constraints, new_exact_obj_ei[... , output_info.obj_to_optimise_dim :])
                 best_sample_point_per_interation = new_x_ei
         
         # reinitialize the models so they are ready for fitting on next iteration
-        mll_ei, model_ei = initialize_model(train_x_ei, train_obj_ei, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR)
+        mll_ei, model_ei = optimisation_model.initialize_model(train_x_ei, train_obj_ei)
         t1 = time.monotonic()
 
         if verbose:
             print(f"{Fore.YELLOW}Iteration: {iteration}{Style.RESET_ALL}")
             
-            for obj in OBJECTIVES_TO_OPTIMISE.keys():
+            for obj in output_info.obj_to_optimise.keys():
                 if best_observation_per_interation[obj] is None:
                     print(f"{Fore.RED}best_value_{obj}: None{Style.RESET_ALL}")
                     continue
-                if(OBJECTIVES_TO_OPTIMISE[obj] == 'minimise'):
+                if(output_info.obj_to_optimise[obj] == 'minimise'):
                     print(f"{Fore.RED}best_value_{obj}: {-1 * best_observation_per_interation[obj]}{Style.RESET_ALL}")
                 else:
                     print(f"{Fore.RED}best_value_{obj}: {best_observation_per_interation[obj]}{Style.RESET_ALL}")
-            for obj in OUTPUT_OBJECTIVE_CONSTRAINT:
+            for obj in output_info.output_constraints:
                 print(f"{Fore.GREEN}check constraint_{obj}: {best_constraint_per_interation[obj]}{Style.RESET_ALL}")
         else:
             print(".", end="")
         
         if record:
             tmp_new_obj_ei = {}
-            for obj in OBJECTIVES_TO_OPTIMISE.keys():
+            for obj in output_info.obj_to_optimise.keys():
                 if best_observation_per_interation[obj] is None:
                     continue
-                if(OBJECTIVES_TO_OPTIMISE[obj] == 'minimise'):
+                if(output_info.obj_to_optimise[obj] == 'minimise'):
                     tmp_new_obj_ei[obj] = -1 * best_observation_per_interation[obj]
                 else:
                     tmp_new_obj_ei[obj] = best_observation_per_interation[obj]
@@ -299,7 +207,7 @@ for trial in range (1, N_TRIALS + 1):
     best_sample_points_per_trial[trial] = best_sample_point_per_interation
 
     if record:
-        unnormalized_train_x = utils.recover_unrounded_input_data(train_x_ei, INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES, INPUT_OFFSETS, t_type, device, INPUT_EXP)
+        unnormalized_train_x = utils.recover_unrounded_input_data(train_x_ei, input_info, t_type, device)
         results_record.record_input(trial, unnormalized_train_x, hyper_vol_ei)
 
 if record:
@@ -309,10 +217,6 @@ print("<------------------Final Result------------------>")
 best_trial = utils.find_max_index_in_list(best_hyper_vols_per_trial)
 _, best_objective = data_set.find_ppa_result(best_sample_points_per_trial[best_trial + 1])
 print("best_sample_points_per_trial: ", best_sample_points_per_trial[best_trial + 1])
-print("INPUT_NORMALIZED_FACTOR: ", INPUT_NORMALIZED_FACTOR)
-print("INPUT_DATA_SCALES: ", INPUT_DATA_SCALES)
-print("INPUT_OFFSETS: ", INPUT_OFFSETS)
-print("INPUT_EXP: ", INPUT_EXP)
-real_sample_point = utils.recover_single_input_data(best_sample_points_per_trial[best_trial + 1].squeeze(0), INPUT_NORMALIZED_FACTOR, INPUT_DATA_SCALES, INPUT_OFFSETS, INPUT_EXP)
+real_sample_point = utils.recover_single_input_data(best_sample_points_per_trial[best_trial + 1].squeeze(0), input_info.input_normalized_factor, input_info.input_scales, input_info.input_offsets, input_info.input_exp)
 print(f"{Fore.BLUE}Best sample point: {real_sample_point}{Style.RESET_ALL}")
 print(f"{Fore.BLUE}Best objective: {best_objective}{Style.RESET_ALL}")
