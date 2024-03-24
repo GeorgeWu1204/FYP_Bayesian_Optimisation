@@ -47,6 +47,9 @@ elif objective_function_category == 'NutShell':
 elif objective_function_category == 'EL2':
     data_set = data.EL2_Data(INPUT_NAMES, OBJECTIVES_TO_OPTIMISE, INPUT_DATA_SCALES, INPUT_NORMALIZED_FACTOR, INPUT_OFFSETS, INPUT_CONSTANT, INPUT_EXP, OUTPUT_OBJECTIVE_CONSTRAINT, parameter_tuning_obj, t_type, device)
 
+data_set.find_all_possible_designs()
+quit()
+
 print("<-------------- Optimisation Settings -------------->")
 print(f"Input Names: {INPUT_NAMES}")
 print(f"Input Self Constraints: {self_constraints}")

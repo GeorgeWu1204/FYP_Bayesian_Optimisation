@@ -51,9 +51,10 @@ for input_constraint in self_constraints:
 for constraint_range in OUTPUT_OBJECTIVE_CONSTRAINT.keys():
     constraint_set.update_output_obj_constraint(OUTPUT_OBJECTIVE_CONSTRAINT[constraint_range])
 
-
 obj_normalized_factors = list(data_set.output_normalised_factors.values())
 print("obj_normalized_factors: ", obj_normalized_factors)
+
+overall_iteration_required = 50
 verbose = True
 record = True
 if record:

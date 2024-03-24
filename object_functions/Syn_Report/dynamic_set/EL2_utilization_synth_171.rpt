@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-| Date         : Tue Mar  5 10:59:37 2024
+| Date         : Sun Mar 24 12:09:07 2024
 | Host         : cg1710-pi running 64-bit Ubuntu 22.04.4 LTS
 | Command      : report_utilization -file ../../Syn_Report/EL2_utilization_synth.rpt
 | Design       : el2_veer_wrapper
@@ -32,17 +32,17 @@ Table of Contents
 +----------------------------+-------+-------+------------+-----------+-------+
 |          Site Type         |  Used | Fixed | Prohibited | Available | Util% |
 +----------------------------+-------+-------+------------+-----------+-------+
-| CLB LUTs*                  | 40984 |     0 |          0 |    522720 |  7.84 |
-|   LUT as Logic             | 38608 |     0 |          0 |    522720 |  7.39 |
+| CLB LUTs*                  | 29294 |     0 |          0 |    522720 |  5.60 |
+|   LUT as Logic             | 26918 |     0 |          0 |    522720 |  5.15 |
 |   LUT as Memory            |  2376 |     0 |          0 |    161280 |  1.47 |
 |     LUT as Distributed RAM |  2376 |     0 |            |           |       |
 |     LUT as Shift Register  |     0 |     0 |            |           |       |
-| CLB Registers              | 22872 |     0 |          0 |   1045440 |  2.19 |
-|   Register as Flip Flop    | 22872 |     0 |          0 |   1045440 |  2.19 |
+| CLB Registers              |  9760 |     0 |          0 |   1045440 |  0.93 |
+|   Register as Flip Flop    |  9760 |     0 |          0 |   1045440 |  0.93 |
 |   Register as Latch        |     0 |     0 |          0 |   1045440 |  0.00 |
-| CARRY8                     |   589 |     0 |          0 |     65340 |  0.90 |
-| F7 Muxes                   |  4642 |     0 |          0 |    261360 |  1.78 |
-| F8 Muxes                   |  2150 |     0 |          0 |    130680 |  1.65 |
+| CARRY8                     |   566 |     0 |          0 |     65340 |  0.87 |
+| F7 Muxes                   |  1570 |     0 |          0 |    261360 |  0.60 |
+| F8 Muxes                   |   593 |     0 |          0 |    130680 |  0.45 |
 | F9 Muxes                   |   284 |     0 |          0 |     65340 |  0.43 |
 +----------------------------+-------+-------+------------+-----------+-------+
 * Warning! The Final LUT count, after physical optimizations and full implementation, is typically lower. Run opt_design after synthesis, if not already completed, for a more realistic count.
@@ -62,7 +62,7 @@ Warning! LUT value is adjusted to account for LUT combining.
 | 0     |            _ |       Reset |            - |
 | 0     |          Yes |           - |            - |
 | 2     |          Yes |           - |          Set |
-| 22533 |          Yes |           - |        Reset |
+| 9421  |          Yes |           - |        Reset |
 | 0     |          Yes |         Set |            - |
 | 337   |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
@@ -99,7 +99,7 @@ Warning! LUT value is adjusted to account for LUT combining.
 +------------+------+-------+------------+-----------+--------+
 |  Site Type | Used | Fixed | Prohibited | Available |  Util% |
 +------------+------+-------+------------+-----------+--------+
-| Bonded IOB | 1987 |     0 |          0 |       512 | 388.09 |
+| Bonded IOB | 2517 |     0 |          0 |       512 | 491.60 |
 +------------+------+-------+------------+-----------+--------+
 
 
@@ -163,22 +163,22 @@ Warning! LUT value is adjusted to account for LUT combining.
 +----------+-------+---------------------+
 | Ref Name |  Used | Functional Category |
 +----------+-------+---------------------+
-| LUT6     | 24617 |                 CLB |
-| FDCE     | 22533 |            Register |
-| LUT4     |  6476 |                 CLB |
-| LUT5     |  5850 |                 CLB |
-| MUXF7    |  4642 |                 CLB |
-| LUT3     |  3156 |                 CLB |
-| LUT2     |  2315 |                 CLB |
+| LUT6     | 14895 |                 CLB |
+| FDCE     |  9421 |            Register |
+| LUT4     |  5612 |                 CLB |
+| LUT5     |  5131 |                 CLB |
+| LUT3     |  2918 |                 CLB |
 | RAMS64E1 |  2272 |                 CLB |
-| MUXF8    |  2150 |                 CLB |
-| OBUF     |  1176 |                 I/O |
-| INBUF    |   811 |                 I/O |
-| IBUFCTRL |   811 |              Others |
-| CARRY8   |   589 |                 CLB |
+| LUT2     |  1745 |                 CLB |
+| MUXF7    |  1570 |                 CLB |
+| OBUF     |  1474 |                 I/O |
+| INBUF    |  1043 |                 I/O |
+| IBUFCTRL |  1043 |              Others |
+| MUXF8    |   593 |                 CLB |
+| CARRY8   |   566 |                 CLB |
 | FDRE     |   337 |            Register |
 | MUXF9    |   284 |                 CLB |
-| LUT1     |   205 |                 CLB |
+| LUT1     |   170 |                 CLB |
 | RAMS64E  |   104 |                 CLB |
 | DSP48E2  |     4 |          Arithmetic |
 | FDPE     |     2 |            Register |
