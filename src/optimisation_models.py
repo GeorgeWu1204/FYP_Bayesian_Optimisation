@@ -1,7 +1,7 @@
 import random
 import time
 import torch
-from utils import calculate_volumes_for_brute_force, find_samples_brute_force, calculate_hypervolume
+from utils import calculate_hypervolume, encapsulate_obj_tensor_into_dict
 from colorama import Fore, Style
 
 from customised_model import SingleTaskGP_transformed
@@ -96,7 +96,7 @@ class optimisation_model():
 ### <----------------- Other Models ----------------->
 def brute_force(output_info, ref_points, data_set, record, results_record):
     # Global Best Values
-    best_volume = 100
+    best_volume = 0
     best_sample = None  
     best_results = [data_set.worst_value[obj] for obj in data_set.objs_direct]
     sample_inputs = data_set.find_all_possible_designs()
@@ -113,43 +113,55 @@ def brute_force(output_info, ref_points, data_set, record, results_record):
         normalised_obj = data_set.normalise_output_data_tensor(possible_obj)
         con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
         if con_obj.item() <= 0.0:
-            volume = calculate_hypervolume(ref_points, possible_obj, output_info.obj_to_optimise_dim)
-            if volume < best_volume:
+            volume = calculate_hypervolume(ref_points, normalised_obj, output_info.obj_to_optimise_dim)
+            if  best_volume < volume:
                 best_volume = volume
                 best_sample = sample_input
                 best_results = possible_obj
         else:
             continue
         t1 = time.monotonic()
+        best_objs = encapsulate_obj_tensor_into_dict(output_info.obj_to_optimise, best_results)
         if record:
-            results_record.record(iteration, sample_input, 1-volume, best_results, t1-t0)
+            results_record.record(iteration, sample_input.squeeze(0), volume, best_objs, t1-t0)
     print(f"{Fore.GREEN}best_volume: {best_volume}, best_sample: {best_sample}, best_results: {best_results}{Style.RESET_ALL}")
     if record:
         results_record.store()
 
 
-def hill_climbing(var_ranges, objective_function, max_iterations=1000, step_size=1):
+def hill_climbing(input_info, output_info, ref_points, data_set, record, results_record, max_iterations=30, step_size=0.01):
     # Generate initial solution
-    current_solution = {var: random.uniform(range_[0], range_[1]) for var, range_ in var_ranges.items()}
-    current_value = objective_function(current_solution)
-    
-    for _ in range(max_iterations):
-        # Generate a neighbor solution
-        neighbor_solution = current_solution.copy()
-        for var in neighbor_solution:
-            # Randomly decide whether to increase or decrease the variable value
-            direction = random.choice([-1, 1])
-            # Adjust the variable value within its range
-            neighbor_solution[var] = max(min(neighbor_solution[var] + direction * step_size, var_ranges[var][1]), var_ranges[var][0])
-        
+    best_volume = 100
+    best_sample = None  
+    best_results = [data_set.worst_value[obj] for obj in data_set.objs_direct]
+    current_solution = torch.rand((1, len(input_info.input_names)), device=data_set.tensor_device, dtype=data_set.tensor_type)
+    for iteration in range(max_iterations):
+        t0 = time.monotonic()
+        # Generate a neighbor solution by adding a small step in a random direction
+        step_directions = torch.randint(low=0, high=2, size=current_solution.size(), device=data_set.tensor_device, dtype=data_set.tensor_type) * 2 - 1  # Randomly choose -1 or 1 for each element
+        step = step_directions * step_size
+        neighbor_solution = torch.clamp(current_solution + step, min=0, max=1)
         # Evaluate the neighbor solution
-        neighbor_value = objective_function(neighbor_solution)
-        
-        # Check if the neighbor solution is better
-        if neighbor_value > current_value:
-            current_solution, current_value = neighbor_solution, neighbor_value
-        # If the objective function returns zero, we've hit a boundary condition
-        elif neighbor_value == 0:
-            break
-    
-    return current_solution, current_value
+        valid_sample, possible_obj = data_set.find_ppa_result(neighbor_solution)
+        if valid_sample == False:
+            continue
+        normalised_obj = data_set.normalise_output_data_tensor(possible_obj)
+        con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
+        if con_obj.item() <= 0.0:
+            volume = calculate_hypervolume(ref_points, normalised_obj, output_info.obj_to_optimise_dim)
+            if volume < best_volume:
+                best_volume = volume
+                best_sample = neighbor_solution
+                best_results = possible_obj
+                current_solution = neighbor_solution
+            elif volume == 0:
+                break
+        else:
+            continue
+        t1 = time.monotonic()
+        best_objs = encapsulate_obj_tensor_into_dict(output_info.obj_to_optimise, best_results)
+        if record:
+            results_record.record(iteration, current_solution.squeeze(0), volume, best_objs, t1-t0)
+    print(f"{Fore.GREEN}best_volume: {best_volume}, best_sample: {best_sample}, best_results: {best_results}{Style.RESET_ALL}")
+    if record:
+        results_record.store()

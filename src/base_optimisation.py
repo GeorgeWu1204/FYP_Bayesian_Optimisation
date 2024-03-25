@@ -8,21 +8,15 @@ from colorama import Fore, Style
 
 from interface import parse_constraints
 from format_constraints import Simpler_Constraints
-from optimisation_models import brute_force
+from optimisation_models import brute_force, hill_climbing
 
 # Tensor Settings
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 t_type = torch.float64
 
 # Input Settings
-CONSTRAINT_FILE = '../specification/input_spec_optimisation_set_4.txt'
-input_info, output_info, param_tuner = parse_constraints(CONSTRAINT_FILE, device)
-
-INPUT_VARIABLES = []
-for input_name in input_info.input_names:
-    INPUT_VARIABLES.append(input_info.self_constraints[input_name][:2])
-print("INPUT_VARIABLES: ", INPUT_VARIABLES)
-
+CONSTRAINT_FILE = '../specification/input_spec_btb_lsu.txt'
+input_info, output_info, param_tuner, optimisation_name = parse_constraints(CONSTRAINT_FILE, device)
 # Dataset Settings
 if output_info.optimisation_target == 'synthetic':
     RAW_DATA_FILE = '../specification/ppa_v2.db'
@@ -30,7 +24,8 @@ if output_info.optimisation_target == 'synthetic':
 elif output_info.optimisation_target == 'NutShell':
     data_set = data.NutShell_Data(input_info, output_info, param_tuner, t_type, device)
 elif output_info.optimisation_target == 'EL2':
-    data_set = data.EL2_Data(input_info, output_info, param_tuner, t_type, device)
+    data_set = data.EL2_Data(input_info, output_info, param_tuner, optimisation_name, t_type, device)
+
 
 print("<-------------- Optimisation Settings -------------->")
 print(f"Input Names: {input_info.input_names}")
@@ -45,13 +40,7 @@ print(f"Output Objective Constraint: {output_info.output_constraints}")
 print("<--------------------------------------------------->")
 
 #Building simpler constraints
-constraint_set = Simpler_Constraints( output_info.obj_to_optimise_dim, len(output_info.output_constraints))
-for input_constraint in input_info.self_constraints:
-    constraint_set.update_self_constraints(input_constraint)
-
-for constraint_range in output_info.output_constraints.keys():
-    constraint_set.update_output_obj_constraint(output_info.output_constraints[constraint_range])
-
+ref_points = utils.find_ref_points(output_info.obj_to_optimise_dim, data_set.objs_direct, t_type, device)
 overall_iteration_required = 50
 verbose = True
 record = True
@@ -60,11 +49,11 @@ if record:
     for obj_name in output_info.obj_to_optimise.keys():
         record_file_name = record_file_name + obj_name + '_'
     record_file_name = record_file_name + 'brute_force_record_result.txt'
-    results_record = utils.brute_force_training_result(input_info.input_names, output_info.obj_to_optimise, overall_iteration_required, record_file_name)
+    results_record = utils.other_model_training_result(input_info.input_names, output_info.obj_to_optimise, overall_iteration_required, record_file_name)
 
 # Optimisation Loop
-brute_force(input_info, output_info, constraint_set, data_set, record, results_record)
-
+brute_force(output_info, ref_points, data_set, record, results_record)
+hill_climbing(output_info, ref_points, data_set, record, results_record, max_iterations=30, step_size=0.01)
 
 
 

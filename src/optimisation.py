@@ -25,7 +25,7 @@ t_type = torch.float64
 
 # Input Settings
 CONSTRAINT_FILE = '../specification/input_spec_optimisation_set_4.txt'
-input_info, output_info, param_tuner = parse_constraints(CONSTRAINT_FILE, device)
+input_info, output_info, param_tuner, optimisation_name = parse_constraints(CONSTRAINT_FILE, device)
 
 # Dataset Settings
 if output_info.optimisation_target == 'synthetic':
@@ -34,7 +34,7 @@ if output_info.optimisation_target == 'synthetic':
 elif output_info.optimisation_target == 'NutShell':
     data_set = data.NutShell_Data(input_info, output_info, param_tuner, t_type, device)
 elif output_info.optimisation_target == 'EL2':
-    data_set = data.EL2_Data(input_info, output_info, param_tuner, t_type, device)
+    data_set = data.EL2_Data(input_info, output_info, param_tuner, optimisation_name, t_type, device)
 
 print("<-------------- Optimisation Settings -------------->")
 print(f"Input Names: {input_info.input_names}")
@@ -200,7 +200,7 @@ for trial in range (1, N_TRIALS + 1):
     best_sample_points_per_trial[trial] = best_sample_point_per_interation
 
     if record:
-        unnormalized_train_x = utils.recover_unrounded_input_data(train_x_ei, input_info, t_type, device)
+        unnormalized_train_x = utils.recover_single_input_data(train_x_ei, input_info.input_normalized_factor, input_info.input_scales, input_info.input_offsets, input_info.input_exp)
         results_record.record_input(trial, unnormalized_train_x, hyper_vol_ei)
 
 if record:

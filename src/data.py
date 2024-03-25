@@ -312,7 +312,7 @@ class NutShell_Data(Data_Set):
 
 
 class EL2_Data(Data_Set):
-    def __init__(self, input_info, output_info, param_tuner, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
+    def __init__(self, input_info, output_info, param_tuner, optimisation_name, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
     
         self.utilisation_path = '../object_functions/Syn_Report/EL2_utilization_synth.rpt'
         self.param_tuner = param_tuner
@@ -352,7 +352,6 @@ class EL2_Data(Data_Set):
         
         # TODO, since for some of the conditions that are very small, the boundary calculation methods does not work well, hence normalising to the largest value of the condition.
         self.output_constraints_to_check = []
-        print("output_info.output_constraints.keys(): ", output_info.output_constraints.keys())
         for obj_name in list(output_info.output_constraints.keys()):
             self.best_value[obj_name] = output_info.output_constraints[obj_name][1]
             self.worst_value[obj_name] = output_info.output_constraints[obj_name][0]
@@ -369,7 +368,7 @@ class EL2_Data(Data_Set):
         # tensor type and device
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
-        self.build_new_dataset = create_data_set(input_info.input_names, self.objs_to_evaluate, 'EL2', 'optimisation_set_4')
+        self.build_new_dataset = create_data_set(input_info.input_names, self.objs_to_evaluate, optimisation_name)
     
     def find_ppa_result(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
@@ -447,13 +446,12 @@ class EL2_Data(Data_Set):
 
 class create_data_set:
     """This class is implemented to accelerate the redundant synthesis and simulation process"""
-    def __init__(self, input_name, objective_name, proc_name, optimisation_set_name):
+    def __init__(self, input_name, objective_name, optimisation_set_name):
         self.input_name = input_name
         self.input_dim = len(input_name)
         self.objective_name = list(objective_name)
         self.names = input_name + objective_name
-        self.file_name = f'../object_functions/Dataset/{proc_name}_dataset_record_{self.input_dim}_{len(self.objective_name)}_P{optimisation_set_name}.txt'
-        print("self.file_name: ", self.file_name)
+        self.file_name = f'../object_functions/Dataset/{optimisation_set_name}.txt'
         match_file = True
         if osp.exists(self.file_name):
             with open(self.file_name, 'r') as file:

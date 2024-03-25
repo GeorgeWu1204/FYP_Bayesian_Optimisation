@@ -52,6 +52,7 @@ def parse_constraints(filename, device):
     output_objective = {}
     output_constraints = {}
     optimisation_target = None
+    optimisation_name = None
     # Open and read the file
     with open(filename, 'r') as file:
         lines = file.readlines()
@@ -61,7 +62,10 @@ def parse_constraints(filename, device):
         for line in lines:
             line = line.strip()
             # Update the section based on the line content
-            if line.startswith('#input self constraint'):
+            if line.startswith('#Name'):
+                parts = line.split()
+                optimisation_name = parts[1]
+            elif line.startswith('#input self constraint'):
                 section = 'self_constraint'
             elif line.startswith('#input coupled constraint'):
                 section = 'coupled_constraint'
@@ -137,7 +141,7 @@ def parse_constraints(filename, device):
     # Start to Fill in the constraints information
     input_info = fill_constraints(self_constraints, coupled_constraints, device)
     input_info.constants = input_constant
-    return input_info, output_info, parameter_tuner
+    return input_info, output_info, parameter_tuner, optimisation_name
 
 if __name__ == '__main__':
     input_info, output_info, _ = parse_constraints('../specification/input_spec_optimisation_set_3.txt', )

@@ -93,15 +93,6 @@ def encapsulate_obj_tensor_into_dict(objs, obj_tensor):
         obj_index += 1
     return obj_dict 
 
-def encapsulate_input_tensor_into_dict(input_tensor, input_var_names):
-    """This function is used to facilitate the recording of the input results"""
-    input_dict = {}
-    input_index = 0
-    for var in input_var_names:
-        input_dict[var] = input_tensor[... , input_index].item()
-        input_index += 1
-    return input_dict
-
 
 def extract_best_from_initialisation_results(initial_train_x, initial_obj, hypervolumes, obj_to_opt, obj_const):
     """This function is used to extract the best results from the initialisation sampling process."""
@@ -124,20 +115,6 @@ def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, t_type, device):
             ref_points[ref_point_index] = 1
         ref_point_index += 1
     return ref_points
-
-def find_samples_brute_force(input_info):
-    """This function is used for brute force optimisation to prepare all the samples"""
-    print("input_info scales", input_info.input_scales)
-    print("input_info offsets", input_info.input_offsets)
-    print("input_info exp", input_info.input_exp)
-    print("input_input_normalized_factor", input_info.input_normalized_factor)
-    print("input_info self_constraints", input_info.self_constraints)
-    quit()
-    # for i in range(len(ranges)):
-    #     ranges[i] = list(range(ranges[i][0], ranges[i][1] + 1))
-    # combinations = list(itertools.product(*ranges))
-    # vectors = [list(combination) for combination in combinations]
-    # return vectors
 
 def calculate_volumes_for_brute_force(objs, normalised_factors, objs_to_optimise_dim):
     """This function is used for brute force optimisation to calculate the volume of the design space"""
@@ -243,7 +220,7 @@ class recorded_training_result:
                     f.write("\n")
     
 
-class brute_force_training_result:
+class other_model_training_result:
     """This class is used to record the results of brute force optimisation."""
     def __init__(self, input_vars, objectives, overall_iteration_size, record_file_name):
         self.history = {}
@@ -252,8 +229,8 @@ class brute_force_training_result:
         self.record_file_name = record_file_name
         for i in range(overall_iteration_size):
             self.history[i] = {}
-    def record(self, iteration, sample_input, sample_result, best_objs, time):
-        self.history[iteration] = [sample_input, sample_result, best_objs, time]
+    def record(self, iteration, sample_input, sample_volume, best_objs, time):
+        self.history[iteration] = [sample_input, sample_volume, best_objs, time]
     
     def store(self):
         total_time = 0
@@ -267,13 +244,13 @@ class brute_force_training_result:
             f.write("\n")
             for i in range(len(self.history)):
                 valid_history = self.history.get(i, None)
-                if(valid_history != {}):
+                if(valid_history != {} and valid_history != None):
                     total_time += valid_history[3]
                     f.write(f"{i}, {total_time:>4.2f}")
                     for input in valid_history[0]:
-                        f.write(f", {input}")
+                        f.write(f", {input.item()}")
                     f.write(f", {valid_history[1]}")
-                    for obj in range(len(self.objs)):
+                    for obj in self.objs:
                         result = valid_history[2][obj]
                         f.write(f", {result}")
                     f.write("\n")
