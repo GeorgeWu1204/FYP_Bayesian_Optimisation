@@ -5,7 +5,7 @@ import math
 
 def fill_constraints(self_constraints, coupled_constraints, device):
     """this function is used to fill the constraints in the interface"""
-    # self_constraints: {var_name: [lower_bound, upper_bound, scale]}
+    # self_constraints: {var_name: [lower_bound, upper_bound, scale, exp]}
     # coupled_constraints: [{var_name: [lower_bound, upper_bound], var_name: [lower_bound, upper_bound]},... ]
     input_dim = len(self_constraints)
     input_scales = [1] * input_dim
@@ -136,7 +136,7 @@ def parse_constraints(filename, device):
     output_info = Output_Info(output_objective, output_constraints, optimisation_target)
     # Start to Fill in the constraints information
     input_info = fill_constraints(self_constraints, coupled_constraints, device)
-    
+    input_info.constants = input_constant
     return input_info, output_info, parameter_tuner
 
 if __name__ == '__main__':

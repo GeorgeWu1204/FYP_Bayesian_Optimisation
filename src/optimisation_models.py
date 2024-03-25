@@ -86,48 +86,42 @@ class optimisation_model():
         new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
         new_con_obj = data_set.check_qNEHVI_constraints(new_normalised_obj)
         if new_con_obj.item() <= 0.0:
-            hyper_vol = calculate_hypervolume(self.ref_points, new_normalised_obj)
+            hyper_vol = calculate_hypervolume(self.ref_points, new_normalised_obj, self.OBJECTIVES_TO_OPTIMISE_DIM)
         else:
             hyper_vol = 0.0
         new_train_obj = torch.cat([new_normalised_obj[..., : self.OBJECTIVES_TO_OPTIMISE_DIM], new_con_obj], dim=-1)
         return valid_generated_sample, new_x, new_exact_obj, new_train_obj, hyper_vol
 
 
-
-
-
-
-
-### Other Models
-def brute_force(INPUT_VARIABLES, data_set, constraint_set, obj_normalized_factors, OBJECTIVES_TO_OPTIMISE_DIM, record, results_record, INPUT_CONSTANT):
+### <----------------- Other Models ----------------->
+def brute_force(output_info, ref_points, data_set, record, results_record):
     # Global Best Values
     best_volume = 100
     best_sample = None  
     best_results = [data_set.worst_value[obj] for obj in data_set.objs_direct]
-    sample_inputs = find_samples_brute_force(INPUT_VARIABLES)
-    random.shuffle(sample_inputs)
-    overall_iteration_required = len(sample_inputs)
+    sample_inputs = data_set.find_all_possible_designs()
+    shuffled_tensor = sample_inputs[torch.randperm(sample_inputs.size(0))]
+    overall_iteration_required = shuffled_tensor.shape[0]
     print("overall_iteration_required: ", overall_iteration_required)
     #Optimisation Loop
     for iteration in range(overall_iteration_required):
         t0 = time.monotonic()
-        sample_input = sample_inputs[iteration]
-        if constraint_set.check_meet_self_constraint_for_brute_force(sample_input) == True:
-            result = data_set.find_single_ppa_result_for_unnormalised_sample(sample_input)
-            if result == None:
-                continue
-            if constraint_set.check_meet_output_obj_constraint_for_brute_force(result, OBJECTIVES_TO_OPTIMISE_DIM) == True:
-                volume = calculate_volumes_for_brute_force(result, obj_normalized_factors, OBJECTIVES_TO_OPTIMISE_DIM)
-                if volume < best_volume:
-                    best_volume = volume
-                    best_sample = sample_input
-                    best_results = result
-            else:
-                continue
+        sample_input = sample_inputs[iteration].unsqueeze(0)
+        valid_sample, possible_obj = data_set.find_ppa_result(sample_input)
+        if valid_sample == False:
+            continue
+        normalised_obj = data_set.normalise_output_data_tensor(possible_obj)
+        con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
+        if con_obj.item() <= 0.0:
+            volume = calculate_hypervolume(ref_points, possible_obj, output_info.obj_to_optimise_dim)
+            if volume < best_volume:
+                best_volume = volume
+                best_sample = sample_input
+                best_results = possible_obj
+        else:
+            continue
         t1 = time.monotonic()
         if record:
-            for index in INPUT_CONSTANT.keys():
-                del sample_input[index]
             results_record.record(iteration, sample_input, 1-volume, best_results, t1-t0)
     print(f"{Fore.GREEN}best_volume: {best_volume}, best_sample: {best_sample}, best_results: {best_results}{Style.RESET_ALL}")
     if record:

@@ -7,7 +7,7 @@ from colorama import Fore, Style
 
 from interface import parse_constraints
 from sampler import initial_sampler
-from optimisation_models import optimisation_models
+from optimisation_models import optimisation_model
 
 from train_set import train_set_records
 from botorch.sampling.normal import SobolQMCNormalSampler
@@ -24,11 +24,8 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 t_type = torch.float64
 
 # Input Settings
-CONSTRAINT_FILE = '../specification/input_spec_optimisation_set_3.txt'
+CONSTRAINT_FILE = '../specification/input_spec_optimisation_set_4.txt'
 input_info, output_info, param_tuner = parse_constraints(CONSTRAINT_FILE, device)
-print(input_info.input_names)
-print(output_info.obj_to_optimise)
-print(output_info.optimisation_target)
 
 # Dataset Settings
 if output_info.optimisation_target == 'synthetic':
@@ -50,7 +47,6 @@ print(f"Optimisation Device : {output_info.optimisation_target}")
 print(f"Objectives to Optimise: {output_info.obj_to_optimise}")
 print(f"Output Objective Constraint: {output_info.output_constraints}")
 print("<--------------------------------------------------->")
-
 # Train Set Settings
 TRAIN_SET_DISTURBANCE_RANGE = 0.01                  # noise standard deviation for objective
 TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2                # acceptable distance between the rounded vertex and the real vertex
@@ -59,7 +55,7 @@ TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2                # acceptable distance betwee
 NUM_RESTARTS = 4                # number of starting points for BO for optimize_acqf
 NUM_OF_INITIAL_POINT = 16       # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
-N_BATCH = 50                    # number of BO batches (inner loop)
+N_BATCH = 32                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 128                # number of MC samples for qNEI
 RAW_SAMPLES = 8                 # number of raw samples for qNEI
@@ -97,7 +93,7 @@ if record:
 # Global Best Values
 best_hyper_vols_per_trial = []
 best_sample_points_per_trial = {trial : {input : 0.0 for input in input_info.input_names} for trial in range(1, N_TRIALS + 1)}
-optimisation_model = optimisation_models(NUM_RESTARTS, NUM_OF_INITIAL_POINT, BATCH_SIZE, RAW_SAMPLES, MC_SAMPLES, ref_points, output_info.obj_to_optimise_dim, t_type, device)
+optimisation_model = optimisation_model(NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type)
 
 #Optimisation Loop
 for trial in range (1, N_TRIALS + 1):
@@ -119,9 +115,6 @@ for trial in range (1, N_TRIALS + 1):
     train_set_storage.store_initial_data(train_x_ei)
     mll_ei, model_ei = optimisation_model.initialize_model(train_x_ei, train_obj_ei)
     #reset the best observation
-    # best_observation_per_interation = {obj : None for obj in OBJECTIVES_TO_OPTIMISE.keys()}
-    # best_constraint_per_interation = {obj : None for obj in OUTPUT_OBJECTIVE_CONSTRAINT.keys()}
-    # best_hyper_vol_per_interation = 0.0
     best_sample_point_per_interation, best_observation_per_interation, best_constraint_per_interation, best_hyper_vol_per_interation = \
         utils.extract_best_from_initialisation_results(train_x_ei, exact_obj_ei, hyper_vol_ei, output_info.obj_to_optimise, output_info.output_constraints)
     for iteration in range(1, N_BATCH + 1):

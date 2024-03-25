@@ -148,7 +148,7 @@ class Input_Constraints:
         return inequality_constraints
     
             
-class Constraints_Brute_Force:
+class Simpler_Constraints:
     def __init__(self, obj_to_optimise_dim, obj_to_check_constraints_dim):
         self.self_constraints = []
         self.output_obj_constraint = []

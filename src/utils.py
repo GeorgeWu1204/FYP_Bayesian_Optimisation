@@ -68,7 +68,7 @@ def recover_single_input_data(input_tensor, normalised_factor, scales, offsets, 
 
 def recover_unrounded_input_data(input_tensor, input_info, type, device):
     """This function is to find the unrounded version of the real input from the x tensor in recording process"""
-    if input_info.input_exp is not None:
+    if input_info.input_exp is not None and input_info.input_exp > 1:
         results = torch.tensor(input_info.input_exp, dtype=type, device=device) ** (torch.round(input_tensor * torch.tensor(input_info.input_normalized_factor, dtype=type, device=device)) * torch.tensor(input_info.input_scales, dtype=type, device=device) + torch.tensor(input_info.input_offsets, dtype=type, device=device))
     else:
         results = input_tensor * torch.tensor(input_info.input_normalized_factor, dtype=type, device=device) * torch.tensor(input_info.input_scales, dtype=type, device=device) + torch.tensor(input_info.input_offsets, dtype=type, device=device)
@@ -115,9 +115,6 @@ def extract_best_from_initialisation_results(initial_train_x, initial_obj, hyper
 
 def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, t_type, device):
     """This function is used to find the reference points for qNEHVI optimisation"""
-    print("-----test-----")
-    print(OBJECTIVES_DIM)
-    print(OBJECTIVES)
     ref_points = torch.empty((OBJECTIVES_DIM), device=device, dtype=t_type)
     ref_point_index = 0
     for obj in OBJECTIVES.keys():
@@ -128,13 +125,19 @@ def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, t_type, device):
         ref_point_index += 1
     return ref_points
 
-def find_samples_brute_force(ranges):
+def find_samples_brute_force(input_info):
     """This function is used for brute force optimisation to prepare all the samples"""
-    for i in range(len(ranges)):
-        ranges[i] = list(range(ranges[i][0], ranges[i][1] + 1))
-    combinations = list(itertools.product(*ranges))
-    vectors = [list(combination) for combination in combinations]
-    return vectors
+    print("input_info scales", input_info.input_scales)
+    print("input_info offsets", input_info.input_offsets)
+    print("input_info exp", input_info.input_exp)
+    print("input_input_normalized_factor", input_info.input_normalized_factor)
+    print("input_info self_constraints", input_info.self_constraints)
+    quit()
+    # for i in range(len(ranges)):
+    #     ranges[i] = list(range(ranges[i][0], ranges[i][1] + 1))
+    # combinations = list(itertools.product(*ranges))
+    # vectors = [list(combination) for combination in combinations]
+    # return vectors
 
 def calculate_volumes_for_brute_force(objs, normalised_factors, objs_to_optimise_dim):
     """This function is used for brute force optimisation to calculate the volume of the design space"""

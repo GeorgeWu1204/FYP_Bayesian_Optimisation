@@ -5,15 +5,12 @@ make -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-
 make[1]: Entering directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
 make[1]: Nothing to be done for 'all'.
 make[1]: Leaving directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
-BUILD_PATH=snapshots/default /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/configs/veer.config -target=default -set=btb_size=32 -set=lsu_num_nbload=2 -set=btb_enable=1 -set=lsu_stbuf_depth=2 -set=dccm_size=64 -set=dccm_num_banks=4 -set=iccm_size=4 -set=iccm_num_banks=8 
-veer: Set(s) requested : btb_size=32 lsu_num_nbload=2 btb_enable=1 lsu_stbuf_depth=2 dccm_size=64 dccm_num_banks=4 iccm_size=4 iccm_num_banks=8
-veer: Overriding btb_size value 512 with 32
-veer: Overriding lsu_num_nbload value 4 with 2
-veer: Overriding lsu_stbuf_depth value 4 with 2
-veer: Overriding iccm_num_banks value 4 with 8
-veer: Overriding iccm_size value 64 with 4
-veer: Setting default iccm region to region 0xa
-veer: Aligning default iccm offset to top of region @ 0x0ffff000
+BUILD_PATH=snapshots/default /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/configs/veer.config -target=default -set=btb_size=64 -set=lsu_num_nbload=8 -set=lsu_stbuf_depth=8 -set=dccm_size=64 -set=iccm_size=512 
+veer: Set(s) requested : btb_size=64 lsu_num_nbload=8 lsu_stbuf_depth=8 dccm_size=64 iccm_size=512
+veer: Overriding btb_size value 512 with 64
+veer: Overriding lsu_num_nbload value 4 with 8
+veer: Overriding lsu_stbuf_depth value 4 with 8
+veer: Overriding iccm_size value 64 with 512
 
 VeeR configuration for target=default
 
@@ -23,23 +20,23 @@ veer: bht_array_depth                = 256
 veer: bht_ghr_hash_1                 = 1
 veer: bht_ghr_range                  = 7:0
 veer: bht_ghr_size                   = 8
-veer: bht_hash_string                = {ghr[7:4], hashin[5:2]^ghr[4-1:0]} // cf1
+veer: bht_hash_string                = {ghr[7:5], hashin[6:2]^ghr[5-1:0]} // cf1
 veer: bht_size                       = 512
-veer: btb_addr_hi                    = 5
+veer: btb_addr_hi                    = 6
 veer: btb_addr_lo                    = 2
-veer: btb_array_depth                = 16
-veer: btb_btag_fold                  = 1
-veer: btb_btag_size                  = 9
+veer: btb_array_depth                = 32
+veer: btb_btag_fold                  = 0
+veer: btb_btag_size                  = 8
 veer: btb_enable                     = 1
 veer: btb_fold2_index_hash           = 0
 veer: btb_fullya                     = 0
-veer: btb_index1_hi                  = 5
+veer: btb_index1_hi                  = 6
 veer: btb_index1_lo                  = 2
-veer: btb_index2_hi                  = 9
-veer: btb_index2_lo                  = 6
-veer: btb_index3_hi                  = 13
-veer: btb_index3_lo                  = 10
-veer: btb_size                       = 32
+veer: btb_index2_hi                  = 11
+veer: btb_index2_lo                  = 7
+veer: btb_index3_hi                  = 16
+veer: btb_index3_lo                  = 12
+veer: btb_size                       = 64
 veer: btb_toffset_size               = 12
 veer: bus_prty_default               = 3
 veer: dma_bus_id                     = 1
@@ -50,7 +47,7 @@ veer: ifu_bus_prty                   = 2
 veer: ifu_bus_tag                    = 3
 veer: lsu_bus_id                     = 1
 veer: lsu_bus_prty                   = 2
-veer: lsu_bus_tag                    = 2
+veer: lsu_bus_tag                    = 4
 veer: sb_bus_id                      = 1
 veer: sb_bus_prty                    = 2
 veer: sb_bus_tag                     = 1
@@ -70,9 +67,9 @@ veer: fpga_optimize                  = 1
 veer: iccm_icache                    = 1
 veer: load_to_use_plus1              = 0
 veer: lsu2dma                        = 0
-veer: lsu_num_nbload                 = 2
-veer: lsu_num_nbload_width           = 1
-veer: lsu_stbuf_depth                = 2
+veer: lsu_num_nbload                 = 8
+veer: lsu_num_nbload_width           = 3
+veer: lsu_stbuf_depth                = 8
 veer: opensource                     = 0
 veer: timer_legal_en                 = 1
 veer: verilator                      = 
@@ -133,27 +130,27 @@ veer: icache_tag_lo                  = 13
 veer: icache_tag_num_bypass          = 2
 veer: icache_tag_num_bypass_width    = 2
 veer: icache_waypack                 = 1
-veer: iccm_bank_bits                 = 3
-veer: iccm_bank_hi                   = 4
-veer: iccm_bank_index_lo             = 5
-veer: iccm_bits                      = 12
-veer: iccm_data_cell                 = ram_128x39
-veer: iccm_eadr                      = 0xafffffff
+veer: iccm_bank_bits                 = 2
+veer: iccm_bank_hi                   = 3
+veer: iccm_bank_index_lo             = 4
+veer: iccm_bits                      = 19
+veer: iccm_data_cell                 = ram_32768x39
+veer: iccm_eadr                      = 0xee07ffff
 veer: iccm_enable                    = 1
-veer: iccm_index_bits                = 7
-veer: iccm_num_banks                 = 8
-veer: iccm_num_banks_8               = 
-veer: iccm_offset                    = 0x0ffff000
-veer: iccm_region                    = 0xa
-veer: iccm_reserved                  = 0x400
-veer: iccm_rows                      = 128
-veer: iccm_sadr                      = 0xaffff000
-veer: iccm_size                      = 4
-veer: iccm_size_4                    = 
-veer: debug_sb_mem                   = 0xb0580000
-veer: external_data                  = 0xd0580000
-veer: external_data_1                = 0xc0000000
-veer: serialio                       = 0xe0580000
+veer: iccm_index_bits                = 15
+veer: iccm_num_banks                 = 4
+veer: iccm_num_banks_4               = 
+veer: iccm_offset                    = 0xe000000
+veer: iccm_region                    = 0xe
+veer: iccm_reserved                  = 0x1000
+veer: iccm_rows                      = 32768
+veer: iccm_sadr                      = 0xee000000
+veer: iccm_size                      = 512
+veer: iccm_size_512                  = 
+veer: debug_sb_mem                   = 0xa0580000
+veer: external_data                  = 0xc0580000
+veer: external_data_1                = 0xb0000000
+veer: serialio                       = 0xd0580000
 veer: unused_region0                 = 0x90000000
 veer: unused_region1                 = 0x70000000
 veer: unused_region2                 = 0x60000000
@@ -255,8 +252,8 @@ riscv64-unknown-elf-cpp -Isnapshots/default  /home/hw1020/Documents/FYP_Bayesian
 riscv64-unknown-elf-as -mabi=ilp32 -march=rv32imc crt0.cpp.s -o crt0.o
 riscv64-unknown-elf-gcc -Isnapshots/default --specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs -finline-limit=400 -mbranch-cost=1 -Ofast -fno-code-hoisting -funroll-all-loops -DCOMPILER_FLAGS="\"-finline-limit=400 -mbranch-cost=1 -Ofast -fno-code-hoisting -funroll-all-loops\"" -mabi=ilp32 -march=rv32imc -c /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/printf.c -o printf.o
 riscv64-unknown-elf-gcc -Isnapshots/default --specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs -finline-limit=400 -mbranch-cost=1 -Ofast -fno-code-hoisting -funroll-all-loops -DCOMPILER_FLAGS="\"-finline-limit=400 -mbranch-cost=1 -Ofast -fno-code-hoisting -funroll-all-loops\"" -mabi=ilp32 -march=rv32imc -c /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark.c -o cmark.o
-Building cmark
-riscv64-unknown-elf-gcc -mabi=ilp32 -march=rv32imac --verbose -Wl,-Map=cmark.map -T/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark.ld --specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs  -nostartfiles crt0.o printf.o cmark.o -o cmark.exe
+Building cmark_dccm
+riscv64-unknown-elf-gcc -mabi=ilp32 -march=rv32imac --verbose -Wl,-Map=cmark_dccm.map -T/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark_dccm.ld --specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs  -nostartfiles crt0.o printf.o cmark.o -o cmark_dccm.exe
 Using built-in specs.
 Reading specs from /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs
 rename spec link to picolibc_link
@@ -272,13 +269,13 @@ Supported LTO compression algorithms: zlib
 gcc version 10.2.0 () 
 COMPILER_PATH=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/:/usr/lib/gcc/riscv64-unknown-elf/10.2.0/:/usr/lib/gcc/riscv64-unknown-elf/:/usr/lib/gcc/riscv64-unknown-elf/10.2.0/:/usr/lib/gcc/riscv64-unknown-elf/
 LIBRARY_PATH=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/rv32imac/ilp32/:/usr/lib/gcc/riscv64-unknown-elf/10.2.0/
-COLLECT_GCC_OPTIONS='-mabi=ilp32' '-march=rv32imac' '-v' '-T' '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark.ld' '-specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs' '-nostartfiles' '-o' 'cmark.exe'
- /usr/lib/gcc/riscv64-unknown-elf/10.2.0/collect2 -plugin /usr/lib/gcc/riscv64-unknown-elf/10.2.0/liblto_plugin.so -plugin-opt=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/cctRXOSv.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -L/home/hw1020/Documents/Possible_Designs/Cores-VeeR-EL2/third_party/picolibc/install/picolibc/riscv64-unknown-elf/lib/rv32imac/ilp32 -L/home/hw1020/Documents/Possible_Designs/Cores-VeeR-EL2/third_party/picolibc/install/picolibc/riscv64-unknown-elf/lib -melf32lriscv --gc-sections -o cmark.exe -L/usr/lib/gcc/riscv64-unknown-elf/10.2.0/rv32imac/ilp32 -L/usr/lib/gcc/riscv64-unknown-elf/10.2.0 -Map=cmark.map crt0.o printf.o cmark.o -lgcc --start-group -lgcc -lc --end-group -lgcc -T /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark.ld
-COLLECT_GCC_OPTIONS='-mabi=ilp32' '-march=rv32imac' '-v' '-T' '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark.ld' '-specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs' '-nostartfiles' '-o' 'cmark.exe'
-riscv64-unknown-elf-objcopy -O verilog  cmark.exe program.hex
-riscv64-unknown-elf-objdump -S  cmark.exe > cmark.dis
-riscv64-unknown-elf-nm -B -n cmark.exe > cmark.sym
-Completed building cmark
+COLLECT_GCC_OPTIONS='-mabi=ilp32' '-march=rv32imac' '-v' '-T' '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark_dccm.ld' '-specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs' '-nostartfiles' '-o' 'cmark_dccm.exe'
+ /usr/lib/gcc/riscv64-unknown-elf/10.2.0/collect2 -plugin /usr/lib/gcc/riscv64-unknown-elf/10.2.0/liblto_plugin.so -plugin-opt=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccukl6LX.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -L/home/hw1020/Documents/Possible_Designs/Cores-VeeR-EL2/third_party/picolibc/install/picolibc/riscv64-unknown-elf/lib/rv32imac/ilp32 -L/home/hw1020/Documents/Possible_Designs/Cores-VeeR-EL2/third_party/picolibc/install/picolibc/riscv64-unknown-elf/lib -melf32lriscv --gc-sections -o cmark_dccm.exe -L/usr/lib/gcc/riscv64-unknown-elf/10.2.0/rv32imac/ilp32 -L/usr/lib/gcc/riscv64-unknown-elf/10.2.0 -Map=cmark_dccm.map crt0.o printf.o cmark.o -lgcc --start-group -lgcc -lc --end-group -lgcc -T /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark_dccm.ld
+COLLECT_GCC_OPTIONS='-mabi=ilp32' '-march=rv32imac' '-v' '-T' '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark_dccm.ld' '-specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs' '-nostartfiles' '-o' 'cmark_dccm.exe'
+riscv64-unknown-elf-objcopy -O verilog  cmark_dccm.exe program.hex
+riscv64-unknown-elf-objdump -S  cmark_dccm.exe > cmark_dccm.dis
+riscv64-unknown-elf-nm -B -n cmark_dccm.exe > cmark_dccm.sym
+Completed building cmark_dccm
 verilator  --cc -CFLAGS -std=c++11 snapshots/default/common_defines.vh /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/include/el2_def.sv snapshots/default/el2_pdef.vh \
   -Isnapshots/default -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/flist \
   -Wno-WIDTH -Wno-UNOPTFLAT -Wno-IMPLICITSTATIC \
@@ -300,5 +297,73 @@ ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/shar
 ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__2.o Vtb_top___024root__DepSet_h9ad02603__2.cpp
 ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__3.o Vtb_top___024root__DepSet_h9ad02603__3.cpp
 ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__4.o Vtb_top___024root__DepSet_h9ad02603__4.cpp
-make[1]: *** [/usr/local/share/verilator/include/verilated.mk:272: Vtb_top___024root__DepSet_h9ad02603__4.o] Interrupt
-make: *** [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/tools/Makefile:152: verilator-build] Interrupt
+ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__5.o Vtb_top___024root__DepSet_h9ad02603__5.cpp
+ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__6.o Vtb_top___024root__DepSet_h9ad02603__6.cpp
+ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top___024root__DepSet_h9ad02603__7.o Vtb_top___024root__DepSet_h9ad02603__7.cpp
+ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0.o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0.cpp
+ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.fast -c -o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0.o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -x c++-header Vtb_top__pch.h -o Vtb_top__pch.h.slow.gch
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top__ConstPool_0.o Vtb_top__ConstPool_0.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__Slow.o Vtb_top___024root__Slow.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__DepSet_h7f86b803__0__Slow.o Vtb_top___024root__DepSet_h7f86b803__0__Slow.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__DepSet_h7f86b803__1__Slow.o Vtb_top___024root__DepSet_h7f86b803__1__Slow.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__DepSet_h9ad02603__0__Slow.o Vtb_top___024root__DepSet_h9ad02603__0__Slow.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__DepSet_h9ad02603__1__Slow.o Vtb_top___024root__DepSet_h9ad02603__1__Slow.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024root__DepSet_h9ad02603__2__Slow.o Vtb_top___024root__DepSet_h9ad02603__2__Slow.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024unit__Slow.o Vtb_top___024unit__Slow.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top___024unit__DepSet_hba4cee98__0__Slow.o Vtb_top___024unit__DepSet_hba4cee98__0__Slow.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top_el2_configurable_gw__Slow.o Vtb_top_el2_configurable_gw__Slow.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0__Slow.o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0__Slow.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top_el2_configurable_gw__DepSet_hb570c3f5__0__Slow.o Vtb_top_el2_configurable_gw__DepSet_hb570c3f5__0__Slow.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top_el2_mem_if__Slow.o Vtb_top_el2_mem_if__Slow.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0__Slow.o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0__Slow.cpp
+ccache g++   -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable     -std=c++11   -include Vtb_top__pch.h.slow -c -o Vtb_top__Syms.o Vtb_top__Syms.cpp
+echo "" > Vtb_top__ALL.verilator_deplist.tmp
+Archive ar -rcs Vtb_top__ALL.a Vtb_top.o Vtb_top___024root__DepSet_h7f86b803__0.o Vtb_top___024root__DepSet_h7f86b803__1.o Vtb_top___024root__DepSet_h7f86b803__2.o Vtb_top___024root__DepSet_h9ad02603__0.o Vtb_top___024root__DepSet_h9ad02603__1.o Vtb_top___024root__DepSet_h9ad02603__2.o Vtb_top___024root__DepSet_h9ad02603__3.o Vtb_top___024root__DepSet_h9ad02603__4.o Vtb_top___024root__DepSet_h9ad02603__5.o Vtb_top___024root__DepSet_h9ad02603__6.o Vtb_top___024root__DepSet_h9ad02603__7.o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0.o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0.o Vtb_top__ConstPool_0.o Vtb_top___024root__Slow.o Vtb_top___024root__DepSet_h7f86b803__0__Slow.o Vtb_top___024root__DepSet_h7f86b803__1__Slow.o Vtb_top___024root__DepSet_h9ad02603__0__Slow.o Vtb_top___024root__DepSet_h9ad02603__1__Slow.o Vtb_top___024root__DepSet_h9ad02603__2__Slow.o Vtb_top___024unit__Slow.o Vtb_top___024unit__DepSet_hba4cee98__0__Slow.o Vtb_top_el2_configurable_gw__Slow.o Vtb_top_el2_configurable_gw__DepSet_h5a2605f5__0__Slow.o Vtb_top_el2_configurable_gw__DepSet_hb570c3f5__0__Slow.o Vtb_top_el2_mem_if__Slow.o Vtb_top_el2_mem_if__DepSet_h70b8fc88__0__Slow.o Vtb_top__Syms.o
+g++     test_tb_top.o verilated.o verilated_threads.o Vtb_top__ALL.a    -pthread -lpthread -latomic   -o Vtb_top
+rm Vtb_top__ALL.verilator_deplist.tmp
+make[1]: Leaving directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/obj_dir'
+touch verilator-build
+# FIXME: Assuming here that either begin_signature or end_signature implies
+# that both symbols are present.
+grep -E "(begin|end)_signature" cmark_dccm.sym >/dev/null 2>&1; \
+if [ $? -eq 0 ]; then \
+	BEG=`grep "begin_signature" cmark_dccm.sym | cut -d\  -f 1`;\
+	END=`grep "end_signature"   cmark_dccm.sym | cut -d\  -f 1`;\
+	./obj_dir/Vtb_top --mem-signature ${BEG} ${END}; \
+else \
+	./obj_dir/Vtb_top; \
+fi
+
+VerilatorTB: Start of sim
+
+mem_signature_begin = 00000000
+mem_signature_end   = 00000000
+mem_mailbox         = D0580000
+DCCM pre-load from f0040000 to f0041710
+2K performance run parameters for coremark.
+CoreMark Size    : 666
+Total ticks      : 280809
+Total time (secs): 280
+Iterat/Sec/MHz   : 3.57
+Iterations       : 1
+Compiler version : GCC10.2.0
+
+Compiler flags   : -finline-limit=400 -mbranch-cost=1 -Ofast -fno-code-hoisting -funroll-all-loops
+
+Memory location  : STATIC
+
+seedcrc          : 0xe9f5
+[0]crclist       : 0xe714
+[0]crcmatrix     : 0x1fd7
+[0]crcstate      : 0x8e3a
+[0]crcfinal      : 0xe714
+Correct operation validated. See readme.txt for run and reporting rules.
+TEST_PASSED
+
+Finished : minstret = 282995, mcycle = 297715
+See "exec.log" for execution trace with register updates..
+
+- /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tb_top.sv:380: Verilog $finish
+
+VerilatorTB: End of sim

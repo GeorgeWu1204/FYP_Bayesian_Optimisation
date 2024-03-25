@@ -104,7 +104,7 @@ class Data_Set:
                 obj_index += 1
         self.output_constraints_to_check = []
         for obj in output_info.output_constraints:
-            self.output_constraints_to_check.append([self.normalise_single_output_data(bound,obj) for bound in output_obj_constraint[obj]])
+            self.output_constraints_to_check.append([self.normalise_single_output_data(bound,obj) for bound in output_info.output_constraints[obj]])
             self.best_value[obj] = output_info.output_constraints[obj][1]
             self.worst_value[obj] = 0.0
         print("self.constrains_to_check: ", self.output_constraints_to_check)
@@ -120,7 +120,7 @@ class Data_Set:
         result = (input_data - min(self.best_value[obj], self.worst_value[obj])) / abs(self.best_value[obj] - self.worst_value[obj])
         return result
     
-    def format_input_data(self, input_data):
+    def format_and_add_const_to_data(self, input_data):
         """This function is used to add constant input to the input data to make it able to find the ppa result"""
         for index in self.input_constants.keys():
             input_data.insert(index, self.input_constants[index])
@@ -133,7 +133,7 @@ class Data_Set:
         obj_index = 0
         for i in range(num_restart):
             input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.input_scales_factors, self.input_offsets)
-            sample_input = self.format_input_data(input)
+            sample_input = self.format_and_add_const_to_data(input)
             for obj_index in range(self.objs_to_evaluate_dim):
                 obj = self.objs_to_evaluate[obj_index]
                 results[i][obj_index] = self.__dict__.get(sample_input).get_ppa(obj)
@@ -144,7 +144,7 @@ class Data_Set:
 
     def find_single_ppa_result_for_unnormalised_sample(self, sample_input):
         """This function is used to find the ppa result for a single input, only used in result recording"""
-        formatted_input = self.format_input_data(sample_input)
+        formatted_input = self.format_and_add_const_to_data(sample_input)
         result = []
         for  obj in self.objs_to_evaluate:
             result.append(self.__dict__.get(tuple(formatted_input)).get_ppa(obj))
@@ -268,7 +268,7 @@ class NutShell_Data(Data_Set):
         for i in range(num_restart):
             # num_restart needs to be fixed to 1
             input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.input_scales_factors, self.input_offsets)
-            sample_input = self.format_input_data(input)
+            sample_input = self.format_and_add_const_to_data(input)
             # Modify the paramter settings
             utilisation_percentage = self.build_new_dataset.find_corresponding_data(sample_input)
             if utilisation_percentage is None:
@@ -369,7 +369,7 @@ class EL2_Data(Data_Set):
         # tensor type and device
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
-        self.build_new_dataset = create_data_set(input_info.input_names, self.objs_to_evaluate, 'EL2', 'optimisation_set_3')
+        self.build_new_dataset = create_data_set(input_info.input_names, self.objs_to_evaluate, 'EL2', 'optimisation_set_4')
     
     def find_ppa_result(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
@@ -379,7 +379,7 @@ class EL2_Data(Data_Set):
         for i in range(num_restart):
             # num_restart needs to be fixed to 1
             input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.input_scales_factors, self.input_offsets, self.input_exp)
-            sample_input = self.format_input_data(input)
+            sample_input = self.format_and_add_const_to_data(input)
             # Modify the paramter settings
             utilisation_percentage = self.build_new_dataset.find_corresponding_data(sample_input)
             if utilisation_percentage is None:
@@ -422,6 +422,7 @@ class EL2_Data(Data_Set):
                             results[i][obj_index] = -1 * results[i][obj_index]
                         obj_index += 1
             return True, results
+
     def find_all_possible_designs(self):
         """This function is used to find all the possible designs"""
         print("normalised_Factors", self.input_normalized_factors)
@@ -432,10 +433,17 @@ class EL2_Data(Data_Set):
         combinations = torch.stack(grids, dim=-1).reshape(-1, self.input_normalized_factors.size(0))
         # Use .to() method to ensure the tensor is on the right device and has the right dtype
         combinations = combinations.to(device=self.tensor_device, dtype=self.tensor_type)
+        return combinations
+
+    def brute_design_space_exploration(self):
+        combinations = self.find_all_possible_designs()
         for index in range(combinations.shape[0]):
             print("combinations[index]: ", combinations[index])
             valid, result = self.find_ppa_result(combinations[index].unsqueeze(0))
             print("valid: ", valid, "result: ", result)
+
+
+    
 
 class create_data_set:
     """This class is implemented to accelerate the redundant synthesis and simulation process"""
@@ -500,15 +508,17 @@ class create_data_set:
 
 
 ## Functions
-def generate_initial_data(sampler_generator, NUM_OF_INITIAL_POINT, data_set, ref_points, device, OBJECTIVES_TO_OPTIMISE_DIM, NOISE_SE=0.0):
+def generate_initial_data(sampler_generator, NUM_OF_INITIAL_POINT, data_set, ref_points, device, OBJECTIVES_TO_OPTIMISE_DIM):
     """generate training data"""
     unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set)
     train_obj = torch.cat([normalised_objs[...,:OBJECTIVES_TO_OPTIMISE_DIM], con_objs], dim=-1)
     # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
     generate_size = train_obj.shape[0]
     hypervolumes = torch.zeros(generate_size, device=device)
+    print("ref_points: ", ref_points)
+    print("train_obj: ", train_obj.shape)
     for i in range(generate_size):
-        hypervolumes[i] = calculate_hypervolume(ref_points, train_obj[i].unsqueeze(0))
+        hypervolumes[i] = calculate_hypervolume(ref_points, train_obj[i].unsqueeze(0), OBJECTIVES_TO_OPTIMISE_DIM)
     return unnormalised_train_x, exact_objs, train_obj, hypervolumes
 
 
