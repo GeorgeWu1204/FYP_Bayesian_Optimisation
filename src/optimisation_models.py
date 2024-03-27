@@ -1,8 +1,9 @@
 import random
 import time
 import torch
-from utils import calculate_hypervolume, encapsulate_obj_tensor_into_dict
+from utils import calculate_hypervolume, encapsulate_obj_tensor_into_dict, other_model_training_result
 from colorama import Fore, Style
+import numpy as np
 
 from customised_model import SingleTaskGP_transformed
 from botorch.models.transforms.outcome import Standardize
@@ -11,11 +12,14 @@ from gpytorch.mlls.sum_marginal_log_likelihood import SumMarginalLogLikelihood
 from botorch.acquisition.multi_objective.monte_carlo import qNoisyExpectedHypervolumeImprovement
 from botorch.acquisition.multi_objective.objective import IdentityMCMultiOutputObjective
 from botorch.optim import optimize_acqf
+
+
+from botorch.models import SingleTaskGP
 ### Implemented Models
 
 
 class optimisation_model():
-    def __init__(self, NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type):
+    def __init__(self, NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type, output_constraints_enable=True, categorical_handle_enable=True):
         self.NUM_RESTARTS = NUM_RESTARTS
         self.RAW_SAMPLES = RAW_SAMPLES
         self.BATCH_SIZE = BATCH_SIZE
@@ -26,9 +30,18 @@ class optimisation_model():
         self.output_info = output_info  
         self.device = device
         self.t_type = t_type
-
+        self.output_constraints_enable = output_constraints_enable
+        self.categorical_handle_enable = categorical_handle_enable
+    
     def initialize_model(self, train_x, train_obj):
-        """define models for objective and constraint"""
+        if self.categorical_handle_enable:
+            return self.initialize_custom_model(train_x, train_obj)
+        else:
+            return self.initialize_default_model(train_x, train_obj)
+
+
+    def initialize_custom_model(self, train_x, train_obj):
+        """define models that considers the categorical error for objective and constraint"""
         ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
         models = []
         for obj_index in range(train_obj.shape[-1]): 
@@ -41,6 +54,22 @@ class optimisation_model():
                                         outcome_transform=Standardize(m=1),
                                         tensor_type=self.t_type,
                                         tensor_device=self.device
+                                    ))
+        
+        model = ModelListGP(*models)
+        mll = SumMarginalLogLikelihood(model.likelihood, model)
+        return mll, model
+    
+    def initialize_default_model(self, train_x, train_obj):
+        """define models for objective and constraint"""
+        ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
+        models = []
+        for obj_index in range(train_obj.shape[-1]): 
+            train_y = train_obj[..., obj_index : obj_index + 1]
+            models.append(SingleTaskGP(
+                                        train_x, 
+                                        train_y, 
+                                        outcome_transform=Standardize(m=1)
                                     ))
         
         model = ModelListGP(*models)
@@ -94,7 +123,7 @@ class optimisation_model():
 
 
 ### <----------------- Other Models ----------------->
-def brute_force(output_info, ref_points, data_set, record, results_record):
+def brute_force(input_info, output_info, ref_points, data_set, record, record_file_name):
     # Global Best Values
     best_volume = 0
     best_sample = None  
@@ -102,8 +131,12 @@ def brute_force(output_info, ref_points, data_set, record, results_record):
     sample_inputs = data_set.find_all_possible_designs()
     shuffled_tensor = sample_inputs[torch.randperm(sample_inputs.size(0))]
     overall_iteration_required = shuffled_tensor.shape[0]
-    print("overall_iteration_required: ", overall_iteration_required)
     #Optimisation Loop
+    if record:
+        for obj_name in output_info.obj_to_optimise.keys():
+            record_file_name = record_file_name + obj_name + '_'
+        record_file_name = record_file_name + 'brute_force_record_result.txt'
+        results_record = other_model_training_result(input_info.input_names, output_info.obj_to_optimise, overall_iteration_required, record_file_name)
     for iteration in range(overall_iteration_required):
         t0 = time.monotonic()
         sample_input = sample_inputs[iteration].unsqueeze(0)
@@ -129,9 +162,14 @@ def brute_force(output_info, ref_points, data_set, record, results_record):
         results_record.store()
 
 
-def hill_climbing(input_info, output_info, ref_points, data_set, record, results_record, max_iterations=30, step_size=0.01):
+def hill_climbing(input_info, output_info, ref_points, data_set, record, record_file_name, max_iterations=30, step_size=0.01):
     # Generate initial solution
-    best_volume = 100
+    if record:
+        for obj_name in output_info.obj_to_optimise.keys():
+            record_file_name = record_file_name + obj_name + '_'
+        record_file_name = record_file_name + 'hill_climbing_record_result.txt'
+        results_record = other_model_training_result(input_info.input_names, output_info.obj_to_optimise, max_iterations, record_file_name)
+    best_volume = 0
     best_sample = None  
     best_results = [data_set.worst_value[obj] for obj in data_set.objs_direct]
     current_solution = torch.rand((1, len(input_info.input_names)), device=data_set.tensor_device, dtype=data_set.tensor_type)
@@ -141,15 +179,19 @@ def hill_climbing(input_info, output_info, ref_points, data_set, record, results
         step_directions = torch.randint(low=0, high=2, size=current_solution.size(), device=data_set.tensor_device, dtype=data_set.tensor_type) * 2 - 1  # Randomly choose -1 or 1 for each element
         step = step_directions * step_size
         neighbor_solution = torch.clamp(current_solution + step, min=0, max=1)
+        print("neighbor_solution: ", neighbor_solution)
         # Evaluate the neighbor solution
         valid_sample, possible_obj = data_set.find_ppa_result(neighbor_solution)
         if valid_sample == False:
             continue
         normalised_obj = data_set.normalise_output_data_tensor(possible_obj)
+        print("normalised_obj: ", normalised_obj)
         con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
+        print("con_obj: ", con_obj)
         if con_obj.item() <= 0.0:
             volume = calculate_hypervolume(ref_points, normalised_obj, output_info.obj_to_optimise_dim)
-            if volume < best_volume:
+            print("volume: ", volume)
+            if best_volume < volume:
                 best_volume = volume
                 best_sample = neighbor_solution
                 best_results = possible_obj
@@ -163,5 +205,75 @@ def hill_climbing(input_info, output_info, ref_points, data_set, record, results
         if record:
             results_record.record(iteration, current_solution.squeeze(0), volume, best_objs, t1-t0)
     print(f"{Fore.GREEN}best_volume: {best_volume}, best_sample: {best_sample}, best_results: {best_results}{Style.RESET_ALL}")
+    if record:
+        results_record.store()
+
+
+def genetic_algorithm(input_info, output_info, ref_points, data_set, record, record_file_name, max_generations=30, population_size=10, crossover_rate=0.7, mutation_rate=0.01):
+    if record:
+        for obj_name in output_info.obj_to_optimise.keys():
+            record_file_name = record_file_name + obj_name + '_'
+        record_file_name = record_file_name + 'genetic_algorithm_record_result.txt'
+        results_record = other_model_training_result(input_info.input_names, output_info.obj_to_optimise, max_generations * population_size, record_file_name)
+    # Initialize population
+    population = torch.rand((population_size, len(input_info.input_names)), device=data_set.tensor_device, dtype=data_set.tensor_type)
+
+    best_volume = 0
+    best_sample = None
+    best_results = [data_set.worst_value[obj] for obj in data_set.objs_direct]
+
+    for generation in range(max_generations):
+        t0 = time.monotonic()
+        # Evaluate fitness of each solution
+        fitness = []
+        current_iteration = generation * population_size
+        for i in range(population_size):
+            print(f"population[{i}]: ", population[i])
+            valid_sample, possible_obj = data_set.find_ppa_result(population[i].unsqueeze(0))
+            if not valid_sample:
+                fitness.append(float('inf'))  # Assign a large value for invalid samples
+                continue
+            normalised_obj = data_set.normalise_output_data_tensor(possible_obj)
+            con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
+            if con_obj.item() <= 0.0:
+                volume = calculate_hypervolume(ref_points, normalised_obj, output_info.obj_to_optimise_dim)
+                fitness.append(volume)
+                if best_volume < volume:
+                    best_volume = volume
+                    best_sample = population[i]
+                    best_results = possible_obj
+            else:
+                fitness.append(float('inf'))  # Assign a large value for constrained samples
+            t1 = time.monotonic()
+            if record:
+                possible_objs = encapsulate_obj_tensor_into_dict(output_info.obj_to_optimise, possible_obj)
+                results_record.record(current_iteration + i, population[i], best_volume, possible_objs, t1-t0)
+
+        # Selection
+        selected_indices = np.random.choice(population_size, size=population_size, replace=True, p=np.reciprocal(fitness)/np.sum(np.reciprocal(fitness)))
+        selected_population = population[selected_indices]
+
+        # Crossover
+        children = []
+        for i in range(0, population_size, 2):
+            if np.random.rand() < crossover_rate:
+                crossover_point = np.random.randint(1, len(input_info.input_names))
+                child1 = torch.cat((selected_population[i][:crossover_point], selected_population[i+1][crossover_point:]))
+                child2 = torch.cat((selected_population[i+1][:crossover_point], selected_population[i][crossover_point:]))
+                children.append(child1)
+                children.append(child2)
+            else:
+                children.append(selected_population[i])
+                children.append(selected_population[i+1])
+        children = torch.stack(children)
+
+        # Mutation
+        mutation_matrix = (torch.rand(children.size(), device=data_set.tensor_device, dtype=data_set.tensor_type) < mutation_rate).float()
+        mutation_steps = torch.randint(low=0, high=2, size=children.size(), device=data_set.tensor_device, dtype=data_set.tensor_type) * 2 - 1  # -1 or 1
+        mutation = mutation_matrix * mutation_steps * mutation_rate
+        population = torch.clamp(children + mutation, min=0, max=1)
+
+        
+    print(f"{Fore.GREEN}Best volume: {best_volume}, Best sample: {best_sample}, Best results: {best_results}{Style.RESET_ALL}")
     if record:
         results_record.store()

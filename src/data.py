@@ -178,7 +178,6 @@ class Data_Set:
                 condition_val = calculate_smooth_condition(X[i][obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
                 condition_vals.append(condition_val)
             results[i] = max(condition_vals)
-
         return results
 
 

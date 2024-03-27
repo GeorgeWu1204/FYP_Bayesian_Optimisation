@@ -24,7 +24,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 t_type = torch.float64
 
 # Input Settings
-CONSTRAINT_FILE = '../specification/input_spec_optimisation_set_4.txt'
+CONSTRAINT_FILE = '../specification/input_spec_btb_lsu.txt'
 input_info, output_info, param_tuner, optimisation_name = parse_constraints(CONSTRAINT_FILE, device)
 
 # Dataset Settings
@@ -53,11 +53,11 @@ TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2                # acceptable distance betwee
 
 # Model Settings
 NUM_RESTARTS = 4                # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 16       # number of initial points for BO  Note: has to be power of 2 for sobol sampler
+NUM_OF_INITIAL_POINT = 8        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
-N_BATCH = 32                    # number of BO batches (inner loop)
+N_BATCH = 16                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
-MC_SAMPLES = 128                # number of MC samples for qNEI
+MC_SAMPLES = 16                # number of MC samples for qNEI
 RAW_SAMPLES = 8                 # number of raw samples for qNEI
 
 # Runtime Settings
@@ -93,7 +93,7 @@ if record:
 # Global Best Values
 best_hyper_vols_per_trial = []
 best_sample_points_per_trial = {trial : {input : 0.0 for input in input_info.input_names} for trial in range(1, N_TRIALS + 1)}
-optimisation_model = optimisation_model(NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type)
+optimisation_model = optimisation_model(NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type, categorical_handle_enable=False)
 
 #Optimisation Loop
 for trial in range (1, N_TRIALS + 1):
@@ -130,9 +130,9 @@ for trial in range (1, N_TRIALS + 1):
         valid_generated_sample, new_x_ei, new_exact_obj_ei, new_train_obj_ei, hyper_vol = optimisation_model.optimize_acqf_and_get_observation(acqf, data_set)
 
         # examine the posterior
-        if plot_posterior and iteration == 10:
-            posterior_examiner.examine_posterior(model_ei.subset_output([posterior_objective_index]), iteration)
-            # posterior_examiner.examine_acq_function(acqf, iteration)
+        if plot_posterior and iteration == 2:
+            # posterior_examiner.examine_posterior(model_ei.subset_output([posterior_objective_index]), iteration)
+            posterior_examiner.examine_acq_function(acqf, iteration)
 
         #--------------for debug------------------
         # if debug:
@@ -193,15 +193,15 @@ for trial in range (1, N_TRIALS + 1):
                     tmp_new_obj_ei[obj] = -1 * best_observation_per_interation[obj]
                 else:
                     tmp_new_obj_ei[obj] = best_observation_per_interation[obj]
-            results_record.record(iteration, trial, tmp_new_obj_ei, t1-t0)
+            results_record.record(iteration, trial, tmp_new_obj_ei, best_hyper_vol_per_interation, t1-t0)
     
     print("best_sample_point_per_interation: ", best_sample_point_per_interation)
     best_hyper_vols_per_trial.append(best_hyper_vol_per_interation)
     best_sample_points_per_trial[trial] = best_sample_point_per_interation
 
-    if record:
-        unnormalized_train_x = utils.recover_single_input_data(train_x_ei, input_info.input_normalized_factor, input_info.input_scales, input_info.input_offsets, input_info.input_exp)
-        results_record.record_input(trial, unnormalized_train_x, hyper_vol_ei)
+    # if record:
+    #     unnormalized_train_x = utils.recover_single_input_data(train_x_ei, input_info.input_normalized_factor, input_info.input_scales, input_info.input_offsets, input_info.input_exp)
+    #     results_record.record_input(trial, unnormalized_train_x, hyper_vol_ei)
 
 if record:
     results_record.store()
@@ -213,3 +213,4 @@ print("best_sample_points_per_trial: ", best_sample_points_per_trial[best_trial 
 real_sample_point = utils.recover_single_input_data(best_sample_points_per_trial[best_trial + 1].squeeze(0), input_info.input_normalized_factor, input_info.input_scales, input_info.input_offsets, input_info.input_exp)
 print(f"{Fore.BLUE}Best sample point: {real_sample_point}{Style.RESET_ALL}")
 print(f"{Fore.BLUE}Best objective: {best_objective}{Style.RESET_ALL}")
+print(f"{Fore.BLUE}Best hyper volume: {best_hyper_vols_per_trial[best_trial]}{Style.RESET_ALL}")

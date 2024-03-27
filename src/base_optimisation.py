@@ -8,7 +8,7 @@ from colorama import Fore, Style
 
 from interface import parse_constraints
 from format_constraints import Simpler_Constraints
-from optimisation_models import brute_force, hill_climbing
+from optimisation_models import brute_force, hill_climbing, genetic_algorithm
 
 # Tensor Settings
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -41,19 +41,13 @@ print("<--------------------------------------------------->")
 
 #Building simpler constraints
 ref_points = utils.find_ref_points(output_info.obj_to_optimise_dim, data_set.objs_direct, t_type, device)
-overall_iteration_required = 50
 verbose = True
 record = True
-if record:
-    record_file_name = '../test/test_results/'
-    for obj_name in output_info.obj_to_optimise.keys():
-        record_file_name = record_file_name + obj_name + '_'
-    record_file_name = record_file_name + 'brute_force_record_result.txt'
-    results_record = utils.other_model_training_result(input_info.input_names, output_info.obj_to_optimise, overall_iteration_required, record_file_name)
+record_file_name = '../test/test_results/'
 
 # Optimisation Loop
-brute_force(output_info, ref_points, data_set, record, results_record)
-hill_climbing(output_info, ref_points, data_set, record, results_record, max_iterations=30, step_size=0.01)
-
+brute_force(input_info, output_info, ref_points, data_set, record, record_file_name)
+hill_climbing(input_info, output_info, ref_points, data_set, record, record_file_name, max_iterations=30, step_size=0.01)
+genetic_algorithm(input_info, output_info, ref_points, data_set, record, record_file_name)
 
 

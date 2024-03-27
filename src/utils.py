@@ -186,38 +186,39 @@ class recorded_training_result:
         self.input_history = {}
         self.input_names = input_names
 
-    def record(self, iteration, trial, best_objs, time):
-        self.history[(trial -1) * self.iterations + (iteration-1)] = [best_objs, time]
+    def record(self, iteration, trial, best_objs, best_hypervol, time):
+        self.history[(trial -1) * self.iterations + (iteration-1)] = [best_objs, best_hypervol, time]
     
-    def record_input(self, trial, train_x, hyper_vols):
-        self.input_history[trial] = [trial, train_x, hyper_vols]
+    # def record_input(self, trial, train_x, hyper_vols):
+    #     self.input_history[trial] = [trial, train_x, hyper_vols]
     
     def store(self):
         total_time = 0
-        with open(self.record_file_name + 'record_result.txt', 'w') as f:
-            f.write("iteration, time")
+        with open(self.record_file_name + '_BO.txt', 'w') as f:
+            f.write("iteration, time, hyper_vol")
             for obj in self.objs:
                 f.write(f", {obj}")
             f.write("\n")
             for i in range(self.trials * self.iterations):
-                total_time += self.history[i][1]
+                total_time += self.history[i][2]
                 f.write(f"{i}, {total_time:>4.2f}")
+                f.write(f", {self.history[i][1]}")
                 for obj in self.objs:
                     result = self.history[i][0].get(obj, 0)
                     f.write(f", {result}")
                 f.write("\n")
         
-        with open(self.record_file_name + 'record_input.txt', 'w') as f:
-            f.write("trial, hyper_vol")
-            for name in self.input_names:
-                f.write(f", {name}")
-            f.write("\n")
-            for trial in self.input_history.keys():
-                for data_idx in range(len(self.input_history[trial][1])):
-                    f.write(f"{trial}, {self.input_history[trial][2][data_idx]}")
-                    for input_index in range(len(self.input_names)):
-                       f.write(f", {self.input_history[trial][1][data_idx][input_index]}")
-                    f.write("\n")
+        # with open(self.record_file_name + 'record_input.txt', 'w') as f:
+        #     f.write("trial, hyper_vol")
+        #     for name in self.input_names:
+        #         f.write(f", {name}")
+        #     f.write("\n")
+        #     for trial in self.input_history.keys():
+        #         for data_idx in range(len(self.input_history[trial][1])):
+        #             f.write(f"{trial}, {self.input_history[trial][2][data_idx]}")
+        #             for input_index in range(len(self.input_names)):
+        #                f.write(f", {self.input_history[trial][1][data_idx][input_index]}")
+        #             f.write("\n")
     
 
 class other_model_training_result:
@@ -227,10 +228,13 @@ class other_model_training_result:
         self.input_vars = input_vars
         self.objs  = objectives
         self.record_file_name = record_file_name
+        self.train_set_size = 0
         for i in range(overall_iteration_size):
             self.history[i] = {}
+
     def record(self, iteration, sample_input, sample_volume, best_objs, time):
         self.history[iteration] = [sample_input, sample_volume, best_objs, time]
+        self.train_set_size = iteration + 1
     
     def store(self):
         total_time = 0
@@ -242,7 +246,7 @@ class other_model_training_result:
             for obj in self.objs:
                 f.write(f", {obj}")
             f.write("\n")
-            for i in range(len(self.history)):
+            for i in range(self.train_set_size):
                 valid_history = self.history.get(i, None)
                 if(valid_history != {} and valid_history != None):
                     total_time += valid_history[3]
@@ -317,7 +321,7 @@ class test_posterior_result:
         ax.set_ylabel(self.input_names[1])
         ax.set_zlabel('Acquisition Function Value')
         ax.set_title('Acquisition Function Examination at Iteration ' + str(iteration))
-        plt.show()
+        plt.savefig('acquisition_function.png')
         
 
 
