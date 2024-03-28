@@ -6,7 +6,7 @@ from utils import calculate_hypervolume
 
 class train_set_records():
     """This class is used to record the training set"""
-    def __init__(self, normalised_factors, self_constraints, worst_ref_objective, objective_to_optimise_dim, acceptable_threshold = 0.0001, disturbance_threshold = 0.0001, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
+    def __init__(self, normalised_factors, self_constraints, worst_ref_objective, objective_to_optimise_dim, train_set_modification_enable, acceptable_threshold = 0.0001, disturbance_threshold = 0.0001, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
         
         self.normalised_factor = torch.tensor(normalised_factors, dtype=tensor_type, device=tensor_device)
         self.acceptable_threshold = acceptable_threshold
@@ -20,6 +20,7 @@ class train_set_records():
         self.worst_ref_objective = worst_ref_objective
         self.fake_worst_point = torch.tensor(worst_ref_objective.tolist() + [0.0], dtype = tensor_type, device = tensor_device).unsqueeze(0)
         self.objective_to_optimise_dim = objective_to_optimise_dim
+        self.train_set_modification_enable = train_set_modification_enable
 
     def recover_input_data_for_storage(self, input_tensor):
         """This function is to find the real input from the x tensor in recording process"""
@@ -93,6 +94,8 @@ class train_set_records():
 
     def store_new_data(self, valid_sample, new_train_x, new_train_y, new_hyper_vol, dataset):
         """This function is used to store the new data"""
+        if self.train_set_modification_enable == False:
+            return True, new_train_x, new_train_y, new_hyper_vol
         recovered_train_x = self.recover_input_data_for_storage(new_train_x)
         if valid_sample == True:
             # find all the stored samples that are close to the new data
@@ -132,7 +135,7 @@ class train_set_records():
                 valid_neighbour, neighbor_obj = dataset.find_ppa_result(neighbour_tensor.unsqueeze(0))
                 if valid_neighbour:
                     normalised_obj = dataset.normalise_output_data_tensor(neighbor_obj, self.obj_normalized_factors, self.tensor_device)
-                    con_obj = dataset.check_qNEHVI_constraints(normalised_obj)
+                    con_obj = dataset.check_obj_constraints(normalised_obj)
                     if con_obj.item() <= 0.0:
                         return True, neighbour_tensor, neighbor_obj, torch.tensor([calculate_hypervolume(self.worst_ref_objective, neighbor_obj, self.objective_to_optimise_dim)], dtype = self.tensor_type, device = self.tensor_device)
 

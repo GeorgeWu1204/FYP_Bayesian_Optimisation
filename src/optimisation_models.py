@@ -4,6 +4,7 @@ import torch
 from utils import calculate_hypervolume, encapsulate_obj_tensor_into_dict, other_model_training_result
 from colorama import Fore, Style
 import numpy as np
+from typing import Optional
 
 from customised_model import SingleTaskGP_transformed
 from botorch.models.transforms.outcome import Standardize
@@ -12,13 +13,141 @@ from gpytorch.mlls.sum_marginal_log_likelihood import SumMarginalLogLikelihood
 from botorch.acquisition.multi_objective.monte_carlo import qNoisyExpectedHypervolumeImprovement
 from botorch.acquisition.multi_objective.objective import IdentityMCMultiOutputObjective
 from botorch.optim import optimize_acqf
-
-
 from botorch.models import SingleTaskGP
-### Implemented Models
+from botorch.acquisition.objective import ConstrainedMCObjective
+from botorch.acquisition.monte_carlo import qExpectedImprovement
 
 
-class optimisation_model():
+
+
+### <----------------- Single Objective BO Model ----------------->
+def obj_callable(Z: torch.Tensor, X: Optional[torch.Tensor] = None):
+    return Z[..., 0]
+def constraint_callable(Z):
+    result = Z[..., 1]
+    if Z.shape[-1] > 2:
+        for i in range(2, Z.shape[-1]):
+            result = result * Z[..., i]
+    return result
+
+class single_objective_BO_model():
+    """Single Objective Bayesian Optimisation Model"""
+    def __init__(self, NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type, output_constraints_enable=True, categorical_handle_enable=True):
+        self.NUM_RESTARTS = NUM_RESTARTS
+        self.RAW_SAMPLES = RAW_SAMPLES
+        self.BATCH_SIZE = BATCH_SIZE
+        self.ref_points = ref_points
+        self.input_info = input_info
+        self.output_info = output_info  
+        self.device = device
+        self.t_type = t_type
+        self.output_constraints_enable = output_constraints_enable
+        self.categorical_handle_enable = categorical_handle_enable
+        self.objective_index = output_info.obj_to_optimise_index
+        self.constrained_obj = ConstrainedMCObjective(
+                objective=obj_callable,
+                constraints=[constraint_callable],
+            )
+    
+    
+    def initialize_model(self, train_x, train_obj):
+        if self.categorical_handle_enable:
+            return self.initialize_custom_model(train_x, train_obj)
+        else:
+            return self.initialize_default_model(train_x, train_obj)
+    
+    def calculate_weighted_obj_score(self, normalised_obj):
+        result = normalised_obj.clone()
+        for i in range (1, normalised_obj.shape[-1]):
+            result[..., 0] = result[..., 0] * normalised_obj[..., i]
+        return result[..., 0]
+
+    def initialize_custom_model(self, train_x, train_obj):
+        """define models that considers the categorical error for objective and constraint"""
+        ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
+        models = []
+        for obj_index in range(train_obj.shape[-1]): 
+            train_y = train_obj[..., obj_index : obj_index + 1]
+            models.append(SingleTaskGP_transformed(
+                                        self.input_info.input_scales,
+                                        self.input_info.input_normalized_factor,
+                                        train_x, 
+                                        train_y, 
+                                        outcome_transform=Standardize(m=1),
+                                        tensor_type=self.t_type,
+                                        tensor_device=self.device
+                                    ))
+        
+        model = ModelListGP(*models)
+        mll = SumMarginalLogLikelihood(model.likelihood, model)
+        return mll, model
+    
+    def initialize_default_model(self, train_x, train_obj):
+        """define models for objective and constraint"""
+        ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
+        models = []
+        for obj_index in range(train_obj.shape[-1]): 
+            train_y = train_obj[..., obj_index : obj_index + 1]
+            models.append(SingleTaskGP(
+                                        train_x, 
+                                        train_y, 
+                                        outcome_transform=Standardize(m=1)
+                                    ))
+        
+        model = ModelListGP(*models)
+        mll = SumMarginalLogLikelihood(model.likelihood, model)
+        return mll, model
+
+
+    def build_acqf(self, model, train_obj, sampler):
+        """Build the qNEHVI acquisition function"""
+        qEI = qExpectedImprovement(
+            model=model,
+            best_f=self.calculate_weighted_obj_score(train_obj).max(),
+            sampler=sampler,
+            objective=self.constrained_obj,
+        )
+        return qEI
+    
+
+    def optimize_acqf_and_get_observation(self, acq_func, data_set):
+        """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
+        # TODO: Noticed that if there is an input constraint, the points are selected from the generated condition.
+        candidates, _ = optimize_acqf(
+            acq_function=acq_func,
+            bounds=self.input_info.constraints.constraint_bound,
+            q=self.BATCH_SIZE,
+            num_restarts=self.NUM_RESTARTS,
+            options={"batch_limit": 1, "maxiter": 200},
+            raw_samples=self.RAW_SAMPLES,
+            sequential=True
+        )
+        # observe new values
+        new_x = candidates.detach()
+        print("new_x: ", new_x)
+        valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
+        new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
+        new_con_obj = data_set.check_obj_constraints(new_normalised_obj)
+        print("new_con_obj: ", new_con_obj)
+        print("new_normalised_obj: ", new_normalised_obj)
+        new_train_obj = torch.cat([new_normalised_obj[...,0:1], new_con_obj], dim=-1)
+        print("new_train_obj: ", new_train_obj)
+        new_obj_score = self.calculate_weighted_obj_score(new_train_obj)
+        return valid_generated_sample, new_x, new_exact_obj, new_train_obj, new_obj_score
+    
+    def generate_initial_data(self, sampler_generator, NUM_OF_INITIAL_POINT, data_set):
+        """generate training data"""
+        unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set)
+        train_obj = torch.cat([normalised_objs[...,0:1], con_objs], dim=-1)
+        # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
+        obj_scores = self.calculate_weighted_obj_score(train_obj)
+        print("train_obj: ", train_obj.shape)
+        
+        return unnormalised_train_x, exact_objs, train_obj, obj_scores
+
+### <----------------- Multi-objective Model ----------------->
+
+class multi_objective_BO_model():
     def __init__(self, NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type, output_constraints_enable=True, categorical_handle_enable=True):
         self.NUM_RESTARTS = NUM_RESTARTS
         self.RAW_SAMPLES = RAW_SAMPLES
@@ -77,7 +206,7 @@ class optimisation_model():
         return mll, model
 
 
-    def build_qNEHVI_acqf(self, model, train_x, sampler):
+    def build_acqf(self, model, train_x, sampler):
         """Build the qNEHVI acquisition function"""
 
         acq_func = qNoisyExpectedHypervolumeImprovement(
@@ -113,14 +242,26 @@ class optimisation_model():
         print("new_x: ", new_x)
         valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
         new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
-        new_con_obj = data_set.check_qNEHVI_constraints(new_normalised_obj)
+        new_con_obj = data_set.check_obj_constraints(new_normalised_obj)
         if new_con_obj.item() <= 0.0:
             hyper_vol = calculate_hypervolume(self.ref_points, new_normalised_obj, self.OBJECTIVES_TO_OPTIMISE_DIM)
         else:
             hyper_vol = 0.0
         new_train_obj = torch.cat([new_normalised_obj[..., : self.OBJECTIVES_TO_OPTIMISE_DIM], new_con_obj], dim=-1)
         return valid_generated_sample, new_x, new_exact_obj, new_train_obj, hyper_vol
-
+    
+    def generate_initial_data(self, sampler_generator, NUM_OF_INITIAL_POINT, data_set):
+        """generate training data"""
+        unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set)
+        train_obj = torch.cat([normalised_objs[...,:self.OBJECTIVES_TO_OPTIMISE_DIM], con_objs], dim=-1)
+        # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
+        generate_size = train_obj.shape[0]
+        hypervolumes = torch.zeros(generate_size, device=self.device)
+        print("ref_points: ", self.ref_points)
+        print("train_obj: ", train_obj.shape)
+        for i in range(generate_size):
+            hypervolumes[i] = calculate_hypervolume(self.ref_points, train_obj[i].unsqueeze(0), self.OBJECTIVES_TO_OPTIMISE_DIM)
+        return unnormalised_train_x, exact_objs, train_obj, hypervolumes
 
 ### <----------------- Other Models ----------------->
 def brute_force(input_info, output_info, ref_points, data_set, record, record_file_name):
@@ -144,7 +285,7 @@ def brute_force(input_info, output_info, ref_points, data_set, record, record_fi
         if valid_sample == False:
             continue
         normalised_obj = data_set.normalise_output_data_tensor(possible_obj)
-        con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
+        con_obj = data_set.check_obj_constraints(normalised_obj)
         if con_obj.item() <= 0.0:
             volume = calculate_hypervolume(ref_points, normalised_obj, output_info.obj_to_optimise_dim)
             if  best_volume < volume:
@@ -186,7 +327,7 @@ def hill_climbing(input_info, output_info, ref_points, data_set, record, record_
             continue
         normalised_obj = data_set.normalise_output_data_tensor(possible_obj)
         print("normalised_obj: ", normalised_obj)
-        con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
+        con_obj = data_set.check_obj_constraints(normalised_obj)
         print("con_obj: ", con_obj)
         if con_obj.item() <= 0.0:
             volume = calculate_hypervolume(ref_points, normalised_obj, output_info.obj_to_optimise_dim)
@@ -234,7 +375,7 @@ def genetic_algorithm(input_info, output_info, ref_points, data_set, record, rec
                 fitness.append(float('inf'))  # Assign a large value for invalid samples
                 continue
             normalised_obj = data_set.normalise_output_data_tensor(possible_obj)
-            con_obj = data_set.check_qNEHVI_constraints(normalised_obj)
+            con_obj = data_set.check_obj_constraints(normalised_obj)
             if con_obj.item() <= 0.0:
                 volume = calculate_hypervolume(ref_points, normalised_obj, output_info.obj_to_optimise_dim)
                 fitness.append(volume)

@@ -149,25 +149,8 @@ class Data_Set:
         for  obj in self.objs_to_evaluate:
             result.append(self.__dict__.get(tuple(formatted_input)).get_ppa(obj))
         return result
-    
 
-    def check_qEHVI_constraints(self, X):
-        """This is the callable function for the output constraints of the qEHVI acq function"""
-        # X shape sample_shape x batch-shape x q x m , Output shape sample_shape x batch-shape x q
-        results = torch.zeros((X.shape[0], X.shape[1], X.shape[2]), device=X.device, dtype=X.dtype)
-        for i in range(X.shape[0]):
-            for j in range(X.shape[1]):
-                for k in range(X.shape[2]):
-                    for obj_index in range(self.objs_to_optimise_dim, X.shape[3]):
-                        condition_val = calculate_condition(X[i][j][k][obj_index], self.output_constraints_to_check[obj_index - self.objs_to_optimise_dim])
-                        if  condition_val < 0:
-                            results[i][j][k] = 1e-3
-                            break
-                        else:
-                            results[i][j][k] -= condition_val
-        return results
-
-    def check_qNEHVI_constraints(self, X):
+    def check_obj_constraints(self, X):
         """This is the callable function for the output constraints of the qNEHVI acq function"""
         # X shape n x m , Output shape n x 1
         # Negative implies feasible
@@ -505,18 +488,7 @@ class create_data_set:
 
 
 ## Functions
-def generate_initial_data(sampler_generator, NUM_OF_INITIAL_POINT, data_set, ref_points, device, OBJECTIVES_TO_OPTIMISE_DIM):
-    """generate training data"""
-    unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set)
-    train_obj = torch.cat([normalised_objs[...,:OBJECTIVES_TO_OPTIMISE_DIM], con_objs], dim=-1)
-    # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
-    generate_size = train_obj.shape[0]
-    hypervolumes = torch.zeros(generate_size, device=device)
-    print("ref_points: ", ref_points)
-    print("train_obj: ", train_obj.shape)
-    for i in range(generate_size):
-        hypervolumes[i] = calculate_hypervolume(ref_points, train_obj[i].unsqueeze(0), OBJECTIVES_TO_OPTIMISE_DIM)
-    return unnormalised_train_x, exact_objs, train_obj, hypervolumes
+
 
 
 if __name__ == '__main__':

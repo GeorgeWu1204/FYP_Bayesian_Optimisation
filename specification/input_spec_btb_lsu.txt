@@ -10,8 +10,8 @@ var: lsu_stbuf_depth           range: [2,8]       scale: 2     exp: 2      shift
 #input constant
 
 #output objective
-obj_name: mcycle   benchmark: cmark               obj_direct: minimise     range: [400000,420000]
-obj_name: mcycle   benchmark: dhry                obj_direct: minimise     range: [350000,370000]
+obj_name: mcycle   benchmark: cmark               obj_direct: minimise     range: [400000,480000]
+obj_name: mcycle   benchmark: dhry                obj_direct: minimise     range: [350000,420000]
 
 #output constraint
 obj_name: LUT as Logic              range: [30000,33000]

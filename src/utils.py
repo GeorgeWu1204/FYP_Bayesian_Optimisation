@@ -174,9 +174,8 @@ def read_utilization(rpt_file_path, variable_names):
 
 class recorded_training_result:
     """This class is used to record the results of optimisation."""
-    def __init__(self, input_names, objectives, best_values, record_file_name, num_trials, num_iterations):
+    def __init__(self, input_names, objectives, record_file_name, num_trials, num_iterations):
         self.objs  = objectives
-        self.best_vals  = best_values
         self.history = {}
         self.iterations = num_iterations
         self.trials = num_trials
