@@ -27,7 +27,7 @@ def constraint_callable(Z):
     result = Z[..., 1]
     if Z.shape[-1] > 2:
         for i in range(2, Z.shape[-1]):
-            result = result * Z[..., i]
+            result = result * (Z[..., i] <= 0)
     return result
 
 class single_objective_BO_model():
@@ -57,12 +57,19 @@ class single_objective_BO_model():
             return self.initialize_default_model(train_x, train_obj)
     
     def calculate_weighted_obj_score(self, normalised_obj):
+        result = normalised_obj.clone() 
+        result[...,0] = result[...,0] - self.ref_points[self.objective_index]
+        for i in range (1, normalised_obj.shape[-1]):
+            result[..., 0] = result[..., 0] * ( normalised_obj[..., i] <= 0)
+        return result[..., 0]
+    
+    def calculate_max_obj(self, normalised_obj):
         result = normalised_obj.clone()
         for i in range (1, normalised_obj.shape[-1]):
-            result[..., 0] = result[..., 0] * normalised_obj[..., i]
-        return result[..., 0]
+            result[..., 0] = result[..., 0] * ( normalised_obj[..., i] <= 0)
+        return result[..., 0].max()
 
-    def initialize_custom_model(self, train_x, train_obj):
+    def initialize_custom_model(self, train_x, train_obj, state_dict=None):
         """define models that considers the categorical error for objective and constraint"""
         ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
         models = []
@@ -80,9 +87,11 @@ class single_objective_BO_model():
         
         model = ModelListGP(*models)
         mll = SumMarginalLogLikelihood(model.likelihood, model)
+        if state_dict is not None:
+            model.load_state_dict(state_dict)
         return mll, model
     
-    def initialize_default_model(self, train_x, train_obj):
+    def initialize_default_model(self, train_x, train_obj, state_dict=None):
         """define models for objective and constraint"""
         ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
         models = []
@@ -96,6 +105,8 @@ class single_objective_BO_model():
         
         model = ModelListGP(*models)
         mll = SumMarginalLogLikelihood(model.likelihood, model)
+        if state_dict is not None:
+            model.load_state_dict(state_dict)
         return mll, model
 
 
@@ -103,7 +114,7 @@ class single_objective_BO_model():
         """Build the qNEHVI acquisition function"""
         qEI = qExpectedImprovement(
             model=model,
-            best_f=self.calculate_weighted_obj_score(train_obj).max(),
+            best_f=self.calculate_max_obj(train_obj),
             sampler=sampler,
             objective=self.constrained_obj,
         )
@@ -124,14 +135,10 @@ class single_objective_BO_model():
         )
         # observe new values
         new_x = candidates.detach()
-        print("new_x: ", new_x)
         valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
         new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
         new_con_obj = data_set.check_obj_constraints(new_normalised_obj)
-        print("new_con_obj: ", new_con_obj)
-        print("new_normalised_obj: ", new_normalised_obj)
         new_train_obj = torch.cat([new_normalised_obj[...,0:1], new_con_obj], dim=-1)
-        print("new_train_obj: ", new_train_obj)
         new_obj_score = self.calculate_weighted_obj_score(new_train_obj)
         return valid_generated_sample, new_x, new_exact_obj, new_train_obj, new_obj_score
     

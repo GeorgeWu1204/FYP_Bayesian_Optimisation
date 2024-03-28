@@ -99,7 +99,7 @@ def extract_best_from_initialisation_results(initial_train_x, initial_obj, hyper
     max_value, max_index = torch.max(hypervolumes, 0)
     best_observation_per_interation = encapsulate_obj_tensor_into_dict(obj_to_opt, initial_obj[max_index.item()])
     best_constraint_per_interation = encapsulate_obj_tensor_into_dict(obj_const, initial_obj[max_index.item(), len(obj_to_opt):])
-    best_hyper_vol_per_interation = max_value.item()
+    best_hyper_vol_per_interation = max_value
     best_sample_point_per_interation = initial_train_x[max_index.item()].unsqueeze(0)
     return best_sample_point_per_interation, best_observation_per_interation, best_constraint_per_interation, best_hyper_vol_per_interation
 

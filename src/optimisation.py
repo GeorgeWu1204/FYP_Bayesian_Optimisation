@@ -53,7 +53,7 @@ TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2                # acceptable distance betwee
 
 # Model Settings
 NUM_RESTARTS = 4                # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 8        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
+NUM_OF_INITIAL_POINT = 16        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
 N_BATCH = 20                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
@@ -66,6 +66,8 @@ record = True
 debug = True
 plot_posterior = False
 enable_train_set_modification = False
+
+
 #TODO: Temporarily modified for paper
 obj_index = 0
 #reference point for optimisation used for hypervolume calculation
@@ -85,12 +87,14 @@ if not debug:
     warnings.filterwarnings("ignore", category=NumericalWarning)
     warnings.filterwarnings("ignore", category=InputDataWarning)
     torch.set_printoptions(sci_mode=False)
-
+#TODO: Temporarily modified for paper
+output_info.obj_to_optimise = {list(output_info.obj_to_optimise.keys())[obj_index] : list(output_info.obj_to_optimise.values())[obj_index]}
 if record:
     record_file_name = '../test/test_results/'
     for obj_name in output_info.obj_to_optimise.keys():
         record_file_name = record_file_name + obj_name + '_'
-    results_record = utils.recorded_training_result(input_info.input_names, list(output_info.obj_to_optimise.keys())[obj_index], record_file_name, N_TRIALS, N_BATCH)
+    results_record = utils.recorded_training_result(input_info.input_names, output_info.obj_to_optimise, record_file_name, N_TRIALS, N_BATCH)
+
 # Global Best Values
 best_obj_scores_per_trial = []
 best_sample_points_per_trial = {trial : {input : 0.0 for input in input_info.input_names} for trial in range(1, N_TRIALS + 1)}
@@ -121,9 +125,8 @@ for trial in range (1, N_TRIALS + 1):
     #reset the best observation
     best_sample_point_per_interation, best_observation_per_interation, best_constraint_per_interation, best_obj_score_per_interation = \
         utils.extract_best_from_initialisation_results(train_x_ei, exact_obj_ei, obj_score_ei, output_info.obj_to_optimise, output_info.output_constraints)
-    #TODO: Temporarily modified for paper
-    output_info.obj_to_optimise = {list(output_info.obj_to_optimise.keys())[obj_index] : list(output_info.obj_to_optimise.values())[obj_index]}
-
+    print("best_sample_point_per_interation: ", best_sample_point_per_interation)
+    print("best_obj_score_per_interation: ", best_obj_score_per_interation)
     for iteration in range(1, N_BATCH + 1):
         t0 = time.monotonic()
 
@@ -132,7 +135,8 @@ for trial in range (1, N_TRIALS + 1):
 
         #QMC sampler
         qmc_sampler = SobolQMCNormalSampler(sample_shape=torch.Size([MC_SAMPLES]))
-        acqf = Model.build_acqf(model_ei, train_x_ei, qmc_sampler)
+        #TODO: single acqf -> uses train_obj while multiple acqf uses train_x
+        acqf = Model.build_acqf(model_ei, train_obj_ei, qmc_sampler)
         # optimize and get new observation
         valid_generated_sample, new_x_ei, new_exact_obj_ei, new_train_obj_ei, obj_score = Model.optimize_acqf_and_get_observation(acqf, data_set)
 
@@ -189,7 +193,7 @@ for trial in range (1, N_TRIALS + 1):
                     tmp_new_obj_ei[obj] = -1 * best_observation_per_interation[obj]
                 else:
                     tmp_new_obj_ei[obj] = best_observation_per_interation[obj]
-            results_record.record(iteration, trial, tmp_new_obj_ei, best_obj_score_per_interation, t1-t0)
+            results_record.record(iteration, trial, tmp_new_obj_ei, best_obj_score_per_interation.item(), t1-t0)
     
     print("best_sample_point_per_interation: ", best_sample_point_per_interation)
     best_obj_scores_per_trial.append(best_obj_score_per_interation)
