@@ -11,13 +11,13 @@ var: iccm_size                 range: [32,512]     scale: 32     exp: 2      shi
 #input constant
 
 #output objective
-obj_name: mcycle   benchmark: cmark               obj_direct: minimise     range: [400000,420000]
+obj_name: mcycle   benchmark: cmark               obj_direct: minimise     range: [400000,450000]
 obj_name: mcycle   benchmark: dhry                obj_direct: minimise     range: [350000,370000]
 obj_name: mcycle   benchmark: cmark_iccm          obj_direct: minimise     range: [400000,420000]
 obj_name: mcycle   benchmark: cmark_dccm          obj_direct: minimise     range: [350000,370000]
 
 #output constraint
-obj_name: LUT as Logic              range: [30000,33000]
+obj_name: LUT as Logic              range: [20000,40600]
 
 #data
 objective: EL2

@@ -17,18 +17,25 @@ from botorch.models import SingleTaskGP
 from botorch.acquisition.objective import ConstrainedMCObjective
 from botorch.acquisition.monte_carlo import qExpectedImprovement
 
-
-
-
 ### <----------------- Single Objective BO Model ----------------->
 def obj_callable(Z: torch.Tensor, X: Optional[torch.Tensor] = None):
     return Z[..., 0]
+
 def constraint_callable(Z):
     result = Z[..., 1]
     if Z.shape[-1] > 2:
         for i in range(2, Z.shape[-1]):
             result = result * (Z[..., i] <= 0)
     return result
+
+def calculate_weighted_obj_score(normalised_obj, ref_points, objective_index):
+    result = normalised_obj.clone() 
+    result[...,0] = result[...,0] - ref_points[objective_index]
+    for i in range (1, normalised_obj.shape[-1]):
+        result[..., 0] = result[..., 0] * ( normalised_obj[..., i] <= 0)
+    return result[..., 0]
+
+
 
 class single_objective_BO_model():
     """Single Objective Bayesian Optimisation Model"""
@@ -55,13 +62,6 @@ class single_objective_BO_model():
             return self.initialize_custom_model(train_x, train_obj)
         else:
             return self.initialize_default_model(train_x, train_obj)
-    
-    def calculate_weighted_obj_score(self, normalised_obj):
-        result = normalised_obj.clone() 
-        result[...,0] = result[...,0] - self.ref_points[self.objective_index]
-        for i in range (1, normalised_obj.shape[-1]):
-            result[..., 0] = result[..., 0] * ( normalised_obj[..., i] <= 0)
-        return result[..., 0]
     
     def calculate_max_obj(self, normalised_obj):
         result = normalised_obj.clone()
@@ -109,7 +109,6 @@ class single_objective_BO_model():
             model.load_state_dict(state_dict)
         return mll, model
 
-
     def build_acqf(self, model, train_obj, sampler):
         """Build the qNEHVI acquisition function"""
         qEI = qExpectedImprovement(
@@ -120,7 +119,6 @@ class single_objective_BO_model():
         )
         return qEI
     
-
     def optimize_acqf_and_get_observation(self, acq_func, data_set):
         """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
         # TODO: Noticed that if there is an input constraint, the points are selected from the generated condition.
@@ -138,19 +136,20 @@ class single_objective_BO_model():
         valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
         new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
         new_con_obj = data_set.check_obj_constraints(new_normalised_obj)
-        new_train_obj = torch.cat([new_normalised_obj[...,0:1], new_con_obj], dim=-1)
-        new_obj_score = self.calculate_weighted_obj_score(new_train_obj)
+        new_train_obj = torch.cat([new_normalised_obj[...,self.objective_index:self.objective_index + 1], new_con_obj], dim=-1)
+        new_exact_obj = torch.cat([new_exact_obj[...,self.objective_index:self.objective_index + 1], new_con_obj], dim=-1)
+        new_obj_score = calculate_weighted_obj_score(new_train_obj, self.ref_points, self.objective_index)
         return valid_generated_sample, new_x, new_exact_obj, new_train_obj, new_obj_score
     
     def generate_initial_data(self, sampler_generator, NUM_OF_INITIAL_POINT, data_set):
         """generate training data"""
         unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set)
-        train_obj = torch.cat([normalised_objs[...,0:1], con_objs], dim=-1)
+        train_obj = torch.cat([normalised_objs[...,self.objective_index:self.objective_index + 1], con_objs], dim=-1)
         # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
-        obj_scores = self.calculate_weighted_obj_score(train_obj)
+        obj_scores = calculate_weighted_obj_score(train_obj, self.ref_points, self.objective_index)
+        new_exact_obj = torch.cat([exact_objs[...,self.objective_index:self.objective_index + 1], con_objs], dim=-1)
         print("train_obj: ", train_obj.shape)
-        
-        return unnormalised_train_x, exact_objs, train_obj, obj_scores
+        return unnormalised_train_x, new_exact_obj, train_obj, obj_scores
 
 ### <----------------- Multi-objective Model ----------------->
 
@@ -310,14 +309,14 @@ def brute_force(input_info, output_info, ref_points, data_set, record, record_fi
         results_record.store()
 
 
-def hill_climbing(input_info, output_info, ref_points, data_set, record, record_file_name, max_iterations=30, step_size=0.01):
+def hill_climbing(input_info, output_info, ref_points, data_set, record, record_file_name, obj_index = None, max_iterations=30, step_size=0.05):
     # Generate initial solution
     if record:
         for obj_name in output_info.obj_to_optimise.keys():
             record_file_name = record_file_name + obj_name + '_'
         record_file_name = record_file_name + 'hill_climbing_record_result.txt'
         results_record = other_model_training_result(input_info.input_names, output_info.obj_to_optimise, max_iterations, record_file_name)
-    best_volume = 0
+    best_score = 0
     best_sample = None  
     best_results = [data_set.worst_value[obj] for obj in data_set.objs_direct]
     current_solution = torch.rand((1, len(input_info.input_names)), device=data_set.tensor_device, dtype=data_set.tensor_type)
@@ -336,23 +335,22 @@ def hill_climbing(input_info, output_info, ref_points, data_set, record, record_
         print("normalised_obj: ", normalised_obj)
         con_obj = data_set.check_obj_constraints(normalised_obj)
         print("con_obj: ", con_obj)
+        train_obj = torch.cat([normalised_obj[...,0:1], con_obj], dim=-1)
+        if obj_index is not None:
+            obj_scores = calculate_weighted_obj_score(train_obj, ref_points, obj_index)
         if con_obj.item() <= 0.0:
-            volume = calculate_hypervolume(ref_points, normalised_obj, output_info.obj_to_optimise_dim)
-            print("volume: ", volume)
-            if best_volume < volume:
-                best_volume = volume
+            if best_score < obj_scores:
+                best_score = obj_scores
                 best_sample = neighbor_solution
                 best_results = possible_obj
                 current_solution = neighbor_solution
-            elif volume == 0:
-                break
         else:
             continue
         t1 = time.monotonic()
         best_objs = encapsulate_obj_tensor_into_dict(output_info.obj_to_optimise, best_results)
         if record:
-            results_record.record(iteration, current_solution.squeeze(0), volume, best_objs, t1-t0)
-    print(f"{Fore.GREEN}best_volume: {best_volume}, best_sample: {best_sample}, best_results: {best_results}{Style.RESET_ALL}")
+            results_record.record(iteration, current_solution.squeeze(0), obj_scores.item(), best_objs, t1-t0)
+    print(f"{Fore.GREEN}best_score: {obj_scores}, best_sample: {best_sample}, best_results: {best_results}{Style.RESET_ALL}")
     if record:
         results_record.store()
 
