@@ -3,33 +3,60 @@ from parameter_tuning import NutShell_parameter_tuning, EL2_parameter_tuning
 from data import Input_Info, Output_Info
 import math
 
+def calculate_input_dim(self_constraints):
+    """this function is used to calculate the input dimension"""
+    input_dim = 0
+    for var_obj in self_constraints.keys():
+        if self_constraints[var_obj][-1] == 'Int':
+            input_dim += 1
+        else:
+            input_dim += len(self_constraints[var_obj][0])
+    return input_dim
+            
+
 def fill_constraints(self_constraints, coupled_constraints, device):
     """this function is used to fill the constraints in the interface"""
-    # self_constraints: {var_name: [lower_bound, upper_bound, scale, exp]}
-    # coupled_constraints: [{var_name: [lower_bound, upper_bound], var_name: [lower_bound, upper_bound]},... ]
-    input_dim = len(self_constraints)
+    # Int Val: {var_name: [lower_bound, upper_bound, scale, exp, Int]}
+    # Categorical Val: {var_name: [lower_bound, upper_bound, scale, exp, Categorical]}
+    # Coupled_constraints: [{var_name: [lower_bound, upper_bound], var_name: [lower_bound, upper_bound]},... ]
+    # Input_categorical: {var_name: [index, num_categories, categorical_vals]}
+    input_dim = calculate_input_dim(self_constraints)
     input_scales = [1] * input_dim
     input_normalized_factor = [1] * input_dim
     input_offset = [0] * input_dim
     input_exp = [1] * input_dim
-    for i, var_obj in enumerate(self_constraints.keys()):
-        if self_constraints[var_obj][3] > 1:
-            #has exps
-            input_offset[i] = int(math.log(self_constraints[var_obj][0], self_constraints[var_obj][3]))
-            #force the scales to be 1 if the exps is used
-            self_constraints[var_obj][2] = 1
-            input_normalized_factor[i] = int(math.log(self_constraints[var_obj][1], self_constraints[var_obj][3])) - input_offset[i]
-            input_exp[i] = self_constraints[var_obj][3]
-        else:
-            input_scales[i] = int(self_constraints[var_obj][2])
-            input_normalized_factor[i] = int((self_constraints[var_obj][1] - self_constraints[var_obj][0])/ input_scales[i])
-            input_offset[i] = int(self_constraints[var_obj][0])
     input_names = list(self_constraints.keys())
+    input_categorical = {}
+    var_index = 0
+    for var_obj in self_constraints.keys():
+        if self_constraints[var_obj][-1] == 'Int':
+            if self_constraints[var_obj][3] > 1:
+                #has exps
+                input_offset[var_index] = int(math.log(self_constraints[var_obj][0], self_constraints[var_obj][3]))
+                #force the scales to be 1 if the exps is used
+                self_constraints[var_obj][2] = 1
+                input_normalized_factor[var_index] = int(math.log(self_constraints[var_obj][1], self_constraints[var_obj][3])) - input_offset[var_index]
+                input_exp[var_index] = self_constraints[var_obj][3]
+            else:
+                input_scales[var_index] = int(self_constraints[var_obj][2])
+                input_normalized_factor[var_index] = int((self_constraints[var_obj][1] - self_constraints[var_obj][0])/ input_scales[var_index])
+                input_offset[var_index] = int(self_constraints[var_obj][0])
+            var_index += 1
+        else:
+            input_categorical[var_obj] = [var_index, len(self_constraints[var_obj][0]), self_constraints[var_obj][0]]
+            var_index += len(self_constraints[var_obj][0])
+
+    # Build the constraints (This part of the program could be optimised further)
     constraint = Input_Constraints(input_dim, device)
     constraint.update_scale_normalize_exp_factor(input_scales, input_normalized_factor, input_exp)
-
-    for index, constraints in enumerate(self_constraints.values()):
-        constraint.update_self_constraints(index, list(constraints))
+    var_index = 0
+    for constraints in self_constraints.values():
+        if constraints[-1] == 'Int':
+            constraint.update_self_constraints(var_index, list(constraints))
+            var_index += 1
+        else:
+            constraint.update_self_constraints(var_index, [0,1])
+            var_index += len(constraints[0])
     
     if len(coupled_constraints) != 0:
         format_coupled_constraint = []
@@ -40,7 +67,7 @@ def fill_constraints(self_constraints, coupled_constraints, device):
             format_coupled_constraint.append(and_constraints)
         constraint.update_coupled_constraints(format_coupled_constraint)
     
-    return Input_Info(input_dim, input_scales, input_normalized_factor, input_exp, input_offset, input_names, constraint, self_constraints, coupled_constraints) 
+    return Input_Info(input_dim, input_scales, input_normalized_factor, input_exp, input_offset, input_names, constraint, input_categorical, self_constraints, coupled_constraints) 
 
 def parse_constraints(filename, device):
     """this function is used to parse the constraints from the file"""
@@ -86,10 +113,15 @@ def parse_constraints(filename, device):
                     var_name = parts[1]
                     range_values = parts[3].strip('[]').split(',')
                     if section == 'self_constraint':
-                        scale = int(parts[5])
-                        exp = int(parts[7])
-                        self_constraints[var_name] = [int(range_values[0]), int(range_values[1]), scale, exp]
-                        input_shift_amount[var_name] = int(parts[9])
+                        data_type = parts[11]
+                        if data_type == 'Int':
+                            scale = int(parts[5])
+                            exp = int(parts[7])
+                            self_constraints[var_name] = [int(range_values[0]), int(range_values[1]), scale, exp, data_type]
+                            input_shift_amount[var_name] = int(parts[9])
+                        else:
+                            self_constraints[var_name] = [range_values, data_type]
+                            input_shift_amount[var_name] = 1
                     elif section == 'coupled_constraint':
                         coupled_parts = line.split('and')
                         coupled_data = {}

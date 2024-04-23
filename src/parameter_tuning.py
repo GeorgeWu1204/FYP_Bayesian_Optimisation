@@ -134,7 +134,6 @@ class EL2_parameter_tuning:
         self.stored_report_directory = '../object_functions/Syn_Report/dynamic_set/'
         self.generated_filename = 'EL2_utilization_synth.rpt'
         self.generated_logfile = '../object_functions/Logs/'
-
         
     def tune_and_run_performance_simulation(self, new_value, benchmark):
         try:
@@ -146,7 +145,11 @@ class EL2_parameter_tuning:
             target = 'TEST=' + benchmark
             param_setting = 'CONF_PARAMS='
             for index, param in enumerate(self.tunable_params):
-                value = str(round(new_value[index]) << self.shift_amount[index])
+                if type(new_value[index]) == str:
+                    # if the value is categorical
+                    value = new_value[index]
+                else:
+                    value = str(round(new_value[index]) << self.shift_amount[index])
                 param_setting+= '-set={param}={value} '.format(param=param, value=value)  
             param_setting += ''
             print(param_setting)

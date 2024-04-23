@@ -63,9 +63,10 @@ class Input_Constraints:
     
     def update_self_constraints(self, index, indvidual_constraint):
         self.Node[index].update_offset(indvidual_constraint[0])
-        #-----------------------------------------------------------
         self.normalized_bound[:,index] = torch.tensor([indvidual_constraint[0], indvidual_constraint[1]])
+        # constraint_bound is used to set the bound for the acquisition function.
         self.constraint_bound[:,index] = torch.tensor(self.Node[index].individual_constraints)
+        print(self.normalized_bound)
 
     def update_scale_normalize_exp_factor(self, scales, normalized_factors, exp_factors):
         self.normalized_factors = normalized_factors

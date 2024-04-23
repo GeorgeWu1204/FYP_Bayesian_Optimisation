@@ -5,11 +5,13 @@ make -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-
 make[1]: Entering directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
 make[1]: Nothing to be done for 'all'.
 make[1]: Leaving directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
-BUILD_PATH=snapshots/default /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/configs/veer.config -target=default -set=btb_size=256 -set=lsu_num_nbload=8 -set=lsu_stbuf_depth=8 -set=dccm_size=64 -set=iccm_size=64 
-veer: Set(s) requested : btb_size=256 lsu_num_nbload=8 lsu_stbuf_depth=8 dccm_size=64 iccm_size=64
-veer: Overriding btb_size value 512 with 256
+BUILD_PATH=snapshots/default /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/configs/veer.config -target=default -set=btb_size=32 -set=lsu_num_nbload=8 -set=lsu_stbuf_depth=8 -set=dccm_size=32 -set=iccm_size=128 
+veer: Set(s) requested : btb_size=32 lsu_num_nbload=8 lsu_stbuf_depth=8 dccm_size=32 iccm_size=128
+veer: Overriding btb_size value 512 with 32
 veer: Overriding lsu_num_nbload value 4 with 8
 veer: Overriding lsu_stbuf_depth value 4 with 8
+veer: Overriding dccm_size value 64 with 32
+veer: Overriding iccm_size value 64 with 128
 
 VeeR configuration for target=default
 
@@ -19,23 +21,23 @@ veer: bht_array_depth                = 256
 veer: bht_ghr_hash_1                 = 1
 veer: bht_ghr_range                  = 7:0
 veer: bht_ghr_size                   = 8
-veer: bht_hash_string                = {ghr[7:7], hashin[8:2]^ghr[7-1:0]} // cf1
+veer: bht_hash_string                = {ghr[7:4], hashin[5:2]^ghr[4-1:0]} // cf1
 veer: bht_size                       = 512
-veer: btb_addr_hi                    = 8
+veer: btb_addr_hi                    = 5
 veer: btb_addr_lo                    = 2
-veer: btb_array_depth                = 128
-veer: btb_btag_fold                  = 0
-veer: btb_btag_size                  = 6
+veer: btb_array_depth                = 16
+veer: btb_btag_fold                  = 1
+veer: btb_btag_size                  = 9
 veer: btb_enable                     = 1
 veer: btb_fold2_index_hash           = 0
 veer: btb_fullya                     = 0
-veer: btb_index1_hi                  = 8
+veer: btb_index1_hi                  = 5
 veer: btb_index1_lo                  = 2
-veer: btb_index2_hi                  = 15
-veer: btb_index2_lo                  = 9
-veer: btb_index3_hi                  = 22
-veer: btb_index3_lo                  = 16
-veer: btb_size                       = 256
+veer: btb_index2_hi                  = 9
+veer: btb_index2_lo                  = 6
+veer: btb_index3_hi                  = 13
+veer: btb_index3_lo                  = 10
+veer: btb_size                       = 32
 veer: btb_toffset_size               = 12
 veer: bus_prty_default               = 3
 veer: dma_bus_id                     = 1
@@ -73,26 +75,26 @@ veer: opensource                     = 0
 veer: timer_legal_en                 = 1
 veer: verilator                      = 
 veer: dccm_bank_bits                 = 2
-veer: dccm_bits                      = 16
+veer: dccm_bits                      = 15
 veer: dccm_byte_width                = 4
-veer: dccm_data_cell                 = ram_4096x39
+veer: dccm_data_cell                 = ram_2048x39
 veer: dccm_data_width                = 32
-veer: dccm_eadr                      = 0xf004ffff
+veer: dccm_eadr                      = 0xf0047fff
 veer: dccm_ecc_width                 = 7
 veer: dccm_enable                    = 1
 veer: dccm_fdata_width               = 39
-veer: dccm_index_bits                = 12
+veer: dccm_index_bits                = 11
 veer: dccm_num_banks                 = 4
 veer: dccm_num_banks_4               = 
 veer: dccm_offset                    = 0x40000
 veer: dccm_region                    = 0xf
 veer: dccm_reserved                  = 0x1400
-veer: dccm_rows                      = 4096
+veer: dccm_rows                      = 2048
 veer: dccm_sadr                      = 0xf0040000
-veer: dccm_size                      = 64
-veer: dccm_size_64                   = 
+veer: dccm_size                      = 32
+veer: dccm_size_32                   = 
 veer: dccm_width_bits                = 2
-veer: lsu_sb_bits                    = 16
+veer: lsu_sb_bits                    = 15
 veer: icache_2banks                  = 1
 veer: icache_bank_bits               = 1
 veer: icache_bank_hi                 = 3
@@ -132,20 +134,20 @@ veer: icache_waypack                 = 1
 veer: iccm_bank_bits                 = 2
 veer: iccm_bank_hi                   = 3
 veer: iccm_bank_index_lo             = 4
-veer: iccm_bits                      = 16
-veer: iccm_data_cell                 = ram_4096x39
-veer: iccm_eadr                      = 0xee00ffff
+veer: iccm_bits                      = 17
+veer: iccm_data_cell                 = ram_8192x39
+veer: iccm_eadr                      = 0xee01ffff
 veer: iccm_enable                    = 1
-veer: iccm_index_bits                = 12
+veer: iccm_index_bits                = 13
 veer: iccm_num_banks                 = 4
 veer: iccm_num_banks_4               = 
 veer: iccm_offset                    = 0xe000000
 veer: iccm_region                    = 0xe
 veer: iccm_reserved                  = 0x1000
-veer: iccm_rows                      = 4096
+veer: iccm_rows                      = 8192
 veer: iccm_sadr                      = 0xee000000
-veer: iccm_size                      = 64
-veer: iccm_size_64                   = 
+veer: iccm_size                      = 128
+veer: iccm_size_128                  = 
 veer: debug_sb_mem                   = 0xa0580000
 veer: external_data                  = 0xc0580000
 veer: external_data_1                = 0xb0000000
@@ -269,7 +271,7 @@ gcc version 10.2.0 ()
 COMPILER_PATH=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/:/usr/lib/gcc/riscv64-unknown-elf/10.2.0/:/usr/lib/gcc/riscv64-unknown-elf/:/usr/lib/gcc/riscv64-unknown-elf/10.2.0/:/usr/lib/gcc/riscv64-unknown-elf/
 LIBRARY_PATH=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/rv32imac/ilp32/:/usr/lib/gcc/riscv64-unknown-elf/10.2.0/
 COLLECT_GCC_OPTIONS='-mabi=ilp32' '-march=rv32imac' '-v' '-T' '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark_dccm.ld' '-specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs' '-nostartfiles' '-o' 'cmark_dccm.exe'
- /usr/lib/gcc/riscv64-unknown-elf/10.2.0/collect2 -plugin /usr/lib/gcc/riscv64-unknown-elf/10.2.0/liblto_plugin.so -plugin-opt=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/cc3djUf8.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -L/home/hw1020/Documents/Possible_Designs/Cores-VeeR-EL2/third_party/picolibc/install/picolibc/riscv64-unknown-elf/lib/rv32imac/ilp32 -L/home/hw1020/Documents/Possible_Designs/Cores-VeeR-EL2/third_party/picolibc/install/picolibc/riscv64-unknown-elf/lib -melf32lriscv --gc-sections -o cmark_dccm.exe -L/usr/lib/gcc/riscv64-unknown-elf/10.2.0/rv32imac/ilp32 -L/usr/lib/gcc/riscv64-unknown-elf/10.2.0 -Map=cmark_dccm.map crt0.o printf.o cmark.o -lgcc --start-group -lgcc -lc --end-group -lgcc -T /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark_dccm.ld
+ /usr/lib/gcc/riscv64-unknown-elf/10.2.0/collect2 -plugin /usr/lib/gcc/riscv64-unknown-elf/10.2.0/liblto_plugin.so -plugin-opt=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/cc7Zpicz.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -L/home/hw1020/Documents/Possible_Designs/Cores-VeeR-EL2/third_party/picolibc/install/picolibc/riscv64-unknown-elf/lib/rv32imac/ilp32 -L/home/hw1020/Documents/Possible_Designs/Cores-VeeR-EL2/third_party/picolibc/install/picolibc/riscv64-unknown-elf/lib -melf32lriscv --gc-sections -o cmark_dccm.exe -L/usr/lib/gcc/riscv64-unknown-elf/10.2.0/rv32imac/ilp32 -L/usr/lib/gcc/riscv64-unknown-elf/10.2.0 -Map=cmark_dccm.map crt0.o printf.o cmark.o -lgcc --start-group -lgcc -lc --end-group -lgcc -T /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark_dccm.ld
 COLLECT_GCC_OPTIONS='-mabi=ilp32' '-march=rv32imac' '-v' '-T' '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark_dccm.ld' '-specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs' '-nostartfiles' '-o' 'cmark_dccm.exe'
 riscv64-unknown-elf-objcopy -O verilog  cmark_dccm.exe program.hex
 riscv64-unknown-elf-objdump -S  cmark_dccm.exe > cmark_dccm.dis
@@ -343,9 +345,9 @@ mem_mailbox         = D0580000
 DCCM pre-load from f0040000 to f0041710
 2K performance run parameters for coremark.
 CoreMark Size    : 666
-Total ticks      : 280498
-Total time (secs): 280
-Iterat/Sec/MHz   : 3.57
+Total ticks      : 281414
+Total time (secs): 281
+Iterat/Sec/MHz   : 3.55
 Iterations       : 1
 Compiler version : GCC10.2.0
 
@@ -361,7 +363,7 @@ seedcrc          : 0xe9f5
 Correct operation validated. See readme.txt for run and reporting rules.
 TEST_PASSED
 
-Finished : minstret = 282995, mcycle = 297521
+Finished : minstret = 282995, mcycle = 298312
 See "exec.log" for execution trace with register updates..
 
 - /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tb_top.sv:380: Verilog $finish

@@ -50,11 +50,57 @@ def normalise_input_data(input_tensor, normalized_factors):
             output_tensor[i][j] = input_tensor[i][j] / normalized_factors[j]
     return output_tensor
 
-def recover_single_input_data(input_tensor, normalised_factor, scales, offsets, exps = None):
+def obtain_categorical_input_data(input_tensor, categorical_info):
+    """This function is used to recover the categorical input data"""
+    print("before obtain_categorical_input_data")
+    print(input_tensor)
+    d_dim = input_tensor.shape[0]
+    # Create a new list to store the slices of the original tensor
+    result_array = []
+    # Starting point for slicing
+    start_idx = 0
+    # Process each index and corresponding length
+    for single_categorical_info in categorical_info.values():
+        idx, length = single_categorical_info[0], single_categorical_info[1]
+        # Add the segment before the current indexed segment if there is any
+        if idx > start_idx:
+            result_array+= input_tensor[start_idx:idx].tolist()
+        # Extract the segment
+        segment = input_tensor[idx:idx+length]
+        # Calculate the max along the correct dimension and keepdims for alignment
+        max_value = torch.max(segment, dim=0, keepdim=True).values.int().item()
+        # Add the max value slice to the new tensor parts
+        result_array.append(single_categorical_info[2][max_value])
+        # Update the start index to the end of the current segment
+        start_idx = idx + length
+    
+    # Add the remaining part of the tensor if any
+    if start_idx < d_dim:
+        result_array+= input_tensor[start_idx:].tolist()
+    return result_array
+
+def recover_categorical_input_data(input_tensor, categorical_info):
+    """this function is used to extract the input variables that belongs to the categorical values and assign the maximum value with 1 and the rest with 0"""
+    # Process each index and corresponding length
+    for single_categorical_info in categorical_info.values():
+        idx, length = single_categorical_info[0], single_categorical_info[1]
+        segment = input_tensor[idx:idx+length]
+        result = torch.zeros_like(segment)
+        max_value = torch.max(segment)
+        result[segment == max_value] = 1
+        input_tensor[idx:idx+length] = result
+    return input_tensor
+
+
+def recover_single_input_data(input_tensor, normalised_factor, scales, offsets, categorical_info, exps = None):
     """This function transforms the elements within the tensor individually based on the conditions."""
     # Assuming input_tensor is in the shape of num_restarts x d_dim
     # Initialize an empty tensor for the results with the same shape as input_tensor
     input_var = torch.empty_like(input_tensor)
+    if categorical_info is not None:
+        # Recover the categorical data
+        input_tensor = recover_categorical_input_data(input_tensor, categorical_info) 
+    
     for i in range(input_tensor.shape[0]):
         # Check if exps is not None and the element in exps is larger than one
         if exps is not None and exps[i] > 1:
@@ -62,9 +108,11 @@ def recover_single_input_data(input_tensor, normalised_factor, scales, offsets, 
         else:
             # Apply the else part of the transformation
             input_var[i] = torch.round(input_tensor[i] * normalised_factor[i]) * scales[i] + offsets[i]
-
-    results = input_var.tolist()
-    return results
+    
+    if categorical_info is not None:
+        return obtain_categorical_input_data(input_var, categorical_info)
+    else:
+        return input_var.tolist()
 
 def recover_unrounded_input_data(input_tensor, input_info, type, device):
     """This function is to find the unrounded version of the real input from the x tensor in recording process"""

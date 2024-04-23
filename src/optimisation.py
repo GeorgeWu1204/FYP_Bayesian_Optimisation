@@ -24,7 +24,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 t_type = torch.float64
 
 # Input Settings
-CONSTRAINT_FILE = '../specification/input_spec_optimisation_set_4.txt'
+CONSTRAINT_FILE = '../specification/input_spec_optimisation_test_categorical.txt'
 input_info, output_info, param_tuner, optimisation_name = parse_constraints(CONSTRAINT_FILE, device)
 
 # Dataset Settings

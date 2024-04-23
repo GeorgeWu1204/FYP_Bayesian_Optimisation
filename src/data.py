@@ -4,12 +4,12 @@ import glob
 import sys
 import pickle
 import os.path as osp
-from utils import calculate_condition, calculate_smooth_condition, recover_single_input_data, read_utilization, calculate_hypervolume
+from utils import calculate_smooth_condition, recover_single_input_data, read_utilization
 from botorch.utils.transforms import normalize
 
 class Input_Info:
     """Class to store all the related input information"""
-    def __init__(self, input_dim, input_scales, input_normalized_factor, input_exp, input_offsets, input_names, input_constraints, self_constraints, coupled_constraints):
+    def __init__(self, input_dim, input_scales, input_normalized_factor, input_exp, input_offsets, input_names, input_constraints, input_categorical, self_constraints, coupled_constraints):
         self.input_dim = input_dim
         self.input_scales = input_scales
         self.input_normalized_factor = input_normalized_factor
@@ -20,6 +20,7 @@ class Input_Info:
         self.constants = None
         self.self_constraints = self_constraints
         self.coupled_constraints = coupled_constraints
+        self.input_categorical = input_categorical
 
 class Output_Info:
     """Class to store all the related output information"""
@@ -63,10 +64,11 @@ class Data_Set:
         self.output_normalised_factors = {}
         self.objs_direct = {}    
         # to recover the input data
-        self.input_normalized_factors = torch.tensor(input_info.input_data_normalized_factors, dtype=tensor_type, device=tensor_device)
+        self.input_normalized_factors = torch.tensor(input_info.input_normalized_factor, dtype=tensor_type, device=tensor_device)
         self.input_scales_factors = torch.tensor(input_info.input_scales, dtype=tensor_type, device=tensor_device)
         self.input_offsets = torch.tensor(input_info.input_offsets, dtype=tensor_type, device=tensor_device)
-        self.input_constants = input_info.input_constants
+        self.input_exp = torch.tensor(input_info.input_exp, dtype=tensor_type, device=tensor_device)
+        self.input_constants = input_info.constants
         # tensor type and device
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
@@ -229,11 +231,6 @@ class NutShell_Data(Data_Set):
             self.best_value[obj] = output_obj_constraint[obj][1]
             self.worst_value[obj] = 0.0
         
-        # to recover the input data
-        self.input_normalized_factors = torch.tensor(input_data_normalized_factors, dtype=tensor_type, device=tensor_device)
-        self.input_scales_factors = torch.tensor(scales, dtype=tensor_type, device=tensor_device)
-        self.input_offsets = torch.tensor(input_offsets, dtype=tensor_type, device=tensor_device)
-        self.input_constants = input_constants
         # tensor type and device
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
@@ -295,11 +292,10 @@ class NutShell_Data(Data_Set):
 
 class EL2_Data(Data_Set):
     def __init__(self, input_info, output_info, param_tuner, optimisation_name, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
-    
         self.utilisation_path = '../object_functions/Syn_Report/EL2_utilization_synth.rpt'
         self.param_tuner = param_tuner
-
-        # to recover the output data
+        
+        # to recover the Output data
         self.objs_to_optimise_dim = output_info.obj_to_optimise_dim
         self.objs_to_evaluate = list(output_info.obj_to_optimise.keys()) + list(output_info.output_constraints.keys())
         self.objs_to_evaluate_dim = len(self.objs_to_evaluate)
@@ -338,15 +334,17 @@ class EL2_Data(Data_Set):
             self.best_value[obj_name] = output_info.output_constraints[obj_name][1]
             self.worst_value[obj_name] = output_info.output_constraints[obj_name][0]
             self.output_constraints_to_check.append([self.normalise_single_output_data(bound, obj_name) for bound in output_info.output_constraints[obj_name]])
-            
             self.normaliser_bounds[0][obj_index] = output_info.output_constraints[obj_name][0]
             self.normaliser_bounds[1][obj_index] = output_info.output_constraints[obj_name][1]
-        # to recover the input data
+        
+        # to recover the Input data
         self.input_normalized_factors = torch.tensor(input_info.input_normalized_factor, dtype=tensor_type, device=tensor_device)
         self.input_scales_factors = torch.tensor(input_info.input_scales, dtype=tensor_type, device=tensor_device)
         self.input_offsets = torch.tensor(input_info.input_offsets, dtype=tensor_type, device=tensor_device)
         self.input_exp = torch.tensor(input_info.input_exp, dtype=tensor_type, device=tensor_device)
         self.input_constants = input_info.constants
+        self.input_categorical = input_info.input_categorical
+
         # tensor type and device
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
@@ -359,8 +357,10 @@ class EL2_Data(Data_Set):
         obj_index = 0
         for i in range(num_restart):
             # num_restart needs to be fixed to 1
-            input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.input_scales_factors, self.input_offsets, self.input_exp)
+            input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.input_scales_factors, self.input_offsets, self.input_categorical, self.input_exp)
             sample_input = self.format_and_add_const_to_data(input)
+            print("sample_input: ", sample_input)
+            quit()
             # Modify the paramter settings
             utilisation_percentage = self.build_new_dataset.find_corresponding_data(sample_input)
             if utilisation_percentage is None:

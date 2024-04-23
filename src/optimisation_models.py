@@ -35,7 +35,7 @@ def calculate_weighted_obj_score(normalised_obj, ref_points, objective_index):
         result[..., 0] = result[..., 0] * ( normalised_obj[..., i] <= 0)
     return result[..., 0]
 
-
+### <----------------- Single Objective BO With Resource Limitation Consideration ----------------->
 
 class single_objective_BO_model():
     """Single Objective Bayesian Optimisation Model"""
@@ -150,6 +150,87 @@ class single_objective_BO_model():
         new_exact_obj = torch.cat([exact_objs[...,self.objective_index:self.objective_index + 1], con_objs], dim=-1)
         print("train_obj: ", train_obj.shape)
         return unnormalised_train_x, new_exact_obj, train_obj, obj_scores
+
+
+
+### <----------------- Single Objective BO Designed for Simple Handling of Resource Constraint ----------------->
+
+class single_objective_BO_model_with_resource_constraint(single_objective_BO_model):
+
+    def __init__(self, NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type, output_constraints_enable=True, categorical_handle_enable=True):
+        super().__init__(NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type, output_constraints_enable, categorical_handle_enable)
+
+    def initialize_model(self, train_x, train_obj):    
+        return self.initialize_default_model(train_x, train_obj)
+    
+    def calculate_max_obj(self, normalised_obj):
+        result = normalised_obj.clone()
+        for i in range (1, normalised_obj.shape[-1]):
+            result[..., 0] = result[..., 0] * ( normalised_obj[..., i] <= 0)
+        return result[..., 0].max()
+
+    
+    def initialize_default_model(self, train_x, train_obj, state_dict=None):
+        """define models for objective and constraint"""
+        ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
+        models = []
+        for obj_index in range(train_obj.shape[-1]): 
+            train_y = train_obj[..., obj_index : obj_index + 1]
+            models.append(SingleTaskGP(
+                                        train_x, 
+                                        train_y, 
+                                        outcome_transform=Standardize(m=1)
+                                    ))
+        
+        model = ModelListGP(*models)
+        mll = SumMarginalLogLikelihood(model.likelihood, model)
+        if state_dict is not None:
+            model.load_state_dict(state_dict)
+        return mll, model
+
+    def build_acqf(self, model, train_obj, sampler):
+        """Build the qNEHVI acquisition function"""
+        qEI = qExpectedImprovement(
+            model=model,
+            best_f=self.calculate_max_obj(train_obj),
+            sampler=sampler,
+            objective=self.constrained_obj,
+        )
+        return qEI
+    
+    def optimize_acqf_and_get_observation(self, acq_func, data_set):
+        """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
+        # TODO: Noticed that if there is an input constraint, the points are selected from the generated condition.
+        candidates, _ = optimize_acqf(
+            acq_function=acq_func,
+            bounds=self.input_info.constraints.constraint_bound,
+            q=self.BATCH_SIZE,
+            num_restarts=self.NUM_RESTARTS,
+            options={"batch_limit": 1, "maxiter": 200},
+            raw_samples=self.RAW_SAMPLES,
+            sequential=True
+        )
+        # observe new values
+        new_x = candidates.detach()
+        valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
+        new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
+        new_con_obj = data_set.check_obj_constraints(new_normalised_obj)
+        new_train_obj = torch.cat([new_normalised_obj[...,self.objective_index:self.objective_index + 1], new_con_obj], dim=-1)
+        new_exact_obj = torch.cat([new_exact_obj[...,self.objective_index:self.objective_index + 1], new_con_obj], dim=-1)
+        new_obj_score = calculate_weighted_obj_score(new_train_obj, self.ref_points, self.objective_index)
+        return valid_generated_sample, new_x, new_exact_obj, new_train_obj, new_obj_score
+    
+    def generate_initial_data(self, sampler_generator, NUM_OF_INITIAL_POINT, data_set):
+        """generate training data"""
+        unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set)
+        train_obj = torch.cat([normalised_objs[...,self.objective_index:self.objective_index + 1], con_objs], dim=-1)
+        # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
+        obj_scores = calculate_weighted_obj_score(train_obj, self.ref_points, self.objective_index)
+        new_exact_obj = torch.cat([exact_objs[...,self.objective_index:self.objective_index + 1], con_objs], dim=-1)
+        print("train_obj: ", train_obj.shape)
+        return unnormalised_train_x, new_exact_obj, train_obj, obj_scores
+
+
 
 ### <----------------- Multi-objective Model ----------------->
 
