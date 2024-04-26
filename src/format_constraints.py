@@ -1,6 +1,4 @@
 import torch
-import numpy as np
-import random
 from utils import build_matrix
 import math
 
@@ -188,6 +186,3 @@ if __name__ == '__main__':
     num_restarts = 1
     q_dim = 1
     d_dim = 2
-    # result = c.check_meet_constraint(d_data, 0)
-    # print(result)
-    # test = c.create_initial_data(1)

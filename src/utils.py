@@ -1,5 +1,4 @@
 import torch
-import itertools
 import numpy as np
 import matplotlib.pyplot as plt
 from botorch.utils.multi_objective.box_decompositions.non_dominated import NondominatedPartitioning

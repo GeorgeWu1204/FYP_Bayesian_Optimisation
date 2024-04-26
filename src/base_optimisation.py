@@ -1,10 +1,6 @@
 import torch
 import data
-import time
 import utils
-import warnings
-import random
-from colorama import Fore, Style
 
 from interface import parse_constraints
 from format_constraints import Simpler_Constraints

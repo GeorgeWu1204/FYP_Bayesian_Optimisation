@@ -1,8 +1,14 @@
 # FYP Bayesian Optimisation
 
-## Run the model
-
 This project is currently under development. The aim is to use Bayesian Optimisation to find the multi-objectives optimal solutions within the customised processor's design space.
+
+## Prerequisite 
+
+```git submodule init``` 
+
+Do the modifications as shown in [Processor Setup](object_functions/README.md)
+
+## Run the model
 
 To run this code, run the following command in the terminal:
 
@@ -50,11 +56,13 @@ Apart from that, the train_obj only considers the objectives that need to optimi
 - Improve the initial Sampling method.
 - Select the sample point to decide whether it shoud be integrated to the training set.
 - Connect the model with the real customisable processor.
+- Complete the overall optimisation flow.
+- Enable the model to accept categorical variables.
 
 ## TODO
 
-- Complete the overall flow
-- Constraints format extension, to support variables increasing exponentially, e.g. btb_size = { 8, 16, 32, 64, 128, 256, 512 }
+- Categorical Variable Kernel Optimisation.
+- Invalid designs handling.
 
 ## Things to Improve
 

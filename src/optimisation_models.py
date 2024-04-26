@@ -1,4 +1,3 @@
-import random
 import time
 import torch
 from utils import calculate_hypervolume, encapsulate_obj_tensor_into_dict, other_model_training_result
