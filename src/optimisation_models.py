@@ -73,17 +73,18 @@ class single_objective_BO_model():
         ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
         models = []
         for obj_index in range(train_obj.shape[-1]): 
+            print("obj_index: ", obj_index)
             train_y = train_obj[..., obj_index : obj_index + 1]
             models.append(SingleTaskGP_transformed(
                                         self.input_info.input_scales,
                                         self.input_info.input_normalized_factor,
+                                        self.input_info.input_categorical,
                                         train_x, 
                                         train_y, 
                                         outcome_transform=Standardize(m=1),
                                         tensor_type=self.t_type,
                                         tensor_device=self.device
                                     ))
-        
         model = ModelListGP(*models)
         mll = SumMarginalLogLikelihood(model.likelihood, model)
         if state_dict is not None:
@@ -264,6 +265,7 @@ class multi_objective_BO_model():
             models.append(SingleTaskGP_transformed(
                                         self.input_info.input_scales,
                                         self.input_info.input_normalized_factor,
+                                        self.input_info.input_categorical,
                                         train_x, 
                                         train_y, 
                                         outcome_transform=Standardize(m=1),

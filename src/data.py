@@ -359,8 +359,6 @@ class EL2_Data(Data_Set):
             # num_restart needs to be fixed to 1
             input = recover_single_input_data(sample_inputs[i,:], self.input_normalized_factors, self.input_scales_factors, self.input_offsets, self.input_categorical, self.input_exp)
             sample_input = self.format_and_add_const_to_data(input)
-            print("sample_input: ", sample_input)
-            quit()
             # Modify the paramter settings
             utilisation_percentage = self.build_new_dataset.find_corresponding_data(sample_input)
             if utilisation_percentage is None:

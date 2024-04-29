@@ -43,10 +43,12 @@ print(f"Input Offset: {input_info.input_offsets}")
 print(f"Input Scales: {input_info.input_scales}")
 print(f"Input Normalised Factor: {input_info.input_normalized_factor}")
 print(f"Input Exponential: {input_info.input_exp}")
+print(f"Input Categories: {input_info.input_categorical}")
 print(f"Optimisation Device : {output_info.optimisation_target}")
 print(f"Objectives to Optimise: {output_info.obj_to_optimise}")
 print(f"Output Objective Constraint: {output_info.output_constraints}")
 print("<--------------------------------------------------->")
+
 # Train Set Settings
 TRAIN_SET_DISTURBANCE_RANGE = 0.01                  # noise standard deviation for objective
 TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2                # acceptable distance between the rounded vertex and the real vertex
@@ -89,7 +91,6 @@ if not debug:
     torch.set_printoptions(sci_mode=False)
 #TODO: Temporarily modified for paper
 output_info.obj_to_optimise = {list(output_info.obj_to_optimise.keys())[obj_index] : list(output_info.obj_to_optimise.values())[obj_index]}
-print("output_info.obj_to_optimise: ", output_info.obj_to_optimise)
 
 if record:
     record_file_name = '../test/test_results/'
@@ -101,7 +102,6 @@ if record:
 best_obj_scores_per_trial = []
 best_sample_points_per_trial = {trial : {input : 0.0 for input in input_info.input_names} for trial in range(1, N_TRIALS + 1)}
 Model = single_objective_BO_model(NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type)
-
 #TODO: Temporarily modified for paper
 Model.objective_index = obj_index
 #Optimisation Loop
@@ -132,10 +132,8 @@ for trial in range (1, N_TRIALS + 1):
     print("best_obj_score_per_interation: ", best_obj_score_per_interation)
     for iteration in range(1, N_BATCH + 1):
         t0 = time.monotonic()
-
         # fit the models
         fit_gpytorch_model(mll_ei)
-
         #QMC sampler
         qmc_sampler = SobolQMCNormalSampler(sample_shape=torch.Size([MC_SAMPLES]))
         #TODO: single acqf -> uses train_obj while multiple acqf uses train_x

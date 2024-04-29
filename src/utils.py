@@ -51,26 +51,16 @@ def normalise_input_data(input_tensor, normalized_factors):
 
 def obtain_categorical_input_data(input_tensor, categorical_info):
     """This function is used to recover the categorical input data"""
-    print("before obtain_categorical_input_data")
-    print(input_tensor)
     d_dim = input_tensor.shape[0]
-    # Create a new list to store the slices of the original tensor
     result_array = []
-    # Starting point for slicing
     start_idx = 0
-    # Process each index and corresponding length
     for single_categorical_info in categorical_info.values():
         idx, length = single_categorical_info[0], single_categorical_info[1]
-        # Add the segment before the current indexed segment if there is any
         if idx > start_idx:
             result_array+= input_tensor[start_idx:idx].tolist()
-        # Extract the segment
         segment = input_tensor[idx:idx+length]
-        # Calculate the max along the correct dimension and keepdims for alignment
         max_value = torch.max(segment, dim=0, keepdim=True).values.int().item()
-        # Add the max value slice to the new tensor parts
         result_array.append(single_categorical_info[2][max_value])
-        # Update the start index to the end of the current segment
         start_idx = idx + length
     
     # Add the remaining part of the tensor if any
@@ -105,7 +95,6 @@ def recover_single_input_data(input_tensor, normalised_factor, scales, offsets, 
         if exps is not None and exps[i] > 1:
             input_var[i] = exps[i] ** (torch.round(input_tensor[i] * normalised_factor[i]) * scales[i] + offsets[i])
         else:
-            # Apply the else part of the transformation
             input_var[i] = torch.round(input_tensor[i] * normalised_factor[i]) * scales[i] + offsets[i]
     
     if categorical_info is not None:
