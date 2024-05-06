@@ -363,7 +363,6 @@ class EL2_Data(Data_Set):
             utilisation_percentage = self.build_new_dataset.find_corresponding_data(sample_input)
             if utilisation_percentage is None:
                 print(f"{sample_input} not found in the dataset, Start to Generate ")
-                
                 objective_results = []
                 # print("Start to run the performance simulation for ", type(self.performance_objs_benchmarks))
                 # Run the Performance Simulation (Recording mcycle only)

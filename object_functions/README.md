@@ -36,13 +36,16 @@ Clone Project
 
 ### Prerequisites
 
+- Vivado 2023.2
 - Verilator (4.106 or later)
-- RISC-V GNU Compiler Toolchain
+- RISC-V GNU Compiler Toolchain ```sudo apt install gcc-riscv64-unknown-elf```
 - ```export RV_ROOT=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2```
 - TODO: Have not came up with a better method to handle this. The current method is to modify the ```configs/veer.config``` line 373 to ```$build_path = "/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/$snapshot" ;```
 - TODO2: To run the dhry benchmark, need to modify the ```tb_top.sv``` to delete the selection of ```verilator```
+
+### Modifications
+- add ```#include <limits>``` to the ```/usr/local/share/verilator/include/verilated.cpp```
+
 ### Steps
 
 ```make -f $RV_ROOT/tools/Makefile```
-
-
