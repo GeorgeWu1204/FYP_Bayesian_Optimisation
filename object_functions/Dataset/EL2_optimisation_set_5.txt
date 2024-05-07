@@ -1,0 +1,1 @@
+btb_size, lsu_num_nbload, lsu_stbuf_depth, dccm_size, iccm_size, mcycle_cmark, mcycle_dhry, mcycle_cmark_iccm, mcycle_cmark_dccm, LUT as Logic

@@ -49,6 +49,18 @@ def normalise_input_data(input_tensor, normalized_factors):
             output_tensor[i][j] = input_tensor[i][j] / normalized_factors[j]
     return output_tensor
 
+
+def standardize_tensor(x):
+    """Standardizes a tensor of shape [n, 1] by subtracting the mean and dividing by the standard deviation."""
+    mean = x.mean(dim=0, keepdim=True)  # Compute mean along the first dimension
+    std = x.std(dim=0, keepdim=True)    # Compute standard deviation along the first dimension
+    # Check if standard deviation is zero to avoid division by zero
+    if std == 0:
+        return x - mean
+    else:
+        return (x - mean) / std
+
+
 def obtain_categorical_input_data(input_tensor, categorical_info):
     """This function is used to recover the categorical input data"""
     d_dim = input_tensor.shape[0]

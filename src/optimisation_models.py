@@ -1,6 +1,6 @@
 import time
 import torch
-from utils import calculate_hypervolume, encapsulate_obj_tensor_into_dict, other_model_training_result
+from utils import calculate_hypervolume, encapsulate_obj_tensor_into_dict, other_model_training_result, standardize_tensor
 from colorama import Fore, Style
 import numpy as np
 from typing import Optional
@@ -73,15 +73,15 @@ class single_objective_BO_model():
         ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
         models = []
         for obj_index in range(train_obj.shape[-1]): 
-            print("obj_index: ", obj_index)
             train_y = train_obj[..., obj_index : obj_index + 1]
+            standardized_train_y = standardize_tensor(train_y)
             models.append(SingleTaskGP_transformed(
                                         self.input_info.input_scales,
                                         self.input_info.input_normalized_factor,
                                         self.input_info.input_categorical,
                                         train_x, 
-                                        train_y, 
-                                        outcome_transform=Standardize(m=1),
+                                        standardized_train_y, 
+                                        # outcome_transform=Standardize(m = 1),
                                         tensor_type=self.t_type,
                                         tensor_device=self.device
                                     ))
@@ -148,7 +148,6 @@ class single_objective_BO_model():
         # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
         obj_scores = calculate_weighted_obj_score(train_obj, self.ref_points, self.objective_index)
         new_exact_obj = torch.cat([exact_objs[...,self.objective_index:self.objective_index + 1], con_objs], dim=-1)
-        print("train_obj: ", train_obj.shape)
         return unnormalised_train_x, new_exact_obj, train_obj, obj_scores
 
 
@@ -224,10 +223,8 @@ class single_objective_BO_model_with_resource_constraint(single_objective_BO_mod
         """generate training data"""
         unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set)
         train_obj = torch.cat([normalised_objs[...,self.objective_index:self.objective_index + 1], con_objs], dim=-1)
-        # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
         obj_scores = calculate_weighted_obj_score(train_obj, self.ref_points, self.objective_index)
         new_exact_obj = torch.cat([exact_objs[...,self.objective_index:self.objective_index + 1], con_objs], dim=-1)
-        print("train_obj: ", train_obj.shape)
         return unnormalised_train_x, new_exact_obj, train_obj, obj_scores
 
 

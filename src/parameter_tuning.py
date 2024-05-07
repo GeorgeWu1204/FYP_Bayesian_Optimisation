@@ -152,7 +152,6 @@ class EL2_parameter_tuning:
                     value = str(round(new_value[index]) << self.shift_amount[index])
                 param_setting+= '-set={param}={value} '.format(param=param, value=value)  
             param_setting += ''
-            # print(param_setting)
             command = ['make', '-f', os.path.join(rv_root, 'tools/Makefile'), target, param_setting]
             # print(command)
             # Prepare the command with the expanded environment variable

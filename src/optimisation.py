@@ -24,7 +24,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 t_type = torch.float64
 
 # Input Settings
-CONSTRAINT_FILE = '../specification/input_spec_optimisation_test_categorical.txt'
+CONSTRAINT_FILE = '../specification/input_spec_btb_lsu.txt'
 input_info, output_info, param_tuner, optimisation_name = parse_constraints(CONSTRAINT_FILE, device)
 
 # Dataset Settings
@@ -55,9 +55,9 @@ TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2                # acceptable distance betwee
 
 # Model Settings
 NUM_RESTARTS = 4                # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 16        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
+NUM_OF_INITIAL_POINT = 8        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
-N_BATCH = 50                    # number of BO batches (inner loop)
+N_BATCH = 15                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
 MC_SAMPLES = 128                # number of MC samples for qNEI
 RAW_SAMPLES = 8                 # number of raw samples for qNEI
@@ -71,7 +71,8 @@ enable_train_set_modification = False
 
 
 #TODO: Temporarily modified for paper
-obj_index = 2
+obj_index = 0
+
 #reference point for optimisation used for hypervolume calculation
 ref_points = utils.find_ref_points(output_info.obj_to_optimise_dim, data_set.objs_direct, t_type, device)
 #normalise objective to ensure the same scale
@@ -89,7 +90,8 @@ if not debug:
     warnings.filterwarnings("ignore", category=NumericalWarning)
     warnings.filterwarnings("ignore", category=InputDataWarning)
     torch.set_printoptions(sci_mode=False)
-#TODO: Temporarily modified for paper
+
+#TODO: Temporarily modified for paper, change from multi-objective to single-objective while keep using the same dataset.
 output_info.obj_to_optimise = {list(output_info.obj_to_optimise.keys())[obj_index] : list(output_info.obj_to_optimise.values())[obj_index]}
 
 if record:
@@ -211,11 +213,7 @@ print("<------------------Final Result------------------>")
 best_trial = utils.find_max_index_in_list(best_obj_scores_per_trial)
 _, best_objective = data_set.find_ppa_result(best_sample_points_per_trial[best_trial + 1])
 print("best_sample_points_per_trial: ", best_sample_points_per_trial[best_trial + 1])
-real_sample_point = utils.recover_single_input_data(best_sample_points_per_trial[best_trial + 1].squeeze(0), input_info.input_normalized_factor, input_info.input_scales, input_info.input_offsets, input_info.input_exp)
+real_sample_point = utils.recover_single_input_data(best_sample_points_per_trial[best_trial + 1].squeeze(0), input_info.input_normalized_factor, input_info.input_scales, input_info.input_offsets, input_info.input_categorical, input_info.input_exp)
 print(f"{Fore.BLUE}Best sample point: {real_sample_point}{Style.RESET_ALL}")
 print(f"{Fore.BLUE}Best objective: {best_objective}{Style.RESET_ALL}")
 print(f"{Fore.BLUE}Best hyper volume: {best_obj_scores_per_trial[best_trial]}{Style.RESET_ALL}")
-
-# for i in range(train_obj_ei.shape[0]):
-#     print(f"train_x_ei: {train_x_ei[i, :].tolist()}")
-#     print(f"train_obj_ei: {train_obj_ei[i, :].tolist()}")

@@ -76,13 +76,6 @@ class train_set_records():
                                 break
                 if valid_initial_data:
                     self.history_record[recovered_sample].append(recovered_train_x[i])
-
-    # def calculate_hypervolume(self, train_obj):
-    #     """Calculate the hypervolume"""
-    #     # Y dimension (batch_shape) x n x m-dim
-    #     partitioning = NondominatedPartitioning(ref_point=self.worst_ref_objective, Y = train_obj[..., : self.objective_to_optimise_dim])
-    #     hv = partitioning.compute_hypervolume().item()
-    #     return hv
         
     def calculate_distance(self, x1, x2):
         """This function is used to calculate the distance between two points"""
