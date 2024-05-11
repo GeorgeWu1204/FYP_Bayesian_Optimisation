@@ -2,7 +2,7 @@ import torch
 import numpy as np
 from itertools import product
 from botorch.utils.multi_objective.box_decompositions.non_dominated import NondominatedPartitioning
-from utils import calculate_hypervolume
+from utils import calculate_hypervolume, recover_categorical_input_data
 
 class train_set_records():
     """This class is used to record the training set"""
@@ -59,7 +59,7 @@ class train_set_records():
         """This function is used to store the initial data"""
         self.reset_storage()
         train_set_size = train_x.shape[0]
-        recovered_train_x = self.recover_input_data_for_storage(train_x)
+        recovered_train_x = recover_categorical_input_data(train_x)
         for i in range(train_set_size):
             recovered_sample = self.convert_tensor_to_tuple(recovered_train_x[i])
             if self.history_record.get(recovered_sample, None) == None:

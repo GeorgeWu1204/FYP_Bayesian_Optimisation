@@ -127,7 +127,7 @@ class EL2_parameter_tuning:
         self.shift_amount = shift_amount            # The amount by which the parameters are shifted
         self.generation_path = generation_path      # Path to execute the generation command
         self.vivado_project_path = vivado_project_path
-        self.tcl_path = '../../tools/run_EL2_synthesis.tcl'
+        self.tcl_path = '../../tools/EL2/run_EL2_synthesis.tcl'
         # Log file for the generated reports
         self.generated_report_num = 0
         self.generated_report_directory = '../object_functions/Syn_Report/'
@@ -226,13 +226,9 @@ class EL2_parameter_tuning:
                 if valid:
                     print("simulation result: ", self.run_performance_simulation())
 
-if __name__ == '__main__':
-    tunable_params = ['btb_size', 'dccm_size' ]
-    generation_path = '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
-    new_value = [128, 512]
-    shift_amount = [0, 0]
-    vivado_project_path = '../object_functions/Vivado_Prj/EL2_Prj/'
-    pt = EL2_parameter_tuning(tunable_params, shift_amount, generation_path, vivado_project_path)
-    pt.tune_and_run_performance_simulation(new_value, 'cmark')
-    # pt.tune_parameter(new_value)
-    # pt.run_synthesis()
+
+
+# class CVA6_parameter_tuning:
+#     """This is the tuner for CVA6 Cores, it could automatically customise the processor according to the param settings"""
+#     def __init__(self, tunable_params, shift_amount, generation_path, vivado_project_path):
+#         super().__init__(tunable_params, shift_amount, generation_path, vivado_project_path)

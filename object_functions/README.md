@@ -49,3 +49,17 @@ Clone Project
 ### Steps
 
 ```make -f $RV_ROOT/tools/Makefile```
+
+## [CVA6 RISC-V CPU](https://github.com/openhwgroup/cva6)
+
+### Prerequisites
+
+- Verilator 5.008.
+
+### Configure
+
+at line 99 of ```cva6/makefile```
+
+## [SCR1 RISC-V Core](https://github.com/syntacore/scr1/tree/master)
+
+## [Ibex RISC-V Core](https://github.com/lowRISC/ibex)

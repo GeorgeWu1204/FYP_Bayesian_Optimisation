@@ -6,6 +6,8 @@ This project is currently under development. The aim is to use Bayesian Optimisa
 
 - Python 3.8.5
 - meson 0.61.2
+- torch 2.3.0+cu121
+- botorch 0.10.0
 
 ## Prerequisite
 
@@ -63,13 +65,13 @@ Apart from that, the train_obj only considers the objectives that need to optimi
 - Connect the model with the real customisable processor.
 - Complete the overall optimisation flow.
 - Enable the model to accept categorical variables.
+- Categorical Variable Kernel Optimisation.
+- Invalid designs handling.
 
 ## TODO
 
-- Categorical Variable Kernel Optimisation.
-- Invalid designs handling.
+- Find another configurable core supporting categorical value. [RISC-V Lib](https://github.com/riscv/riscv-isa-manual/blob/latex/marchid.md)
 
 ## Things to Improve
 
 - Currently, the output constraints are considered as the last dimension of the objective functions.
-- Discreteness problem, many samples map to the same outcomes, driving the model easily to the local optimum.
