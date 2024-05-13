@@ -1,3 +1,6 @@
 [submodule "object_functions/Cores-VeeR-EL2"]
 	path = object_functions/Cores-VeeR-EL2
 	url = https://github.com/chipsalliance/Cores-VeeR-EL2.git
+[submodule "object_functions/scr1"]
+	path = object_functions/scr1
+	url = https://github.com/syntacore/scr1.git
