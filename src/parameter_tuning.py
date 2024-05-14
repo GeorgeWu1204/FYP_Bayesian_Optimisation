@@ -232,3 +232,52 @@ class EL2_parameter_tuning:
 #     """This is the tuner for CVA6 Cores, it could automatically customise the processor according to the param settings"""
 #     def __init__(self, tunable_params, shift_amount, generation_path, vivado_project_path):
 #         super().__init__(tunable_params, shift_amount, generation_path, vivado_project_path)
+
+
+class scr1_parameter_tuning:
+    """This is the tuner for scr1 Cores, it could automatically customise the processor according to the param settings"""
+    def __init__(self, tunable_params, shift_amount, generation_path, vivado_project_path):
+        self.tunable_params = tunable_params        # A dictionary or list of parameters that can be tuned
+        self.shift_amount = shift_amount            # The amount by which the parameters are shifted
+        self.generation_path = generation_path      # Path to execute the generation command
+        self.vivado_project_path = vivado_project_path
+        self.tcl_path = '../../tools/scr1/run_scr1_synthesis.tcl'
+        # Log file for the generated reports
+        self.generated_report_num = 0
+        self.generated_report_directory = '../object_functions/Syn_Report/'
+        self.stored_report_directory = '../object_functions/Syn_Report/dynamic_set/'
+        self.generated_filename = 'scr1_utilization_synth.rpt'
+        self.generated_logfile = '../object_functions/Logs/'
+        self.configuration_file = '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/scr1/src/includes/scr1_arch_description.svh'
+
+    def tune_and_run_performance_simulation(self, new_value, benchmark):
+        try:
+            # Expand the environment variable
+            rv_root = os.environ.get('RV_ROOT', '')  # Default to an empty string if RV_ROOT is not set
+            if not rv_root:
+                print("RV_ROOT environment variable is not set.")
+                return False, None, None
+            target = 'TEST=' + benchmark
+            param_setting = 'CONF_PARAMS='
+            for index, param in enumerate(self.tunable_params):
+                if type(new_value[index]) == str:
+                    # if the value is categorical
+                    value = new_value[index]
+                else:
+                    value = str(round(new_value[index]) << self.shift_amount[index])
+                param_setting+= '-set={param}={value} '.format(param=param, value=value)  
+            param_setting += ''
+            command = ['make', '-f', os.path.join(rv_root, 'tools/Makefile'), target, param_setting]
+            # print(command)
+            # Prepare the command with the expanded environment variable
+            # Run the 'make' command in the directory where the Makefile is located
+            with open(self.generated_logfile + 'Processor_Generation.log', 'w') as f:
+                subprocess.run(command, check=True, stdout=f, stderr=f, cwd=self.generation_path)
+            minstret, mcycle = self.extract_minstret_mcycle(self.generated_logfile + 'Processor_Generation.log')
+            if mcycle is None:
+                return False, None, None
+            return True, minstret, mcycle
+        except subprocess.CalledProcessError as e:
+            # Optionally, log the error message from the exception
+            print(f"Error occurred: {e}")
+            return False, None, None

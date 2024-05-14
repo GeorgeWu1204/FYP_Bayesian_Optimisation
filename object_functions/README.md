@@ -60,6 +60,18 @@ Clone Project
 
 at line 99 of ```cva6/makefile```
 
+### Problem
+
+The Simulation Results of the benchmarks such as Dhrystone are currently not supported. Hence, it cannot be used as a good candidate for the Bayesian Optimisation.
+
 ## [SCR1 RISC-V Core](https://github.com/syntacore/scr1/tree/master)
 
+### Setup
+
+```export RISCV=/home/hw1020/Documents/Installations```
+
 ## [Ibex RISC-V Core](https://github.com/lowRISC/ibex)
+
+## [Rocket Chip](https://github.com/chipsalliance/rocket-chip.git)
+
+
