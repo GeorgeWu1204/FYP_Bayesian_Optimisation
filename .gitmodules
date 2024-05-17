@@ -4,3 +4,6 @@
 [submodule "object_functions/scr1"]
 	path = object_functions/scr1
 	url = https://github.com/syntacore/scr1.git
+[submodule "object_functions/rocket-chip"]
+	path = object_functions/rocket-chip
+	url = https://github.com/chipsalliance/rocket-chip.git

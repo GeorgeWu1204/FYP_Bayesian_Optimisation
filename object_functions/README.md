@@ -74,4 +74,11 @@ The Simulation Results of the benchmarks such as Dhrystone are currently not sup
 
 ## [Rocket Chip](https://github.com/chipsalliance/rocket-chip.git)
 
+### Setup
+```git clone https://github.com/chipsalliance/rocket-chip.git```
+```cd rocket-chip```
+```git checkout v1.6```
+```git submodule update --init```
+```export RISCV=/home/hw1020/Documents/Installations```
+Then need to modify according to the issue proposed [GitHub Issue](https://github.com/chipsalliance/rocket-chip/pull/3226)
 
