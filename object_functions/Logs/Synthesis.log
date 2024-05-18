@@ -6,36 +6,31 @@
     ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
     ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 
-source ../../tools/run_EL2_synthesis.tcl
-# open_project EL2_Prj.xpr
-INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/EL2_Prj/EL2_Prj.gen/sources_1'.
+source ../../tools/RocketChip/run_RocketChip_synthesis.tcl
+# open_project rocket_chip.xpr
+INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/rocket_chip/rocket_chip.gen/sources_1'.
 Scanning sources...
 Finished scanning sources
-open_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1341.316 ; gain = 0.023 ; free physical = 17694 ; free virtual = 28864
-# reset_run synth_1
-INFO: [Project 1-1160] Copying file /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/EL2_Prj/EL2_Prj.runs/synth_1/el2_veer_wrapper.dcp to /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/EL2_Prj/EL2_Prj.srcs/utils_1/imports/synth_1 and adding it to utils fileset
-# launch_runs synth_1 -jobs 12
-[Tue May  7 14:07:43 2024] Launched synth_1...
-Run output will be captured here: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/EL2_Prj/EL2_Prj.runs/synth_1/runme.log
-# wait_on_run synth_1
-[Tue May  7 14:07:43 2024] Waiting for synth_1 to finish...
+open_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1341.789 ; gain = 0.023 ; free physical = 19250 ; free virtual = 28486
+# open_run synth_1 -name synth_1
+Design is defaulting to impl run constrset: constrs_1
+Design is defaulting to synth run part: xczu19eg-ffvc1760-2-i
+INFO: [Device 21-403] Loading part xczu19eg-ffvc1760-2-i
+Netlist sorting complete. Time (s): cpu = 00:00:00.24 ; elapsed = 00:00:00.24 . Memory (MB): peak = 2525.266 ; gain = 0.000 ; free physical = 18101 ; free virtual = 27337
+INFO: [Netlist 29-17] Analyzing 1552 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2023.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 2665.199 ; gain = 0.000 ; free physical = 18016 ; free virtual = 27253
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 702 instances were transformed.
+  IBUF => IBUF (IBUFCTRL, INBUF): 414 instances
+  RAM16X1D => RAM32X1D (RAMD32(x2)): 59 instances
+  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 36 instances
+  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 193 instances
 
-*** Running vivado
-    with args -log el2_veer_wrapper.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source el2_veer_wrapper.tcl
-
-INFO: [Common 17-41] Interrupt caught. Command should exit soon.
-
-****** Vivado v2023.2 (64-bit)
-  **** SW Build 4029153 on Fri Oct 13 20:13:54 MDT 2023
-  **** IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
-  **** SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
-    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
-    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
-
-source el2_veer_wrapper.tcl -notrace
-INFO: [Common 17-41] Interrupt caught. Command should exit soon.
-[Tue May  7 14:07:52 2024] Interrupt received
-wait_on_runs: Time (s): cpu = 00:00:01 ; elapsed = 00:00:08 . Memory (MB): peak = 1356.258 ; gain = 8.004 ; free physical = 17272 ; free virtual = 28437
-INFO: [Common 17-344] 'wait_on_runs' was cancelled
-INFO: [Common 17-344] 'source' was cancelled
-INFO: [Common 17-206] Exiting Vivado at Tue May  7 14:07:52 2024...
+open_run: Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 2665.234 ; gain = 1323.445 ; free physical = 18016 ; free virtual = 27253
+# report_utilization -file ../../Syn_Report/rocket_utilization_synth.rpt
+# close_project
+INFO: [Common 17-206] Exiting Vivado at Sat May 18 18:59:35 2024...

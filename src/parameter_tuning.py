@@ -402,4 +402,5 @@ class rocket_tuning:
 
 if __name__ == '__main__':
     rocket_test = rocket_tuning(['icache_nSets', 'dcache_nSets'], [0, 0], '../object_functions/rocket-chip/emulator', '../object_functions/Vivado_Prj/rocket_chip/')
-    rocket_test.tune_and_run_performance_simulation([32, 64], 'dhrystone')
+    # rocket_test.tune_and_run_performance_simulation([32, 64], 'dhrystone')
+    rocket_test.run_synthesis()

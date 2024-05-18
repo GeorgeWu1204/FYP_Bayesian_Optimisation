@@ -22,14 +22,9 @@ To run this code, run the following command in the terminal:
 ```cd src``` \
 ```python3 optimisation.py```
 
-The model settings are all in ```src/optimisation.py```
+The model settings are all in ```src/optimisation_models.py```
 
-To run the brute force method, run the following command in the terminal:
-
-```cd src``` \
-```python3 brute_force.py```
-
-To change the objective and constraints, modify the file ```data/input_constraint.txt```
+The optimisation settings are all stored in ```specifications/```
 
 ## Record Results
 
@@ -51,6 +46,13 @@ To add the constraints to the objectives of the model, the train_obj is extended
 
 Apart from that, the train_obj only considers the objectives that need to optimise and ignore te objectives for constraints purposes.
 
+## Supported Cores
+
+As detailed in the [Processor Setup](object_functions/README.md), the following cores are supported:
+- NutShell
+- VeeR EL2 RISC-V Core
+- Rocket Chip
+
 ## Current Progress
 
 - Formatted Input Constraints
@@ -67,10 +69,6 @@ Apart from that, the train_obj only considers the objectives that need to optimi
 - Enable the model to accept categorical variables.
 - Categorical Variable Kernel Optimisation.
 - Invalid designs handling.
-
-## TODO
-
-- Find another configurable core supporting categorical value. [RISC-V Lib](https://github.com/riscv/riscv-isa-manual/blob/latex/marchid.md)
 
 ## Things to Improve
 
