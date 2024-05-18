@@ -421,7 +421,10 @@ class EL2_Data(Data_Set):
             print("valid: ", valid, "result: ", result)
 
 
-    
+class Rocket_Chip_data(EL2_Data):
+    def __init__(self, input_info, output_info, param_tuner, optimisation_name, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
+        super().__init__(input_info, output_info, param_tuner, optimisation_name, tensor_type, tensor_device)
+        self.utilisation_path = '../object_functions/Syn_Report/rocket_utilization_synth.rpt'
 
 class create_data_set:
     """This class is implemented to accelerate the redundant synthesis and simulation process"""

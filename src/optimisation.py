@@ -35,6 +35,8 @@ elif output_info.optimisation_target == 'NutShell':
     data_set = data.NutShell_Data(input_info, output_info, param_tuner, t_type, device)
 elif output_info.optimisation_target == 'EL2':
     data_set = data.EL2_Data(input_info, output_info, param_tuner, optimisation_name, t_type, device)
+elif output_info.optimisation_target == 'rocket_chip':
+    data_set = data.Rocket_Chip_data(input_info, output_info, param_tuner, optimisation_name, t_type, device)
 
 print("<-------------- Optimisation Settings -------------->")
 print(f"Input Names: {input_info.input_names}")

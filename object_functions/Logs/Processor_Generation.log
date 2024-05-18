@@ -1,362 +1,217 @@
-rm -rf *.log *.s *.hex *.dis *.tbl irun* vcs* simv* *.map snapshots veer* \
-verilator* *.exe obj* *.o *.sym ucli.key vc_hdrs.h csrc *.csv work \
-dataset.asdb library.cfg vsimsa.cfg riviera-build wave.asdb
-make -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/tools/picolibc.mk all
-make[1]: Entering directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
-make[1]: Nothing to be done for 'all'.
-make[1]: Leaving directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2'
-BUILD_PATH=snapshots/default /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/configs/veer.config -target=default -set=btb_size=128 -set=lsu_num_nbload=4 -set=lsu_stbuf_depth=4 -set=dccm_size=128 -set=iccm_size=128 
-veer: Set(s) requested : btb_size=128 lsu_num_nbload=4 lsu_stbuf_depth=4 dccm_size=128 iccm_size=128
-veer: Overriding btb_size value 512 with 128
-veer: Overriding dccm_size value 64 with 128
-veer: Overriding iccm_size value 64 with 128
+cd /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip && java -Xmx2G -Xss8M -jar /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/sbt-launch.jar assembly
+WARNING: A terminally deprecated method in java.lang.System has been called
+WARNING: System::setSecurityManager has been called by sbt.TrapExit$ (file:/home/hw1020/.sbt/boot/scala-2.12.10/org.scala-sbt/sbt/1.3.13/run_2.12-1.3.13.jar)
+WARNING: Please consider reporting this to the maintainers of sbt.TrapExit$
+WARNING: System::setSecurityManager will be removed in a future release
+[info] welcome to sbt 1.3.13 (Eclipse Adoptium Java 17.0.11)
+[info] loading settings for project rocket-chip-build from plugins.sbt ...
+[info] loading project definition from /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/project
+[info] loading settings for project rocketchip from build.sbt ...
+[info] loading settings for project hardfloat from build.sbt ...
+[info] loading settings for project api-config-chipsalliance from build.sbt ...
+Using addons: 
+[info] set current project to rocketchip (in build file:/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/)
+[info] Compiling 1 Scala source to /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/target/scala-2.12/classes ...
+[info] Done compiling.
+[warn] Multiple main classes detected.  Run 'show discoveredMainClasses' to see the list
+[info] Strategy 'discard' was applied to 23 files (Run the task at debug level to see details)
+[info] Strategy 'filterDistinctLines' was applied to a file (Run the task at debug level to see details)
+[success] Total time: 27 s, completed 18 May 2024, 18:16:22
+mkdir -p /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/
+cd /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip && java -Xmx2G -Xss8M -cp /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/rocketchip.jar freechips.rocketchip.system.Generator -td /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -T freechips.rocketchip.system.TestHarness -C freechips.rocketchip.system.CustomisedConfig 
+Interrupt map (2 harts 2 interrupts):
+  [1, 2] => ldut
 
-VeeR configuration for target=default
+<stdin>:69.27-72.5: Warning (simple_bus_reg): /soc/external-interrupts: missing or empty reg/ranges property
+<stdin>:94.28-99.5: Warning (simple_bus_reg): /soc/subsystem_pbus_clock: missing or empty reg/ranges property
+<stdin>:36.29-40.6: Warning (interrupt_provider): /cpus/cpu@0/interrupt-controller: Missing #address-cells in interrupt provider
+<stdin>:73.36-82.5: Warning (interrupt_provider): /soc/interrupt-controller@c000000: Missing #address-cells in interrupt provider
+/dts-v1/;
 
-veer: bht_addr_hi                    = 9
-veer: bht_addr_lo                    = 2
-veer: bht_array_depth                = 256
-veer: bht_ghr_hash_1                 = 1
-veer: bht_ghr_range                  = 7:0
-veer: bht_ghr_size                   = 8
-veer: bht_hash_string                = {ghr[7:6], hashin[7:2]^ghr[6-1:0]} // cf1
-veer: bht_size                       = 512
-veer: btb_addr_hi                    = 7
-veer: btb_addr_lo                    = 2
-veer: btb_array_depth                = 64
-veer: btb_btag_fold                  = 0
-veer: btb_btag_size                  = 7
-veer: btb_enable                     = 1
-veer: btb_fold2_index_hash           = 0
-veer: btb_fullya                     = 0
-veer: btb_index1_hi                  = 7
-veer: btb_index1_lo                  = 2
-veer: btb_index2_hi                  = 13
-veer: btb_index2_lo                  = 8
-veer: btb_index3_hi                  = 19
-veer: btb_index3_lo                  = 14
-veer: btb_size                       = 128
-veer: btb_toffset_size               = 12
-veer: bus_prty_default               = 3
-veer: dma_bus_id                     = 1
-veer: dma_bus_prty                   = 2
-veer: dma_bus_tag                    = 1
-veer: ifu_bus_id                     = 1
-veer: ifu_bus_prty                   = 2
-veer: ifu_bus_tag                    = 3
-veer: lsu_bus_id                     = 1
-veer: lsu_bus_prty                   = 2
-veer: lsu_bus_tag                    = 3
-veer: sb_bus_id                      = 1
-veer: sb_bus_prty                    = 2
-veer: sb_bus_tag                     = 1
-veer: bitmanip_zba                   = 1
-veer: bitmanip_zbb                   = 1
-veer: bitmanip_zbc                   = 1
-veer: bitmanip_zbe                   = 0
-veer: bitmanip_zbf                   = 0
-veer: bitmanip_zbp                   = 0
-veer: bitmanip_zbr                   = 0
-veer: bitmanip_zbs                   = 1
-veer: div_bit                        = 4
-veer: div_new                        = 1
-veer: dma_buf_depth                  = 5
-veer: fast_interrupt_redirect        = 1
-veer: fpga_optimize                  = 1
-veer: iccm_icache                    = 1
-veer: load_to_use_plus1              = 0
-veer: lsu2dma                        = 0
-veer: lsu_num_nbload                 = 4
-veer: lsu_num_nbload_width           = 2
-veer: lsu_stbuf_depth                = 4
-veer: opensource                     = 0
-veer: timer_legal_en                 = 1
-veer: verilator                      = 
-veer: dccm_bank_bits                 = 2
-veer: dccm_bits                      = 17
-veer: dccm_byte_width                = 4
-veer: dccm_data_cell                 = ram_8192x39
-veer: dccm_data_width                = 32
-veer: dccm_eadr                      = 0xf005ffff
-veer: dccm_ecc_width                 = 7
-veer: dccm_enable                    = 1
-veer: dccm_fdata_width               = 39
-veer: dccm_index_bits                = 13
-veer: dccm_num_banks                 = 4
-veer: dccm_num_banks_4               = 
-veer: dccm_offset                    = 0x40000
-veer: dccm_region                    = 0xf
-veer: dccm_reserved                  = 0x1400
-veer: dccm_rows                      = 8192
-veer: dccm_sadr                      = 0xf0040000
-veer: dccm_size                      = 128
-veer: dccm_size_128                  = 
-veer: dccm_width_bits                = 2
-veer: lsu_sb_bits                    = 17
-veer: icache_2banks                  = 1
-veer: icache_bank_bits               = 1
-veer: icache_bank_hi                 = 3
-veer: icache_bank_lo                 = 3
-veer: icache_bank_width              = 8
-veer: icache_banks_way               = 2
-veer: icache_beat_addr_hi            = 5
-veer: icache_beat_bits               = 3
-veer: icache_bypass_enable           = 1
-veer: icache_data_cell               = ram_512x71
-veer: icache_data_depth              = 512
-veer: icache_data_index_lo           = 4
-veer: icache_data_width              = 64
-veer: icache_ecc                     = 1
-veer: icache_enable                  = 1
-veer: icache_fdata_width             = 71
-veer: icache_index_hi                = 12
-veer: icache_ln_sz                   = 64
-veer: icache_num_beats               = 8
-veer: icache_num_bypass              = 2
-veer: icache_num_bypass_width        = 2
-veer: icache_num_lines               = 256
-veer: icache_num_lines_bank          = 64
-veer: icache_num_lines_way           = 128
-veer: icache_num_ways                = 2
-veer: icache_scnd_last               = 6
-veer: icache_size                    = 16
-veer: icache_status_bits             = 1
-veer: icache_tag_bypass_enable       = 1
-veer: icache_tag_cell                = ram_128x25
-veer: icache_tag_depth               = 128
-veer: icache_tag_index_lo            = 6
-veer: icache_tag_lo                  = 13
-veer: icache_tag_num_bypass          = 2
-veer: icache_tag_num_bypass_width    = 2
-veer: icache_waypack                 = 1
-veer: iccm_bank_bits                 = 2
-veer: iccm_bank_hi                   = 3
-veer: iccm_bank_index_lo             = 4
-veer: iccm_bits                      = 17
-veer: iccm_data_cell                 = ram_8192x39
-veer: iccm_eadr                      = 0xee01ffff
-veer: iccm_enable                    = 1
-veer: iccm_index_bits                = 13
-veer: iccm_num_banks                 = 4
-veer: iccm_num_banks_4               = 
-veer: iccm_offset                    = 0xe000000
-veer: iccm_region                    = 0xe
-veer: iccm_reserved                  = 0x1000
-veer: iccm_rows                      = 8192
-veer: iccm_sadr                      = 0xee000000
-veer: iccm_size                      = 128
-veer: iccm_size_128                  = 
-veer: debug_sb_mem                   = 0xa0580000
-veer: external_data                  = 0xc0580000
-veer: external_data_1                = 0xb0000000
-veer: serialio                       = 0xd0580000
-veer: unused_region0                 = 0x90000000
-veer: unused_region1                 = 0x70000000
-veer: unused_region2                 = 0x60000000
-veer: unused_region3                 = 0x50000000
-veer: unused_region4                 = 0x40000000
-veer: unused_region5                 = 0x30000000
-veer: unused_region6                 = 0x20000000
-veer: unused_region7                 = 0x10000000
-veer: unused_region8                 = 0x00000000
-veer: pic_2cycle                     = 0
-veer: pic_base_addr                  = 0xf00c0000
-veer: pic_bits                       = 15
-veer: pic_int_words                  = 1
-veer: pic_meie_count                 = 31
-veer: pic_meie_mask                  = 0x1
-veer: pic_meie_offset                = 0x2000
-veer: pic_meigwclr_count             = 31
-veer: pic_meigwclr_mask              = 0x0
-veer: pic_meigwclr_offset            = 0x5000
-veer: pic_meigwctrl_count            = 31
-veer: pic_meigwctrl_mask             = 0x3
-veer: pic_meigwctrl_offset           = 0x4000
-veer: pic_meip_count                 = 1
-veer: pic_meip_mask                  = 0x0
-veer: pic_meip_offset                = 0x1000
-veer: pic_meipl_count                = 31
-veer: pic_meipl_mask                 = 0xf
-veer: pic_meipl_offset               = 0x0000
-veer: pic_meipt_count                = 31
-veer: pic_meipt_mask                 = 0x0
-veer: pic_meipt_offset               = 0x3004
-veer: pic_mpiccfg_count              = 1
-veer: pic_mpiccfg_mask               = 0x1
-veer: pic_mpiccfg_offset             = 0x3000
-veer: pic_offset                     = 0xc0000
-veer: pic_region                     = 0xf
-veer: pic_size                       = 32
-veer: pic_total_int                  = 31
-veer: pic_total_int_plus1            = 32
-veer: data_access_addr0              = 0x00000000
-veer: data_access_addr1              = 0x00000000
-veer: data_access_addr2              = 0x00000000
-veer: data_access_addr3              = 0x00000000
-veer: data_access_addr4              = 0x00000000
-veer: data_access_addr5              = 0x00000000
-veer: data_access_addr6              = 0x00000000
-veer: data_access_addr7              = 0x00000000
-veer: data_access_enable0            = 0x0
-veer: data_access_enable1            = 0x0
-veer: data_access_enable2            = 0x0
-veer: data_access_enable3            = 0x0
-veer: data_access_enable4            = 0x0
-veer: data_access_enable5            = 0x0
-veer: data_access_enable6            = 0x0
-veer: data_access_enable7            = 0x0
-veer: data_access_mask0              = 0xffffffff
-veer: data_access_mask1              = 0xffffffff
-veer: data_access_mask2              = 0xffffffff
-veer: data_access_mask3              = 0xffffffff
-veer: data_access_mask4              = 0xffffffff
-veer: data_access_mask5              = 0xffffffff
-veer: data_access_mask6              = 0xffffffff
-veer: data_access_mask7              = 0xffffffff
-veer: inst_access_addr0              = 0x00000000
-veer: inst_access_addr1              = 0x00000000
-veer: inst_access_addr2              = 0x00000000
-veer: inst_access_addr3              = 0x00000000
-veer: inst_access_addr4              = 0x00000000
-veer: inst_access_addr5              = 0x00000000
-veer: inst_access_addr6              = 0x00000000
-veer: inst_access_addr7              = 0x00000000
-veer: inst_access_enable0            = 0x0
-veer: inst_access_enable1            = 0x0
-veer: inst_access_enable2            = 0x0
-veer: inst_access_enable3            = 0x0
-veer: inst_access_enable4            = 0x0
-veer: inst_access_enable5            = 0x0
-veer: inst_access_enable6            = 0x0
-veer: inst_access_enable7            = 0x0
-veer: inst_access_mask0              = 0xffffffff
-veer: inst_access_mask1              = 0xffffffff
-veer: inst_access_mask2              = 0xffffffff
-veer: inst_access_mask3              = 0xffffffff
-veer: inst_access_mask4              = 0xffffffff
-veer: inst_access_mask5              = 0xffffffff
-veer: inst_access_mask6              = 0xffffffff
-veer: inst_access_mask7              = 0xffffffff
-veer: pmp_entries                    = 16
-veer: ret_stack_size                 = 8
-veer: Writing snapshots/default/el2_pdef.vh
-veer: Writing snapshots/default/el2_param.vh
-veer: Writing snapshots/default/common_defines.vh
-veer: Writing snapshots/default/defines.h
-veer: Writing snapshots/default/pd_defines.vh
-veer: Writing snapshots/default/whisper.json
-veer: Writing snapshots/default/perl_configs.pl
-veer: Writing snapshots/default/link.ld
-riscv64-unknown-elf-cpp -Isnapshots/default  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/crt0.s  > crt0.cpp.s
-riscv64-unknown-elf-as -mabi=ilp32 -march=rv32imc crt0.cpp.s -o crt0.o
-riscv64-unknown-elf-gcc -Isnapshots/default --specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs -finline-limit=400 -mbranch-cost=1 -Ofast -fno-code-hoisting -funroll-all-loops -DCOMPILER_FLAGS="\"-finline-limit=400 -mbranch-cost=1 -Ofast -fno-code-hoisting -funroll-all-loops\"" -mabi=ilp32 -march=rv32imc -c /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/printf.c -o printf.o
-riscv64-unknown-elf-gcc -Isnapshots/default --specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs -finline-limit=400 -mbranch-cost=1 -Ofast -fno-code-hoisting -funroll-all-loops -DCOMPILER_FLAGS="\"-finline-limit=400 -mbranch-cost=1 -Ofast -fno-code-hoisting -funroll-all-loops\"" -mabi=ilp32 -march=rv32imc -c /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark.c -o cmark.o
-Building cmark_dccm
-riscv64-unknown-elf-gcc -mabi=ilp32 -march=rv32imac --verbose -Wl,-Map=cmark_dccm.map -T/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark_dccm.ld --specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs  -nostartfiles crt0.o printf.o cmark.o -o cmark_dccm.exe
-Using built-in specs.
-Reading specs from /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs
-rename spec link to picolibc_link
-rename spec cpp to picolibc_cpp
-rename spec cc1 to picolibc_cc1
-rename spec cc1plus to picolibc_cc1plus
-COLLECT_GCC=riscv64-unknown-elf-gcc
-COLLECT_LTO_WRAPPER=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/lto-wrapper
-Target: riscv64-unknown-elf
-Configured with: ../configure --build=x86_64-linux-gnu --prefix=/usr --includedir='/usr/include' --mandir='/usr/share/man' --infodir='/usr/share/info' --sysconfdir=/etc --localstatedir=/var --disable-option-checking --disable-silent-rules --libdir='/usr/lib/x86_64-linux-gnu' --libexecdir='/usr/lib/x86_64-linux-gnu' --disable-maintainer-mode --disable-dependency-tracking --target=riscv64-unknown-elf --prefix=/usr --infodir=/usr/share/doc/gcc-riscv64-unknown-elf/info --mandir=/usr/share/man --htmldir=/usr/share/doc/gcc-riscv64-unknown-elf/html --pdfdir=/usr/share/doc/gcc-riscv64-unknown-elf/pdf --bindir=/usr/bin --libexecdir=/usr/lib --libdir=/usr/lib --with-pkgversion= --disable-shared --disable-threads --enable-languages=c,c++ --enable-tls --with-newlib --with-native-system-header-dir=/include --disable-libmudflap --disable-libssp --disable-libquadmath --disable-libgomp --disable-nls --with-system-zlib --enable-checking=yes --enable-multilib --with-abi=lp64d --disable-libstdcxx-pch --disable-libstdcxx --disable-fixinc --with-arch=rv64imafdc --with-gnu-as --with-gnu-ld --with-as=/usr/lib/riscv64-unknown-elf/bin/as --with-ld=/usr/lib/riscv64-unknown-elf/bin/ld AR_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/ar AS_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/as NM_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/nm LD_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/ld OBJDUMP_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/objdump RANLIB_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/ranlib READELF_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/readelf STRIP_FOR_TARGET=/usr/lib/riscv64-unknown-elf/bin/strip CFLAGS='-g -O2 -fdebug-prefix-map=/build/gcc-riscv64-unknown-elf-LkcieF/gcc-riscv64-unknown-elf-10.2.0=. -fstack-protector-strong' CPPFLAGS='-Wdate-time -D_FORTIFY_SOURCE=2' CXXFLAGS='-g -O2 -fdebug-prefix-map=/build/gcc-riscv64-unknown-elf-LkcieF/gcc-riscv64-unknown-elf-10.2.0=. -fstack-protector-strong' FCFLAGS='-g -O2 -fdebug-prefix-map=/build/gcc-riscv64-unknown-elf-LkcieF/gcc-riscv64-unknown-elf-10.2.0=. -fstack-protector-strong' FFLAGS='-g -O2 -fdebug-prefix-map=/build/gcc-riscv64-unknown-elf-LkcieF/gcc-riscv64-unknown-elf-10.2.0=. -fstack-protector-strong' GCJFLAGS='-g -O2 -fdebug-prefix-map=/build/gcc-riscv64-unknown-elf-LkcieF/gcc-riscv64-unknown-elf-10.2.0=. -fstack-protector-strong' LDFLAGS='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now' OBJCFLAGS='-g -O2 -fdebug-prefix-map=/build/gcc-riscv64-unknown-elf-LkcieF/gcc-riscv64-unknown-elf-10.2.0=. -fstack-protector-strong' OBJCXXFLAGS='-g -O2 -fdebug-prefix-map=/build/gcc-riscv64-unknown-elf-LkcieF/gcc-riscv64-unknown-elf-10.2.0=. -fstack-protector-strong' 'CFLAGS_FOR_TARGET=-Os -mcmodel=medany' 'CXXFLAGS_FOR_TARGET=-Os -mcmodel=medany'
-Thread model: single
-Supported LTO compression algorithms: zlib
-gcc version 10.2.0 () 
-COMPILER_PATH=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/:/usr/lib/gcc/riscv64-unknown-elf/10.2.0/:/usr/lib/gcc/riscv64-unknown-elf/:/usr/lib/gcc/riscv64-unknown-elf/10.2.0/:/usr/lib/gcc/riscv64-unknown-elf/
-LIBRARY_PATH=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/rv32imac/ilp32/:/usr/lib/gcc/riscv64-unknown-elf/10.2.0/
-COLLECT_GCC_OPTIONS='-mabi=ilp32' '-march=rv32imac' '-v' '-T' '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark_dccm.ld' '-specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs' '-nostartfiles' '-o' 'cmark_dccm.exe'
- /usr/lib/gcc/riscv64-unknown-elf/10.2.0/collect2 -plugin /usr/lib/gcc/riscv64-unknown-elf/10.2.0/liblto_plugin.so -plugin-opt=/usr/lib/gcc/riscv64-unknown-elf/10.2.0/lto-wrapper -plugin-opt=-fresolution=/tmp/cc0BZiv9.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -L/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc/riscv64-unknown-elf/lib/rv32imac/ilp32 -L/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc/riscv64-unknown-elf/lib -melf32lriscv --gc-sections -o cmark_dccm.exe -L/usr/lib/gcc/riscv64-unknown-elf/10.2.0/rv32imac/ilp32 -L/usr/lib/gcc/riscv64-unknown-elf/10.2.0 -Map=cmark_dccm.map crt0.o printf.o cmark.o -lgcc --start-group -lgcc -lc --end-group -lgcc -T /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark_dccm.ld
-COLLECT_GCC_OPTIONS='-mabi=ilp32' '-march=rv32imac' '-v' '-T' '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/asm/cmark_dccm.ld' '-specs=/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/third_party/picolibc/install/picolibc.specs' '-nostartfiles' '-o' 'cmark_dccm.exe'
-riscv64-unknown-elf-objcopy -O verilog  cmark_dccm.exe program.hex
-riscv64-unknown-elf-objdump -S  cmark_dccm.exe > cmark_dccm.dis
-riscv64-unknown-elf-nm -B -n cmark_dccm.exe > cmark_dccm.sym
-Completed building cmark_dccm
-verilator  --cc -CFLAGS -std=c++11 snapshots/default/common_defines.vh /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/include/el2_def.sv snapshots/default/el2_pdef.vh \
-  -Isnapshots/default -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/flist \
-  -Wno-WIDTH -Wno-UNOPTFLAT -Wno-IMPLICIT \
-  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tb_top.sv /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/ahb_sif.sv --top-module tb_top \
-  -exe test_tb_top.cpp --autoflush  
-cp /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/test_tb_top.cpp obj_dir/
-make -e -C obj_dir/ -f Vtb_top.mk OPT_FAST="-Os"
-make[1]: Entering directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/obj_dir'
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o test_tb_top.o test_tb_top.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o verilated.o /usr/local/share/verilator/include/verilated.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o Vtb_top.o Vtb_top.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o Vtb_top__1.o Vtb_top__1.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o Vtb_top__2.o Vtb_top__2.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o Vtb_top__3.o Vtb_top__3.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o Vtb_top__4.o Vtb_top__4.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o Vtb_top__5.o Vtb_top__5.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o Vtb_top__6.o Vtb_top__6.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o Vtb_top__7.o Vtb_top__7.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o Vtb_top__8.o Vtb_top__8.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o Vtb_top__9.o Vtb_top__9.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o Vtb_top__10.o Vtb_top__10.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o Vtb_top___024unit.o Vtb_top___024unit.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o Vtb_top_el2_configurable_gw.o Vtb_top_el2_configurable_gw.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14 -Os -c -o Vtb_top_el2_mem_if.o Vtb_top_el2_mem_if.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14  -c -o Vtb_top__Slow.o Vtb_top__Slow.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14  -c -o Vtb_top__1__Slow.o Vtb_top__1__Slow.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14  -c -o Vtb_top__2__Slow.o Vtb_top__2__Slow.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14  -c -o Vtb_top__3__Slow.o Vtb_top__3__Slow.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14  -c -o Vtb_top__4__Slow.o Vtb_top__4__Slow.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14  -c -o Vtb_top__5__Slow.o Vtb_top__5__Slow.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14  -c -o Vtb_top__6__Slow.o Vtb_top__6__Slow.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14  -c -o Vtb_top__7__Slow.o Vtb_top__7__Slow.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14  -c -o Vtb_top__8__Slow.o Vtb_top__8__Slow.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14  -c -o Vtb_top__9__Slow.o Vtb_top__9__Slow.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14  -c -o Vtb_top___024unit__Slow.o Vtb_top___024unit__Slow.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14  -c -o Vtb_top_el2_configurable_gw__Slow.o Vtb_top_el2_configurable_gw__Slow.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14  -c -o Vtb_top_el2_mem_if__Slow.o Vtb_top_el2_mem_if__Slow.cpp
-ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++11  -std=gnu++14  -c -o Vtb_top__Syms.o Vtb_top__Syms.cpp
-Archive ar -cr Vtb_top__ALL.a Vtb_top.o Vtb_top__1.o Vtb_top__2.o Vtb_top__3.o Vtb_top__4.o Vtb_top__5.o Vtb_top__6.o Vtb_top__7.o Vtb_top__8.o Vtb_top__9.o Vtb_top__10.o Vtb_top___024unit.o Vtb_top_el2_configurable_gw.o Vtb_top_el2_mem_if.o Vtb_top__Slow.o Vtb_top__1__Slow.o Vtb_top__2__Slow.o Vtb_top__3__Slow.o Vtb_top__4__Slow.o Vtb_top__5__Slow.o Vtb_top__6__Slow.o Vtb_top__7__Slow.o Vtb_top__8__Slow.o Vtb_top__9__Slow.o Vtb_top___024unit__Slow.o Vtb_top_el2_configurable_gw__Slow.o Vtb_top_el2_mem_if__Slow.o Vtb_top__Syms.o
-g++    test_tb_top.o verilated.o Vtb_top__ALL.a      -o Vtb_top
-make[1]: Leaving directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/obj_dir'
-touch verilator-build
-# FIXME: Assuming here that either begin_signature or end_signature implies
-# that both symbols are present.
-grep -E "(begin|end)_signature" cmark_dccm.sym >/dev/null 2>&1; \
-if [ $? -eq 0 ]; then \
-	BEG=`grep "begin_signature" cmark_dccm.sym | cut -d\  -f 1`;\
-	END=`grep "end_signature"   cmark_dccm.sym | cut -d\  -f 1`;\
-	./obj_dir/Vtb_top --mem-signature ${BEG} ${END}; \
-else \
-	./obj_dir/Vtb_top; \
-fi
+/ {
+	#address-cells = <1>;
+	#size-cells = <1>;
+	compatible = "freechips,rocketchip-unknown-dev";
+	model = "freechips,rocketchip-unknown";
+	L15: cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		timebase-frequency = <1000000>;
+		L4: cpu@0 {
+			clock-frequency = <0>;
+			compatible = "sifive,rocket0", "riscv";
+			d-cache-block-size = <64>;
+			d-cache-sets = <64>;
+			d-cache-size = <16384>;
+			d-tlb-sets = <64>;
+			d-tlb-size = <256>;
+			device_type = "cpu";
+			hardware-exec-breakpoint-count = <1>;
+			i-cache-block-size = <64>;
+			i-cache-sets = <32>;
+			i-cache-size = <8192>;
+			i-tlb-sets = <1>;
+			i-tlb-size = <4>;
+			mmu-type = "riscv,sv39";
+			next-level-cache = <&L10>;
+			reg = <0x0>;
+			riscv,isa = "rv64imac";
+			riscv,pmpgranularity = <4>;
+			riscv,pmpregions = <8>;
+			status = "okay";
+			timebase-frequency = <1000000>;
+			tlb-split;
+			L2: interrupt-controller {
+				#interrupt-cells = <1>;
+				compatible = "riscv,cpu-intc";
+				interrupt-controller;
+			};
+		};
+	};
+	L10: memory@80000000 {
+		device_type = "memory";
+		reg = <0x80000000 0x10000000>;
+	};
+	L14: soc {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "freechips,rocketchip-unknown-soc", "simple-bus";
+		ranges;
+		L6: clint@2000000 {
+			compatible = "riscv,clint0";
+			interrupts-extended = <&L2 3 &L2 7>;
+			reg = <0x2000000 0x10000>;
+			reg-names = "control";
+		};
+		L7: debug-controller@0 {
+			compatible = "sifive,debug-013", "riscv,debug-013";
+			debug-attach = "dmi";
+			interrupts-extended = <&L2 65535>;
+			reg = <0x0 0x1000>;
+			reg-names = "control";
+		};
+		L1: error-device@3000 {
+			compatible = "sifive,error0";
+			reg = <0x3000 0x1000>;
+		};
+		L9: external-interrupts {
+			interrupt-parent = <&L5>;
+			interrupts = <1 2>;
+		};
+		L5: interrupt-controller@c000000 {
+			#interrupt-cells = <1>;
+			compatible = "riscv,plic0";
+			interrupt-controller;
+			interrupts-extended = <&L2 11 &L2 9>;
+			reg = <0xc000000 0x4000000>;
+			reg-names = "control";
+			riscv,max-priority = <3>;
+			riscv,ndev = <2>;
+		};
+		L11: mmio-port-axi4@60000000 {
+			#address-cells = <1>;
+			#size-cells = <1>;
+			compatible = "simple-bus";
+			ranges = <0x60000000 0x60000000 0x20000000>;
+		};
+		L12: rom@10000 {
+			compatible = "sifive,rom0";
+			reg = <0x10000 0x10000>;
+			reg-names = "mem";
+		};
+		L0: subsystem_pbus_clock {
+			#clock-cells = <0>;
+			clock-frequency = <100000000>;
+			clock-output-names = "subsystem_pbus_clock";
+			compatible = "fixed-clock";
+		};
+	};
+};
 
-VerilatorTB: Start of sim
+Generated Address Map
+	       0 -     1000 ARWX  debug-controller@0
+	    3000 -     4000 ARWX  error-device@3000
+	   10000 -    20000  R X  rom@10000
+	 2000000 -  2010000 ARW   clint@2000000
+	 c000000 - 10000000 ARW   interrupt-controller@c000000
+	60000000 - 80000000  RWX  mmio-port-axi4@60000000
+	80000000 - 90000000  RWXC memory@80000000
 
-mem_signature_begin = 00000000
-mem_signature_end   = 00000000
-mem_mailbox         = D0580000
-DCCM pre-load from f0040000 to f0041710
-2K performance run parameters for coremark.
-CoreMark Size    : 666
-Total ticks      : 280581
-Total time (secs): 280
-Iterat/Sec/MHz   : 3.57
-Iterations       : 1
-Compiler version : GCC10.2.0
+mkdir -p ./output
+mkdir -p /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/
+ln -fs /home/hw1020/Downloads/Installed_Package/rocket_env/riscv64-unknown-elf/share/riscv-tests/benchmarks/dhrystone.riscv output/dhrystone.riscv
+java -Xmx2G -Xss8M -cp /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/rocketchip.jar firrtl.stage.FirrtlMain -i /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.fir \
+    -o /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.v \
+    -X verilog \
+    --infer-rw TestHarness \
+    --repl-seq-mem -c:TestHarness:-o:/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.conf \
+    -faf /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.anno.json \
+    -td /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/ \
+    -fct firrtl.passes.InlineInstances, \
+     \
 
-Compiler flags   : -finline-limit=400 -mbranch-cost=1 -Ofast -fno-code-hoisting -funroll-all-loops
-
-Memory location  : STATIC
-
-seedcrc          : 0xe9f5
-[0]crclist       : 0xe714
-[0]crcmatrix     : 0x1fd7
-[0]crcstate      : 0x8e3a
-[0]crcfinal      : 0xe714
-Correct operation validated. See readme.txt for run and reporting rules.
-TEST_PASSED
-
-Finished : minstret = 282995, mcycle = 297510
-See "exec.log" for execution trace with register updates..
-
-- /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/testbench/tb_top.sv:380: Verilog $finish
-
-VerilatorTB: End of sim
+cd /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src && \
+/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/scripts/vlsi_mem_gen /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.conf > /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.behav_srams.v.tmp && \
+mv -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.behav_srams.v.tmp /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.behav_srams.v
+mkdir -p /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig
+/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/bin/verilator --cc --exe --top-module TestHarness +define+PRINTF_COND=\$c\(\"verbose\",\"\&\&\"\,\"done_reset\"\) +define+RANDOMIZE_GARBAGE_ASSIGN +define+STOP_COND=\$c\(\"done_reset\"\) --assert --output-split 20000 --output-split-cfuncs 20000 --threads 2 -Wno-UNOPTTHREADS -Wno-STMTDLY -Wno-LATCH -Wno-WIDTH --x-assign unique -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/vsrc -O3 -CFLAGS "-O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs" --max-num-width 1048576 -Mdir /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig \
+-o /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/emulator-freechips.rocketchip.system-freechips.rocketchip.system.CustomisedConfig /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.v /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.behav_srams.v  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/emulator.cc /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/SimDTM.cc /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/SimJTAG.cc /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/remote_bitbang.cc -LDFLAGS " -L/home/hw1020/Downloads/Installed_Package/rocket_env/lib -Wl,-rpath,/home/hw1020/Downloads/Installed_Package/rocket_env/lib -L/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator -lfesvr -lpthread" \
+-CFLAGS "-I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h"
+make VM_PARALLEL_BUILDS=1 -C /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig -f VTestHarness.mk
+make[1]: Entering directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig'
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o SimDTM.o /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/SimDTM.cc
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o SimJTAG.o /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/SimJTAG.cc
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o emulator.o /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/emulator.cc
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o remote_bitbang.o /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/remote_bitbang.cc
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o verilated.o /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/verilated.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o verilated_dpi.o /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/verilated_dpi.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o verilated_threads.o /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/verilated_threads.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness.o VTestHarness.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_h30a6511e__0.o VTestHarness___024root__DepSet_h30a6511e__0.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_h30a6511e__1.o VTestHarness___024root__DepSet_h30a6511e__1.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_h30a6511e__2.o VTestHarness___024root__DepSet_h30a6511e__2.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_h30a6511e__3.o VTestHarness___024root__DepSet_h30a6511e__3.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_h30a6511e__4.o VTestHarness___024root__DepSet_h30a6511e__4.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_h30a6511e__5.o VTestHarness___024root__DepSet_h30a6511e__5.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_h30a6511e__6.o VTestHarness___024root__DepSet_h30a6511e__6.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_h30a6511e__7.o VTestHarness___024root__DepSet_h30a6511e__7.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_h30a6511e__8.o VTestHarness___024root__DepSet_h30a6511e__8.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_h30a6511e__9.o VTestHarness___024root__DepSet_h30a6511e__9.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_h30a6511e__10.o VTestHarness___024root__DepSet_h30a6511e__10.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_h30a6511e__11.o VTestHarness___024root__DepSet_h30a6511e__11.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_h30a6511e__12.o VTestHarness___024root__DepSet_h30a6511e__12.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_h30a6511e__13.o VTestHarness___024root__DepSet_h30a6511e__13.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_hcfd557fa__0.o VTestHarness___024root__DepSet_hcfd557fa__0.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_hcfd557fa__1.o VTestHarness___024root__DepSet_hcfd557fa__1.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_hcfd557fa__2.o VTestHarness___024root__DepSet_hcfd557fa__2.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_hcfd557fa__3.o VTestHarness___024root__DepSet_hcfd557fa__3.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_hcfd557fa__4.o VTestHarness___024root__DepSet_hcfd557fa__4.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_hcfd557fa__5.o VTestHarness___024root__DepSet_hcfd557fa__5.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_hcfd557fa__6.o VTestHarness___024root__DepSet_hcfd557fa__6.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_hcfd557fa__7.o VTestHarness___024root__DepSet_hcfd557fa__7.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_hcfd557fa__8.o VTestHarness___024root__DepSet_hcfd557fa__8.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024root__DepSet_hcfd557fa__9.o VTestHarness___024root__DepSet_hcfd557fa__9.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness___024unit__DepSet_hc9fa512f__0.o VTestHarness___024unit__DepSet_hc9fa512f__0.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17 -Os -c -o VTestHarness__Dpi.o VTestHarness__Dpi.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17  -c -o VTestHarness__ConstPool_0.o VTestHarness__ConstPool_0.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17  -c -o VTestHarness___024root__Slow.o VTestHarness___024root__Slow.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17  -c -o VTestHarness___024root__DepSet_hcfd557fa__0__Slow.o VTestHarness___024root__DepSet_hcfd557fa__0__Slow.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17  -c -o VTestHarness___024root__DepSet_hcfd557fa__1__Slow.o VTestHarness___024root__DepSet_hcfd557fa__1__Slow.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17  -c -o VTestHarness___024root__DepSet_hcfd557fa__2__Slow.o VTestHarness___024root__DepSet_hcfd557fa__2__Slow.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17  -c -o VTestHarness___024root__DepSet_hcfd557fa__3__Slow.o VTestHarness___024root__DepSet_hcfd557fa__3__Slow.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17  -c -o VTestHarness___024root__DepSet_hcfd557fa__4__Slow.o VTestHarness___024root__DepSet_hcfd557fa__4__Slow.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17  -c -o VTestHarness___024root__DepSet_hcfd557fa__5__Slow.o VTestHarness___024root__DepSet_hcfd557fa__5__Slow.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17  -c -o VTestHarness___024root__DepSet_hcfd557fa__6__Slow.o VTestHarness___024root__DepSet_hcfd557fa__6__Slow.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17  -c -o VTestHarness___024unit__Slow.o VTestHarness___024unit__Slow.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17  -c -o VTestHarness___024unit__DepSet_h66f95809__0__Slow.o VTestHarness___024unit__DepSet_h66f95809__0__Slow.cpp
+ccache g++  -I.  -MMD -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h  -DVL_THREADED -std=c++17  -c -o VTestHarness__Syms.o VTestHarness__Syms.cpp
+echo "" > VTestHarness__ALL.verilator_deplist.tmp
+Archive ar -rcs VTestHarness__ALL.a VTestHarness.o VTestHarness___024root__DepSet_h30a6511e__0.o VTestHarness___024root__DepSet_h30a6511e__1.o VTestHarness___024root__DepSet_h30a6511e__2.o VTestHarness___024root__DepSet_h30a6511e__3.o VTestHarness___024root__DepSet_h30a6511e__4.o VTestHarness___024root__DepSet_h30a6511e__5.o VTestHarness___024root__DepSet_h30a6511e__6.o VTestHarness___024root__DepSet_h30a6511e__7.o VTestHarness___024root__DepSet_h30a6511e__8.o VTestHarness___024root__DepSet_h30a6511e__9.o VTestHarness___024root__DepSet_h30a6511e__10.o VTestHarness___024root__DepSet_h30a6511e__11.o VTestHarness___024root__DepSet_h30a6511e__12.o VTestHarness___024root__DepSet_h30a6511e__13.o VTestHarness___024root__DepSet_hcfd557fa__0.o VTestHarness___024root__DepSet_hcfd557fa__1.o VTestHarness___024root__DepSet_hcfd557fa__2.o VTestHarness___024root__DepSet_hcfd557fa__3.o VTestHarness___024root__DepSet_hcfd557fa__4.o VTestHarness___024root__DepSet_hcfd557fa__5.o VTestHarness___024root__DepSet_hcfd557fa__6.o VTestHarness___024root__DepSet_hcfd557fa__7.o VTestHarness___024root__DepSet_hcfd557fa__8.o VTestHarness___024root__DepSet_hcfd557fa__9.o VTestHarness___024unit__DepSet_hc9fa512f__0.o VTestHarness__Dpi.o VTestHarness__ConstPool_0.o VTestHarness___024root__Slow.o VTestHarness___024root__DepSet_hcfd557fa__0__Slow.o VTestHarness___024root__DepSet_hcfd557fa__1__Slow.o VTestHarness___024root__DepSet_hcfd557fa__2__Slow.o VTestHarness___024root__DepSet_hcfd557fa__3__Slow.o VTestHarness___024root__DepSet_hcfd557fa__4__Slow.o VTestHarness___024root__DepSet_hcfd557fa__5__Slow.o VTestHarness___024root__DepSet_hcfd557fa__6__Slow.o VTestHarness___024unit__Slow.o VTestHarness___024unit__DepSet_h66f95809__0__Slow.o VTestHarness__Syms.o
+g++    SimDTM.o SimJTAG.o emulator.o remote_bitbang.o verilated.o verilated_dpi.o verilated_threads.o VTestHarness__ALL.a   -L/home/hw1020/Downloads/Installed_Package/rocket_env/lib -Wl,-rpath,/home/hw1020/Downloads/Installed_Package/rocket_env/lib -L/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator -lfesvr -lpthread  -pthread -lpthread -latomic   -o /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/emulator-freechips.rocketchip.system-freechips.rocketchip.system.CustomisedConfig
+rm VTestHarness__ALL.verilator_deplist.tmp
+make[1]: Leaving directory '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig'
+./emulator-freechips.rocketchip.system-freechips.rocketchip.system.CustomisedConfig +max-cycles=100000000 output/dhrystone.riscv 2> /dev/null 2> output/dhrystone.riscv.run && [ $PIPESTATUS -eq 0 ]
+Microseconds for one run through Dhrystone: 775
+Dhrystones per Second:                      1288
+mcycle = 387963
+minstret = 191060

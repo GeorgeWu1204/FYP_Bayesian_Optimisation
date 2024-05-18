@@ -292,7 +292,7 @@ class rocket_tuning:
         self.shift_amount = shift_amount            # The amount by which the parameters are shifted
         self.generation_path = generation_path      # Path to execute the generation command
         self.vivado_project_path = vivado_project_path
-        self.tcl_path = '../../tools/RocketChip/run_scr1_synthesis.tcl'
+        self.tcl_path = '../../tools/RocketChip/run_RocketChip_synthesis.tcl'
         # Log file for the generated reports
         self.generated_report_num = 0
         self.generated_report_directory = '../object_functions/Syn_Report/'
@@ -300,7 +300,6 @@ class rocket_tuning:
         self.generated_filename = 'rocket_chip_utilization_synth.rpt'
         self.generated_logfile = '../object_functions/Logs/'
         self.configuration_file = '../object_functions/rocket-chip/src/main/scala/subsystem/Configs.scala'
-        self.emunerator_file = '../object_functions/rocket-chip/emunerator'
 
     def modify_config_files(self, input_vals):
             with open(self.configuration_file, 'r') as file:
@@ -339,48 +338,49 @@ class rocket_tuning:
             else:
                 print("WithCustomisedCore class definition not found.")
 
-    def extract_minstret_mcycle(self, log_file_path):
-        """
-        Extracts minstret and mcycle values from a log file.
-        """
-        # Regular expression to match the specific line and capture minstret and mcycle values
-        pattern = r'Finished : minstret = (\d+), mcycle = (\d+)'
-
-        # Initialize variables to store the extracted values
-        minstret = None
+    def extract_mcycle_minstret(self):
+        # Initialize variables to store mcycle and minstret
         mcycle = None
-
-        # Open the log file and read line by line
-        try:
-            with open(log_file_path, 'r') as file:
-                for line in file:
-                    # Search for the pattern in each line
-                    match = re.search(pattern, line)
-                    # If a match is found, extract the values
-                    if match:
-                        minstret = int(match.group(1))
-                        mcycle = int(match.group(2))
-                        # Break the loop after finding the first match
+        minstret = None
+        
+        # Define the regex patterns to match the desired lines
+        mcycle_pattern = re.compile(r'mcycle\s*=\s*(\d+)')
+        minstret_pattern = re.compile(r'minstret\s*=\s*(\d+)')
+        
+        # Open the file and read its contents
+        with open(self.generated_logfile + 'Processor_Generation.log', 'r') as file:
+            lines = file.readlines()
+        
+        # Iterate over the lines to find the section and extract values
+        for line in lines:
+            if 'Microseconds for one run through Dhrystone:' in line:
+                # Once we find the section, we start looking for mcycle and minstret
+                for subsequent_line in lines[lines.index(line):]:
+                    mcycle_match = mcycle_pattern.search(subsequent_line)
+                    minstret_match = minstret_pattern.search(subsequent_line)
+                    
+                    if mcycle_match:
+                        mcycle = int(mcycle_match.group(1))
+                    
+                    if minstret_match:
+                        minstret = int(minstret_match.group(1))
+                    
+                    # Break the loop once both values are found
+                    if mcycle is not None and minstret is not None:
                         break
-        except FileNotFoundError:
-            print(f"Error: The file {log_file_path} was not found.")
-            return None, None
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return None, None
-
-        return minstret, mcycle
+        
+        return mcycle, minstret
 
     def tune_and_run_performance_simulation(self, new_value, benchmark):
         try:
             # generate the design
             self.modify_config_files(new_value)
-            generate_design_command = ["make", "CONFIG=freechips.rocketchip.system.CustomisedConfig"]
-            subprocess.run(generate_design_command, cwd=self.emunerator_file)
-            run_benchmark_command = ["make", "-j12", "CONFIG=freechips.rocketchip.system.CustomisedConfig", "run-bmark-tests-fast"]
+            clean_command = ["make", "clean"]
+            subprocess.run(clean_command, cwd = self.generation_path, check=True)
+            run_benchmark_command = ["make", "-j12", "CONFIG=freechips.rocketchip.system.CustomisedConfig", f"output/{benchmark}.riscv.run"]
             with open(self.generated_logfile + 'Processor_Generation.log', 'w') as f:
-                subprocess.run(run_benchmark_command, check=True, stdout=f, stderr=f, cwd=self.emunerator_file)
-            minstret, mcycle = self.extract_minstret_mcycle(self.generated_logfile + 'Processor_Generation.log')
+                subprocess.run(run_benchmark_command, check=True, stdout=f, stderr=f, cwd=self.generation_path)
+            minstret, mcycle = self.extract_mcycle_minstret()
             if mcycle is None:
                 return False, None, None
             return True, minstret, mcycle
@@ -388,6 +388,18 @@ class rocket_tuning:
             # Optionally, log the error message from the exception
             print(f"Error occurred: {e}")
             return False, None, None
+    
+    def run_synthesis(self):
+        '''Run synthesis using the new parameters.'''
+        command = ["vivado", "-nolog", "-nojournal", "-mode", "batch", "-source", self.tcl_path]
+        try:
+            with open(self.generated_logfile + 'Synthesis.log', 'w') as f:
+                subprocess.run(command, check=True, cwd=self.vivado_project_path, stdout=f, stderr=f)
+        except subprocess.CalledProcessError as e:
+            print(f"Error executing Vivado: {e}")
         
 
 
+if __name__ == '__main__':
+    rocket_test = rocket_tuning(['icache_nSets', 'dcache_nSets'], [0, 0], '../object_functions/rocket-chip/emulator', '../object_functions/Vivado_Prj/rocket_chip/')
+    rocket_test.tune_and_run_performance_simulation([32, 64], 'dhrystone')
