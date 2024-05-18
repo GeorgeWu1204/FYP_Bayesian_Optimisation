@@ -281,3 +281,113 @@ class scr1_parameter_tuning:
             # Optionally, log the error message from the exception
             print(f"Error occurred: {e}")
             return False, None, None
+
+
+
+
+class rocket_tuning:
+    """This is the tuner for scr1 Cores, it could automatically customise the processor according to the param settings"""
+    def __init__(self, tunable_params, shift_amount, generation_path, vivado_project_path):
+        self.tunable_params = tunable_params        # A dictionary or list of parameters that can be tuned
+        self.shift_amount = shift_amount            # The amount by which the parameters are shifted
+        self.generation_path = generation_path      # Path to execute the generation command
+        self.vivado_project_path = vivado_project_path
+        self.tcl_path = '../../tools/RocketChip/run_scr1_synthesis.tcl'
+        # Log file for the generated reports
+        self.generated_report_num = 0
+        self.generated_report_directory = '../object_functions/Syn_Report/'
+        self.stored_report_directory = '../object_functions/Syn_Report/dynamic_set/'
+        self.generated_filename = 'rocket_chip_utilization_synth.rpt'
+        self.generated_logfile = '../object_functions/Logs/'
+        self.configuration_file = '../object_functions/rocket-chip/src/main/scala/subsystem/Configs.scala'
+        self.emunerator_file = '../object_functions/rocket-chip/emunerator'
+
+    def modify_config_files(self, input_vals):
+            with open(self.configuration_file, 'r') as file:
+                scala_code = file.read()
+            
+            # Regular expression to find the WithCustomisedCore class definition
+            class_pattern = re.compile(r'class WithCustomisedCore\((.*?)\)\s*extends\s*Config\((.*?)=>\s*{(.*?)case RocketTilesKey\s*=>\s*{(.*?)}\s*}\)', re.DOTALL)
+            match = class_pattern.search(scala_code)
+            
+            if match:
+                params = match.group(1)
+                body = match.group(4)
+                for var_name, var_val in zip(self.tunable_params, input_vals):
+                    class_name, sub_name = var_name.split('_')
+                    print(class_name, sub_name)
+                    if class_name == 'icache':
+                        pattern = re.compile(r'icache\s*=\s*Some\(ICacheParams\((.*?)\)\)', re.DOTALL)
+                        match = pattern.search(body)
+                    elif class_name == 'dcache':
+                        pattern = re.compile(r'dcache\s*=\s*Some\(DCacheParams\((.*?)\)\)', re.DOTALL)
+                        match = pattern.search(body)
+                    if match:
+                        params = match.group(1)
+                        sub_pattern = re.compile(rf'{sub_name}\s*=\s*\d+')
+                        if sub_pattern.search(params):
+                            new_params = sub_pattern.sub(f'{sub_name} = {var_val}', params)
+                            new_body = body.replace(params, new_params)
+                            scala_code = scala_code.replace(body, new_body)
+                            body = new_body  # update the body for subsequent iterations
+                        else:
+                            print(f"{sub_name} not found in {class_name} parameters.")
+                    else:
+                        print(f"{class_name} class not found in the body.")
+                with open(self.configuration_file, 'w') as file:
+                    file.write(scala_code)
+            else:
+                print("WithCustomisedCore class definition not found.")
+
+    def extract_minstret_mcycle(self, log_file_path):
+        """
+        Extracts minstret and mcycle values from a log file.
+        """
+        # Regular expression to match the specific line and capture minstret and mcycle values
+        pattern = r'Finished : minstret = (\d+), mcycle = (\d+)'
+
+        # Initialize variables to store the extracted values
+        minstret = None
+        mcycle = None
+
+        # Open the log file and read line by line
+        try:
+            with open(log_file_path, 'r') as file:
+                for line in file:
+                    # Search for the pattern in each line
+                    match = re.search(pattern, line)
+                    # If a match is found, extract the values
+                    if match:
+                        minstret = int(match.group(1))
+                        mcycle = int(match.group(2))
+                        # Break the loop after finding the first match
+                        break
+        except FileNotFoundError:
+            print(f"Error: The file {log_file_path} was not found.")
+            return None, None
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None, None
+
+        return minstret, mcycle
+
+    def tune_and_run_performance_simulation(self, new_value, benchmark):
+        try:
+            # generate the design
+            self.modify_config_files(new_value)
+            generate_design_command = ["make", "CONFIG=freechips.rocketchip.system.CustomisedConfig"]
+            subprocess.run(generate_design_command, cwd=self.emunerator_file)
+            run_benchmark_command = ["make", "-j12", "CONFIG=freechips.rocketchip.system.CustomisedConfig", "run-bmark-tests-fast"]
+            with open(self.generated_logfile + 'Processor_Generation.log', 'w') as f:
+                subprocess.run(run_benchmark_command, check=True, stdout=f, stderr=f, cwd=self.emunerator_file)
+            minstret, mcycle = self.extract_minstret_mcycle(self.generated_logfile + 'Processor_Generation.log')
+            if mcycle is None:
+                return False, None, None
+            return True, minstret, mcycle
+        except subprocess.CalledProcessError as e:
+            # Optionally, log the error message from the exception
+            print(f"Error occurred: {e}")
+            return False, None, None
+        
+
+
