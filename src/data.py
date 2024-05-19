@@ -372,6 +372,7 @@ class EL2_Data(Data_Set):
                         self.build_new_dataset.record_data(sample_input, 'failed')
                         return False, results
                     objective_results.append(mcycle)
+                
                 # Run the Synthesis on Vivado
                 self.param_tuner.run_synthesis()
                 # Store the utilisation result

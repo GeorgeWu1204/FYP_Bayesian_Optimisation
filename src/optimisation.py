@@ -24,7 +24,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 t_type = torch.float64
 
 # Input Settings
-CONSTRAINT_FILE = '../specification/input_spec_btb_lsu.txt'
+CONSTRAINT_FILE = '../specification/Rocket-Chip/input_spec_icache_dcache.txt'
 input_info, output_info, param_tuner, optimisation_name = parse_constraints(CONSTRAINT_FILE, device)
 
 # Dataset Settings
@@ -50,6 +50,9 @@ print(f"Optimisation Device : {output_info.optimisation_target}")
 print(f"Objectives to Optimise: {output_info.obj_to_optimise}")
 print(f"Output Objective Constraint: {output_info.output_constraints}")
 print("<--------------------------------------------------->")
+
+data_set.brute_design_space_exploration()
+quit()
 
 # Train Set Settings
 TRAIN_SET_DISTURBANCE_RANGE = 0.01                  # noise standard deviation for objective

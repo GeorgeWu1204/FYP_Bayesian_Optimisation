@@ -216,25 +216,13 @@ class EL2_parameter_tuning:
 
         return minstret, mcycle
     
-    def find_all_combinations_of_simulation_results(self):
-        btb_set = [ 32, 64, 128, 256, 512]
-        icache_set = [32, 64, 128, 256]
-        for btb in btb_set:
-            for icache in icache_set:
-                print("sample input: ", btb, icache)
-                valid = self.tune_parameter([btb, icache])
-                if valid:
-                    print("simulation result: ", self.run_performance_simulation())
-
-
-
 # class CVA6_parameter_tuning:
 #     """This is the tuner for CVA6 Cores, it could automatically customise the processor according to the param settings"""
 #     def __init__(self, tunable_params, shift_amount, generation_path, vivado_project_path):
 #         super().__init__(tunable_params, shift_amount, generation_path, vivado_project_path)
 
 
-class scr1_parameter_tuning:
+class SCR1_parameter_tuning:
     """This is the tuner for scr1 Cores, it could automatically customise the processor according to the param settings"""
     def __init__(self, tunable_params, shift_amount, generation_path, vivado_project_path):
         self.tunable_params = tunable_params        # A dictionary or list of parameters that can be tuned

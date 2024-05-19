@@ -1,0 +1,21 @@
+#Name: rocket_cache_related_optimisation
+#input self constraint
+var: icache_nSets              range: [4,32]        scale: 4     exp: 2      shift: 0   data_type: Int
+var: icache_nWays              range: [4,32]        scale: 2     exp: 2      shift: 0   data_type: Int
+var: dcache_nSets              range: [4,32]        scale: 4     exp: 2      shift: 0   data_type: Int
+var: dcache_nWays              range: [4,32]        scale: 2     exp: 2      shift: 0   data_type: Int     
+
+#input coupled constraint
+
+#input constant
+
+#output objective
+obj_name: mcycle   benchmark: dhrystone                obj_direct: minimise     range: [400000,420000]
+
+#output constraint
+obj_name: LUT as Logic              range: [30000,33000]
+
+#data
+objective: rocket_chip
+vivado_project_path: ../object_functions/Vivado_Prj/rocket_chip/
+generation_path: ../object_functions/rocket-chip/emulator

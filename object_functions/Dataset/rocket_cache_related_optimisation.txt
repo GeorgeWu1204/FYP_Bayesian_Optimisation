@@ -1,0 +1,1 @@
+icache_nSets, icache_nWays, dcache_nSets, dcache_nWays, mcycle_dhrystone, LUT as Logic

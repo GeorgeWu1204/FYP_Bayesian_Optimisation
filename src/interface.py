@@ -1,5 +1,5 @@
 from format_constraints import Input_Constraints
-from parameter_tuning import NutShell_parameter_tuning, EL2_parameter_tuning
+from parameter_tuning import NutShell_parameter_tuning, EL2_parameter_tuning, rocket_tuning
 from data import Input_Info, Output_Info
 import math
 
@@ -166,6 +166,8 @@ def parse_constraints(filename, device):
         parameter_tuner = NutShell_parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), objective_function_setting_path, generation_path, vivado_project_path, board_settings)
     elif optimisation_target == 'EL2':
         parameter_tuner = EL2_parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), generation_path, vivado_project_path)
+    elif optimisation_target == 'rocket_chip':
+        parameter_tuner = rocket_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), generation_path, vivado_project_path)
     else:
         parameter_tuner = None
     
