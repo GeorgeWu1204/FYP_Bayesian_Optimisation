@@ -362,7 +362,8 @@ class rocket_tuning:
     def tune_and_run_performance_simulation(self, new_value, benchmark):
         try:
             # generate the design
-            self.modify_config_files(new_value)
+            rounded_value = [round(val) for val in new_value]   
+            self.modify_config_files(rounded_value)
             clean_command = ["make", "clean"]
             subprocess.run(clean_command, cwd = self.generation_path, check=True)
             run_benchmark_command = ["make", "-j12", "CONFIG=freechips.rocketchip.system.CustomisedConfig", f"output/{benchmark}.riscv.run"]
