@@ -285,7 +285,7 @@ class rocket_tuning:
         self.generated_report_num = 0
         self.generated_report_directory = '../object_functions/Syn_Report/'
         self.stored_report_directory = '../object_functions/Syn_Report/dynamic_set/'
-        self.generated_filename = 'rocket_chip_utilization_synth.rpt'
+        self.generated_filename = 'rocket_utilization_synth.rpt'
         self.generated_logfile = '../object_functions/Logs/'
         self.configuration_file = '../object_functions/rocket-chip/src/main/scala/subsystem/Configs.scala'
 
@@ -386,10 +386,17 @@ class rocket_tuning:
                 subprocess.run(command, check=True, cwd=self.vivado_project_path, stdout=f, stderr=f)
         except subprocess.CalledProcessError as e:
             print(f"Error executing Vivado: {e}")
+    
+    def store_synthesis_report(self):
+        '''Store the synthesis report in a file.'''
+        name, extension = os.path.splitext(self.generated_filename)
+        new_name = name + '_' + str(self.generated_report_num) + extension
+        shutil.copy(self.generated_report_directory + self.generated_filename, self.stored_report_directory + new_name)
+        self.generated_report_num += 1
         
 
 
 if __name__ == '__main__':
     rocket_test = rocket_tuning(['icache_nSets', 'dcache_nSets'], [0, 0], '../object_functions/rocket-chip/emulator', '../object_functions/Vivado_Prj/rocket_chip/')
     # rocket_test.tune_and_run_performance_simulation([32, 64], 'dhrystone')
-    rocket_test.run_synthesis()
+    rocket_test.store_synthesis_report()
