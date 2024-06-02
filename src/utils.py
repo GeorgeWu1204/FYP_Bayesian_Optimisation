@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from botorch.utils.multi_objective.box_decompositions.non_dominated import NondominatedPartitioning
 import re
+import pickle
 
 def calculate_condition(x, condition):
     """This function is used to calculate the input constraints"""
@@ -214,7 +215,9 @@ def read_utilization(rpt_file_path, variable_names):
         print(f"File not found: {rpt_file_path}")
         return
 
-
+def save_data_to_file(filename, data):
+    with open(filename, 'wb') as f:
+        pickle.dump(data, f)
 
 
 
@@ -314,6 +317,7 @@ class test_posterior_result:
         self.input_names = input_names
         self.X = np.linspace(0, 1, num_samples) 
         self.num_samples = num_samples
+        self.save_directory= '../test/Model_Test_Results/'
         # Create multi-dimensional grids
         basis_grid = np.meshgrid(*[self.X for _ in range(self.dim)])
         # Flatten and combine all grids to form the combination array
@@ -334,26 +338,38 @@ class test_posterior_result:
 
         X = self.testcase[:,0].cpu().detach().numpy().reshape([self.num_samples for _ in range(self.dim)])
         Y = self.testcase[:,1].cpu().detach().numpy().reshape([self.num_samples for _ in range(self.dim)])
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-        surf = ax.plot_surface(X, Y, Z_mean, cmap='viridis', edgecolor='none', alpha=0.7)
-        # Plot Uncertainty using Contourf  at the base
-        min_uncertainty, max_uncertainty = np.min(Z_uncertainty), np.max(Z_uncertainty)
-        levels  = np.linspace(min_uncertainty, max_uncertainty, num=10)
-        levels  = np.unique(levels)  # Ensure levels are unique
-        epsilon = np.diff(levels).min() * 0.1  # Small increment
-        levels[1:] += epsilon  # Avoid incrementing the first level to keep the minimum
+        data = {
+            'Z_mean': Z_mean,
+            'Z_uncertainty': Z_uncertainty,
+            'X': X,
+            'Y': Y
+        }
+        save_data_to_file(self.save_directory + 'posterior.pkl', data)
 
-        contour = ax.contourf(X, Y, Z_uncertainty, zdir='z', offset=Z_mean.min()-0.25, levels=levels, cmap='inferno', alpha=0.5)
 
-        ax.set_xlabel(self.input_names[0])
-        ax.set_ylabel(self.input_names[1])
-        ax.set_zlabel('Mean Prediction')
-        ax.set_title('Posterior Mean and Uncertainty at Iteration ' + str(iteration))
+        # fig = plt.figure()
+        # ax = fig.add_subplot(111, projection='3d')
+        # surf = ax.plot_surface(X, Y, Z_mean, cmap='viridis', edgecolor='none', alpha=0.7)
+        # # Plot Uncertainty using Contourf  at the base
+        # min_uncertainty, max_uncertainty = np.min(Z_uncertainty), np.max(Z_uncertainty)
+        # levels  = np.linspace(min_uncertainty, max_uncertainty, num=10)
+        # levels  = np.unique(levels)  # Ensure levels are unique
+        # epsilon = np.diff(levels).min() * 0.1  # Small increment
+        # levels[1:] += epsilon  # Avoid incrementing the first level to keep the minimum
 
-        # Add a color bar for the contour plot
-        fig.colorbar(contour, shrink=0.5, aspect=5, label='Uncertainty (Std Dev)')
-        plt.show()
+        # contour = ax.contourf(X, Y, Z_uncertainty, zdir='z', offset=Z_mean.min()-0.25, levels=levels, cmap='inferno', alpha=0.5)
+
+        # ax.set_xlabel(self.input_names[0])
+        # ax.set_ylabel(self.input_names[1])
+        # # ax.set_zlabel('Mean Prediction')
+        # ax.set_title('Posterior Mean and Uncertainty at Iteration ' + str(iteration))
+
+        # # Add a color bar for the contour plot
+        # cbar = fig.colorbar(contour, shrink=0.5, aspect=5, label='Uncertainty (Std Dev)', orientation='horizontal')
+        # cbar.ax.xaxis.set_ticks_position('bottom')
+        # cbar.ax.xaxis.set_label_position('bottom')
+        # cbar.ax.set_anchor((0.5, -0.15))
+        # plt.show()
 
     def examine_acq_function(self, acq_function, iteration):
         """This function is used to examine the acquisition function"""
@@ -369,6 +385,8 @@ class test_posterior_result:
         ax.set_zlabel('Acquisition Function Value')
         ax.set_title('Acquisition Function Examination at Iteration ' + str(iteration))
         plt.savefig('acquisition_function.png')
+        
+
         
 
 

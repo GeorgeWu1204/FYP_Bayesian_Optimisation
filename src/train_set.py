@@ -6,7 +6,7 @@ from utils import calculate_hypervolume, recover_categorical_input_data
 
 class train_set_records():
     """This class is used to record the training set"""
-    def __init__(self, normalised_factors, self_constraints, worst_ref_objective, objective_to_optimise_dim, train_set_modification_enable, acceptable_threshold = 0.0001, disturbance_threshold = 0.0001, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
+    def __init__(self, normalised_factors, self_constraints, categorical_info, worst_ref_objective, objective_to_optimise_dim, train_set_modification_enable, acceptable_threshold = 0.0001, disturbance_threshold = 0.0001, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
         
         self.normalised_factor = torch.tensor(normalised_factors, dtype=tensor_type, device=tensor_device)
         self.acceptable_threshold = acceptable_threshold
@@ -17,6 +17,7 @@ class train_set_records():
         self.samples_amount_threshold = 5
         self.neighbour_dist = 1
         self.self_constraint = self_constraints
+        self.categorical_info = categorical_info
         self.worst_ref_objective = worst_ref_objective
         self.fake_worst_point = torch.tensor(worst_ref_objective.tolist() + [0.0], dtype = tensor_type, device = tensor_device).unsqueeze(0)
         self.objective_to_optimise_dim = objective_to_optimise_dim
@@ -59,7 +60,7 @@ class train_set_records():
         """This function is used to store the initial data"""
         self.reset_storage()
         train_set_size = train_x.shape[0]
-        recovered_train_x = recover_categorical_input_data(train_x)
+        recovered_train_x = recover_categorical_input_data(train_x, self.categorical_info)
         for i in range(train_set_size):
             recovered_sample = self.convert_tensor_to_tuple(recovered_train_x[i])
             if self.history_record.get(recovered_sample, None) == None:

@@ -20,6 +20,6 @@ obj_name: mcycle   benchmark: cmark_dccm          obj_direct: minimise     range
 obj_name: LUT as Logic              range: [20000,40600]
 
 #data
-objective: EL2
+customisable_processor: EL2
 vivado_project_path: ../object_functions/Vivado_Prj/EL2_Prj/
 generation_path: ../object_functions/Cores-VeeR-EL2/

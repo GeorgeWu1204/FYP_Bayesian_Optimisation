@@ -1,0 +1,21 @@
+#input self constraint
+var: arch       range: [1,2,3,4,5,6]  scale: 1  exp: 0  shift: 0  data_type: Categorical
+var: btb        range: [4,252]  scale: 4  exp: 0  shift: 0  data_type: Int 
+
+#input coupled constraint
+var: arch range: [1,4] var: btb range: [4,4]
+var: arch range: [5,6] var: btb range: [4,252]
+#input constant
+
+#output objective
+obj_name: ncycle_2   obj_direct: minimise  range: [13500000,13700000]
+
+#output constraint
+obj_name: lut  range: [0,2600] 
+
+#data
+customisable_processor: dataset_1
+settings_path: 'None'
+vivado_project_path: 'None'
+generation_path: 'None'
+board_settings: None

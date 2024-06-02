@@ -16,6 +16,6 @@ obj_name: mcycle   benchmark: dhrystone                obj_direct: minimise     
 obj_name: LUT as Logic              range: [30000,33000]
 
 #data
-objective: rocket_chip
+customisable_processor: rocket_chip
 vivado_project_path: ../object_functions/Vivado_Prj/rocket_chip/
 generation_path: ../object_functions/rocket-chip/emulator

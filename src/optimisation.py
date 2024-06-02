@@ -24,13 +24,16 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 t_type = torch.float64
 
 # Input Settings
-CONSTRAINT_FILE = '../specification/Rocket-Chip/input_spec_icache_dcache.txt'
+# CONSTRAINT_FILE = '../specification/Rocket-Chip/input_spec_icache_dcache.txt'
+# CONSTRAINT_FILE = '../specification/EL2/input_spec_btb_lsu.txt'
+CONSTRAINT_FILE = '../specification/Simple_Dataset/dataset_1_settings.txt'
 input_info, output_info, param_tuner, optimisation_name = parse_constraints(CONSTRAINT_FILE, device)
 
 # Dataset Settings
-if output_info.optimisation_target == 'synthetic':
-    RAW_DATA_FILE = '../specification/ppa_v2.db'
-    data_set = data.read_data_from_db(RAW_DATA_FILE, input_info, output_info, t_type, device)
+if output_info.optimisation_target == 'dataset_1':
+    data_set = data.DataSet_1(input_info, output_info, param_tuner, t_type, device)
+elif output_info.optimisation_target == 'dataset_2':
+    data_set = data.DataSet_2(input_info, output_info, param_tuner, t_type, device)
 elif output_info.optimisation_target == 'NutShell':
     data_set = data.NutShell_Data(input_info, output_info, param_tuner, t_type, device)
 elif output_info.optimisation_target == 'EL2':
@@ -51,8 +54,8 @@ print(f"Objectives to Optimise: {output_info.obj_to_optimise}")
 print(f"Output Objective Constraint: {output_info.output_constraints}")
 print("<--------------------------------------------------->")
 
-data_set.brute_design_space_exploration()
-quit()
+# data_set.brute_design_space_exploration()
+# quit()
 
 # Train Set Settings
 TRAIN_SET_DISTURBANCE_RANGE = 0.01                  # noise standard deviation for objective
@@ -71,7 +74,7 @@ RAW_SAMPLES = 8                 # number of raw samples for qNEI
 verbose = True
 record = True
 debug = True
-plot_posterior = False
+plot_posterior = True
 enable_train_set_modification = False
 
 
@@ -82,7 +85,7 @@ obj_index = 0
 ref_points = utils.find_ref_points(output_info.obj_to_optimise_dim, data_set.objs_direct, t_type, device)
 #normalise objective to ensure the same scale
 sampler_generator = initial_sampler(input_info.input_dim, output_info.obj_to_evaluate_dim, input_info.constraints, data_set, t_type, device)
-train_set_storage = train_set_records(input_info.input_normalized_factor, list(input_info.self_constraints.values()), ref_points, output_info.obj_to_optimise_dim, enable_train_set_modification, TRAIN_SET_ACCEPTABLE_THRESHOLD, TRAIN_SET_DISTURBANCE_RANGE, t_type, device)
+train_set_storage = train_set_records(input_info.input_normalized_factor, list(input_info.self_constraints.values()), input_info.input_categorical, ref_points, output_info.obj_to_optimise_dim, enable_train_set_modification, TRAIN_SET_ACCEPTABLE_THRESHOLD, TRAIN_SET_DISTURBANCE_RANGE, t_type, device)
 
 if plot_posterior:
     posterior_examiner = utils.test_posterior_result(input_info.input_names, t_type, device)
@@ -149,9 +152,9 @@ for trial in range (1, N_TRIALS + 1):
         valid_generated_sample, new_x_ei, new_exact_obj_ei, new_train_obj_ei, obj_score = Model.optimize_acqf_and_get_observation(acqf, data_set)
 
         # examine the posterior
-        if plot_posterior and iteration == 20:
-            # posterior_examiner.examine_posterior(model_ei.subset_output([posterior_objective_index]), iteration)
-            posterior_examiner.examine_acq_function(acqf, iteration)
+        if plot_posterior and iteration == 10:
+            posterior_examiner.examine_posterior(model_ei.subset_output([posterior_objective_index]), iteration)
+            # posterior_examiner.examine_acq_function(acqf, iteration)
             
         # update training points
         valid_point_for_storage, modified_new_train_x, modified_new_train_obj_ei, modified_obj_score  = train_set_storage.store_new_data(valid_generated_sample, new_x_ei, new_train_obj_ei, obj_score, data_set)

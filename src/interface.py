@@ -17,9 +17,9 @@ def calculate_input_dim(self_constraints):
 def fill_constraints(self_constraints, coupled_constraints, device):
     """this function is used to fill the constraints in the interface"""
     # Int Val: {var_name: [lower_bound, upper_bound, scale, exp, Int]}
-    # Categorical Val: {var_name: [lower_bound, upper_bound, scale, exp, Categorical]}
     # Coupled_constraints: [{var_name: [lower_bound, upper_bound], var_name: [lower_bound, upper_bound]},... ]
     # Input_categorical: {var_name: [index, num_categories, categorical_vals]}
+    # format_coupled_constraint : {0: [1, 4], 1: [4, 4]}
     input_dim = calculate_input_dim(self_constraints)
     input_scales = [1] * input_dim
     input_normalized_factor = [1] * input_dim
@@ -45,7 +45,6 @@ def fill_constraints(self_constraints, coupled_constraints, device):
         else:
             input_categorical[var_obj] = [var_index, len(self_constraints[var_obj][0]), self_constraints[var_obj][0]]
             var_index += len(self_constraints[var_obj][0])
-
     # Build the constraints (This part of the program could be optimised further)
     constraint = Input_Constraints(input_dim, device)
     constraint.update_scale_normalize_exp_factor(input_scales, input_normalized_factor, input_exp)
@@ -78,7 +77,7 @@ def parse_constraints(filename, device):
     coupled_constraints = []
     output_objective = {}
     output_constraints = {}
-    optimisation_target = None
+    customisable_processor = None
     optimisation_name = None
     # Open and read the file
     with open(filename, 'r') as file:
@@ -123,6 +122,7 @@ def parse_constraints(filename, device):
                             self_constraints[var_name] = [range_values, data_type]
                             input_shift_amount[var_name] = 1
                     elif section == 'coupled_constraint':
+                        # and relationship
                         coupled_parts = line.split('and')
                         coupled_data = {}
                         for part in coupled_parts:
@@ -131,13 +131,16 @@ def parse_constraints(filename, device):
                             range_values = var_parts[3].strip('[]').split(',')
                             coupled_data[var_name] = [int(range_values[0]), int(range_values[1])]
                         coupled_constraints.append(coupled_data)
+                    else:
+                        print('Error: Invalid section')
+                        quit()
             elif line.startswith('obj_name:') and section:
                 # Process the objective line
                 parts = line.split()
                 for i in range(1, len(parts)):
-                        if parts[i] == 'obj_direct:' or parts[i] == 'range:' or parts[i] == 'benchmark:':
-                            obj_name_end_index = i
-                            break
+                    if parts[i] == 'obj_direct:' or parts[i] == 'range:' or parts[i] == 'benchmark:':
+                        obj_name_end_index = i
+                        break
                 obj_name = ' '.join(parts[1:obj_name_end_index])
                 if section == 'output_objective':
                     if parts[obj_name_end_index] == 'benchmark:':
@@ -152,8 +155,8 @@ def parse_constraints(filename, device):
                 elif section == 'output_constraint':
                     range_values = parts[obj_name_end_index+1].strip('[]').split(',')
                     output_constraints[obj_name] = [int(range_values[0]), int(range_values[1])]
-            elif line.startswith('objective'):
-                optimisation_target = line.split()[1]
+            elif line.startswith('customisable_processor'):
+                customisable_processor = line.split()[1]
             elif line.startswith('settings_path'):
                 objective_function_setting_path = line.split()[1]
             elif line.startswith('vivado_project_path'):
@@ -162,16 +165,17 @@ def parse_constraints(filename, device):
                 generation_path = line.split()[1]
             elif line.startswith('board_settings'):
                 board_settings = line.split()[1]
-    if optimisation_target == 'NutShell':
+    if customisable_processor == 'NutShell':
         parameter_tuner = NutShell_parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), objective_function_setting_path, generation_path, vivado_project_path, board_settings)
-    elif optimisation_target == 'EL2':
+    elif customisable_processor == 'EL2':
         parameter_tuner = EL2_parameter_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), generation_path, vivado_project_path)
-    elif optimisation_target == 'rocket_chip':
+    elif customisable_processor == 'rocket_chip':
         parameter_tuner = rocket_tuning(tuple(self_constraints.keys()), tuple(input_shift_amount.values()), generation_path, vivado_project_path)
     else:
+        # For real dataset, it does not need parameter tuner
         parameter_tuner = None
     
-    output_info = Output_Info(output_objective, output_constraints, optimisation_target)
+    output_info = Output_Info(output_objective, output_constraints, customisable_processor)
     # Start to Fill in the constraints information
     input_info = fill_constraints(self_constraints, coupled_constraints, device)
     input_info.constants = input_constant
