@@ -149,7 +149,7 @@ class single_objective_BO_model():
             )
         # observe new values
         new_x = candidates.detach()
-        valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
+        valid_generated_sample, new_exact_obj = data_set.find_evaluation_results(new_x)
         new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
         new_con_obj = data_set.check_obj_constraints(new_normalised_obj)
         new_train_obj = torch.cat([new_normalised_obj, new_con_obj], dim=-1)
@@ -227,7 +227,7 @@ class BOOM_EXPLORER_MOCKED(single_objective_BO_model):
         )
         # observe new values
         new_x = candidates.detach()
-        valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
+        valid_generated_sample, new_exact_obj = data_set.find_evaluation_results(new_x)
         new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
         new_con_obj = data_set.check_obj_constraints(new_normalised_obj)
         new_train_obj = torch.cat([new_normalised_obj[...,self.objective_index:self.objective_index + 1], new_con_obj], dim=-1)
@@ -341,7 +341,7 @@ class multi_objective_BO_model():
         # observe new values
         new_x = candidates.detach()
         print("new_x: ", new_x)
-        valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
+        valid_generated_sample, new_exact_obj = data_set.find_evaluation_results(new_x)
         new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
         new_con_obj = data_set.check_obj_constraints(new_normalised_obj)
         if new_con_obj.item() <= 0.0:
@@ -382,7 +382,7 @@ def brute_force(input_info, output_info, ref_points, data_set, record, record_fi
     for iteration in range(overall_iteration_required):
         t0 = time.monotonic()
         sample_input = sample_inputs[iteration].unsqueeze(0)
-        valid_sample, possible_obj = data_set.find_ppa_result(sample_input)
+        valid_sample, possible_obj = data_set.find_evaluation_results(sample_input)
         if valid_sample == False:
             continue
         normalised_obj = data_set.normalise_output_data_tensor(possible_obj)
@@ -423,7 +423,7 @@ def hill_climbing(input_info, output_info, ref_points, data_set, record, record_
         neighbor_solution = torch.clamp(current_solution + step, min=0, max=1)
         print("neighbor_solution: ", neighbor_solution)
         # Evaluate the neighbor solution
-        valid_sample, possible_obj = data_set.find_ppa_result(neighbor_solution)
+        valid_sample, possible_obj = data_set.find_evaluation_results(neighbor_solution)
         if valid_sample == False:
             continue
         normalised_obj = data_set.normalise_output_data_tensor(possible_obj)
@@ -470,7 +470,7 @@ def genetic_algorithm(input_info, output_info, ref_points, data_set, record, rec
         current_iteration = generation * population_size
         for i in range(population_size):
             print(f"population[{i}]: ", population[i])
-            valid_sample, possible_obj = data_set.find_ppa_result(population[i].unsqueeze(0))
+            valid_sample, possible_obj = data_set.find_evaluation_results(population[i].unsqueeze(0))
             if not valid_sample:
                 fitness.append(float('inf'))  # Assign a large value for invalid samples
                 continue
@@ -628,7 +628,7 @@ def genetic_algorithm(input_info, output_info, ref_points, data_set, record, rec
 #         )
 #         # observe new values
 #         new_x = candidates.detach()
-#         valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
+#         valid_generated_sample, new_exact_obj = data_set.find_evaluation_results(new_x)
 #         new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
 #         new_con_obj = data_set.check_obj_constraints(new_normalised_obj)
 #         new_train_obj = torch.cat([new_normalised_obj[...,self.objective_index:self.objective_index + 1], new_con_obj], dim=-1)

@@ -60,12 +60,14 @@ class Output_Info:
 class Data_Sample:
     """Individual Storage Element"""
     def __init__(self, data, objs, data_set_type):
+        self.objective_vals = []
         if (data_set_type == 'txt'):
-            self.Constraints = data[0]
-            self.Cycle_count = data[1]
-            self.PPA = {}
             for obj in objs:
-                self.PPA[obj] = data[2][obj]
+                if obj == 'ncycle_2':
+                    index = obj.split('_')[-1]
+                    self.objective_vals.append(int(list(data[1][int(index)].values())[0]))
+                else:
+                    self.objective_vals.append(data[2][obj])
         elif (data_set_type == 'db'):
             self.Constraints = data[0]
             self.Cycle_count = None
@@ -74,6 +76,8 @@ class Data_Sample:
                 self.PPA[obj] = data[1][obj]
     def get_ppa(self, obj):
         return self.PPA.get(obj, None)   
+    def get_objectives(self):
+        return self.objective_vals
 
 class Data_Set:
     """This class is used for DSE where the dataset is provided"""
@@ -119,27 +123,32 @@ class Data_Set:
                     val_list[obj].append(raw_data[i][obj])
 
             # Iterate over each item in output_objective
-            obj_index = 0
-            for obj, values in output_info.obj_to_optimise.items():
-                # Extract the obj_direction from the values list
-                obj_direction = values[0]
-                self.objs_direct[obj] = obj_direction
-                if obj_direction == 'minimise':
-                    self.best_value[obj] = values[1]
-                    self.worst_value[obj] = values[2]
-                else:
-                    self.best_value[obj] = values[2]
-                    self.worst_value[obj] = values[1]
-                # for recording the best pair
-                self.normaliser_bounds[0][obj_index] = min(val_list[obj])
-                self.normaliser_bounds[1][obj_index] = max(val_list[obj])
-                self.best_pair[obj] = [[i] for i in raw_data.keys() if raw_data[i][obj] == self.best_value[obj]][0]
-                obj_index += 1
+        obj_index = 0
+        for obj, values in output_info.obj_to_optimise.items():
+            # Extract the obj_direction from the values list
+            obj_direction = values[0]
+            self.objs_direct[obj] = obj_direction
+            if obj_direction == 'minimise':
+                self.best_value[obj] = values[1]
+                self.worst_value[obj] = values[2]
+            else:
+                self.best_value[obj] = values[2]
+                self.worst_value[obj] = values[1]
+            # for recording the best pair
+            # self.normaliser_bounds[0][obj_index] = min(val_list[obj])
+            # self.normaliser_bounds[1][obj_index] = max(val_list[obj])
+            # self.best_pair[obj] = [[i] for i in raw_data.keys() if raw_data[i][obj] == self.best_value[obj]][0]
+            obj_index += 1
         self.output_constraints_to_check = []
+        print("self.best_value ", self.best_value)
+        print("self.worst_value ", self.worst_value)
         for obj in output_info.output_constraints:
-            self.output_constraints_to_check.append([self.normalise_single_output_data(bound,obj) for bound in output_info.output_constraints[obj]])
             self.best_value[obj] = output_info.output_constraints[obj][1]
             self.worst_value[obj] = 0.0
+            print("obj: ", obj)
+            print("output_info.output_constraints[obj]: ", output_info.output_constraints[obj])
+            self.output_constraints_to_check.append([self.normalise_single_output_data(bound,obj) for bound in output_info.output_constraints[obj]])
+            
         print("self.constrains_to_check: ", self.output_constraints_to_check)
 
     def normalise_output_data_tensor(self, input_tensor):
@@ -159,7 +168,7 @@ class Data_Set:
             input_data.insert(index, self.input_constants[index])
         return tuple(input_data)
     
-    def find_ppa_result(self, sample_inputs):
+    def find_evaluation_results(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
         num_restart= sample_inputs.shape[0]
         results = torch.empty((num_restart, len(self.objs_to_evaluate)), device=sample_inputs.device, dtype=sample_inputs.dtype)
@@ -238,7 +247,7 @@ class NutShell_Data(Data_Set):
             self.output_constraints_to_check.append([bound / self.output_normalised_factors[obj] for bound in output_obj_constraint[obj]])
         self.build_new_dataset = create_data_set(input_names, self.objs_to_evaluate, 'NutShell')
 
-    def find_ppa_result(self, sample_inputs):
+    def find_evaluation_results(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
         num_restart= sample_inputs.shape[0]
         results = torch.empty((num_restart, len(self.objs_to_evaluate)), device=sample_inputs.device, dtype=sample_inputs.dtype)
@@ -349,7 +358,7 @@ class EL2_Data(Data_Set):
         self.tensor_device = tensor_device
         self.build_new_dataset = create_data_set(input_info.input_names, self.objs_to_evaluate, optimisation_name)
     
-    def find_ppa_result(self, sample_inputs):
+    def find_evaluation_results(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
         num_restart= sample_inputs.shape[0]
         results = torch.empty((num_restart, len(self.objs_to_evaluate)), device=sample_inputs.device, dtype=sample_inputs.dtype)
@@ -417,7 +426,7 @@ class EL2_Data(Data_Set):
         combinations = self.find_all_possible_designs()
         for index in range(combinations.shape[0]):
             print("combinations[index]: ", combinations[index])
-            valid, result = self.find_ppa_result(combinations[index].unsqueeze(0))
+            valid, result = self.find_evaluation_results(combinations[index].unsqueeze(0))
             print("valid: ", valid, "result: ", result)
 
 
@@ -491,7 +500,7 @@ class create_data_set:
 
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # input_names = ['LUT', 'FF']
     # objective_names = ['Latency', 'Throughput']
     # dataset = create_data_set(input_names, objective_names)

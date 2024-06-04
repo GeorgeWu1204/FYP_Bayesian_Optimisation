@@ -37,7 +37,7 @@ class initial_sampler:
                 if self.constraint_set.check_single_point_meet_constraint(possible_initial_tensor[i,:]) == False:
                     continue
                 # check internal constraints
-                valid_sample, possible_obj = data_set.find_ppa_result(possible_initial_tensor[i:i+1,:])
+                valid_sample, possible_obj = data_set.find_evaluation_results(possible_initial_tensor[i:i+1,:])
                 # if the generated desgin does not meet the internal constraints that are not disclosed in the spec.
                 if valid_sample == False:
                     continue
@@ -73,7 +73,7 @@ class initial_sampler:
 #                 if self.constraint_set.check_single_point_meet_constraint(possible_initial_tensor[i,:]) == False:
 #                     continue
 #                 # check internal constraints
-#                 valid_sample, possible_obj = data_set.find_ppa_result(possible_initial_tensor[i:i+1,:])
+#                 valid_sample, possible_obj = data_set.find_evaluation_results(possible_initial_tensor[i:i+1,:])
 #                 # if the generated desgin does not meet the internal constraints that are not disclosed in the spec.
 #                 if valid_sample == False:
 #                     continue

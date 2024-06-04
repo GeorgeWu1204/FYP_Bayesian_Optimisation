@@ -126,7 +126,7 @@ class train_set_records():
             # neighbour_tensor = torch.empty((1, len(self.self_constraints)), dtype = self.tensor_type, device = self.tensor_device)
             for neighbour in neighbour_samples:
                 neighbour_tensor = torch.tensor(neighbour, dtype = self.tensor_type, device = self.tensor_device)
-                valid_neighbour, neighbor_obj = dataset.find_ppa_result(neighbour_tensor.unsqueeze(0))
+                valid_neighbour, neighbor_obj = dataset.find_evaluation_results(neighbour_tensor.unsqueeze(0))
                 if valid_neighbour:
                     normalised_obj = dataset.normalise_output_data_tensor(neighbor_obj, self.obj_normalized_factors, self.tensor_device)
                     con_obj = dataset.check_obj_constraints(normalised_obj)

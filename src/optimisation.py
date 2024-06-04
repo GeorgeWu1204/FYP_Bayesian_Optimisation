@@ -30,9 +30,9 @@ input_info, output_info, param_tuner, optimisation_name = parse_constraints(CONS
 
 # Dataset Settings
 if output_info.optimisation_target == 'dataset_1':
-    data_set = data.Data_Set(input_info, output_info, param_tuner, t_type, device)
+    data_set = data.Data_Set(input_info, output_info, 'txt', t_type, device)
 elif output_info.optimisation_target == 'dataset_2':
-    data_set = data.Data_Set(input_info, output_info, param_tuner, t_type, device)
+    data_set = data.Data_Set(input_info, output_info, t_type, device)
 elif output_info.optimisation_target == 'NutShell':
     data_set = data.NutShell_Data(input_info, output_info, param_tuner, t_type, device)
 elif output_info.optimisation_target == 'EL2':
@@ -218,7 +218,7 @@ if record:
 # Final stage, find the best sample point and the corresponding best observation
 print("<------------------Final Result------------------>")
 best_trial = utils.find_max_index_in_list(best_obj_scores_per_trial)
-_, best_objective = data_set.find_ppa_result(best_sample_points_per_trial[best_trial + 1])
+_, best_objective = data_set.find_evaluation_results(best_sample_points_per_trial[best_trial + 1])
 print("best_sample_points_per_trial: ", best_sample_points_per_trial[best_trial + 1])
 real_sample_point = utils.recover_single_input_data(best_sample_points_per_trial[best_trial + 1].squeeze(0), input_info.input_normalized_factor, input_info.input_scales, input_info.input_offsets, input_info.input_categorical, input_info.input_exp)
 print(f"{Fore.BLUE}Best sample point: {real_sample_point}{Style.RESET_ALL}")
