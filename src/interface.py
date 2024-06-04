@@ -46,23 +46,15 @@ def fill_constraints(self_constraints, coupled_constraints, device):
             input_categorical[var_obj] = [var_index, len(self_constraints[var_obj][0]), self_constraints[var_obj][0]]
             var_index += len(self_constraints[var_obj][0])
     # Build the constraints (This part of the program could be optimised further)
-    constraint = Input_Constraints(input_dim, device)
-    constraint.update_scale_normalize_exp_factor(input_scales, input_normalized_factor, input_exp)
-    var_index = 0
-    for constraints in self_constraints.values():
-        if constraints[-1] == 'Int':
-            constraint.update_self_constraints(var_index, list(constraints))
-            var_index += 1
-        else:
-            constraint.update_self_constraints(var_index, [0,1])
-            var_index += len(constraints[0])
+    constraint = Input_Constraints(input_dim, input_names, input_categorical, device)
+    constraint.update_integer_transform_info(input_offset, input_scales, input_normalized_factor, input_exp)
     
     if len(coupled_constraints) != 0:
         format_coupled_constraint = []
         for or_constraint in range(len(coupled_constraints)):
             and_constraints = {}
             for and_constraint in coupled_constraints[or_constraint].keys():
-                and_constraints[input_names.index(and_constraint)] = coupled_constraints[or_constraint][and_constraint]
+                and_constraints[str(and_constraint)] = coupled_constraints[or_constraint][and_constraint]
             format_coupled_constraint.append(and_constraints)
         constraint.update_coupled_constraints(format_coupled_constraint)
     
@@ -93,7 +85,7 @@ def parse_constraints(filename, device):
                 optimisation_name = parts[1]
             elif line.startswith('#input self constraint'):
                 section = 'self_constraint'
-            elif line.startswith('#input coupled constraint'):
+            elif line.startswith('#input conditional constraint'):
                 section = 'coupled_constraint'
             elif line.startswith('#input constant'):
                 section = 'input_constant'

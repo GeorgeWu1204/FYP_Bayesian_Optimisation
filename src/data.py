@@ -7,6 +7,31 @@ import os.path as osp
 from utils import calculate_smooth_condition, recover_single_input_data, read_utilization
 from botorch.utils.transforms import normalize
 
+def read_data_from_db(db_name):
+    db = {}
+    if not osp.exists(db_name):
+        print(f"[i] generating: '{db_name}'")
+        if len(sys.argv) == 2:
+            loc = sys.argv[1]
+        else:
+            loc = "**"
+
+        for dbf in glob.glob(f'{loc}/ppa*.db', recursive=True):
+            print(f"[i] loading db: '{dbf}'")
+            with open(dbf, 'r') as f:
+                local_db = eval(f.read())
+                db.update(local_db)
+
+        # pickle our database
+        with open(db_name, 'wb') as f:
+            pickle.dump(db, f)
+    else:
+        print(f"[i] loading: '{db_name}'")
+        with open(db_name, 'rb') as f:
+            db.update(pickle.load(f))
+    return db
+
+
 class Input_Info:
     """Class to store all the related input information"""
     def __init__(self, input_dim, input_scales, input_normalized_factor, input_exp, input_offsets, input_names, input_constraints, input_categorical, self_constraints, coupled_constraints):
@@ -52,7 +77,7 @@ class Data_Sample:
 
 class Data_Set:
     """This class is used for DSE where the dataset is provided"""
-    def __init__(self, data, input_info, output_info, data_set_type = 'txt', tensor_type = torch.float64, tensor_device = torch.device('cpu')):
+    def __init__(self, input_info, output_info, data_set_type = 'txt', tensor_type = torch.float64, tensor_device = torch.device('cpu')):
         val_list = {}
         self.best_value = {}
         self.best_pair = {}
@@ -73,19 +98,25 @@ class Data_Set:
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
         self.normaliser_bounds = torch.empty((2, len(output_info.obj_to_optimise)), dtype=tensor_type, device=tensor_device)
+        
         if data_set_type == 'txt':
-            for i in range(len(data)):
-                d_input_dic = data[i][0]
+            file_name = '../specification/Simple_Dataset/ppa.txt'
+            with open(file_name, 'r') as f:
+                content = f.read()
+                raw_data = ast.literal_eval(content)
+            for i in range(len(raw_data)):
+                d_input_dic = raw_data[i][0]
                 d_input = [val for val in d_input_dic.values()]
-                self.__dict__[tuple(d_input)] = Data_Sample(data[i], self.objs_to_evaluate, data_set_type)
+                self.__dict__[tuple(d_input)] = Data_Sample(raw_data[i], self.objs_to_evaluate, data_set_type)
                 
         elif data_set_type == 'db':
             for obj in self.objs_to_evaluate:
                 val_list[obj] = []
-            for i in data.keys():
-                self.__dict__[i] = Data_Sample([i, data[i]], self.objs_to_evaluate, data_set_type)
+            raw_data = read_data_from_db('../specification/Simple_Dataset/ppa_v2.db')
+            for i in raw_data.keys():
+                self.__dict__[i] = Data_Sample([i, raw_data[i]], self.objs_to_evaluate, data_set_type)
                 for obj in self.objs_to_evaluate:
-                    val_list[obj].append(data[i][obj])
+                    val_list[obj].append(raw_data[i][obj])
 
             # Iterate over each item in output_objective
             obj_index = 0
@@ -102,7 +133,7 @@ class Data_Set:
                 # for recording the best pair
                 self.normaliser_bounds[0][obj_index] = min(val_list[obj])
                 self.normaliser_bounds[1][obj_index] = max(val_list[obj])
-                self.best_pair[obj] = [[i] for i in data.keys() if data[i][obj] == self.best_value[obj]][0]
+                self.best_pair[obj] = [[i] for i in raw_data.keys() if raw_data[i][obj] == self.best_value[obj]][0]
                 obj_index += 1
         self.output_constraints_to_check = []
         for obj in output_info.output_constraints:
@@ -165,38 +196,6 @@ class Data_Set:
             results[i] = max(condition_vals)
         return results
 
-
-def read_data_from_txt(file_name, objs, scales, input_data_normalized_factors):
-    with open(file_name, 'r') as f:
-        content = f.read()
-        raw_data = ast.literal_eval(content)
-        data_set = Data_Set(raw_data, objs, scales, input_data_normalized_factors, 'txt')
-    return data_set
-
-def read_data_from_db(db_name, objs, output_obj_constraint, scales, input_data_normalized_factors, input_offsets, input_constants, type, device):
-    db = {}
-    if not osp.exists(db_name):
-        print(f"[i] generating: '{db_name}'")
-        if len(sys.argv) == 2:
-            loc = sys.argv[1]
-        else:
-            loc = "**"
-
-        for dbf in glob.glob(f'{loc}/ppa*.db', recursive=True):
-            print(f"[i] loading db: '{dbf}'")
-            with open(dbf, 'r') as f:
-                local_db = eval(f.read())
-                db.update(local_db)
-
-        # pickle our database
-        with open(db_name, 'wb') as f:
-            pickle.dump(db, f)
-    else:
-        print(f"[i] loading: '{db_name}'")
-        with open(db_name, 'rb') as f:
-            db.update(pickle.load(f))
-    data_set = Data_Set(db, objs, scales, input_data_normalized_factors, input_offsets, input_constants, output_obj_constraint, 'db', type, device)
-    return data_set
     
 
 class NutShell_Data(Data_Set):
@@ -493,8 +492,9 @@ class create_data_set:
 
 
 if __name__ == '__main__':
-    input_names = ['LUT', 'FF']
-    objective_names = ['Latency', 'Throughput']
-    dataset = create_data_set(input_names, objective_names)
-    dataset.record_data([3.0, 2.0], [3.234, 4.23])
-    print(dataset.find_corresponding_data((3.0, 2.0)))
+    # input_names = ['LUT', 'FF']
+    # objective_names = ['Latency', 'Throughput']
+    # dataset = create_data_set(input_names, objective_names)
+    # dataset.record_data([3.0, 2.0], [3.234, 4.23])
+    # print(dataset.find_corresponding_data((3.0, 2.0)))
+    # read_data_from_txt('../object_functions/Dataset/NutShell.txt', ['Latency', 'Throughput'], [1, 1], [1, 1])

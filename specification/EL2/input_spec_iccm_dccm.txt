@@ -4,7 +4,7 @@ var: dccm_num_banks            range: [2,4]       scale: 2     exp: 2      shift
 var: iccm_size                 range: [4,512]     scale: 4     exp: 2      shift: 0
 var: iccm_num_banks            range: [2,8]       scale: 2     exp: 2      shift: 0     
 
-#input coupled constraint
+#input conditional constraint
 
 #input constant
 

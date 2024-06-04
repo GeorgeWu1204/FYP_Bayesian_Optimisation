@@ -38,7 +38,7 @@ def calculate_weighted_obj_score(normalised_obj, ref_points, objective_index):
 
 class single_objective_BO_model():
     """Single Objective Bayesian Optimisation Model"""
-    def __init__(self, NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type, output_constraints_enable=True, categorical_handle_enable=True):
+    def __init__(self, NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, sampler_generator, device, t_type, output_constraints_enable=True, categorical_handle_enable=True):
         self.NUM_RESTARTS = NUM_RESTARTS
         self.RAW_SAMPLES = RAW_SAMPLES
         self.BATCH_SIZE = BATCH_SIZE
@@ -49,11 +49,11 @@ class single_objective_BO_model():
         self.t_type = t_type
         self.output_constraints_enable = output_constraints_enable
         self.categorical_handle_enable = categorical_handle_enable
-        self.objective_index = output_info.obj_to_optimise_index
         self.constrained_obj = ConstrainedMCObjective(
                 objective=obj_callable,
                 constraints=[constraint_callable],
             )
+        self.sampler = sampler_generator
     
     
     def initialize_model(self, train_x, train_obj):
@@ -121,40 +121,56 @@ class single_objective_BO_model():
     
     def optimize_acqf_and_get_observation(self, acq_func, data_set):
         """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
-        # TODO: Noticed that if there is an input constraint, the points are selected from the generated condition.
-        candidates, _ = optimize_acqf(
-            acq_function=acq_func,
-            bounds=self.input_info.constraints.constraint_bound,
-            q=self.BATCH_SIZE,
-            num_restarts=self.NUM_RESTARTS,
-            options={"batch_limit": 1, "maxiter": 200},
-            raw_samples=self.RAW_SAMPLES,
-            sequential=True
-        )
+        if self.input_info.coupled_constraints() is not None:
+            unnormalised_train_x = self.sampler.generate_initial_data(self.NUM_RESTARTS)
+            sampled_initial_conditions = unnormalised_train_x.unsqueeze(1) # to match the dimension n * 1 * m
+            print("sampled_initial_conditions: ", sampled_initial_conditions)
+            candidates, _ = optimize_acqf(
+                acq_function=acq_func,
+                bounds=self.input_info.constraints.constraint_bound,
+                q=self.BATCH_SIZE,
+                num_restarts=self.NUM_RESTARTS,
+                options={"batch_limit": 1, "maxiter": 200},
+                nonlinear_inequality_constraints = [self.input_info.constraints.get_nonlinear_inequality_constraints],
+                batch_initial_conditions = sampled_initial_conditions,
+                raw_samples=self.RAW_SAMPLES,
+                sequential=True
+            )
+        else:
+            # If there is no conditional constraint presented in the experiment settings
+            candidates, _ = optimize_acqf(
+                acq_function=acq_func,
+                bounds=self.input_info.constraints.constraint_bound,
+                q=self.BATCH_SIZE,
+                num_restarts=self.NUM_RESTARTS,
+                options={"batch_limit": 1, "maxiter": 200},
+                raw_samples=self.RAW_SAMPLES,
+                sequential=True
+            )
         # observe new values
         new_x = candidates.detach()
         valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
         new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
         new_con_obj = data_set.check_obj_constraints(new_normalised_obj)
-        new_train_obj = torch.cat([new_normalised_obj[...,self.objective_index:self.objective_index + 1], new_con_obj], dim=-1)
-        new_exact_obj = torch.cat([new_exact_obj[...,self.objective_index:self.objective_index + 1], new_con_obj], dim=-1)
-        new_obj_score = calculate_weighted_obj_score(new_train_obj, self.ref_points, self.objective_index)
+        new_train_obj = torch.cat([new_normalised_obj, new_con_obj], dim=-1)
+        new_exact_obj = torch.cat([new_exact_obj, new_con_obj], dim=-1)
+        new_obj_score = calculate_weighted_obj_score(new_train_obj, self.ref_points, 0)
         return valid_generated_sample, new_x, new_exact_obj, new_train_obj, new_obj_score
     
-    def generate_initial_data(self, sampler_generator, NUM_OF_INITIAL_POINT, data_set):
+    def generate_initial_data(self, NUM_OF_INITIAL_POINT, data_set):
         """generate training data"""
-        unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set)
-        train_obj = torch.cat([normalised_objs[...,self.objective_index:self.objective_index + 1], con_objs], dim=-1)
+        unnormalised_train_x, exact_objs, con_objs, normalised_objs = self.sampler.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set)
+        train_obj = torch.cat([normalised_objs, con_objs], dim=-1)
         # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
-        obj_scores = calculate_weighted_obj_score(train_obj, self.ref_points, self.objective_index)
-        new_exact_obj = torch.cat([exact_objs[...,self.objective_index:self.objective_index + 1], con_objs], dim=-1)
+        obj_scores = calculate_weighted_obj_score(train_obj, self.ref_points, 0)
+        new_exact_obj = torch.cat([exact_objs, con_objs], dim=-1)
         return unnormalised_train_x, new_exact_obj, train_obj, obj_scores
 
 
 
 ### <----------------- Single Objective BO Designed for Simple Handling of Resource Constraint ----------------->
 
-class single_objective_BO_model_with_resource_constraint(single_objective_BO_model):
+class BOOM_EXPLORER_MOCKED(single_objective_BO_model):
 
     def __init__(self, NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type, output_constraints_enable=True, categorical_handle_enable=True):
         super().__init__(NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type, output_constraints_enable, categorical_handle_enable)
@@ -502,3 +518,129 @@ def genetic_algorithm(input_info, output_info, ref_points, data_set, record, rec
     print(f"{Fore.GREEN}Best volume: {best_volume}, Best sample: {best_sample}, Best results: {best_results}{Style.RESET_ALL}")
     if record:
         results_record.store()
+
+
+
+
+
+
+
+
+
+
+
+
+# Backup
+# class single_objective_BO_model():
+#     """Single Objective Bayesian Optimisation Model"""
+#     def __init__(self, NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type, output_constraints_enable=True, categorical_handle_enable=True):
+#         self.NUM_RESTARTS = NUM_RESTARTS
+#         self.RAW_SAMPLES = RAW_SAMPLES
+#         self.BATCH_SIZE = BATCH_SIZE
+#         self.ref_points = ref_points
+#         self.input_info = input_info
+#         self.output_info = output_info  
+#         self.device = device
+#         self.t_type = t_type
+#         self.output_constraints_enable = output_constraints_enable
+#         self.categorical_handle_enable = categorical_handle_enable
+#         self.objective_index = output_info.obj_to_optimise_index
+#         self.constrained_obj = ConstrainedMCObjective(
+#                 objective=obj_callable,
+#                 constraints=[constraint_callable],
+#             )
+    
+    
+#     def initialize_model(self, train_x, train_obj):
+#         if self.categorical_handle_enable:
+#             return self.initialize_custom_model(train_x, train_obj)
+#         else:
+#             return self.initialize_default_model(train_x, train_obj)
+    
+#     def calculate_max_obj(self, normalised_obj):
+#         result = normalised_obj.clone()
+#         for i in range (1, normalised_obj.shape[-1]):
+#             result[..., 0] = result[..., 0] * ( normalised_obj[..., i] <= 0)
+#         return result[..., 0].max()
+
+#     def initialize_custom_model(self, train_x, train_obj, state_dict=None):
+#         """define models that considers the categorical error for objective and constraint"""
+#         ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
+#         models = []
+#         for obj_index in range(train_obj.shape[-1]): 
+#             train_y = train_obj[..., obj_index : obj_index + 1]
+#             standardized_train_y = standardize_tensor(train_y)
+#             models.append(SingleTaskGP_transformed(
+#                                         self.input_info.input_scales,
+#                                         self.input_info.input_normalized_factor,
+#                                         self.input_info.input_categorical,
+#                                         train_x, 
+#                                         standardized_train_y, 
+#                                         # outcome_transform=Standardize(m = 1),
+#                                         tensor_type=self.t_type,
+#                                         tensor_device=self.device
+#                                     ))
+#         model = ModelListGP(*models)
+#         mll = SumMarginalLogLikelihood(model.likelihood, model)
+#         if state_dict is not None:
+#             model.load_state_dict(state_dict)
+#         return mll, model
+    
+#     def initialize_default_model(self, train_x, train_obj, state_dict=None):
+#         """define models for objective and constraint"""
+#         ### Model selection: Assume multiple independent output training on the same data in this case, otherwise MultiTaskGP ###
+#         models = []
+#         for obj_index in range(train_obj.shape[-1]): 
+#             train_y = train_obj[..., obj_index : obj_index + 1]
+#             models.append(SingleTaskGP(
+#                                         train_x, 
+#                                         train_y, 
+#                                         outcome_transform=Standardize(m=1)
+#                                     ))
+        
+#         model = ModelListGP(*models)
+#         mll = SumMarginalLogLikelihood(model.likelihood, model)
+#         if state_dict is not None:
+#             model.load_state_dict(state_dict)
+#         return mll, model
+
+#     def build_acqf(self, model, train_obj, sampler):
+#         """Build the qNEHVI acquisition function"""
+#         qEI = qExpectedImprovement(
+#             model=model,
+#             best_f=self.calculate_max_obj(train_obj),
+#             sampler=sampler,
+#             objective=self.constrained_obj,
+#         )
+#         return qEI
+    
+#     def optimize_acqf_and_get_observation(self, acq_func, data_set):
+#         """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
+#         # TODO: Noticed that if there is an input constraint, the points are selected from the generated condition.
+#         candidates, _ = optimize_acqf(
+#             acq_function=acq_func,
+#             bounds=self.input_info.constraints.constraint_bound,
+#             q=self.BATCH_SIZE,
+#             num_restarts=self.NUM_RESTARTS,
+#             options={"batch_limit": 1, "maxiter": 200},
+#             raw_samples=self.RAW_SAMPLES,
+#             sequential=True
+#         )
+#         # observe new values
+#         new_x = candidates.detach()
+#         valid_generated_sample, new_exact_obj = data_set.find_ppa_result(new_x)
+#         new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
+#         new_con_obj = data_set.check_obj_constraints(new_normalised_obj)
+#         new_train_obj = torch.cat([new_normalised_obj[...,self.objective_index:self.objective_index + 1], new_con_obj], dim=-1)
+#         new_exact_obj = torch.cat([new_exact_obj[...,self.objective_index:self.objective_index + 1], new_con_obj], dim=-1)
+#         new_obj_score = calculate_weighted_obj_score(new_train_obj, self.ref_points, self.objective_index)
+#         return valid_generated_sample, new_x, new_exact_obj, new_train_obj, new_obj_score
+    
+#     def generate_initial_data(self, sampler_generator, NUM_OF_INITIAL_POINT, data_set):
+#         """generate training data"""
+#         unnormalised_train_x, exact_objs, con_objs, normalised_objs = sampler_generator.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set)
+#         train_obj = torch.cat([normalised_objs[...,self.objective_index:self.objective_index + 1], con_objs], dim=-1)
+#         # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
+#         obj_scores = calculate_weighted_obj_score(train_obj, self.ref_points, self.objective_index)
+#         new_exact_obj = torch.cat([exact_objs[...,self.objective_index:self.objective_index + 1], con_objs], dim=-1)
+#         return unnormalised_train_x, new_exact_obj, train_obj, obj_scores

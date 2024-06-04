@@ -6,7 +6,7 @@ var: lsu_stbuf_depth           range: [2,8]       scale: 2     exp: 2      shift
 var: dccm_size                 range: [32,512]     scale: 32     exp: 2      shift: 0   data_type: Int
 var: iccm_size                 range: [32,512]     scale: 32     exp: 2      shift: 0   data_type: Int
 
-#input coupled constraint
+#input conditional constraint
 
 #input constant
 

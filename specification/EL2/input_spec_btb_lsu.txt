@@ -5,7 +5,7 @@ var: lsu_num_nbload            range: [2,8]       scale: 2     exp: 2      shift
 var: btb_enable                range: [0,1]       scale: 1     exp: 1      shift: 0     data_type: Int
 var: lsu_stbuf_depth           range: [2,8]       scale: 2     exp: 2      shift: 0     data_type: Int 
 
-#input coupled constraint
+#input conditional constraint
 
 #input constant
 

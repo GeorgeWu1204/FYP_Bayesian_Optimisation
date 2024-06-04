@@ -5,41 +5,18 @@ from botorch.utils.multi_objective.box_decompositions.non_dominated import Nondo
 import re
 import pickle
 
-def calculate_condition(x, condition):
-    """This function is used to calculate the input constraints"""
-    return (x - condition[0]) * (condition[1] - x)
+
 
 def calculate_smooth_condition(x, condition):
     """Smooth, differentiable step function. Used for calculating the output constraints"""
     return (1 / (1 + torch.exp(-10 * (x - condition[1]))) - 1 / (1 + torch.exp(-10 * (x - condition[0]))) + 0.5) * 1e-1
 
 def calculate_hypervolume(ref_points, train_obj, obj_to_optimise_dim = 0):
-    """Calculate the hypervolume"""
+    """Calculate the hypervolume. This is for multi-objective optimisation."""
     # Y dimension (batch_shape) x n x m-dim
     partitioning = NondominatedPartitioning(ref_point=ref_points, Y = train_obj[..., : obj_to_optimise_dim])
     hv = partitioning.compute_hypervolume().item()
     return hv
-
-
-def build_matrix(data, constraints, num_restarts, q_dim, d_dim):
-    """Build a matrix to store all the results of whether the input data meet the constraints."""
-    # formatted_correlated_constraints = {d_dim : [condition_size, num_restarts * q_dim]}
-    formatted_correlated_constraints = {}
-    individual_constraint = torch.empty((d_dim, num_restarts * q_dim))
-    flat_data = data.flatten()
-
-    for i in range(d_dim):
-        indices = torch.arange(start = i, end = len(flat_data), step = d_dim)
-        selected_data = flat_data[indices]
-        # individual constraint
-        individual_constraint[i] = calculate_condition(selected_data, constraints.Node[i].individual_constraints)
-        if(constraints.Node[i].have_constraints()):
-            condition_size = constraints.Node[i].condition_size()
-            cal_condition = torch.empty((condition_size, num_restarts * q_dim))
-            for j in range(0, constraints.Node[i].condition_size()):
-                cal_condition[j] = calculate_condition(selected_data, constraints.Node[i].conditions[j])
-            formatted_correlated_constraints[i] = cal_condition
-    return individual_constraint, formatted_correlated_constraints
 
 def normalise_input_data(input_tensor, normalized_factors):
     """This function is used to normalise the input data, it is not used currently"""
@@ -50,7 +27,6 @@ def normalise_input_data(input_tensor, normalized_factors):
             output_tensor[i][j] = input_tensor[i][j] / normalized_factors[j]
     return output_tensor
 
-
 def standardize_tensor(x):
     """Standardizes a tensor of shape [n, 1] by subtracting the mean and dividing by the standard deviation."""
     mean = x.mean(dim=0, keepdim=True)  # Compute mean along the first dimension
@@ -60,7 +36,6 @@ def standardize_tensor(x):
         return x - mean
     else:
         return (x - mean) / std
-
 
 def obtain_categorical_input_data(input_tensor, categorical_info):
     """This function is used to recover the categorical input data"""

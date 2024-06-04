@@ -3,7 +3,7 @@ var: NrExtIntr              range: [1,10]    scale: 1    shift: 0
 var: MMIOSize               range: [1,8]    scale: 1    shift: 28
 var: MemMapRegionBits       range: [0, 28]  scale: 1    shift: 0 
 
-#input coupled constraint
+#input conditional constraint
 
 #input constant
 

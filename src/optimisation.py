@@ -8,7 +8,6 @@ from colorama import Fore, Style
 from interface import parse_constraints
 from sampler import initial_sampler
 from optimisation_models import multi_objective_BO_model, single_objective_BO_model
-
 from train_set import train_set_records
 from botorch.sampling.normal import SobolQMCNormalSampler
 from botorch.fit import fit_gpytorch_model
@@ -31,9 +30,9 @@ input_info, output_info, param_tuner, optimisation_name = parse_constraints(CONS
 
 # Dataset Settings
 if output_info.optimisation_target == 'dataset_1':
-    data_set = data.DataSet_1(input_info, output_info, param_tuner, t_type, device)
+    data_set = data.Data_Set(input_info, output_info, param_tuner, t_type, device)
 elif output_info.optimisation_target == 'dataset_2':
-    data_set = data.DataSet_2(input_info, output_info, param_tuner, t_type, device)
+    data_set = data.Data_Set(input_info, output_info, param_tuner, t_type, device)
 elif output_info.optimisation_target == 'NutShell':
     data_set = data.NutShell_Data(input_info, output_info, param_tuner, t_type, device)
 elif output_info.optimisation_target == 'EL2':
@@ -55,7 +54,7 @@ print(f"Output Objective Constraint: {output_info.output_constraints}")
 print("<--------------------------------------------------->")
 
 # data_set.brute_design_space_exploration()
-# quit()
+quit()
 
 # Train Set Settings
 TRAIN_SET_DISTURBANCE_RANGE = 0.01                  # noise standard deviation for objective
@@ -100,7 +99,7 @@ if not debug:
     torch.set_printoptions(sci_mode=False)
 
 #TODO: Temporarily modified for paper, change from multi-objective to single-objective while keep using the same dataset.
-output_info.obj_to_optimise = {list(output_info.obj_to_optimise.keys())[obj_index] : list(output_info.obj_to_optimise.values())[obj_index]}
+# output_info.obj_to_optimise = {list(output_info.obj_to_optimise.keys())[obj_index] : list(output_info.obj_to_optimise.values())[obj_index]}
 
 if record:
     record_file_name = '../test/test_results/'
@@ -113,7 +112,7 @@ best_obj_scores_per_trial = []
 best_sample_points_per_trial = {trial : {input : 0.0 for input in input_info.input_names} for trial in range(1, N_TRIALS + 1)}
 Model = single_objective_BO_model(NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type)
 #TODO: Temporarily modified for paper
-Model.objective_index = obj_index
+# Model.objective_index = obj_index
 #Optimisation Loop
 for trial in range (1, N_TRIALS + 1):
 

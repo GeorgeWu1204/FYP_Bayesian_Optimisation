@@ -5,7 +5,7 @@ var: icache_nWays              range: [4,32]        scale: 2     exp: 2      shi
 var: dcache_nSets              range: [4,32]        scale: 4     exp: 2      shift: 0   data_type: Int
 var: dcache_nWays              range: [4,32]        scale: 2     exp: 2      shift: 0   data_type: Int     
 
-#input coupled constraint
+#input conditional constraint
 
 #input constant
 

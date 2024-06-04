@@ -72,4 +72,3 @@ for k in ppa_stats:
     else:
        print(f"{Fore.GREEN}* {k} => {ppa_stats[k]}{Style.RESET_ALL}")
 
-
