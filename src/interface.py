@@ -124,8 +124,7 @@ def parse_constraints(filename, device):
                             coupled_data[var_name] = [int(range_values[0]), int(range_values[1])]
                         coupled_constraints.append(coupled_data)
                     else:
-                        print('Error: Invalid section')
-                        quit()
+                        exit('Error: Invalid section')
             elif line.startswith('obj_name:') and section:
                 # Process the objective line
                 parts = line.split()

@@ -9,7 +9,8 @@ import pickle
 
 def calculate_smooth_condition(x, condition):
     """Smooth, differentiable step function. Used for calculating the output constraints"""
-    return (1 / (1 + torch.exp(-10 * (x - condition[1]))) - 1 / (1 + torch.exp(-10 * (x - condition[0]))) + 0.5) * 1e-1
+    # return (1 / (1 + torch.exp(-10 * (x - condition[1]))) - 1 / (1 + torch.exp(-10 * (x - condition[0]))) + 0.5) * 1e-1
+    return 0.5 - (1 / (1 + torch.exp(-10 * (x - condition[1]))))
 
 def calculate_hypervolume(ref_points, train_obj, obj_to_optimise_dim = 0):
     """Calculate the hypervolume. This is for multi-objective optimisation."""
@@ -44,11 +45,12 @@ def obtain_categorical_input_data(input_tensor, categorical_info):
     start_idx = 0
     for single_categorical_info in categorical_info.values():
         idx, length = single_categorical_info[0], single_categorical_info[1]
+        # add the elements before the start of the categorical data to the result array
         if idx > start_idx:
             result_array+= input_tensor[start_idx:idx].tolist()
         segment = input_tensor[idx:idx+length]
-        max_value = torch.max(segment, dim=0, keepdim=True).values.int().item()
-        result_array.append(single_categorical_info[2][max_value])
+        max_index = int(torch.argmax(segment, dim=0))
+        result_array.append(int(single_categorical_info[2][max_index]))
         start_idx = idx + length
     
     # Add the remaining part of the tensor if any
@@ -130,6 +132,7 @@ def extract_best_from_initialisation_results(initial_train_x, initial_obj, hyper
 
 def find_ref_points(OBJECTIVES_DIM, OBJECTIVES, t_type, device):
     """This function is used to find the reference points for qNEHVI optimisation"""
+    # Assuming that all the objectives are normalised.
     ref_points = torch.empty((OBJECTIVES_DIM), device=device, dtype=t_type)
     ref_point_index = 0
     for obj in OBJECTIVES.keys():

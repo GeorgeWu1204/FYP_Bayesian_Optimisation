@@ -3,12 +3,12 @@ var: arch       range: [1,2,3,4,5,6]  scale: 1  exp: 0  shift: 0  data_type: Cat
 var: btb        range: [4,252]  scale: 4  exp: 0  shift: 0  data_type: Int 
 
 #input conditional constraint
-var: arch range: [1,4] var: btb range: [4,4]
-
+var: arch range: [1,4] and var: btb range: [4,4]
+var: arch range: [5,6] and var: btb range: [4,252]
 #input constant
 
 #output objective
-obj_name: ncycle_2   obj_direct: minimise  range: [13500000,13700000]
+obj_name: ncycle_2   obj_direct: minimise  range: [300000,13700000]
 
 #output constraint
 obj_name: lut  range: [0,2600] 

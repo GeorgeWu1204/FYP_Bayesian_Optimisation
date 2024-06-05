@@ -8,10 +8,10 @@ def calculate_int_condition(x, condition):
     """This function is used to calculate the input constraints"""
     return (x - condition[0]) * (condition[1] - x)
 
-def calculate_categorical_condition(x, condition):
+def calculate_categorical_condition(x, categorical_range, condition):
     #x dim = [num_categories, num_restarts * q_dim]
-    index = torch.argmax(x, dim=0)
-    return calculate_int_condition(index, condition)
+    index = torch.argmax(x, dim=1)
+    return calculate_int_condition(int(categorical_range[index]), condition)
 
 def extract_categorical_parameters_from_flatten_data(data, total_amount, d_dim, categorical_info):
     extracted_data = []
@@ -20,13 +20,12 @@ def extract_categorical_parameters_from_flatten_data(data, total_amount, d_dim, 
         end_idx = start_idx + categorical_info[1]
         if end_idx <= len(data):
             extracted_data.append(data[start_idx:end_idx])
-    result = torch.stack(extracted_data).transpose(0, 1)
-    print(result.shape)
+    result = torch.stack(extracted_data)
     return result
 
 def build_matrix(data, constraints, num_restarts, q_dim, d_dim):
     """Build a matrix to store all the results of whether the input data meet the constraints."""
-    # formatted_correlated_constraints = {d_dim : [condition_size, num_restarts * q_dim]}
+    # formatted_correlated_constraints = {d_dim : matrix of shape (condition_size * (num_restarts * q_dim))}
     formatted_correlated_constraints = {}
     individual_constraint = torch.empty((d_dim, num_restarts * q_dim))
     flat_data = data.flatten()
@@ -35,14 +34,14 @@ def build_matrix(data, constraints, num_restarts, q_dim, d_dim):
         # individual constraint
         # individual_constraint[i] = calculate_int_condition(selected_data, constraints.Node[i].individual_constraints)
         skip = False
-        # Ca
+        # Categorical
         for categorical_info in constraints.categorical_info.values():
             if i == categorical_info[0]:
                 condition_size = constraints.Node[i].condition_size()
                 cal_condition = torch.empty((condition_size, num_restarts * q_dim))
                 extracted_data = extract_categorical_parameters_from_flatten_data(flat_data, num_restarts * q_dim, d_dim, categorical_info)
                 for j in range(0, constraints.Node[i].condition_size()):
-                    cal_condition[j] = calculate_categorical_condition(extracted_data, constraints.Node[i].conditions[j])
+                    cal_condition[j] = calculate_categorical_condition(extracted_data, categorical_info[2], constraints.Node[i].conditions[j])
                 formatted_correlated_constraints[i] = cal_condition
                 skip = True
                 continue
@@ -107,7 +106,7 @@ class Constraints_Node:
             # This is to avoid multiple same conditions in the list.
         elif parameter_type == 'Categorical':
             tmp_condition = condition
-        print(tmp_condition)
+
         if tmp_condition in self.conditions:
             return self.conditions.index(condition)
         else:
@@ -123,13 +122,26 @@ class Input_Constraints:
         self.Node = [Constraints_Node(i) for i in range(dim)]
         self.linked_constraints = []
         self.normalized_factors = []
-        self.input_names = input_names
+        self.input_names_index = {}
         self.categorical_info = categorical_info
         self.constraint_bound = torch.empty((2, dim), device=device)
+        input_name_start_index = 0
+        input_name_index = 0
         if self.categorical_info is not None:
             for key in self.categorical_info.keys():
                 for index in range(self.categorical_info[key][0], self.categorical_info[key][0] + self.categorical_info[key][1]):
                     self.Node[index].type = 'Categorical'
+                # To build the input_names_index
+                if input_name_start_index <= self.categorical_info[key][0]:
+                    for i in range(input_name_start_index, self.categorical_info[key][0] + 1):
+                        self.input_names_index[input_names[input_name_index]] = i
+                        input_name_index += 1
+                    input_name_start_index = self.categorical_info[key][0] + self.categorical_info[key][1]
+            if input_name_start_index < dim:
+                for i in range(input_name_start_index, dim):
+                    self.input_names_index[input_names[input_name_index]] = i
+                    input_name_index += 1
+                
         
     def update_self_constraints(self, index, indvidual_constraint):
         self.Node[index].update_offset(indvidual_constraint[0])
@@ -149,13 +161,14 @@ class Input_Constraints:
         for or_constraint in new_constraints:
             linked_constraint = {}
             for constraint_var_name in or_constraint.keys():
-                constraint_var_index = self.input_names.index(constraint_var_name)
+                constraint_var_index = self.input_names_index[constraint_var_name]
+
                 if constraint_var_name in self.categorical_info.keys():
                     condition_index_within_node = self.Node[constraint_var_index].check_condition_included(or_constraint[constraint_var_name], 'Categorical')
                 else:
                     if(constraint_var_index >= self.dim):
                         raise Exception('Constraint variable index out of range')
-                    condition_index_within_node = self.Node[constraint_var_index].check_condition_included(or_constraint[constraint_var_index], 'Int')
+                    condition_index_within_node = self.Node[constraint_var_index].check_condition_included(or_constraint[constraint_var_name], 'Int')
                 linked_constraint[constraint_var_index] = condition_index_within_node
             and_constraint.append(linked_constraint)
         self.linked_constraints.append(and_constraint)
@@ -179,7 +192,7 @@ class Input_Constraints:
                 constraint_sum = 0
                 for constraint in linked_constraint.keys():
                     # loop through all the constraints in the and_constraint
-                    if(formatted_correlated_constraints[constraint][linked_constraint[constraint]][X_index] <= 0):
+                    if(formatted_correlated_constraints[constraint][linked_constraint[constraint]][X_index] < 0):
                         # constraint_sum = torch.tensor(NEGATIVE_PARAMETER_VALUE)
                         constraint_sum = formatted_correlated_constraints[constraint][linked_constraint[constraint]][X_index]
                         break
@@ -187,7 +200,7 @@ class Input_Constraints:
                         constraint_sum += formatted_correlated_constraints[constraint][linked_constraint[constraint]][X_index]
                 if(constraint_sum > max_constraint_sum):
                     max_constraint_sum = constraint_sum.clone()
-            if(max_constraint_sum <= 0):
+            if(max_constraint_sum < 0):
                 #within a or_constraint, if all the and_constraint are not satisfied, the or_constraint is not satisfied.
                 return max_constraint_sum
             overall_constraint_sum += max_constraint_sum

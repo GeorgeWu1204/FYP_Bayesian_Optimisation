@@ -32,7 +32,7 @@ input_info, output_info, param_tuner, optimisation_name = parse_constraints(CONS
 if output_info.optimisation_target == 'dataset_1':
     data_set = data.Data_Set(input_info, output_info, 'txt', t_type, device)
 elif output_info.optimisation_target == 'dataset_2':
-    data_set = data.Data_Set(input_info, output_info, t_type, device)
+    data_set = data.Data_Set(input_info, output_info, 'db', t_type, device)
 elif output_info.optimisation_target == 'NutShell':
     data_set = data.NutShell_Data(input_info, output_info, param_tuner, t_type, device)
 elif output_info.optimisation_target == 'EL2':
@@ -54,7 +54,6 @@ print(f"Output Objective Constraint: {output_info.output_constraints}")
 print("<--------------------------------------------------->")
 
 # data_set.brute_design_space_exploration()
-quit()
 
 # Train Set Settings
 TRAIN_SET_DISTURBANCE_RANGE = 0.01                  # noise standard deviation for objective
@@ -62,7 +61,7 @@ TRAIN_SET_ACCEPTABLE_THRESHOLD = 0.2                # acceptable distance betwee
 
 # Model Settings
 NUM_RESTARTS = 4                # number of starting points for BO for optimize_acqf
-NUM_OF_INITIAL_POINT = 8        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
+NUM_OF_INITIAL_POINT = 2        # number of initial points for BO  Note: has to be power of 2 for sobol sampler
 N_TRIALS = 1                    # number of trials of BO (outer loop)
 N_BATCH = 15                    # number of BO batches (inner loop)
 BATCH_SIZE = 1                  # batch size of BO (restricted to be 1 in this case)
@@ -71,9 +70,9 @@ RAW_SAMPLES = 8                 # number of raw samples for qNEI
 
 # Runtime Settings
 verbose = True
-record = True
+record = False
 debug = True
-plot_posterior = True
+plot_posterior = False
 enable_train_set_modification = False
 
 
@@ -82,6 +81,7 @@ obj_index = 0
 
 #reference point for optimisation used for hypervolume calculation
 ref_points = utils.find_ref_points(output_info.obj_to_optimise_dim, data_set.objs_direct, t_type, device)
+
 #normalise objective to ensure the same scale
 sampler_generator = initial_sampler(input_info.input_dim, output_info.obj_to_evaluate_dim, input_info.constraints, data_set, t_type, device)
 train_set_storage = train_set_records(input_info.input_normalized_factor, list(input_info.self_constraints.values()), input_info.input_categorical, ref_points, output_info.obj_to_optimise_dim, enable_train_set_modification, TRAIN_SET_ACCEPTABLE_THRESHOLD, TRAIN_SET_DISTURBANCE_RANGE, t_type, device)
@@ -110,9 +110,8 @@ if record:
 # Global Best Values
 best_obj_scores_per_trial = []
 best_sample_points_per_trial = {trial : {input : 0.0 for input in input_info.input_names} for trial in range(1, N_TRIALS + 1)}
-Model = single_objective_BO_model(NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, device, t_type)
-#TODO: Temporarily modified for paper
-# Model.objective_index = obj_index
+Model = single_objective_BO_model(NUM_RESTARTS, RAW_SAMPLES, BATCH_SIZE, input_info, output_info, ref_points, sampler_generator, device, t_type)
+
 #Optimisation Loop
 for trial in range (1, N_TRIALS + 1):
 
@@ -122,7 +121,7 @@ for trial in range (1, N_TRIALS + 1):
         exact_obj_ei,
         train_obj_ei,
         obj_score_ei,
-    ) = Model.generate_initial_data(sampler_generator, NUM_OF_INITIAL_POINT, data_set)
+    ) = Model.generate_initial_data(NUM_OF_INITIAL_POINT, data_set)
    
 
     print("<----------------Initial Data--------------->")
@@ -131,7 +130,7 @@ for trial in range (1, N_TRIALS + 1):
     print("exact_obj_ei: ", exact_obj_ei)
     print("obj_score_ei: ", obj_score_ei)
     print("<------------------------------------------->")
-
+    quit()
     train_set_storage.store_initial_data(train_x_ei)
     mll_ei, model_ei = Model.initialize_model(train_x_ei, train_obj_ei)
     #reset the best observation
