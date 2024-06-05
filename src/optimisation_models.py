@@ -28,6 +28,8 @@ def constraint_callable(Z):
     return result
 
 def calculate_weighted_obj_score(normalised_obj, ref_points, objective_index):
+    """Calculate the weighted objective score for the objective function"""
+    #Not the ref_point last dim is obj_to_optimise, objective_index is for single objective dim
     result = normalised_obj.clone() 
     result[...,0] = result[...,0] - ref_points[objective_index]
     for i in range (1, normalised_obj.shape[-1]):
@@ -121,8 +123,8 @@ class single_objective_BO_model():
     
     def optimize_acqf_and_get_observation(self, acq_func, data_set):
         """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
-        if self.input_info.coupled_constraints() is not None:
-            unnormalised_train_x = self.sampler.generate_initial_data(self.NUM_RESTARTS)
+        if len(self.input_info.coupled_constraints) > 0:
+            unnormalised_train_x = self.sampler.generate_valid_initial_data(self.NUM_RESTARTS, data_set)
             sampled_initial_conditions = unnormalised_train_x.unsqueeze(1) # to match the dimension n * 1 * m
             print("sampled_initial_conditions: ", sampled_initial_conditions)
             candidates, _ = optimize_acqf(
@@ -152,19 +154,18 @@ class single_objective_BO_model():
         valid_generated_sample, new_exact_obj = data_set.find_evaluation_results(new_x)
         new_normalised_obj = data_set.normalise_output_data_tensor(new_exact_obj)
         new_con_obj = data_set.check_obj_constraints(new_normalised_obj)
-        new_train_obj = torch.cat([new_normalised_obj, new_con_obj], dim=-1)
-        new_exact_obj = torch.cat([new_exact_obj, new_con_obj], dim=-1)
+        new_train_obj = torch.cat([new_normalised_obj[:,:-new_con_obj.shape[-1]], new_con_obj], dim=-1)
+        new_exact_obj = torch.cat([new_exact_obj[:,:-new_con_obj.shape[-1]], new_con_obj], dim=-1)
         new_obj_score = calculate_weighted_obj_score(new_train_obj, self.ref_points, 0)
         return valid_generated_sample, new_x, new_exact_obj, new_train_obj, new_obj_score
     
     def generate_initial_data(self, NUM_OF_INITIAL_POINT, data_set):
         """generate training data"""
         unnormalised_train_x, exact_objs, con_objs, normalised_objs = self.sampler.generate_valid_initial_data(NUM_OF_INITIAL_POINT, data_set)
-        train_obj = torch.cat([normalised_objs, con_objs], dim=-1)
-        # with_noise_train_obj = train_obj + torch.randn_like(train_obj) * NOISE_SE
+        train_obj = torch.cat([normalised_objs[:,:-con_objs.shape[-1]], con_objs], dim=-1)
         obj_scores = calculate_weighted_obj_score(train_obj, self.ref_points, 0)
-        new_exact_obj = torch.cat([exact_objs, con_objs], dim=-1)
-        return unnormalised_train_x, new_exact_obj, train_obj, obj_scores
+        # new_exact_obj = torch.cat([exact_objs, con_objs], dim=-1)
+        return unnormalised_train_x, exact_objs, train_obj, obj_scores
 
 
 

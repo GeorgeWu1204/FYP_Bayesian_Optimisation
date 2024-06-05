@@ -10,7 +10,7 @@ import pickle
 def calculate_smooth_condition(x, condition):
     """Smooth, differentiable step function. Used for calculating the output constraints"""
     # return (1 / (1 + torch.exp(-10 * (x - condition[1]))) - 1 / (1 + torch.exp(-10 * (x - condition[0]))) + 0.5) * 1e-1
-    return 0.5 - (1 / (1 + torch.exp(-10 * (x - condition[1]))))
+    return (1 / (1 + torch.exp(-10 * (x - condition[1])))) - 0.5
 
 def calculate_hypervolume(ref_points, train_obj, obj_to_optimise_dim = 0):
     """Calculate the hypervolume. This is for multi-objective optimisation."""

@@ -141,12 +141,6 @@ class Input_Constraints:
                 for i in range(input_name_start_index, dim):
                     self.input_names_index[input_names[input_name_index]] = i
                     input_name_index += 1
-                
-        
-    def update_self_constraints(self, index, indvidual_constraint):
-        self.Node[index].update_offset(indvidual_constraint[0])
-        # constraint_bound is used to set the bound for the acquisition function.
-        self.constraint_bound[:,index] = torch.tensor(self.Node[index].individual_constraints)
 
 
     def update_integer_transform_info(self, input_offset, scales, normalized_factors, exp_factors):
@@ -154,6 +148,7 @@ class Input_Constraints:
         for index in range(self.dim):
             self.Node[index].initialize_scale_normalise_exp_factor(scales[index], normalized_factors[index], exp_factors[index])
             self.Node[index].update_offset(input_offset[index])
+            self.constraint_bound[:,index] = torch.tensor(self.Node[index].individual_constraints)
 
     def update_coupled_constraints(self, new_constraints):
         # new_constraints = {index: [condition]}
@@ -265,11 +260,6 @@ class Simpler_Constraints:
         
 if __name__ == '__main__':
     c = Input_Constraints(2)
-    c.update_self_constraints(0, [1, 6])
-    c.update_self_constraints(1, [4, 252])
-    c.update_coupled_constraints([{0: [1, 4], 1: [4, 4]}, {0: [4, 6], 1: [4, 252]}])
-    c.update_scale(1, 4)
-
     tensor = torch.tensor([[[3, 4]]])
     print(tensor.shape)
     num_restarts = 1

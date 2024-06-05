@@ -79,7 +79,7 @@ plot_posterior = False
 enable_train_set_modification = False
 
 
-#TODO: Temporarily modified for paper
+#objective index for hypervolume calculation
 obj_index = 0
 #reference point for optimisation used for hypervolume calculation
 ref_points = utils.find_ref_points(output_info.obj_to_optimise_dim, data_set.objs_direct, t_type, device)
@@ -127,12 +127,11 @@ for trial in range (1, N_TRIALS + 1):
    
 
     print("<----------------Initial Data--------------->")
-    print("train_x_ei: ", train_x_ei)
-    print("train_obj_ei: ", train_obj_ei)
-    print("exact_obj_ei: ", exact_obj_ei)
-    print("obj_score_ei: ", obj_score_ei)
+    print("train_x_ei: ", train_x_ei)                   #shape = (num_samples, input_dim)
+    print("train_obj_ei: ", train_obj_ei)               #shape = (num_samples, objs_to_evaluate_dim)
+    print("exact_obj_ei: ", exact_obj_ei)               #shape = (num_samples, objs_to_evaluate_dim)
+    print("obj_score_ei: ", obj_score_ei)               #shape = (num_samples, 1)
     print("<------------------------------------------->")
-    quit()
     train_set_storage.store_initial_data(train_x_ei)
     mll_ei, model_ei = Model.initialize_model(train_x_ei, train_obj_ei)
     #reset the best observation
@@ -140,6 +139,7 @@ for trial in range (1, N_TRIALS + 1):
         utils.extract_best_from_initialisation_results(train_x_ei, exact_obj_ei, obj_score_ei, output_info.obj_to_optimise, output_info.output_constraints)
     print("best_sample_point_per_interation: ", best_sample_point_per_interation)
     print("best_obj_score_per_interation: ", best_obj_score_per_interation)
+
     for iteration in range(1, N_BATCH + 1):
         t0 = time.monotonic()
         # fit the models
