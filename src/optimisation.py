@@ -25,7 +25,8 @@ t_type = torch.float64
 # Input Settings
 # CONSTRAINT_FILE = '../specification/Rocket-Chip/input_spec_icache_dcache.txt'
 # CONSTRAINT_FILE = '../specification/EL2/input_spec_btb_lsu.txt'
-CONSTRAINT_FILE = '../specification/Simple_Dataset/dataset_1_settings.txt'
+# CONSTRAINT_FILE = '../specification/Simple_Dataset/dataset_1_settings.txt'
+CONSTRAINT_FILE = '../specification/Simple_Dataset/dataset_2_settings.txt'
 input_info, output_info, param_tuner, optimisation_name = parse_constraints(CONSTRAINT_FILE, device)
 
 # Dataset Settings
@@ -39,6 +40,8 @@ elif output_info.optimisation_target == 'EL2':
     data_set = data.EL2_Data(input_info, output_info, param_tuner, optimisation_name, t_type, device)
 elif output_info.optimisation_target == 'rocket_chip':
     data_set = data.Rocket_Chip_data(input_info, output_info, param_tuner, optimisation_name, t_type, device)
+else:
+    print("no supported dataset")
 
 print("<-------------- Optimisation Settings -------------->")
 print(f"Input Names: {input_info.input_names}")
@@ -78,7 +81,6 @@ enable_train_set_modification = False
 
 #TODO: Temporarily modified for paper
 obj_index = 0
-
 #reference point for optimisation used for hypervolume calculation
 ref_points = utils.find_ref_points(output_info.obj_to_optimise_dim, data_set.objs_direct, t_type, device)
 

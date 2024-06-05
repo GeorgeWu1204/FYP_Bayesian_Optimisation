@@ -1,0 +1,23 @@
+#input self constraint
+var: arch       range: [1,12]   scale: 1  exp: 0  shift: 0  data_type: Int 
+var: pre-type   range: [5,6]    scale: 1  exp: 0  shift: 0  data_type: Int 
+var: btb        range: [4,255]  scale: 1  exp: 0  shift: 0  data_type: Int 
+
+
+#input coupled constraint
+
+#input constant
+
+#output objective
+obj_name: ncycles_dijkstra      obj_direct: minimise    range: [300000,13700000]
+
+#output constraint
+obj_name: lut   range: [0,20000]
+obj_name: ff    range: [0,12000]
+
+#data
+customisable_processor: dataset_2
+settings_path: 'None'
+vivado_project_path: 'None'
+generation_path: 'None'
+board_settings: None

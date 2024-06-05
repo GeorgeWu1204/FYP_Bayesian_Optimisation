@@ -173,16 +173,16 @@ class Input_Constraints:
             and_constraint.append(linked_constraint)
         self.linked_constraints.append(and_constraint)
 
-    def check_meet_constraint(self, formatted_correlated_constraints, X_index):
+    def check_meet_constraint(self, individual_constraint, formatted_correlated_constraints, X_index):
         #X_index : the index of the candidtate of the point.
         overall_constraint_sum = 0
         # # check meet the individual constraint
-        # for individual_constraint_index in range(self.dim):
-        #     if(individual_constraint[individual_constraint_index][X_index] < 0):
-        #         #if the initial condition is not met, return the value of the constraint.
-        #         return individual_constraint[individual_constraint_index][X_index]
-        #     else:
-        #         overall_constraint_sum += individual_constraint[individual_constraint_index][X_index]
+        for individual_constraint_index in range(self.dim):
+            if(individual_constraint[individual_constraint_index][X_index] < 0):
+                #if the initial condition is not met, return the value of the constraint.
+                return individual_constraint[individual_constraint_index][X_index]
+            else:
+                overall_constraint_sum += individual_constraint[individual_constraint_index][X_index]
         # check meet the conditional constraint
         for or_constraints in self.linked_constraints:
             # loop through all the or_constraints sets in the linked_constraints
@@ -210,8 +210,8 @@ class Input_Constraints:
     def check_single_point_meet_constraint(self, X):
         q_dim = 1
         x_input = X.unsqueeze(0)
-        _, correlated_constraints = build_matrix(x_input, self, 1, q_dim, self.dim)
-        if self.check_meet_constraint(correlated_constraints, 0) > 0:
+        individual_constraint, correlated_constraints = build_matrix(x_input, self, 1, q_dim, self.dim)
+        if self.check_meet_constraint(individual_constraint, correlated_constraints, 0) > 0:
             return True
         else:
             return False
@@ -228,11 +228,11 @@ class Input_Constraints:
             num_restarts, q_dim, d_dim = X.shape
             re_organized_x = X
 
-        _, correlated_constraints = build_matrix(re_organized_x, self, num_restarts, q_dim, d_dim)
+        individual_constraint, correlated_constraints = build_matrix(re_organized_x, self, num_restarts, q_dim, d_dim)
         inequality_constraints = torch.empty((num_restarts, q_dim), dtype=X.dtype)
         for i in range(num_restarts):
             for j in range(q_dim):
-                inequality_constraints[i][j] = self.check_meet_constraint(correlated_constraints, i * q_dim + j)
+                inequality_constraints[i][j] = self.check_meet_constraint(individual_constraint, correlated_constraints, i * q_dim + j)
         return inequality_constraints
     
             

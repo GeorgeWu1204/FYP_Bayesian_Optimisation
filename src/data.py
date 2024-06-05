@@ -71,9 +71,8 @@ class Data_Sample:
         elif (data_set_type == 'db'):
             self.Constraints = data[0]
             self.Cycle_count = None
-            self.PPA = {}
             for obj in objs:
-                self.PPA[obj] = data[1][obj]
+                self.objective_vals[obj] = data[1][obj]
     def get_objectives(self, obj):
         return self.objective_vals.get(obj, None)
 
@@ -119,12 +118,11 @@ class Data_Set:
                 self.__dict__[i] = Data_Sample([i, raw_data[i]], self.objs_to_evaluate, data_set_type)
                 for obj in self.objs_to_evaluate:
                     val_list[obj].append(raw_data[i][obj])
+            
 
             # Iterate over each item in output_objective
         obj_index = 0
         for obj, values in output_info.obj_to_optimise.items():
-            print("obj: ", obj)
-            print("values: ", values)
             # Extract the obj_direction from the values list
             obj_direction = values[0]
             self.objs_direct[obj] = obj_direction
@@ -178,7 +176,6 @@ class Data_Set:
             sample_input = self.format_and_add_const_to_data(input)
             for obj_index in range(self.objs_to_evaluate_dim):
                 obj = self.objs_to_evaluate[obj_index]
-                print("sample_input: ", sample_input)
                 sample_objective = self.__dict__.get(sample_input, None)
                 if sample_objective is None:
                     return False, results   
