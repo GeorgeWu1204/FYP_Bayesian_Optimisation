@@ -1,15 +1,14 @@
-# FYP Bayesian Optimisation
+# Automated Customisable Processor Design Platform
 
-This project is currently under development. The aim is to use Bayesian Optimisation to find the multi-objectives optimal solutions within the customised processor's design space.
+This project proposes a automated customisable processor design platform based on Bayesian Optimisation. The platform is able to optimise the processor's performance based on the user's requirements. It could consider both the parameter constraints from the customisable processor's specification and the resource utilisation constraints. 
 
-## Environment
+## Optimisation Model's Environment
 
 - Python 3.8.5
-- meson 0.61.2
 - torch 2.3.0+cu121
 - botorch 0.10.0
 
-## Prerequisite
+## Setup
 
 ```git submodule init```
 
@@ -24,7 +23,7 @@ To run this code, run the following command in the terminal:
 
 The model settings are all in ```src/optimisation_models.py```
 
-The optimisation settings are all stored in ```specifications/```
+The optimisation task's settings are all stored in ```specifications/```
 
 ## Record Results
 
@@ -34,26 +33,25 @@ To plot the results, the tools are provided in ```test/plot_tools/```
 
 The corresponding plots are stored in ```test/plot_results/```
 
-## Data Format
-
-### Input Variables
-
-To improve the performance of the model, the input variables are downscaled by their step size and then extracted by there offset. For example, if a variable is to select from [4, 8, 12, 16], the step size is 4, the offset is 4. The input variable is then scaled to [0, 1, 2, 3] and then extracted by the offset 4.
-
-### Output Variables
-
-To add the constraints to the objectives of the model, the train_obj is extended by one dimension to represent the validity of the design. The value of the last dimension is negative if the design is valid, positive otherwise.
-
-Apart from that, the train_obj only considers the objectives that need to optimise and ignore te objectives for constraints purposes.
 
 ## Supported Cores
 
 As detailed in the [Processor Setup](object_functions/README.md), the following cores are supported:
 - NutShell
 - VeeR EL2 RISC-V Core
-- Rocket Chip
+- Rocket Chip v1.6
+- SCR1
 
-## Current Progress
+
+## Functionality
+- Support Parameter Constraints among the parameters, including both self and conditional constraints.
+- Support Resource Utilisation Constraints.
+- Optimised for integer-valued and categorical parameters.
+- Support multi-objective optimisation.
+- Fully automated design platform for customisable processors.
+
+
+<!-- ## Current Progress
 
 - Formatted Input Constraints
 - Built a simple model
@@ -68,8 +66,5 @@ As detailed in the [Processor Setup](object_functions/README.md), the following 
 - Complete the overall optimisation flow.
 - Enable the model to accept categorical variables.
 - Categorical Variable Kernel Optimisation.
-- Invalid designs handling.
+- Invalid designs handling. -->
 
-## Things to Improve
-
-- Currently, the output constraints are considered as the last dimension of the objective functions.

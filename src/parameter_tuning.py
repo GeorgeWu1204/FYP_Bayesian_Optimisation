@@ -218,8 +218,6 @@ class EL2_parameter_tuning:
     
 
 
-
-
 class rocket_tuning:
     """This is the tuner for scr1 Cores, it could automatically customise the processor according to the param settings"""
     def __init__(self, tunable_params, shift_amount, generation_path, vivado_project_path):
@@ -345,11 +343,6 @@ class rocket_tuning:
 
 
 # < ----------------------------------------- Future Development ------------------------------------------>
-
-
-
-
-
 # class CVA6_parameter_tuning:
 #     """This is the tuner for CVA6 Cores, it could automatically customise the processor according to the param settings"""
 #     def __init__(self, tunable_params, shift_amount, generation_path, vivado_project_path):
@@ -409,4 +402,5 @@ class SCR1_parameter_tuning:
 if __name__ == '__main__':
     rocket_test = rocket_tuning(['icache_nSets', 'dcache_nSets'], [0, 0], '../object_functions/rocket-chip/emulator', '../object_functions/Vivado_Prj/rocket_chip/')
     # rocket_test.tune_and_run_performance_simulation([32, 64], 'dhrystone')
-    rocket_test.store_synthesis_report()
+    print("hihi")
+    rocket_test.run_synthesis()

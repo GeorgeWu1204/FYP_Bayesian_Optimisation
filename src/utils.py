@@ -193,6 +193,34 @@ def read_utilization(rpt_file_path, variable_names):
         print(f"File not found: {rpt_file_path}")
         return
 
+def extract_worst_slack(file_path):
+    # Define regex patterns to match the lines with worst slack values
+    setup_pattern = r"Setup\s*:\s*\d+\s*Failing Endpoints,\s*Worst Slack\s*([-+]?\d*\.?\d+ns)"
+    hold_pattern = r"Hold\s*:\s*\d+\s*Failing Endpoints,\s*Worst Slack\s*([-+]?\d*\.?\d+ns)"
+    
+    setup_worst_slack = None
+    hold_worst_slack = None
+    
+    # Read the file and search for the patterns
+    with open(file_path, 'r') as file:
+        for line in file:
+            if not setup_worst_slack:
+                setup_match = re.search(setup_pattern, line)
+                if setup_match:
+                    setup_worst_slack = setup_match.group(1)
+                    
+            if not hold_worst_slack:
+                hold_match = re.search(hold_pattern, line)
+                if hold_match:
+                    hold_worst_slack = hold_match.group(1)
+                    
+            # If both values are found, no need to continue reading
+            if setup_worst_slack and hold_worst_slack:
+                break
+    
+    return setup_worst_slack, hold_worst_slack
+
+
 def save_data_to_file(filename, data):
     with open(filename, 'wb') as f:
         pickle.dump(data, f)
@@ -379,8 +407,9 @@ if __name__ == '__main__':
     # # Calculate y values using the smooth condition function
     # y_values = calculate_smooth_condition(x_values, condition)
     # print(y_values)
-    test = read_utilization('../object_functions/Syn_Report/EL2_utilization_synth.rpt', ['LUT as Logic', 'CLB Registers'])
+    # test = read_utilization('../object_functions/Syn_Report/EL2_utilization_synth.rpt', ['LUT as Logic', 'CLB Registers'])
+    # print(test)
+    test = extract_worst_slack('../object_functions/Syn_Report/rocket_time_summary.rpt')
     print(test)
-
 
     
