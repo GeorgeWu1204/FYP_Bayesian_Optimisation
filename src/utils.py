@@ -217,8 +217,18 @@ def extract_worst_slack(file_path):
             # If both values are found, no need to continue reading
             if setup_worst_slack and hold_worst_slack:
                 break
-    
-    return setup_worst_slack, hold_worst_slack
+    setup_result = float(setup_worst_slack.split('ns')[0])
+    hold_result = float(hold_worst_slack.split('ns')[0])
+    return setup_result, hold_result
+
+def find_the_anticipated_fastest_time_period(file_path, default_max_freq):
+    """This function is used to find the anticipated maximum frequency"""
+    setup_slack, hold_slack = extract_worst_slack(file_path)
+    # Find the minimum slack value
+    min_slack = min(setup_slack, hold_slack)
+    # Calculate the anticipated maximum frequency
+    anticipated_fastest_time_period = (1/default_max_freq - min_slack)
+    return anticipated_fastest_time_period
 
 
 def save_data_to_file(filename, data):

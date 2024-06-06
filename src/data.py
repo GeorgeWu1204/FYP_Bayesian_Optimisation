@@ -4,7 +4,7 @@ import glob
 import sys
 import pickle
 import os.path as osp
-from utils import calculate_smooth_condition, recover_single_input_data, read_utilization
+from utils import calculate_smooth_condition, recover_single_input_data, read_utilization, find_the_anticipated_fastest_time_period
 from botorch.utils.transforms import normalize
 
 def read_data_from_db(db_name):
@@ -302,8 +302,9 @@ class NutShell_Data(Data_Set):
 class EL2_Data(Data_Set):
     def __init__(self, input_info, output_info, param_tuner, optimisation_name, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
         self.utilisation_path = '../object_functions/Syn_Report/EL2_utilization_synth.rpt'
+        self.time_report = '../object_functions/Syn_Report/EL2_time_summary.rpt'
         self.param_tuner = param_tuner
-        
+        self.frequency_constraint = 50000000             #50MHz
         # to recover the Output data
         self.objs_to_optimise_dim = output_info.obj_to_optimise_dim
         self.objs_to_evaluate = list(output_info.obj_to_optimise.keys()) + list(output_info.output_constraints.keys())
@@ -388,8 +389,11 @@ class EL2_Data(Data_Set):
                 self.param_tuner.store_synthesis_report()
                 # Read the utilisation percentage
                 utilisation_percentage = read_utilization(self.utilisation_path, self.objs_to_evaluate[len(self.performance_objs_benchmarks) : ])
+                # Read the Time Report
+                time_period = find_the_anticipated_fastest_time_period(self.time_report, self.frequency_constraint)
                 print("objective_results ", objective_results)
                 print("utilisation_percentage ", utilisation_percentage)
+                objective_results = objective_results * time_period * pow(10,-3)    # Here we assume the time unit is ms
                 objective_results += utilisation_percentage 
                 self.build_new_dataset.record_data(sample_input, objective_results)
                 for obj_index in range(self.objs_to_evaluate_dim):
@@ -435,6 +439,7 @@ class Rocket_Chip_data(EL2_Data):
     def __init__(self, input_info, output_info, param_tuner, optimisation_name, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
         super().__init__(input_info, output_info, param_tuner, optimisation_name, tensor_type, tensor_device)
         self.utilisation_path = '../object_functions/Syn_Report/rocket_utilization_synth.rpt'
+        self.time_report = '../object_functions/Syn_Report/rocket_time_summary.rpt'
 
 class create_data_set:
     """This class is implemented to accelerate the redundant synthesis and simulation process"""
