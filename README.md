@@ -2,6 +2,8 @@
 
 This project proposes a automated customisable processor design platform based on Bayesian Optimisation. The platform is able to optimise the processor's performance based on the user's requirements. It could consider both the parameter constraints from the customisable processor's specification and the resource utilisation constraints. 
 
+![Overall Flow](doc/Overall_Flow.jpg)
+
 ## Setup
 
 ```git submodule init```
