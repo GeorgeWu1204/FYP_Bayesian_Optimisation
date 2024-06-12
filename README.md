@@ -2,12 +2,6 @@
 
 This project proposes a automated customisable processor design platform based on Bayesian Optimisation. The platform is able to optimise the processor's performance based on the user's requirements. It could consider both the parameter constraints from the customisable processor's specification and the resource utilisation constraints. 
 
-## Optimisation Model's Environment
-
-- Python 3.8.5
-- torch 2.3.0+cu121
-- botorch 0.10.0
-
 ## Setup
 
 ```git submodule init```
@@ -31,7 +25,7 @@ To record the results, change the record flag in ```optimisation.py``` to be tru
 
 To plot the results, the tools are provided in ```test/plot_tools/```
 
-The corresponding plots are stored in ```test/plot_results/```
+The plot tools are stored in ```test/plot_results/```
 
 
 ## Supported Cores
@@ -50,6 +44,9 @@ As detailed in the [Processor Setup](object_functions/README.md), the following 
 - Support multi-objective optimisation.
 - Fully automated design platform for customisable processors.
 
+## Documentation and Information
+Ce Guo, Haoran Wu, and Wayne Luk. Resource-constraint bayesian optimization for soft processors on fpgas.
+In 14th International Symposium on Highly Efficient Accelerators and Reconfigurable Technologies (HEART ’24), pages 1–13, Porto, Portugal, June 19-21 2024. ACM. doi: 10.1145/3665283.3665291. pages 4, 23, 28
 
 <!-- ## Current Progress
 
