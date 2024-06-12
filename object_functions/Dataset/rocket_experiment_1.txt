@@ -1,0 +1,2 @@
+icache_nSets, icache_nWays, dcache_nSets, dcache_nWays, dcache_nTLBSets, dcache_nTLBWays, dhrystone, qsort, mt-matmul, median
+8.0, 16.0, 8.0, 8.0, 2.0, 2.0, 0.0012, 0.0024, 0.0036, 0.0048, 12751, 1.2

@@ -300,7 +300,7 @@ class NutShell_Data(Data_Set):
 
 
 class EL2_Data(Data_Set):
-    def __init__(self, input_info, output_info, param_tuner, optimisation_name, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
+    def __init__(self, input_info, output_info, param_tuner, optimisation_name, build_dataset = True, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
         self.utilisation_path = '../object_functions/Syn_Report/EL2_utilization_synth.rpt'
         self.time_report = '../object_functions/Syn_Report/EL2_time_summary.rpt'
         self.param_tuner = param_tuner
@@ -315,7 +315,14 @@ class EL2_Data(Data_Set):
         self.worst_value = {}
         self.best_value = {}
         self.objs_direct = {}
+        print("output_info.objs_to_evaluate_dim ", self.objs_to_evaluate_dim)
+        print("device ", tensor_device)
+        print("dtype ", tensor_type)
         self.normaliser_bounds = torch.empty((2, self.objs_to_evaluate_dim), dtype=tensor_type, device=tensor_device)
+
+        # Note: this is to build the dataset to store the objective vals for a parameter set, in order to facilitate the future DSE
+        self.build_dataset = build_dataset
+        self.benchmark_to_eval_to_build_dataset = ['dhrystone', 'qsort', 'mt-matmul', 'median']
 
         # Iterate over each item in output_objective
         obj_index = 0   
@@ -358,7 +365,7 @@ class EL2_Data(Data_Set):
         # tensor type and device
         self.tensor_type = tensor_type
         self.tensor_device = tensor_device
-        self.build_new_dataset = create_data_set(input_info.input_names, self.objs_to_evaluate, optimisation_name)
+        self.build_new_dataset = create_data_set(input_info.input_names, self.performance_objs_benchmarks, self.benchmark_to_eval_to_build_dataset, optimisation_name)
     
     def find_evaluation_results(self, sample_inputs):
         """Find the ppa result for given data input, if the objective is to find the minimal value, return the negative value"""
@@ -373,15 +380,23 @@ class EL2_Data(Data_Set):
             utilisation_percentage = self.build_new_dataset.find_corresponding_data(sample_input)
             if utilisation_percentage is None:
                 print(f"{sample_input} not found in the dataset, Start to Generate ")
-                objective_results = []
-                # print("Start to run the performance simulation for ", type(self.performance_objs_benchmarks))
-                # Run the Performance Simulation (Recording mcycle only)
-                for benchmark in self.performance_objs_benchmarks:
-                    valid_simulation, _, mcycle = self.param_tuner.tune_and_run_performance_simulation(sample_input, benchmark)
-                    if valid_simulation == False:
-                        self.build_new_dataset.record_data(sample_input, 'failed')
-                        return False, results
-                    objective_results.append(mcycle)
+                simulation_results = []
+                if self.build_dataset:
+                    # Add all the benchmark performance in one round to facilitate the future DSE
+                    simulation_results_for_all_benchmarks = []
+                    for benmark in self.benchmark_to_eval_to_build_dataset:
+                        valid_simulation, _, mcycle = self.param_tuner.tune_and_run_performance_simulation(sample_input, benmark)
+                        if valid_simulation == False:
+                            simulation_results_for_all_benchmarks.append('failed')
+                        else:
+                            simulation_results_for_all_benchmarks.append(mcycle)
+                    simulation_results.append(simulation_results_for_all_benchmarks[self.performance_objs_benchmarks.index(self.performance_objs_benchmarks[0])])
+                else:
+                    for benchmark in self.performance_objs_benchmarks:
+                        valid_simulation, _, mcycle = self.param_tuner.tune_and_run_performance_simulation(sample_input, benchmark)
+                        if valid_simulation == False:
+                            return False, results
+                        simulation_results.append(mcycle)
                 
                 # Run the Synthesis on Vivado
                 self.param_tuner.run_synthesis()
@@ -391,11 +406,16 @@ class EL2_Data(Data_Set):
                 utilisation_percentage = read_utilization(self.utilisation_path, self.objs_to_evaluate[len(self.performance_objs_benchmarks) : ])
                 # Read the Time Report
                 time_period = find_the_anticipated_fastest_time_period(self.time_report, self.frequency_constraint)
+                objective_results = [i * time_period * 1e-3 for i in simulation_results]  # Here we assume the time unit is ms
+                objective_results_for_all_benchmarks = [i * time_period * 1e-3 for i in simulation_results_for_all_benchmarks]  # Here we assume the time unit is ms
+                objective_results.append(utilisation_percentage)  
                 print("objective_results ", objective_results)
                 print("utilisation_percentage ", utilisation_percentage)
-                objective_results = objective_results * time_period * pow(10,-3)    # Here we assume the time unit is ms
-                objective_results += utilisation_percentage 
-                self.build_new_dataset.record_data(sample_input, objective_results)
+                
+                if self.build_dataset:
+                    self.build_new_dataset.record_simulation_results(sample_input, objective_results_for_all_benchmarks)
+                    self.build_new_dataset.record_synthesis_results(utilisation_percentage, time_period)
+
                 for obj_index in range(self.objs_to_evaluate_dim):
                     obj = self.objs_to_evaluate[obj_index]
                     results[i][obj_index] = objective_results[obj_index]
@@ -436,18 +456,21 @@ class EL2_Data(Data_Set):
 
 
 class Rocket_Chip_data(EL2_Data):
-    def __init__(self, input_info, output_info, param_tuner, optimisation_name, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
-        super().__init__(input_info, output_info, param_tuner, optimisation_name, tensor_type, tensor_device)
+    def __init__(self, input_info, output_info, param_tuner, optimisation_name, build_dataset = True, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
+        super().__init__(input_info, output_info, param_tuner, optimisation_name, build_dataset, tensor_type, tensor_device)
         self.utilisation_path = '../object_functions/Syn_Report/rocket_utilization_synth.rpt'
         self.time_report = '../object_functions/Syn_Report/rocket_time_summary.rpt'
 
+
 class create_data_set:
     """This class is implemented to accelerate the redundant synthesis and simulation process"""
-    def __init__(self, input_name, objective_name, optimisation_set_name):
+    def __init__(self, input_name, object_to_optimise, all_benchmarks_to_eval, optimisation_set_name):
         self.input_name = input_name
         self.input_dim = len(input_name)
-        self.objective_name = list(objective_name)
-        self.names = input_name + objective_name
+        self.all_benchmarks_to_eval = list(all_benchmarks_to_eval)
+        # index to evaluate
+        self.object_to_optimise = self.all_benchmarks_to_eval.index(object_to_optimise[0])
+        self.names = input_name + all_benchmarks_to_eval
         self.file_name = f'../object_functions/Dataset/{optimisation_set_name}.txt'
         match_file = True
         if osp.exists(self.file_name):
@@ -455,36 +478,39 @@ class create_data_set:
                 line = file.readline()
                 first_line = line.split(',')
                 trimmed_array = [item.lstrip() for item in first_line]
-                #TODO: make it better
-                for index in range (self.input_dim + len(objective_name) - 1):
+                for index in range (self.input_dim + len(all_benchmarks_to_eval) - 1):
                     if trimmed_array[index] != self.names[index]:    
                         print("trimmed_array[index] ", trimmed_array[index])
                         print("self.names[index] ", self.names[index])
                         match_file = False
-                        raise ValueError("The input and objective names do not match the dataset")
+                        # raise ValueError("The input and objective names do not match the dataset")
         else:
             match_file = False
         if not match_file:
             with open(self.file_name, 'w') as file:
-                for index in range(self.input_dim + len(objective_name)):
+                for index in range(self.input_dim + len(all_benchmarks_to_eval)):
                     if index == 0:
                         file.write(f"{self.names[index]}")
                     else:
                         file.write(f", {self.names[index]}")
                 file.write("\n")
-    def record_data(self, input_data, objective_data):
+    def record_simulation_results(self, input_data, objective_data_set):
         with open(self.file_name, 'a') as file:
             for index in range(self.input_dim):
                 if index == 0:
                     file.write(f"{input_data[index]}")
                 else:
                     file.write(f", {input_data[index]}")
-            if objective_data == 'failed':
-                file.write(", failed\n")
+            
             else:
-                for data in objective_data:
-                    file.write(f", {data}")
-                file.write("\n")    
+                for objective_data in objective_data_set:
+                    file.write(f", {objective_data}")
+    
+    def record_synthesis_results(self, utilisation_data, time_period):
+        with open(self.file_name, 'a') as file:
+            file.write(f", {utilisation_data}")
+            file.write(f", {time_period}")
+            file.write("\n")
 
     def find_corresponding_data(self, input_data):
         with open(self.file_name, 'r') as file:
@@ -494,7 +520,9 @@ class create_data_set:
                 sample_data = tuple([float(i) for i in line[0:self.input_dim]])
                 if sample_data == input_data:
                     if line[self.input_dim] != ' failed\n':
-                        result = [float(i) for i in line[self.input_dim:] ]
+                        result = []
+                        result.append(float(line[self.input_dim + self.object_to_optimise]))
+                        result.append(float(line[-2]))
                         return result
                     else:
                         return 'failed'
@@ -508,8 +536,8 @@ class create_data_set:
 
 # if __name__ == '__main__':
     # input_names = ['LUT', 'FF']
-    # objective_names = ['Latency', 'Throughput']
-    # dataset = create_data_set(input_names, objective_names)
+    # all_benchmarks_to_evals = ['Latency', 'Throughput']
+    # dataset = create_data_set(input_names, all_benchmarks_to_evals)
     # dataset.record_data([3.0, 2.0], [3.234, 4.23])
     # print(dataset.find_corresponding_data((3.0, 2.0)))
     # read_data_from_txt('../object_functions/Dataset/NutShell.txt', ['Latency', 'Throughput'], [1, 1], [1, 1])

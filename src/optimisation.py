@@ -22,11 +22,13 @@ from botorch.exceptions.warnings import InputDataWarning
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 t_type = torch.float64
 
+build_dataset = True
+
 # Input Settings
 # CONSTRAINT_FILE = '../specification/Simple_Dataset/dataset_1_settings.txt'
 # CONSTRAINT_FILE = '../specification/Simple_Dataset/dataset_2_settings.txt'
 # CONSTRAINT_FILE = '../specification/EL2/input_spec_btb_lsu.txt'
-CONSTRAINT_FILE = '../specification/Rocket-Chip/input_spec_icache_dcache.txt'
+CONSTRAINT_FILE = '../specification/Rocket-Chip/Experiment_1.txt'
 
 input_info, output_info, param_tuner, optimisation_name = parse_constraints(CONSTRAINT_FILE, device)
 
@@ -38,9 +40,9 @@ elif output_info.optimisation_target == 'dataset_2':
 elif output_info.optimisation_target == 'NutShell':
     data_set = data.NutShell_Data(input_info, output_info, param_tuner, t_type, device)
 elif output_info.optimisation_target == 'EL2':
-    data_set = data.EL2_Data(input_info, output_info, param_tuner, optimisation_name, t_type, device)
+    data_set = data.EL2_Data(input_info, output_info, param_tuner, optimisation_name, build_dataset, t_type, device)
 elif output_info.optimisation_target == 'rocket_chip':
-    data_set = data.Rocket_Chip_data(input_info, output_info, param_tuner, optimisation_name, t_type, device)
+    data_set = data.Rocket_Chip_data(input_info, output_info, param_tuner, optimisation_name, build_dataset, t_type, device)
 else:
     print("no supported dataset")
 
@@ -56,7 +58,6 @@ print(f"Optimisation Device : {output_info.optimisation_target}")
 print(f"Objectives to Optimise: {output_info.obj_to_optimise}")
 print(f"Output Objective Constraint: {output_info.output_constraints}")
 print("<--------------------------------------------------->")
-
 # data_set.brute_design_space_exploration()
 
 # Train Set Settings

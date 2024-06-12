@@ -1,11 +1,11 @@
-#Name: rocket_experiment_1
+#Name: rocket_experiment_2
 #input self constraint
 var: icache_nSets              range: [4,32]        scale: 4     exp: 2      shift: 0   data_type: Int
 var: icache_nWays              range: [4,32]        scale: 2     exp: 2      shift: 0   data_type: Int
 var: dcache_nSets              range: [4,32]        scale: 4     exp: 2      shift: 0   data_type: Int
 var: dcache_nWays              range: [4,32]        scale: 2     exp: 2      shift: 0   data_type: Int   
-var: dcache_nTLBSets           range: [1,8]         scale: 1     exp: 2      shift: 0   data_type: Int
-var: dcache_nTLBWays           range: [1,8]         scale: 1     exp: 2      shift: 0   data_type: Int
+var: nTLBSets                  range: [1,8]         scale: 1     exp: 2      shift: 0   data_type: Int
+var: nTLBWays                  range: [1,8]         scale: 1     exp: 2      shift: 0   data_type: Int
 
 #input conditional constraint
 
@@ -15,7 +15,7 @@ var: dcache_nTLBWays           range: [1,8]         scale: 1     exp: 2      shi
 obj_name: mcycle   benchmark: dhrystone                obj_direct: minimise     range: [400000,420000]
 
 #output constraint
-obj_name: LUT as Logic              range: [0,20800]
+obj_name: LUT as Logic              range: [0,32600]
 
 #data
 customisable_processor: rocket_chip

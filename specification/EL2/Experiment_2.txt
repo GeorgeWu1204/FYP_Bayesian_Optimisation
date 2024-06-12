@@ -1,0 +1,27 @@
+#Name: EL2_experiment_1
+#input self constraint
+var: btb_size                  range: [32,512]      scale: 32       exp: 2      shift: 0        data_type: Int
+var: btb_enable                range: [0,1]         scale: 1        exp: 0      shift: 0        data_type: Categorical
+var: lsu_num_nbload            range: [2,8]         scale: 2        exp: 2      shift: 0        data_type: Int
+var: lsu_stbuf_depth           range: [2,8]         scale: 2        exp: 2      shift: 0        data_type: Int
+var: dccm_size                 range: [32,512]      scale: 32       exp: 2      shift: 0        data_type: Int
+var: iccm_size                 range: [32,512]      scale: 32       exp: 2      shift: 0        data_type: Int
+var: icache_enable             range: [0,1]         scale: 1        exp: 0      shift: 0        data_type: Categorical
+var: icache_size               range: [4,512]       scale: 4        exp: 2      shift: 0        data_type: Int
+
+
+#input conditional constraint
+var: btb_enable range: [0,0] and var: btb_size range: [0,0]
+
+#input constant
+
+#output objective
+obj_name: mcycle   benchmark: cmark               obj_direct: minimise     range: [400000,450000]
+
+#output constraint
+obj_name: LUT as Logic              range: [0,40600]
+
+#data
+customisable_processor: EL2
+vivado_project_path: ../object_functions/Vivado_Prj/EL2_Prj/
+generation_path: ../object_functions/Cores-VeeR-EL2/
