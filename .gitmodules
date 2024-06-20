@@ -7,3 +7,6 @@
 [submodule "object_functions/rocket-chip"]
 	path = object_functions/rocket-chip
 	url = https://github.com/chipsalliance/rocket-chip.git
+[submodule "object_functions/NutShell"]
+	path = object_functions/NutShell
+	url = https://github.com/OSCPU/NutShell.git

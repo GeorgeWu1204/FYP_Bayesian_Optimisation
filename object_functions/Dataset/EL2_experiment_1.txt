@@ -1,0 +1,1 @@
+btb_size, btb_enable, lsu_num_nbload, lsu_stbuf_depth, dccm_size, iccm_size, icache_enable, icache_size, cmark, dhry, cmark_iccm, cmark_dccm

@@ -14,36 +14,36 @@ CRITICAL WARNING: [Project 1-19] Could not find the file '/home/hw1020/Documents
 CRITICAL WARNING: [Project 1-19] Could not find the file '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.DefaultFPGAConfig/plusarg_reader.v'.
 Scanning sources...
 Finished scanning sources
-open_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1341.785 ; gain = 0.023 ; free physical = 12863 ; free virtual = 27269
-# open_run synth_1 -name synth_1
-Design is defaulting to impl run constrset: constrs_1
-Design is defaulting to synth run part: xczu19eg-ffvc1760-2-i
-INFO: [Device 21-403] Loading part xczu19eg-ffvc1760-2-i
-Netlist sorting complete. Time (s): cpu = 00:00:00.17 ; elapsed = 00:00:00.17 . Memory (MB): peak = 2525.262 ; gain = 0.000 ; free physical = 11701 ; free virtual = 26108
-INFO: [Netlist 29-17] Analyzing 1283 Unisim elements for replacement
-INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
-INFO: [Project 1-479] Netlist was created with Vivado 2023.2
-INFO: [Project 1-570] Preparing netlist for logic optimization
-Parsing XDC File [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/rocket_chip/rocket_chip.srcs/constrs_1/new/Rocket_Chip_Time_Constraints.xdc]
-Finished Parsing XDC File [/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/rocket_chip/rocket_chip.srcs/constrs_1/new/Rocket_Chip_Time_Constraints.xdc]
-INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2673.820 ; gain = 0.000 ; free physical = 11611 ; free virtual = 26018
-INFO: [Project 1-111] Unisim Transformation Summary:
-  A total of 712 instances were transformed.
-  IBUF => IBUF (IBUFCTRL, INBUF): 414 instances
-  RAM16X1D => RAM32X1D (RAMD32(x2)): 62 instances
-  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 36 instances
-  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 193 instances
-  RAM64M8 => RAM64M8 (RAMD64E(x8)): 6 instances
-  RAM64X1D => RAM64X1D (RAMD64E(x2)): 1 instance 
+open_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1340.754 ; gain = 2.992 ; free physical = 16910 ; free virtual = 28520
+# reset_run synth_1
+INFO: [Project 1-1161] Replacing file /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/rocket_chip/rocket_chip.srcs/utils_1/imports/synth_1/ExampleRocketSystem.dcp with file /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/rocket_chip/rocket_chip.runs/synth_1/ExampleRocketSystem.dcp
+# launch_runs synth_1 -jobs 12
+[Thu Jun 20 01:09:24 2024] Launched synth_1...
+Run output will be captured here: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Vivado_Prj/rocket_chip/rocket_chip.runs/synth_1/runme.log
+# wait_on_run synth_1
+[Thu Jun 20 01:09:25 2024] Waiting for synth_1 to finish...
 
-open_run: Time (s): cpu = 00:00:14 ; elapsed = 00:00:14 . Memory (MB): peak = 2673.855 ; gain = 1332.070 ; free physical = 11611 ; free virtual = 26018
-# report_utilization -file ../../Syn_Report/rocket_utilization_synth.rpt
-# report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -routable_nets -name timing_1 -file ../../Syn_Report/rocket_time_summary.rpt
-WARNING: [Common 17-708] report_timing_summary: The '-name' option will be ignored because it is only relevant in GUI mode.
-INFO: [Timing 38-35] Done setting XDC timing constraints.
-INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2, Temperature grade: I, Delay Type: min_max.
-INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
-report_timing_summary: Time (s): cpu = 00:00:30 ; elapsed = 00:00:24 . Memory (MB): peak = 4418.207 ; gain = 1744.352 ; free physical = 10077 ; free virtual = 24484
-# close_project
-INFO: [Common 17-206] Exiting Vivado at Wed Jun 12 12:02:47 2024...
+*** Running vivado
+    with args -log ExampleRocketSystem.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source ExampleRocketSystem.tcl
+
+
+****** Vivado v2023.2 (64-bit)
+  **** SW Build 4029153 on Fri Oct 13 20:13:54 MDT 2023
+  **** IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+  **** SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source ExampleRocketSystem.tcl -notrace
+create_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1339.379 ; gain = 0.023 ; free physical = 16425 ; free virtual = 28040
+ERROR: [Common 17-69] Command failed: File '/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.DefaultFPGAConfig.behav_srams.v' does not exist
+INFO: [Common 17-206] Exiting Vivado at Thu Jun 20 01:09:36 2024...
+[Thu Jun 20 01:09:46 2024] synth_1 finished
+ERROR: [Vivado 12-13638] Failed runs(s) : 'synth_1'
+wait_on_runs: Time (s): cpu = 00:00:12 ; elapsed = 00:00:22 . Memory (MB): peak = 1346.691 ; gain = 0.000 ; free physical = 16902 ; free virtual = 28518
+ERROR: [Common 17-39] 'wait_on_runs' failed due to earlier errors.
+
+    while executing
+"wait_on_run synth_1"
+    (file "../../tools/RocketChip/run_RocketChip_synthesis.tcl" line 4)
+INFO: [Common 17-206] Exiting Vivado at Thu Jun 20 01:09:46 2024...

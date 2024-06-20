@@ -15,169 +15,200 @@ Using addons:
 [info] Strategy 'discard' was applied to 23 files (Run the task at debug level to see details)
 [info] Strategy 'filterDistinctLines' was applied to a file (Run the task at debug level to see details)
 [info] Assembly up to date: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/rocketchip.jar
-[success] Total time: 4 s, completed 12 Jun 2024, 12:00:38
+[success] Total time: 4 s, completed 20 Jun 2024, 01:09:06
 mkdir -p /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/
 cd /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip && java -Xmx2G -Xss8M -cp /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/rocketchip.jar freechips.rocketchip.system.Generator -td /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -T freechips.rocketchip.system.TestHarness -C freechips.rocketchip.system.CustomisedConfig 
-Interrupt map (2 harts 2 interrupts):
-  [1, 2] => ldut
-
-<stdin>:69.27-72.5: Warning (simple_bus_reg): /soc/external-interrupts: missing or empty reg/ranges property
-<stdin>:94.28-99.5: Warning (simple_bus_reg): /soc/subsystem_pbus_clock: missing or empty reg/ranges property
-<stdin>:36.29-40.6: Warning (interrupt_provider): /cpus/cpu@0/interrupt-controller: Missing #address-cells in interrupt provider
-<stdin>:73.36-82.5: Warning (interrupt_provider): /soc/interrupt-controller@c000000: Missing #address-cells in interrupt provider
-/dts-v1/;
-
-/ {
-	#address-cells = <1>;
-	#size-cells = <1>;
-	compatible = "freechips,rocketchip-unknown-dev";
-	model = "freechips,rocketchip-unknown";
-	L15: cpus {
-		#address-cells = <1>;
-		#size-cells = <0>;
-		timebase-frequency = <1000000>;
-		L4: cpu@0 {
-			clock-frequency = <0>;
-			compatible = "sifive,rocket0", "riscv";
-			d-cache-block-size = <64>;
-			d-cache-sets = <16>;
-			d-cache-size = <32768>;
-			d-tlb-sets = <4>;
-			d-tlb-size = <16>;
-			device_type = "cpu";
-			hardware-exec-breakpoint-count = <1>;
-			i-cache-block-size = <64>;
-			i-cache-sets = <4>;
-			i-cache-size = <8192>;
-			i-tlb-sets = <1>;
-			i-tlb-size = <4>;
-			mmu-type = "riscv,sv39";
-			next-level-cache = <&L10>;
-			reg = <0x0>;
-			riscv,isa = "rv64imac";
-			riscv,pmpgranularity = <4>;
-			riscv,pmpregions = <8>;
-			status = "okay";
-			timebase-frequency = <1000000>;
-			tlb-split;
-			L2: interrupt-controller {
-				#interrupt-cells = <1>;
-				compatible = "riscv,cpu-intc";
-				interrupt-controller;
-			};
-		};
-	};
-	L10: memory@80000000 {
-		device_type = "memory";
-		reg = <0x80000000 0x10000000>;
-	};
-	L14: soc {
-		#address-cells = <1>;
-		#size-cells = <1>;
-		compatible = "freechips,rocketchip-unknown-soc", "simple-bus";
-		ranges;
-		L6: clint@2000000 {
-			compatible = "riscv,clint0";
-			interrupts-extended = <&L2 3 &L2 7>;
-			reg = <0x2000000 0x10000>;
-			reg-names = "control";
-		};
-		L7: debug-controller@0 {
-			compatible = "sifive,debug-013", "riscv,debug-013";
-			debug-attach = "dmi";
-			interrupts-extended = <&L2 65535>;
-			reg = <0x0 0x1000>;
-			reg-names = "control";
-		};
-		L1: error-device@3000 {
-			compatible = "sifive,error0";
-			reg = <0x3000 0x1000>;
-		};
-		L9: external-interrupts {
-			interrupt-parent = <&L5>;
-			interrupts = <1 2>;
-		};
-		L5: interrupt-controller@c000000 {
-			#interrupt-cells = <1>;
-			compatible = "riscv,plic0";
-			interrupt-controller;
-			interrupts-extended = <&L2 11 &L2 9>;
-			reg = <0xc000000 0x4000000>;
-			reg-names = "control";
-			riscv,max-priority = <3>;
-			riscv,ndev = <2>;
-		};
-		L11: mmio-port-axi4@60000000 {
-			#address-cells = <1>;
-			#size-cells = <1>;
-			compatible = "simple-bus";
-			ranges = <0x60000000 0x60000000 0x20000000>;
-		};
-		L12: rom@10000 {
-			compatible = "sifive,rom0";
-			reg = <0x10000 0x10000>;
-			reg-names = "mem";
-		};
-		L0: subsystem_pbus_clock {
-			#clock-cells = <0>;
-			clock-frequency = <100000000>;
-			clock-output-names = "subsystem_pbus_clock";
-			compatible = "fixed-clock";
-		};
-	};
-};
-
-Generated Address Map
-	       0 -     1000 ARWX  debug-controller@0
-	    3000 -     4000 ARWX  error-device@3000
-	   10000 -    20000  R X  rom@10000
-	 2000000 -  2010000 ARW   clint@2000000
-	 c000000 - 10000000 ARW   interrupt-controller@c000000
-	60000000 - 80000000  RWX  mmio-port-axi4@60000000
-	80000000 - 90000000  RWXC memory@80000000
-
-cd /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip && java -Xmx2G -Xss8M -jar /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/sbt-launch.jar assembly
-WARNING: A terminally deprecated method in java.lang.System has been called
-WARNING: System::setSecurityManager has been called by sbt.TrapExit$ (file:/home/hw1020/.sbt/boot/scala-2.12.10/org.scala-sbt/sbt/1.3.13/run_2.12-1.3.13.jar)
-WARNING: Please consider reporting this to the maintainers of sbt.TrapExit$
-WARNING: System::setSecurityManager will be removed in a future release
-[info] welcome to sbt 1.3.13 (Eclipse Adoptium Java 17.0.11)
-[info] loading settings for project rocket-chip-build from plugins.sbt ...
-[info] loading project definition from /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/project
-[info] loading settings for project rocketchip from build.sbt ...
-[info] loading settings for project hardfloat from build.sbt ...
-[info] loading settings for project api-config-chipsalliance from build.sbt ...
-Using addons: 
-[info] set current project to rocketchip (in build file:/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/)
-[warn] Multiple main classes detected.  Run 'show discoveredMainClasses' to see the list
-[info] Strategy 'discard' was applied to 23 files (Run the task at debug level to see details)
-[info] Strategy 'filterDistinctLines' was applied to a file (Run the task at debug level to see details)
-[info] Assembly up to date: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/rocketchip.jar
-[success] Total time: 3 s, completed 12 Jun 2024, 12:01:11
-mkdir -p ./output
-mkdir -p /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/
-ln -fs /home/hw1020/Downloads/Installed_Package/rocket_env/riscv64-unknown-elf/share/riscv-tests/benchmarks/median.riscv output/median.riscv
-java -Xmx2G -Xss8M -cp /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/rocketchip.jar firrtl.stage.FirrtlMain -i /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.fir \
-    -o /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.v \
-    -X verilog \
-    --infer-rw TestHarness \
-    --repl-seq-mem -c:TestHarness:-o:/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.conf \
-    -faf /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.anno.json \
-    -td /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/ \
-    -fct firrtl.passes.InlineInstances, \
-     \
-
-cd /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src && \
-/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/scripts/vlsi_mem_gen /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.conf > /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.behav_srams.v.tmp && \
-mv -f /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.behav_srams.v.tmp /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.behav_srams.v
-mkdir -p /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig
-/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/verilator/install/bin/verilator --cc --exe --top-module TestHarness +define+PRINTF_COND=\$c\(\"verbose\",\"\&\&\"\,\"done_reset\"\) +define+RANDOMIZE_GARBAGE_ASSIGN +define+STOP_COND=\$c\(\"done_reset\"\) --assert --output-split 20000 --output-split-cfuncs 20000 --threads 2 -Wno-UNOPTTHREADS -Wno-STMTDLY -Wno-LATCH -Wno-WIDTH --x-assign unique -I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/vsrc -O3 -CFLAGS "-O1 -std=c++11 -I/home/hw1020/Downloads/Installed_Package/rocket_env/include -DVERILATOR -DTEST_HARNESS=VTestHarness -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/verilator.h -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.plusArgs" --max-num-width 1048576 -Mdir /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig \
--o /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/emulator-freechips.rocketchip.system-freechips.rocketchip.system.CustomisedConfig /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.v /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.behav_srams.v  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/emulator.cc /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/SimDTM.cc /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/SimJTAG.cc /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/src/main/resources/csrc/remote_bitbang.cc -LDFLAGS " -L/home/hw1020/Downloads/Installed_Package/rocket_env/lib -Wl,-rpath,/home/hw1020/Downloads/Installed_Package/rocket_env/lib -L/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator -lfesvr -lpthread" \
--CFLAGS "-I/home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src -include /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig/VTestHarness.h"
-%Error-BLKLOOPINIT: /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/rocket-chip/emulator/generated-src/freechips.rocketchip.system.CustomisedConfig.behav_srams.v:33:35: Unsupported: Delayed assignment to array inside for loops (non-delayed is ok - see docs)
-   33 |           ram[RW0_addr][i*8 +: 8] <= RW0_wdata[i*8 +: 8];
-      |                                   ^~
-                    ... For error description see https://verilator.org/warn/BLKLOOPINIT?v=4.226
-%Error: Exiting due to 1 error(s)
-        ... See the manual at https://verilator.org/verilator_doc.html for more assistance.
-make: *** [Makefrag-verilator:88: emulator-freechips.rocketchip.system-freechips.rocketchip.system.CustomisedConfig] Error 1
+Exception in thread "main" java.lang.reflect.InvocationTargetException
+	at ... ()
+	at freechips.rocketchip.stage.phases.PreElaboration.$anonfun$transform$1(PreElaboration.scala:36)
+	at ... ()
+	at ... (Stack trace trimmed to user code only. Rerun with --full-stacktrace to see the full stack trace)
+Caused by: java.lang.IllegalArgumentException: requirement failed
+	at scala.Predef$.require(Predef.scala:268)
+	at chisel3.util.log2Ceil$.apply(Math.scala:49)
+	at chisel3.util.log2Ceil$.apply(Math.scala:52)
+	at freechips.rocketchip.rocket.TLB.$anonfun$r_sectored_repl_addr$2(TLB.scala:201)
+	at chisel3.internal.prefix$.apply(prefix.scala:48)
+	at freechips.rocketchip.rocket.TLB.$anonfun$r_sectored_repl_addr$1(TLB.scala:201)
+	at chisel3.internal.plugin.package$.autoNameRecursively(package.scala:33)
+	at freechips.rocketchip.rocket.TLB.<init>(TLB.scala:201)
+	at freechips.rocketchip.rocket.DCacheModule$DCacheModuleImpl.$anonfun$tlb$2(DCache.scala:115)
+	at chisel3.Module$.do_apply(Module.scala:53)
+	at freechips.rocketchip.rocket.DCacheModule$DCacheModuleImpl.$anonfun$tlb$1(DCache.scala:115)
+	at chisel3.internal.plugin.package$.autoNameRecursively(package.scala:33)
+	at freechips.rocketchip.rocket.DCacheModule$DCacheModuleImpl.<init>(DCache.scala:113)
+	at freechips.rocketchip.rocket.DCacheModule.$anonfun$dcacheImpl$1(DCache.scala:1148)
+	at chisel3.withClock$.apply(MultiClock.scala:47)
+	at freechips.rocketchip.rocket.DCacheModule.<init>(DCache.scala:1148)
+	at freechips.rocketchip.rocket.DCache.$anonfun$module$1(DCache.scala:85)
+	at chisel3.internal.plugin.package$.autoNameRecursively(package.scala:33)
+	at freechips.rocketchip.rocket.DCache.module$lzycompute(DCache.scala:85)
+	at freechips.rocketchip.rocket.DCache.module(DCache.scala:85)
+	at freechips.rocketchip.rocket.DCache.module(DCache.scala:84)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.$anonfun$instantiate$3(LazyModule.scala:278)
+	at chisel3.Module$.do_apply(Module.scala:53)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.$anonfun$instantiate$2(LazyModule.scala:278)
+	at chisel3.internal.plugin.package$.autoNameRecursively(package.scala:33)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.$anonfun$instantiate$1(LazyModule.scala:278)
+	at scala.collection.immutable.List.flatMap(List.scala:366)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.instantiate(LazyModule.scala:276)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.instantiate$(LazyModule.scala:273)
+	at freechips.rocketchip.diplomacy.LazyModuleImp.instantiate(LazyModule.scala:335)
+	at freechips.rocketchip.diplomacy.LazyModuleImp.$anonfun$x$21$1(LazyModule.scala:337)
+	at chisel3.internal.plugin.package$.autoNameRecursivelyProduct(package.scala:48)
+	at freechips.rocketchip.diplomacy.LazyModuleImp.<init>(LazyModule.scala:337)
+	at freechips.rocketchip.tile.BaseTileModuleImp.<init>(BaseTile.scala:368)
+	at freechips.rocketchip.tile.RocketTileModuleImp.<init>(RocketTile.scala:122)
+	at freechips.rocketchip.tile.RocketTile.$anonfun$module$1(RocketTile.scala:105)
+	at chisel3.internal.plugin.package$.autoNameRecursively(package.scala:33)
+	at freechips.rocketchip.tile.RocketTile.module$lzycompute(RocketTile.scala:105)
+	at freechips.rocketchip.tile.RocketTile.module(RocketTile.scala:105)
+	at freechips.rocketchip.tile.RocketTile.module(RocketTile.scala:38)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.$anonfun$instantiate$3(LazyModule.scala:278)
+	at chisel3.Module$.do_apply(Module.scala:53)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.$anonfun$instantiate$2(LazyModule.scala:278)
+	at chisel3.internal.plugin.package$.autoNameRecursively(package.scala:33)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.$anonfun$instantiate$1(LazyModule.scala:278)
+	at scala.collection.immutable.List.flatMap(List.scala:366)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.instantiate(LazyModule.scala:276)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.instantiate$(LazyModule.scala:273)
+	at freechips.rocketchip.diplomacy.LazyRawModuleImp.instantiate(LazyModule.scala:344)
+	at freechips.rocketchip.diplomacy.LazyRawModuleImp.$anonfun$x$22$2(LazyModule.scala:357)
+	at chisel3.withClockAndReset$.apply(MultiClock.scala:26)
+	at freechips.rocketchip.diplomacy.LazyRawModuleImp.$anonfun$x$22$1(LazyModule.scala:357)
+	at chisel3.internal.plugin.package$.autoNameRecursivelyProduct(package.scala:48)
+	at freechips.rocketchip.diplomacy.LazyRawModuleImp.<init>(LazyModule.scala:356)
+	at freechips.rocketchip.prci.Domain$$anon$1.<init>(ClockDomain.scala:10)
+	at freechips.rocketchip.prci.Domain.$anonfun$module$1(ClockDomain.scala:10)
+	at chisel3.internal.plugin.package$.autoNameRecursively(package.scala:33)
+	at freechips.rocketchip.prci.Domain.module$lzycompute(ClockDomain.scala:10)
+	at freechips.rocketchip.prci.Domain.module(ClockDomain.scala:10)
+	at freechips.rocketchip.prci.Domain.module(ClockDomain.scala:7)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.$anonfun$instantiate$3(LazyModule.scala:278)
+	at chisel3.Module$.do_apply(Module.scala:53)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.$anonfun$instantiate$2(LazyModule.scala:278)
+	at chisel3.internal.plugin.package$.autoNameRecursively(package.scala:33)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.$anonfun$instantiate$1(LazyModule.scala:278)
+	at scala.collection.immutable.List.flatMap(List.scala:366)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.instantiate(LazyModule.scala:276)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.instantiate$(LazyModule.scala:273)
+	at freechips.rocketchip.diplomacy.LazyRawModuleImp.instantiate(LazyModule.scala:344)
+	at freechips.rocketchip.diplomacy.LazyRawModuleImp.$anonfun$x$22$2(LazyModule.scala:357)
+	at chisel3.withClockAndReset$.apply(MultiClock.scala:26)
+	at freechips.rocketchip.diplomacy.LazyRawModuleImp.$anonfun$x$22$1(LazyModule.scala:357)
+	at chisel3.internal.plugin.package$.autoNameRecursivelyProduct(package.scala:48)
+	at freechips.rocketchip.diplomacy.LazyRawModuleImp.<init>(LazyModule.scala:356)
+	at freechips.rocketchip.prci.Domain$$anon$1.<init>(ClockDomain.scala:10)
+	at freechips.rocketchip.prci.Domain.$anonfun$module$1(ClockDomain.scala:10)
+	at chisel3.internal.plugin.package$.autoNameRecursively(package.scala:33)
+	at freechips.rocketchip.prci.Domain.module$lzycompute(ClockDomain.scala:10)
+	at freechips.rocketchip.prci.Domain.module(ClockDomain.scala:10)
+	at freechips.rocketchip.prci.Domain.module(ClockDomain.scala:7)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.$anonfun$instantiate$3(LazyModule.scala:278)
+	at chisel3.Module$.do_apply(Module.scala:53)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.$anonfun$instantiate$2(LazyModule.scala:278)
+	at chisel3.internal.plugin.package$.autoNameRecursively(package.scala:33)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.$anonfun$instantiate$1(LazyModule.scala:278)
+	at scala.collection.immutable.List.flatMap(List.scala:366)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.instantiate(LazyModule.scala:276)
+	at freechips.rocketchip.diplomacy.LazyModuleImpLike.instantiate$(LazyModule.scala:273)
+	at freechips.rocketchip.diplomacy.LazyModuleImp.instantiate(LazyModule.scala:335)
+	at freechips.rocketchip.diplomacy.LazyModuleImp.$anonfun$x$21$1(LazyModule.scala:337)
+	at chisel3.internal.plugin.package$.autoNameRecursivelyProduct(package.scala:48)
+	at freechips.rocketchip.diplomacy.LazyModuleImp.<init>(LazyModule.scala:337)
+	at freechips.rocketchip.subsystem.BareSubsystemModuleImp.<init>(BaseSubsystem.scala:29)
+	at freechips.rocketchip.subsystem.BaseSubsystemModuleImp.<init>(BaseSubsystem.scala:122)
+	at freechips.rocketchip.subsystem.RocketSubsystemModuleImp.<init>(RocketSubsystem.scala:40)
+	at freechips.rocketchip.system.ExampleRocketSystemModuleImp.<init>(ExampleRocketSystem.scala:25)
+	at freechips.rocketchip.system.ExampleRocketSystem.$anonfun$module$1(ExampleRocketSystem.scala:22)
+	at chisel3.internal.plugin.package$.autoNameRecursively(package.scala:33)
+	at freechips.rocketchip.system.ExampleRocketSystem.module$lzycompute(ExampleRocketSystem.scala:22)
+	at freechips.rocketchip.system.ExampleRocketSystem.module(ExampleRocketSystem.scala:22)
+	at freechips.rocketchip.system.TestHarness.$anonfun$dut$2(TestHarness.scala:17)
+	at chisel3.Module$.do_apply(Module.scala:53)
+	at freechips.rocketchip.system.TestHarness.$anonfun$dut$1(TestHarness.scala:17)
+	at chisel3.internal.plugin.package$.autoNameRecursively(package.scala:33)
+	at freechips.rocketchip.system.TestHarness.<init>(TestHarness.scala:17)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+	at freechips.rocketchip.stage.phases.PreElaboration.$anonfun$transform$1(PreElaboration.scala:36)
+	at chisel3.Module$.do_apply(Module.scala:53)
+	at chisel3.stage.phases.Elaborate.$anonfun$transform$2(Elaborate.scala:33)
+	at chisel3.internal.Builder$.$anonfun$build$1(Builder.scala:720)
+	at scala.util.DynamicVariable.withValue(DynamicVariable.scala:62)
+	at chisel3.internal.Builder$.build(Builder.scala:715)
+	at chisel3.stage.phases.Elaborate.$anonfun$transform$1(Elaborate.scala:33)
+	at scala.collection.TraversableLike.$anonfun$flatMap$1(TraversableLike.scala:293)
+	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+	at scala.collection.TraversableLike.flatMap(TraversableLike.scala:293)
+	at scala.collection.TraversableLike.flatMap$(TraversableLike.scala:290)
+	at scala.collection.AbstractTraversable.flatMap(Traversable.scala:108)
+	at chisel3.stage.phases.Elaborate.transform(Elaborate.scala:28)
+	at chisel3.stage.phases.Elaborate.transform(Elaborate.scala:21)
+	at firrtl.options.phases.DeletedWrapper.internalTransform(DeletedWrapper.scala:38)
+	at firrtl.options.phases.DeletedWrapper.internalTransform(DeletedWrapper.scala:15)
+	at firrtl.options.Translator.transform(Phase.scala:248)
+	at firrtl.options.Translator.transform$(Phase.scala:248)
+	at firrtl.options.phases.DeletedWrapper.transform(DeletedWrapper.scala:15)
+	at firrtl.options.DependencyManager.$anonfun$transform$5(DependencyManager.scala:280)
+	at firrtl.Utils$.time(Utils.scala:181)
+	at firrtl.options.DependencyManager.$anonfun$transform$3(DependencyManager.scala:280)
+	at scala.collection.LinearSeqOptimized.foldLeft(LinearSeqOptimized.scala:126)
+	at scala.collection.LinearSeqOptimized.foldLeft$(LinearSeqOptimized.scala:122)
+	at scala.collection.immutable.List.foldLeft(List.scala:91)
+	at firrtl.options.DependencyManager.transform(DependencyManager.scala:269)
+	at firrtl.options.DependencyManager.transform$(DependencyManager.scala:255)
+	at firrtl.options.PhaseManager.transform(DependencyManager.scala:443)
+	at chisel3.stage.ChiselStage.run(ChiselStage.scala:45)
+	at firrtl.options.Stage$$anon$1.transform(Stage.scala:43)
+	at firrtl.options.Stage$$anon$1.transform(Stage.scala:43)
+	at firrtl.options.phases.DeletedWrapper.internalTransform(DeletedWrapper.scala:38)
+	at firrtl.options.phases.DeletedWrapper.internalTransform(DeletedWrapper.scala:15)
+	at firrtl.options.Translator.transform(Phase.scala:248)
+	at firrtl.options.Translator.transform$(Phase.scala:248)
+	at firrtl.options.phases.DeletedWrapper.transform(DeletedWrapper.scala:15)
+	at firrtl.options.Stage.$anonfun$transform$5(Stage.scala:47)
+	at scala.collection.LinearSeqOptimized.foldLeft(LinearSeqOptimized.scala:126)
+	at scala.collection.LinearSeqOptimized.foldLeft$(LinearSeqOptimized.scala:122)
+	at scala.collection.immutable.List.foldLeft(List.scala:91)
+	at firrtl.options.Stage.$anonfun$transform$3(Stage.scala:47)
+	at logger.Logger$.$anonfun$makeScope$2(Logger.scala:137)
+	at scala.util.DynamicVariable.withValue(DynamicVariable.scala:62)
+	at logger.Logger$.makeScope(Logger.scala:135)
+	at firrtl.options.Stage.transform(Stage.scala:47)
+	at firrtl.options.Stage.transform(Stage.scala:17)
+	at firrtl.options.DependencyManager.$anonfun$transform$5(DependencyManager.scala:280)
+	at firrtl.Utils$.time(Utils.scala:181)
+	at firrtl.options.DependencyManager.$anonfun$transform$3(DependencyManager.scala:280)
+	at scala.collection.LinearSeqOptimized.foldLeft(LinearSeqOptimized.scala:126)
+	at scala.collection.LinearSeqOptimized.foldLeft$(LinearSeqOptimized.scala:122)
+	at scala.collection.immutable.List.foldLeft(List.scala:91)
+	at firrtl.options.DependencyManager.transform(DependencyManager.scala:269)
+	at firrtl.options.DependencyManager.transform$(DependencyManager.scala:255)
+	at firrtl.options.PhaseManager.transform(DependencyManager.scala:443)
+	at freechips.rocketchip.system.RocketChipStage.run(RocketChipStageGenerator.scala:44)
+	at firrtl.options.Stage$$anon$1.transform(Stage.scala:43)
+	at firrtl.options.Stage$$anon$1.transform(Stage.scala:43)
+	at firrtl.options.phases.DeletedWrapper.internalTransform(DeletedWrapper.scala:38)
+	at firrtl.options.phases.DeletedWrapper.internalTransform(DeletedWrapper.scala:15)
+	at firrtl.options.Translator.transform(Phase.scala:248)
+	at firrtl.options.Translator.transform$(Phase.scala:248)
+	at firrtl.options.phases.DeletedWrapper.transform(DeletedWrapper.scala:15)
+	at firrtl.options.Stage.$anonfun$transform$5(Stage.scala:47)
+	at scala.collection.LinearSeqOptimized.foldLeft(LinearSeqOptimized.scala:126)
+	at scala.collection.LinearSeqOptimized.foldLeft$(LinearSeqOptimized.scala:122)
+	at scala.collection.immutable.List.foldLeft(List.scala:91)
+	at firrtl.options.Stage.$anonfun$transform$3(Stage.scala:47)
+	at logger.Logger$.$anonfun$makeScope$2(Logger.scala:137)
+	at scala.util.DynamicVariable.withValue(DynamicVariable.scala:62)
+	at logger.Logger$.makeScope(Logger.scala:135)
+	at firrtl.options.Stage.transform(Stage.scala:47)
+	at firrtl.options.Stage.execute(Stage.scala:58)
+	at firrtl.options.StageMain.main(Stage.scala:71)
+	at freechips.rocketchip.system.Generator.main(RocketChipStageGenerator.scala)
+make: *** No rule to make target 'output/median.riscv.run'. Stop.

@@ -7,3 +7,4 @@ set_property is_global_include true [get_files  /home/hw1020/Documents/FYP_Bayes
 set_property file_type SystemVerilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/snapshots/default/el2_pdef.vh]
 set_property file_type SystemVerilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/dmi/rvjtag_tap.v]
 set_property file_type SystemVerilog [get_files  /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/Cores-VeeR-EL2/design/dmi/dmi_mux.v]
+add_files -fileset constrs_1 -norecurse /home/hw1020/Documents/FYP_Bayesian_Optimisation/object_functions/tools/EL2/EL2_Time_Constraints.xdc

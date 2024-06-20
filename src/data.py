@@ -300,7 +300,7 @@ class NutShell_Data(Data_Set):
 
 
 class EL2_Data(Data_Set):
-    def __init__(self, input_info, output_info, param_tuner, optimisation_name, build_dataset = True, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
+    def __init__(self, input_info, output_info, param_tuner, optimisation_name, build_dataset = True, tensor_type=torch.float64, tensor_device=torch.device('cpu'), benchmark_to_eval_to_build_dataset = ['cmark', 'dhry', 'cmark_iccm', 'cmark_dccm']):
         self.utilisation_path = '../object_functions/Syn_Report/EL2_utilization_synth.rpt'
         self.time_report = '../object_functions/Syn_Report/EL2_time_summary.rpt'
         self.param_tuner = param_tuner
@@ -315,14 +315,11 @@ class EL2_Data(Data_Set):
         self.worst_value = {}
         self.best_value = {}
         self.objs_direct = {}
-        print("output_info.objs_to_evaluate_dim ", self.objs_to_evaluate_dim)
-        print("device ", tensor_device)
-        print("dtype ", tensor_type)
         self.normaliser_bounds = torch.empty((2, self.objs_to_evaluate_dim), dtype=tensor_type, device=tensor_device)
 
         # Note: this is to build the dataset to store the objective vals for a parameter set, in order to facilitate the future DSE
         self.build_dataset = build_dataset
-        self.benchmark_to_eval_to_build_dataset = ['dhrystone', 'qsort', 'mt-matmul', 'median']
+        self.benchmark_to_eval_to_build_dataset = benchmark_to_eval_to_build_dataset
 
         # Iterate over each item in output_objective
         obj_index = 0   
@@ -457,7 +454,8 @@ class EL2_Data(Data_Set):
 
 class Rocket_Chip_data(EL2_Data):
     def __init__(self, input_info, output_info, param_tuner, optimisation_name, build_dataset = True, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
-        super().__init__(input_info, output_info, param_tuner, optimisation_name, build_dataset, tensor_type, tensor_device)
+        benchmark_to_eval_to_build_dataset = ['dhrystone', 'qsort', 'mt-matmul', 'median']
+        super().__init__(input_info, output_info, param_tuner, optimisation_name, build_dataset, tensor_type, tensor_device, benchmark_to_eval_to_build_dataset)
         self.utilisation_path = '../object_functions/Syn_Report/rocket_utilization_synth.rpt'
         self.time_report = '../object_functions/Syn_Report/rocket_time_summary.rpt'
 

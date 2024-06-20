@@ -164,7 +164,7 @@ class EL2_parameter_tuning:
             return True, minstret, mcycle
         except subprocess.CalledProcessError as e:
             # Optionally, log the error message from the exception
-            print(f"Error occurred: {e}")
+            print(f"Error occurred for the current benchmark {benchmark}")
             return False, None, None
     
     def run_synthesis(self):

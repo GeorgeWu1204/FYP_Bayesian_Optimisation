@@ -11,7 +11,6 @@ var: icache_size               range: [4,512]       scale: 4        exp: 2      
 
 
 #input conditional constraint
-var: btb_enable range: [0,0] and var: btb_size range: [0,0]
 
 #input constant
 

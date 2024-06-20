@@ -112,7 +112,7 @@ def parse_constraints(filename, device):
                             input_shift_amount[var_name] = int(parts[9])
                         else:
                             self_constraints[var_name] = [range_values, data_type]
-                            input_shift_amount[var_name] = 1
+                            input_shift_amount[var_name] = 0
                     elif section == 'coupled_constraint':
                         # and relationship
                         coupled_parts = line.split('and')
