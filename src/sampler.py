@@ -38,7 +38,6 @@ class initial_sampler:
                     continue
                 # check internal constraints
                 valid_sample, possible_obj = data_set.find_evaluation_results(possible_initial_tensor[i:i+1,:])
-                print("valid_sample is ", valid_sample)
                 # if the generated desgin does not meet the internal constraints that are not disclosed in the spec.
                 if valid_sample == False:
                     continue

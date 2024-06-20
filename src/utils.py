@@ -61,14 +61,15 @@ def obtain_categorical_input_data(input_tensor, categorical_info):
 def recover_categorical_input_data(input_tensor, categorical_info):
     """this function is used to extract the input variables that belongs to the categorical values and assign the maximum value with 1 and the rest with 0"""
     # Process each index and corresponding length
+    recovered_categorical_tensor= input_tensor.clone()
     for single_categorical_info in categorical_info.values():
         idx, length = single_categorical_info[0], single_categorical_info[1]
         segment = input_tensor[idx:idx+length]
         result = torch.zeros_like(segment)
         max_value = torch.max(segment)
         result[segment == max_value] = 1
-        input_tensor[idx:idx+length] = result
-    return input_tensor
+        recovered_categorical_tensor[idx:idx+length] = result
+    return recovered_categorical_tensor
 
 
 def recover_single_input_data(input_tensor, normalised_factor, scales, offsets, categorical_info, exps = None):
@@ -78,14 +79,16 @@ def recover_single_input_data(input_tensor, normalised_factor, scales, offsets, 
     input_var = torch.empty_like(input_tensor)
     if categorical_info is not None:
         # Recover the categorical data
-        input_tensor = recover_categorical_input_data(input_tensor, categorical_info) 
+        recovered_categorical_input_tensor = recover_categorical_input_data(input_tensor, categorical_info) 
+    else:
+        recovered_categorical_input_tensor = input_tensor.clone()
     
-    for i in range(input_tensor.shape[0]):
+    for i in range(recovered_categorical_input_tensor.shape[0]):
         # Check if exps is not None and the element in exps is larger than one
         if exps is not None and exps[i] > 1:
-            input_var[i] = exps[i] ** (torch.round(input_tensor[i] * normalised_factor[i]) * scales[i] + offsets[i])
+            input_var[i] = exps[i] ** (torch.round(recovered_categorical_input_tensor[i] * normalised_factor[i]) * scales[i] + offsets[i])
         else:
-            input_var[i] = torch.round(input_tensor[i] * normalised_factor[i]) * scales[i] + offsets[i]
+            input_var[i] = torch.round(recovered_categorical_input_tensor[i] * normalised_factor[i]) * scales[i] + offsets[i]
     
     if categorical_info is not None:
         return obtain_categorical_input_data(input_var, categorical_info)

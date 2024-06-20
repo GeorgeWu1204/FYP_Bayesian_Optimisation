@@ -6,7 +6,7 @@ from utils import calculate_hypervolume, recover_categorical_input_data
 
 class train_set_records():
     """This class is used to record the training set"""
-    def __init__(self, normalised_factors, self_constraints, categorical_info, worst_ref_objective, objective_to_optimise_dim, train_set_modification_enable, acceptable_threshold = 0.0001, disturbance_threshold = 0.0001, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
+    def __init__(self, normalised_factors, self_constraints, conditional_constraints, categorical_info, worst_ref_objective, objective_to_optimise_dim, train_set_modification_enable, acceptable_threshold = 0.0001, disturbance_threshold = 0.0001, tensor_type=torch.float64, tensor_device=torch.device('cpu')):
         
         self.normalised_factor = torch.tensor(normalised_factors, dtype=tensor_type, device=tensor_device)
         self.acceptable_threshold = acceptable_threshold
@@ -22,6 +22,7 @@ class train_set_records():
         self.fake_worst_point = torch.tensor(worst_ref_objective.tolist() + [0.0], dtype = tensor_type, device = tensor_device).unsqueeze(0)
         self.objective_to_optimise_dim = objective_to_optimise_dim
         self.train_set_modification_enable = train_set_modification_enable
+        self.condition_constraints = conditional_constraints
 
     def recover_input_data_for_storage(self, input_tensor):
         """This function is to find the real input from the x tensor in recording process"""
@@ -66,17 +67,18 @@ class train_set_records():
             if self.history_record.get(recovered_sample, None) == None:
                 self.history_record[recovered_sample] = [recovered_train_x[i]]
             else:
-                possible_neighbor =  self.get_close_neighbours(recovered_train_x[i])
-                valid_initial_data = True
-                for neighbour in possible_neighbor:
-                    if self.history_record.get(neighbour, None) != None:
-                        neighbour_samples = self.history_record[neighbour]
-                        for sample in neighbour_samples:
-                            if self.calculate_distance(recovered_train_x[i], sample) < self.acceptable_threshold:
-                                valid_initial_data = False
-                                break
-                if valid_initial_data:
-                    self.history_record[recovered_sample].append(recovered_train_x[i])
+                if self.condition_constraints == None:
+                    possible_neighbor =  self.get_close_neighbours(recovered_train_x[i])
+                    valid_initial_data = True
+                    for neighbour in possible_neighbor:
+                        if self.history_record.get(neighbour, None) != None:
+                            neighbour_samples = self.history_record[neighbour]
+                            for sample in neighbour_samples:
+                                if self.calculate_distance(recovered_train_x[i], sample) < self.acceptable_threshold:
+                                    valid_initial_data = False
+                                    break
+                    if valid_initial_data:
+                        self.history_record[recovered_sample].append(recovered_train_x[i])
         
     def calculate_distance(self, x1, x2):
         """This function is used to calculate the distance between two points"""

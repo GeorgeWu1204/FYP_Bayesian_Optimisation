@@ -88,7 +88,7 @@ ref_points = utils.find_ref_points(output_info.obj_to_optimise_dim, data_set.obj
 
 #normalise objective to ensure the same scale
 sampler_generator = initial_sampler(input_info.input_dim, output_info.obj_to_evaluate_dim, input_info.constraints, data_set, t_type, device)
-train_set_storage = train_set_records(input_info.input_normalized_factor, list(input_info.self_constraints.values()), input_info.input_categorical, ref_points, output_info.obj_to_optimise_dim, enable_train_set_modification, TRAIN_SET_ACCEPTABLE_THRESHOLD, TRAIN_SET_DISTURBANCE_RANGE, t_type, device)
+train_set_storage = train_set_records(input_info.input_normalized_factor, list(input_info.self_constraints.values()), input_info.conditional_constraints, input_info.input_categorical, ref_points, output_info.obj_to_optimise_dim, enable_train_set_modification, TRAIN_SET_ACCEPTABLE_THRESHOLD, TRAIN_SET_DISTURBANCE_RANGE, t_type, device)
 
 if plot_posterior:
     posterior_examiner = utils.test_posterior_result(input_info.input_names, t_type, device)

@@ -11,7 +11,10 @@ def calculate_int_condition(x, condition):
 def calculate_categorical_condition(x, categorical_range, condition):
     #x dim = [num_categories, num_restarts * q_dim]
     index = torch.argmax(x, dim=1)
-    return calculate_int_condition(int(categorical_range[index]), condition)
+    result = torch.empty((x.shape[0]))
+    for i in range(x.shape[0]):
+        result[i] = int(categorical_range[index[i].item()])
+    return calculate_int_condition(result, condition)
 
 def extract_categorical_parameters_from_flatten_data(data, total_amount, d_dim, categorical_info):
     extracted_data = []
@@ -172,12 +175,12 @@ class Input_Constraints:
         #X_index : the index of the candidtate of the point.
         overall_constraint_sum = 0
         # # check meet the individual constraint
-        for individual_constraint_index in range(self.dim):
-            if(individual_constraint[individual_constraint_index][X_index] < 0):
-                #if the initial condition is not met, return the value of the constraint.
-                return individual_constraint[individual_constraint_index][X_index]
-            else:
-                overall_constraint_sum += individual_constraint[individual_constraint_index][X_index]
+        # for individual_constraint_index in range(self.dim):
+        #     if(individual_constraint[individual_constraint_index][X_index] < 0):
+        #         #if the initial condition is not met, return the value of the constraint.
+        #         return individual_constraint[individual_constraint_index][X_index]
+        #     else:
+        #         overall_constraint_sum += individual_constraint[individual_constraint_index][X_index]
         # check meet the conditional constraint
         for or_constraints in self.linked_constraints:
             # loop through all the or_constraints sets in the linked_constraints

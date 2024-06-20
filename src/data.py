@@ -34,7 +34,7 @@ def read_data_from_db(db_name):
 
 class Input_Info:
     """Class to store all the related input information"""
-    def __init__(self, input_dim, input_scales, input_normalized_factor, input_exp, input_offsets, input_names, input_constraints, input_categorical, self_constraints, coupled_constraints):
+    def __init__(self, input_dim, input_scales, input_normalized_factor, input_exp, input_offsets, input_names, input_constraints, input_categorical, self_constraints, conditional_constraints):
         self.input_dim = input_dim
         self.input_scales = input_scales
         self.input_normalized_factor = input_normalized_factor
@@ -44,7 +44,7 @@ class Input_Info:
         self.constraints = input_constraints
         self.constants = None
         self.self_constraints = self_constraints
-        self.coupled_constraints = coupled_constraints
+        self.conditional_constraints = conditional_constraints
         self.input_categorical = input_categorical
 
 class Output_Info:

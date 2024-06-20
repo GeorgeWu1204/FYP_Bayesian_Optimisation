@@ -14,7 +14,7 @@ def calculate_input_dim(self_constraints):
     return input_dim
             
 
-def fill_constraints(self_constraints, coupled_constraints, device):
+def fill_constraints(self_constraints, conditional_constraints, device):
     """this function is used to fill the constraints in the interface"""
     # Int Val: {var_name: [lower_bound, upper_bound, scale, exp, Int]}
     # Coupled_constraints: [{var_name: [lower_bound, upper_bound], var_name: [lower_bound, upper_bound]},... ]
@@ -49,16 +49,16 @@ def fill_constraints(self_constraints, coupled_constraints, device):
     constraint = Input_Constraints(input_dim, input_names, input_categorical, device)
     constraint.update_integer_transform_info(input_offset, input_scales, input_normalized_factor, input_exp)
     
-    if len(coupled_constraints) != 0:
+    if len(conditional_constraints) != 0:
         format_coupled_constraint = []
-        for or_constraint in range(len(coupled_constraints)):
+        for or_constraint in range(len(conditional_constraints)):
             and_constraints = {}
-            for and_constraint in coupled_constraints[or_constraint].keys():
-                and_constraints[str(and_constraint)] = coupled_constraints[or_constraint][and_constraint]
+            for and_constraint in conditional_constraints[or_constraint].keys():
+                and_constraints[str(and_constraint)] = conditional_constraints[or_constraint][and_constraint]
             format_coupled_constraint.append(and_constraints)
         constraint.update_coupled_constraints(format_coupled_constraint)
     
-    return Input_Info(input_dim, input_scales, input_normalized_factor, input_exp, input_offset, input_names, constraint, input_categorical, self_constraints, coupled_constraints) 
+    return Input_Info(input_dim, input_scales, input_normalized_factor, input_exp, input_offset, input_names, constraint, input_categorical, self_constraints, conditional_constraints) 
 
 def parse_constraints(filename, device):
     """this function is used to parse the constraints from the file"""
@@ -66,7 +66,7 @@ def parse_constraints(filename, device):
     self_constraints = {}
     input_constant = {}
     input_shift_amount = {}
-    coupled_constraints = []
+    conditional_constraints = []
     output_objective = {}
     output_constraints = {}
     customisable_processor = None
@@ -122,7 +122,7 @@ def parse_constraints(filename, device):
                             var_name = var_parts[1]
                             range_values = var_parts[3].strip('[]').split(',')
                             coupled_data[var_name] = [int(range_values[0]), int(range_values[1])]
-                        coupled_constraints.append(coupled_data)
+                        conditional_constraints.append(coupled_data)
                     else:
                         exit('Error: Invalid section')
             elif line.startswith('obj_name:') and section:
@@ -168,7 +168,7 @@ def parse_constraints(filename, device):
     
     output_info = Output_Info(output_objective, output_constraints, customisable_processor)
     # Start to Fill in the constraints information
-    input_info = fill_constraints(self_constraints, coupled_constraints, device)
+    input_info = fill_constraints(self_constraints, conditional_constraints, device)
     input_info.constants = input_constant
     return input_info, output_info, parameter_tuner, optimisation_name
 

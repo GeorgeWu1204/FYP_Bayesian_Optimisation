@@ -123,10 +123,10 @@ class single_objective_BO_model():
     
     def optimize_acqf_and_get_observation(self, acq_func, data_set):
         """Optimizes the acquisition function, and returns a new candidate and the corresponding observation."""
-        if len(self.input_info.coupled_constraints) > 0:
-            unnormalised_train_x = self.sampler.generate_valid_initial_data(self.NUM_RESTARTS, data_set)
+        if len(self.input_info.conditional_constraints) > 0:
+            unnormalised_train_x, *_ = self.sampler.generate_valid_initial_data(self.NUM_RESTARTS, data_set)
             sampled_initial_conditions = unnormalised_train_x.unsqueeze(1) # to match the dimension n * 1 * m
-            print("sampled_initial_conditions: ", sampled_initial_conditions)
+            print(self.input_info.constraints.get_nonlinear_inequality_constraints(sampled_initial_conditions))
             candidates, _ = optimize_acqf(
                 acq_function=acq_func,
                 bounds=self.input_info.constraints.constraint_bound,
