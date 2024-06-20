@@ -25,10 +25,10 @@ t_type = torch.float64
 build_dataset = True
 
 # Input Settings
-# CONSTRAINT_FILE = '../specification/Simple_Dataset/dataset_1_settings.txt'
+CONSTRAINT_FILE = '../specification/Simple_Dataset/dataset_1_settings.txt'
 # CONSTRAINT_FILE = '../specification/Simple_Dataset/dataset_2_settings.txt'
 # CONSTRAINT_FILE = '../specification/EL2/Experiment_1.txt'
-CONSTRAINT_FILE = '../specification/Rocket-Chip/Experiment_1.txt'
+# CONSTRAINT_FILE = '../specification/Rocket-Chip/Experiment_1.txt'
 
 input_info, output_info, param_tuner, optimisation_name = parse_constraints(CONSTRAINT_FILE, device)
 

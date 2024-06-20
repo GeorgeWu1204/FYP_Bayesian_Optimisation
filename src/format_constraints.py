@@ -209,6 +209,8 @@ class Input_Constraints:
         q_dim = 1
         x_input = X.unsqueeze(0)
         individual_constraint, correlated_constraints = build_matrix(x_input, self, 1, q_dim, self.dim)
+        if self.linked_constraints == []:
+            return True
         if self.check_meet_constraint(individual_constraint, correlated_constraints, 0) > 0:
             return True
         else:
